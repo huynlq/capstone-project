@@ -8,6 +8,32 @@ namespace VoluntaryProject.Models
     public class EventType
     {
         private int id;
-        private string eventType;
+        private string type;
+
+        public int Id
+        {
+            get
+            {
+                return id;
+            }
+
+            set
+            {
+                id = value;
+            }
+        }
+
+        public string Type
+        {
+            get
+            {
+                return Type;
+            }
+
+            set
+            {
+                type = value;
+            }
+        }
     }
 }

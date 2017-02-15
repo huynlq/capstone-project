@@ -86,3 +86,5 @@ E:\capstone-project\VoluntaryProject\VoluntaryProject\bin\Microsoft.Owin.Securit
 E:\capstone-project\VoluntaryProject\VoluntaryProject\obj\Debug\VoluntaryProject.csprojResolveAssemblyReference.cache
 E:\capstone-project\VoluntaryProject\VoluntaryProject\obj\Debug\VoluntaryProject.dll
 E:\capstone-project\VoluntaryProject\VoluntaryProject\obj\Debug\VoluntaryProject.pdb
+E:\capstone-project\VoluntaryProject\VoluntaryProject\bin\Microsoft.VisualStudio.DebuggerVisualizers.dll
+E:\capstone-project\VoluntaryProject\VoluntaryProject\bin\Microsoft.VisualStudio.DebuggerVisualizers.xml

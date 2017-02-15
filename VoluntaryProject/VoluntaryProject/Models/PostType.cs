@@ -8,7 +8,7 @@ namespace VoluntaryProject.Models
     public class PostType
     {
         private int id;
-        private string postType;
+        private string type;
 
         public int Id
         {
@@ -23,16 +23,16 @@ namespace VoluntaryProject.Models
             }
         }
 
-        public string PostType
+        public string Type
         {
             get
             {
-                return postType;
+                return type;
             }
 
             set
             {
-                postType = value;
+                type = value;
             }
         }
     }

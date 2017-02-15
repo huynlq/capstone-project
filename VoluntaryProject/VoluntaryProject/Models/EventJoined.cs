@@ -9,5 +9,31 @@ namespace VoluntaryProject.Models
     {
         private int userID;
         private int eventID;
+
+        public int UserID
+        {
+            get
+            {
+                return userID;
+            }
+
+            set
+            {
+                userID = value;
+            }
+        }
+
+        public int EventID
+        {
+            get
+            {
+                return eventID;
+            }
+
+            set
+            {
+                eventID = value;
+            }
+        }
     }
 }
