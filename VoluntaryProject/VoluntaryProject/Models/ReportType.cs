@@ -23,7 +23,7 @@ namespace VoluntaryProject.Models
             }
         }
 
-        public string ReportType
+        public string ReportTypes
         {
             get
             {

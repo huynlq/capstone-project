@@ -41,7 +41,7 @@ namespace VoluntaryProject.Models
             }
         }
 
-        public string EventItem
+        public string EventItems
         {
             get
             {

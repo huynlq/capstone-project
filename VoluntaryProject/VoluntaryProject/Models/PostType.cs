@@ -23,7 +23,7 @@ namespace VoluntaryProject.Models
             }
         }
 
-        public string PostType
+        public string PostTypes
         {
             get
             {
