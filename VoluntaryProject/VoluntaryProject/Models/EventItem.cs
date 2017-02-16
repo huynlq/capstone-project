@@ -41,11 +41,7 @@ namespace VoluntaryProject.Models
             }
         }
 
-<<<<<<< HEAD
-        public string EventItems
-=======
         public string Item
->>>>>>> acb501b66b39ae1d4f376b296de4f985410429ca
         {
             get
             {
