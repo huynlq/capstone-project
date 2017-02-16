@@ -8,7 +8,7 @@ namespace VoluntaryProject.Models
     public class ReportType
     {
         private int id;
-        private string reportType;
+        private string type;
 
         public int Id
         {
@@ -23,16 +23,20 @@ namespace VoluntaryProject.Models
             }
         }
 
+<<<<<<< HEAD
         public string ReportTypes
+=======
+        public string Type
+>>>>>>> acb501b66b39ae1d4f376b296de4f985410429ca
         {
             get
             {
-                return reportType;
+                return Type;
             }
 
             set
             {
-                reportType = value;
+                type = value;
             }
         }
     }

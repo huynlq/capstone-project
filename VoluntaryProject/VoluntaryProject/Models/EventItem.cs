@@ -9,7 +9,7 @@ namespace VoluntaryProject.Models
     {
         private int id;
         private int eventID;
-        private string eventItem;
+        private string item;
         private string requireAmount;
         private string acquireAmount;
         private string timeCreated;
@@ -41,16 +41,20 @@ namespace VoluntaryProject.Models
             }
         }
 
+<<<<<<< HEAD
         public string EventItems
+=======
+        public string Item
+>>>>>>> acb501b66b39ae1d4f376b296de4f985410429ca
         {
             get
             {
-                return eventItem;
+                return Item;
             }
 
             set
             {
-                eventItem = value;
+                Item = value;
             }
         }
 
