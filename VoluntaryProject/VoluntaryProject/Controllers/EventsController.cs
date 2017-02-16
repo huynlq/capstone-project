@@ -50,7 +50,7 @@ namespace VoluntaryProject.Controllers
                 return BadRequest();
             }
 
-            db.Entry(@event).State = EntityState.Modified;
+            db.Entry(@event).State = System.Data.Entity.EntityState.Modified;
 
             try
             {

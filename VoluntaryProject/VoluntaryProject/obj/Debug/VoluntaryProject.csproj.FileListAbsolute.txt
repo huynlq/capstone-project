@@ -214,3 +214,5 @@ C:\Users\Dell pc\Desktop\Capstone PJ\capstone\VoluntaryPJ\VoluntaryProject\Volun
 E:\capstone-project\VoluntaryProject\VoluntaryProject\bin\Microsoft.VisualStudio.DebuggerVisualizers.dll
 E:\capstone-project\VoluntaryProject\VoluntaryProject\bin\Microsoft.VisualStudio.DebuggerVisualizers.xml
 >>>>>>> acb501b66b39ae1d4f376b296de4f985410429ca
+C:\Users\Dell pc\Desktop\Capstone PJ\capstone\VoluntaryPJ\VoluntaryProject\VoluntaryProject\bin\Microsoft.VisualStudio.DebuggerVisualizers.dll
+C:\Users\Dell pc\Desktop\Capstone PJ\capstone\VoluntaryPJ\VoluntaryProject\VoluntaryProject\bin\Microsoft.VisualStudio.DebuggerVisualizers.xml
