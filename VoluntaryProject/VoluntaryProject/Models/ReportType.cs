@@ -24,6 +24,7 @@ namespace VoluntaryProject.Models
         }
 
 
+
         public string ReportTypes;
 
         public string Type

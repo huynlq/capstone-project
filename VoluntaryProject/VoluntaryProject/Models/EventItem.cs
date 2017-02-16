@@ -44,6 +44,9 @@ namespace VoluntaryProject.Models
 
         public string EventItems;
 
+        
+
+
         public string Item
 
         {
