@@ -23,11 +23,8 @@ namespace VoluntaryProject.Models
             }
         }
 
-<<<<<<< HEAD
-        public string ReportTypes
-=======
         public string Type
->>>>>>> acb501b66b39ae1d4f376b296de4f985410429ca
+
         {
             get
             {
