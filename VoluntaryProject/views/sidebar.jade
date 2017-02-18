@@ -1,0 +1,77 @@
+.navbar.nav_title(style='border: 0;')
+  a.site_title(href='index.html')
+    i.fa.fa-paw
+    span Charity Project
+.clearfix
+// menu profile quick info
+.profile.clearfix
+  .profile_info(style='text-align: center; width: 100%')
+    span
+      | Welcome, 
+      span(style='color: white') Guest
+// /menu profile quick info
+br
+#sidebar-menu.main_menu_side.hidden-print.main_menu
+  .menu_section
+    h3 Capstone
+    ul.nav.side-menu
+      li
+        a
+          i.fa.fa-user
+          |  Admin 
+          span.fa.fa-chevron-down
+        ul.nav.child_menu
+          li
+            a(href='admin_dashboard.php') Dashboard (WIP)
+          li
+            a(href='report_list.php') Report List (WIP)
+          li
+            a(href='donation_list.php') Donation List (WIP)
+          li
+            a(href='event_list.php') Event List
+          li
+            a(href='user_list.php') User List
+          li
+            a(href='post_list.php') Post List
+          li
+            a(href='post_creator.php') Post Creator
+      li
+        a
+          i.fa.fa-street-view
+          |  Producer 
+          span.fa.fa-chevron-down
+        ul.nav.child_menu
+          li
+            a(href='event_list_producer.php') Event List
+          li
+            a(href='event_creator.php') Event Creator
+      li
+        a
+          i.fa.fa-users
+          |  User 
+          span.fa.fa-chevron-down
+        ul.nav.child_menu
+          li
+            a(href='user_page.php', readonly='readonly') User Page (WIP)
+          li
+            a(href='edit_user_page.php', readonly='readonly') Edit User Page (WIP)
+          li
+            a(href='donate.php', readonly='readonly') Donate (WIP)
+          li
+            a(href='report.php', readonly='readonly') Report (WIP)
+      li
+        a
+          i.fa.fa-users
+          |  Guest 
+          span.fa.fa-chevron-down
+        ul.nav.child_menu
+          li
+            a(href='login.php', readonly='readonly') Log In (WIP)
+          li
+            a(href='event_list_user.php', readonly='readonly') Event List (WIP)
+          li
+            a(href='event_details.php', readonly='readonly') Event Details (WIP)
+          li
+            a(href='producer_list_user.php', readonly='readonly') Producer List (WIP)
+          li
+            a(href='producer_details.php', readonly='readonly') Producer Details (WIP)
