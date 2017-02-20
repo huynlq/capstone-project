@@ -19,7 +19,40 @@ $(document).ready(function() {
 
     $('#tableBannedUsers tbody').on('click', 'td a.linkunbanuser', unbanUser);
 
-    $('[data-toggle="tooltip"]').tooltip(); 
+    $('[data-toggle="tooltip"]').tooltip();    
+
+    //========================== DIALOG HIDING FUNCTIONS ===================
+
+    var dialog = $( "#ban-reason-form" ).dialog({
+        autoOpen: false,
+        show: {
+            effect: "fade",
+            duration: 200
+          },
+          hide: {
+            effect: "fade",
+            duration: 200
+          },
+        modal: true,
+        width: 400,
+        height: 250,
+        resizable: false,
+        buttons: {
+            "OK" : {
+            text: "OK",
+            id: "confirmBanUser",
+                click: function(){
+                    confirmBanUser();
+                }
+            },
+            "Cancel" : {
+                text: "Cancel",
+                click: function() {
+                    dialog.dialog( "close" );
+                }
+            }
+        }                
+    }); 
 });
 
 // Functions ===============================================
@@ -287,12 +320,24 @@ function deleteUser(event) {
     });
 }
 
-// Ban User
+// Show reaston to ban User
 function banUser(event) {
     event.preventDefault();
 
+    $.getJSON( '/users/id/' + $(this).attr('rel'), function( data ) {
+        $('#txtUserBan').val(data.username);
+    });
+
+    $('#txtUserBanId').val($(this).attr('rel'));
+    
+    $('#ban-reason-form').dialog('open');    
+}
+
+// Confirm ban user
+function confirmBanUser() {
     var user = {
         'markBanned': '1',
+        'bannedReason': $('#txtReason').val(),
         'dateModified': Date()
     };
 
@@ -300,11 +345,15 @@ function banUser(event) {
     $.ajax({
         type: 'PUT',
         data: user,
-        url: '/users/updateuser/' + $(this).attr('rel')
+        url: '/users/updateuser/' + $('#txtUserBanId').val()
     }).done(function( response ) {
         // Check for a successful (blank) response
         if (response.msg === '') {
             populateTables();
+            $('#txtUserBanId').val("");
+            $('#txtUserBan').val("");
+            $('#txtReason').val("");
+            $('#ban-reason-form').dialog('close');
         }
         else {
             alert('Error: ' + response.msg);
@@ -312,13 +361,14 @@ function banUser(event) {
     });
 }
 
-// /Unban User
+// Unban User
 function unbanUser(event) {
     console.log('asc');
     event.preventDefault();
 
     var user = {
         'markBanned': '0',
+        'bannedReason': '',
         'dateModified': Date()
     };
 

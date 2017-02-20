@@ -16,7 +16,7 @@ router.get('/all', function(req, res, next) {
 });
 
 /* GET user by id. */
-router.get('/:id', function(req, res, next) {
+router.get('/id/:id', function(req, res, next) {
 	var db = req.db;
     var collection = db.get('Users');
     var userId = req.params.id;
@@ -26,7 +26,7 @@ router.get('/:id', function(req, res, next) {
 });
 
 /* GET user by role. */
-router.get('/:role', function(req, res, next) {
+router.get('/role/:role', function(req, res, next) {
     var db = req.db;
     var collection = db.get('Users');
     var userRole = req.params.role;

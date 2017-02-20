@@ -4,6 +4,8 @@ html
 		title= title
 		link(rel='stylesheet', href='/stylesheets/style.css')
 		script(src='../vendors/jquery/dist/jquery.min.js')
+		link(href='../vendors/jquery-ui-1.12.1/jquery-ui.css', rel='stylesheet')
+		script(src='../vendors/jquery-ui-1.12.1/jquery-ui.js')
 		script(src='../javascripts/layout.js')
 	body
 		.container.body(style='padding: 0')
@@ -40,13 +42,13 @@ html
 											li
 												a(href='donation_list.php') Donation List (WIP)
 											li
-												a(href='event_list.php') Event List
+												a(href='/events') Event List
 											li
 												a(href='/users') User List
 											li
-												a(href='post_list.php') Post List
+												a(href='/posts') Post List
 											li
-												a(href='post_creator.php') Post Creator
+												a(href='/posts/creator') Post Creator
 									li
 										a
 											i.fa.fa-street-view
@@ -54,9 +56,9 @@ html
 											span.fa.fa-chevron-down
 										ul.nav.child_menu
 											li
-												a(href='event_list_producer.php') Event List
+												a(href='event_list_producer.php') Event List (WIP)
 											li
-												a(href='event_creator.php') Event Creator
+												a(href='/events/creator/event') Event Creator (WIP)
 									li
 										a
 											i.fa.fa-users

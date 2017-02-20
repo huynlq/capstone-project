@@ -29,9 +29,7 @@ block content
 			link(href='../vendors/datatables.net-buttons-bs/css/buttons.bootstrap.min.css', rel='stylesheet')
 			link(href='../vendors/datatables.net-fixedheader-bs/css/fixedHeader.bootstrap.min.css', rel='stylesheet')
 			link(href='../vendors/datatables.net-responsive-bs/css/responsive.bootstrap.min.css', rel='stylesheet')
-			link(href='../vendors/datatables.net-scroller-bs/css/scroller.bootstrap.min.css', rel='stylesheet')
-			// jQuery
-			script(src='../vendors/jquery/dist/jquery.min.js')
+			link(href='../vendors/datatables.net-scroller-bs/css/scroller.bootstrap.min.css', rel='stylesheet')			
 			// Custom Theme Style
 			link(href='../build/css/custom.min.css', rel='stylesheet')
 			// UserList.js
@@ -415,8 +413,28 @@ block content
 						a(href='https://colorlib.com') Colorlib
 					.clearfix
 				// /footer content
-			// jQuery
-			script(src='../vendors/jquery/dist/jquery.min.js')
+			#ban-reason-form(title='Ban This User')
+				p.validateTips All form fields are required.
+				form
+					fieldset
+						.form-group
+							label.control-label.col-md-6.col-sm-6.col-xs-12
+								| User to ban 
+								span.required *
+							.col-md-6.col-sm-6.col-xs-12
+								input#txtUserBan.form-control.col-md-7.col-xs-12(type='text', readonly='readonly')
+						.form-group
+							label.control-label.col-md-6.col-sm-6.col-xs-12
+								| ID 
+								span.required *
+							.col-md-6.col-sm-6.col-xs-12
+								input#txtUserBanId.form-control.col-md-7.col-xs-12(type='text', readonly='readonly')
+						.form-group
+							label.control-label.col-md-6.col-sm-6.col-xs-12
+								| Reason to ban 
+								span.required *
+							.col-md-6.col-sm-6.col-xs-12
+								input#txtReason.form-control.col-md-7.col-xs-12(type='text', required='required')
 			// Bootstrap
 			script(src='../vendors/bootstrap/dist/js/bootstrap.min.js')
 			// FastClick
