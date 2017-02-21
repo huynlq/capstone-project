@@ -12,6 +12,8 @@ var db = monk('localhost:27017/VoluntaryProject');
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
+var posts = require('./routes/posts');
+var events = require('./routes/events');
 
 var app = express();
 
@@ -35,6 +37,8 @@ app.use(function(req,res,next){
 
 app.use('/', routes);
 app.use('/users', users);
+app.use('/posts', posts);
+app.use('/events', events);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
