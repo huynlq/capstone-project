@@ -1,0 +1,167 @@
+extends layout
+
+block content
+	doctype html
+	html(lang='en')
+		head
+			meta(http-equiv='Content-Type', content='text/html; charset=UTF-8')
+			// Meta, title, CSS, favicons, etc.
+			meta(charset='utf-8')
+			meta(http-equiv='X-UA-Compatible', content='IE=edge')
+			meta(name='viewport', content='width=device-width, initial-scale=1')
+			title Charity Project | Event Activities Creator
+			// Bootstrap
+			link(href='../vendors/bootstrap/dist/css/bootstrap.min.css', rel='stylesheet')
+			// Font Awesome
+			link(href='../vendors/font-awesome/css/font-awesome.min.css', rel='stylesheet')
+			// NProgress
+			link(href='../vendors/nprogress/nprogress.css', rel='stylesheet')
+			// iCheck
+			link(href='../vendors/iCheck/skins/flat/green.css', rel='stylesheet')
+			// Datatables
+			link(href='../vendors/datatables.net-bs/css/dataTables.bootstrap.min.css', rel='stylesheet')
+			link(href='../vendors/datatables.net-buttons-bs/css/buttons.bootstrap.min.css', rel='stylesheet')
+			link(href='../vendors/datatables.net-fixedheader-bs/css/fixedHeader.bootstrap.min.css', rel='stylesheet')
+			link(href='../vendors/datatables.net-responsive-bs/css/responsive.bootstrap.min.css', rel='stylesheet')
+			link(href='../vendors/datatables.net-scroller-bs/css/scroller.bootstrap.min.css', rel='stylesheet')
+			// bootstrap-progressbar
+			link(href='../vendors/bootstrap-progressbar/css/bootstrap-progressbar-3.3.4.min.css', rel='stylesheet')
+			// JQVMap
+			link(href='../vendors/jqvmap/dist/jqvmap.min.css', rel='stylesheet')
+			// bootstrap-daterangepicker
+			link(href='../vendors/bootstrap-daterangepicker/daterangepicker.css', rel='stylesheet')
+			// Datatables
+			link(href='../vendors/datatables.net-bs/css/dataTables.bootstrap.min.css', rel='stylesheet')
+			link(href='../vendors/datatables.net-buttons-bs/css/buttons.bootstrap.min.css', rel='stylesheet')
+			link(href='../vendors/datatables.net-fixedheader-bs/css/fixedHeader.bootstrap.min.css', rel='stylesheet')
+			link(href='../vendors/datatables.net-responsive-bs/css/responsive.bootstrap.min.css', rel='stylesheet')
+			link(href='../vendors/datatables.net-scroller-bs/css/scroller.bootstrap.min.css', rel='stylesheet')
+			// Custom Theme Style
+			link(href='../build/css/custom.min.css', rel='stylesheet')
+			script(src='https://maps.googleapis.com/maps/api/js?key=AIzaSyAxUeMBUbKnW-LKTWTIL656w7nHABuNMTI&libraries=places')
+			// jQuery
+			script(src='../javascripts/events/activity_creator.js')
+		body.nav-md
+			.right_col(role='main')
+				// top tiles
+				.row.page-title
+					.title(style='margin: 10px')
+						h1 Event Activities Creator
+				br
+				br
+				br
+				.row
+					// Tabs
+					// Smart Wizard
+					form.form-horizontal.form-label-left
+						h3(style='margin-left: 50px') Event Activities
+						hr
+						input#txtNumberOfDates(type='hidden', value='0')
+						.col-md-2.col-sm-2.col-xs-12
+						.col-md-8.col-sm-8.col-xs-12
+							ul#activityDates.nav.nav-tabs
+							#activityContents.tab-content
+						.col-md-3.col-sm-3.col-xs-12
+					hr
+					.row
+						.col-md-7.col-sm-7
+						.col-md-2.col-sm-2.col-xs-12
+							a.btn.btn-info.col-xs-12(onclick='goNext()') Continue >>
+					// End SmartWizard Content
+					// /top tiles
+				// /page content
+				// footer content
+				footer
+					.pull-right
+						| Gentelella - Bootstrap Admin Template by 
+						a(href='https://colorlib.com') Colorlib
+					.clearfix
+				// /footer content
+			#edit-activity-form(title='Edit Activity')
+				p.validateTips All form fields are required.
+				form
+					fieldset
+						.form-group
+							label.control-label.col-md-6.col-sm-6.col-xs-12
+								| Time 
+								span.required *
+							.col-md-6.col-sm-6.col-xs-12
+								input#txtEditActivityTime.text.ui-widget-content.ui-corner-all.form-control.col-md-7.col-xs-12(type='text', required='required')
+						.form-group
+							label.control-label.col-md-6.col-sm-6.col-xs-12
+								| Place 
+								span.required *
+							.col-md-6.col-sm-6.col-xs-12
+								input#txtEditActivityPlace.text.ui-widget-content.ui-corner-all.form-control.col-md-7.col-xs-12(type='text', required='required')
+						.form-group
+							label.control-label.col-md-6.col-sm-6.col-xs-12
+								| Activity 
+								span.required *
+							.col-md-6.col-sm-6.col-xs-12
+								input#txtEditActivityActivity.text.ui-widget-content.ui-corner-all.form-control.col-md-7.col-xs-12(type='text', required='required')
+						.form-group
+							label.control-label.col-md-6.col-sm-6.col-xs-12
+								| Estimated Budget 
+								span.required *
+							.col-md-6.col-sm-6.col-xs-12
+								input#txtEditActivityBudget.text.ui-widget-content.ui-corner-all.form-control.col-md-7.col-xs-12(type='text', required='required')
+						//
+							<br>
+							<div class="form-group" style="margin-top: 20px">
+							<a id="saveEditActivity" class="btn btn-info glyphicon glyphicon-ok col-md-3 col-sm-3 col-xs-5"></a><a id="cancelEditActivity" class="btn btn-info glyphicon glyphicon-remove col-md-3 col-sm-3 col-xs-5"></a>
+							</div>
+			// Bootstrap
+			script(src='../vendors/bootstrap/dist/js/bootstrap.min.js')
+			// FastClick
+			script(src='../vendors/fastclick/lib/fastclick.js')
+			// NProgress
+			script(src='../vendors/nprogress/nprogress.js')
+			// Chart.js
+			script(src='../vendors/Chart.js/dist/Chart.min.js')
+			// gauge.js
+			script(src='../vendors/gauge.js/dist/gauge.min.js')
+			// bootstrap-progressbar
+			script(src='../vendors/bootstrap-progressbar/bootstrap-progressbar.min.js')
+			// iCheck
+			script(src='../vendors/iCheck/icheck.min.js')
+			// Skycons
+			script(src='../vendors/skycons/skycons.js')
+			// Flot
+			script(src='../vendors/Flot/jquery.flot.js')
+			script(src='../vendors/Flot/jquery.flot.pie.js')
+			script(src='../vendors/Flot/jquery.flot.time.js')
+			script(src='../vendors/Flot/jquery.flot.stack.js')
+			script(src='../vendors/Flot/jquery.flot.resize.js')
+			// Flot plugins
+			script(src='../vendors/flot.orderbars/js/jquery.flot.orderBars.js')
+			script(src='../vendors/flot-spline/js/jquery.flot.spline.min.js')
+			script(src='../vendors/flot.curvedlines/curvedLines.js')
+			// DateJS
+			script(src='../vendors/DateJS/build/date.js')
+			// JQVMap
+			script(src='../vendors/jqvmap/dist/jquery.vmap.js')
+			script(src='../vendors/jqvmap/dist/maps/jquery.vmap.world.js')
+			script(src='../vendors/jqvmap/examples/js/jquery.vmap.sampledata.js')
+			// bootstrap-daterangepicker
+			script(src='../vendors/moment/min/moment.min.js')
+			script(src='../vendors/bootstrap-daterangepicker/daterangepicker.js')
+			// jquery.inputmask
+			script(src='../vendors/jquery.inputmask/dist/min/jquery.inputmask.bundle.min.js')
+			// Datatables
+			script(src='../vendors/datatables.net/js/jquery.dataTables.min.js')
+			script(src='../vendors/datatables.net-bs/js/dataTables.bootstrap.min.js')
+			script(src='../vendors/datatables.net-buttons/js/dataTables.buttons.min.js')
+			script(src='../vendors/datatables.net-buttons-bs/js/buttons.bootstrap.min.js')
+			script(src='../vendors/datatables.net-buttons/js/buttons.flash.min.js')
+			script(src='../vendors/datatables.net-buttons/js/buttons.html5.min.js')
+			script(src='../vendors/datatables.net-buttons/js/buttons.print.min.js')
+			script(src='../vendors/datatables.net-fixedheader/js/dataTables.fixedHeader.min.js')
+			script(src='../vendors/datatables.net-keytable/js/dataTables.keyTable.min.js')
+			script(src='../vendors/datatables.net-responsive/js/dataTables.responsive.min.js')
+			script(src='../vendors/datatables.net-responsive-bs/js/responsive.bootstrap.js')
+			script(src='../vendors/datatables.net-scroller/js/dataTables.scroller.min.js')
+			script(src='../vendors/jszip/dist/jszip.min.js')
+			script(src='../vendors/pdfmake/build/pdfmake.min.js')
+			script(src='../vendors/pdfmake/build/vfs_fonts.js')
+			// Custom Theme Scripts
+			script(src='../build/js/custom.min.js')

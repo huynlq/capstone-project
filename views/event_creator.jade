@@ -1,0 +1,220 @@
+extends layout
+
+block content
+	doctype html
+	html(lang='en')
+		head
+			meta(http-equiv='Content-Type', content='text/html; charset=UTF-8')
+			// Meta, title, CSS, favicons, etc.
+			meta(charset='utf-8')
+			meta(http-equiv='X-UA-Compatible', content='IE=edge')
+			meta(name='viewport', content='width=device-width, initial-scale=1')
+			title Charity Project | Event Creator
+			// Bootstrap
+			link(href='../vendors/bootstrap/dist/css/bootstrap.min.css', rel='stylesheet')
+			// Font Awesome
+			link(href='../vendors/font-awesome/css/font-awesome.min.css', rel='stylesheet')
+			// NProgress
+			link(href='../vendors/nprogress/nprogress.css', rel='stylesheet')
+			// iCheck
+			link(href='../vendors/iCheck/skins/flat/green.css', rel='stylesheet')
+			// bootstrap-progressbar
+			link(href='../vendors/bootstrap-progressbar/css/bootstrap-progressbar-3.3.4.min.css', rel='stylesheet')
+			// JQVMap
+			link(href='../vendors/jqvmap/dist/jqvmap.min.css', rel='stylesheet')
+			// bootstrap-daterangepicker
+			link(href='../vendors/bootstrap-daterangepicker/daterangepicker.css', rel='stylesheet')
+			// Datatables
+			link(href='../vendors/datatables.net-bs/css/dataTables.bootstrap.min.css', rel='stylesheet')
+			link(href='../vendors/datatables.net-buttons-bs/css/buttons.bootstrap.min.css', rel='stylesheet')
+			link(href='../vendors/datatables.net-fixedheader-bs/css/fixedHeader.bootstrap.min.css', rel='stylesheet')
+			link(href='../vendors/datatables.net-responsive-bs/css/responsive.bootstrap.min.css', rel='stylesheet')
+			link(href='../vendors/datatables.net-scroller-bs/css/scroller.bootstrap.min.css', rel='stylesheet')
+			// Custom Theme Style
+			link(href='../build/css/custom.min.css', rel='stylesheet')
+			script(src='https://maps.googleapis.com/maps/api/js?key=AIzaSyAxUeMBUbKnW-LKTWTIL656w7nHABuNMTI&libraries=places')
+			script(src='../javascripts/events/event_creator.js')
+			script(type='text/javascript').
+		body.nav-md			
+			.right_col(role='main')
+				// top tiles
+				.row.page-title
+					.title(style='margin: 10px')
+						h1 Event Creator
+				br
+				br
+				br
+				.row
+					// Tabs
+					// Smart Wizard
+					form.form-horizontal.form-label-left
+						h3(style='margin-left: 50px') Event Description
+						hr
+						.form-group
+							label.control-label.col-md-3.col-sm-3.col-xs-12
+								| Event Name 
+								span.required *
+							.col-md-6.col-sm-6.col-xs-12
+								input#txtEventName.form-control.col-md-7.col-xs-12(type='text', required='required')
+						.form-group
+							label.control-label.col-md-3.col-sm-3.col-xs-12
+								| Event Type 
+								span.required *
+							.col-md-6.col-sm-6.col-xs-12
+								select#txtEventType.form-control
+									option == Choose ==
+									option Type 1
+									option Type 2
+						.form-group
+							label.control-label.col-md-3.col-sm-3.col-xs-12
+								| Event Date 
+								span.required *
+							.controls.col-md-3.col-sm-3.col-xs-12
+								.control-group
+									.controls
+										.input-prepend.input-group
+											span.add-on.input-group-addon
+												i.glyphicon.glyphicon-calendar.fa.fa-calendar
+											input#reservation.form-control(type='text', style='width: 200px', name='reservation', value='', onchange='changeDate()')
+											input#txtDate(type='hidden', value='')
+						.form-group
+							label.control-label.col-md-3.col-sm-3.col-xs-3
+								| Meeting Time 
+								span.required *
+							.col-md-6.col-sm-6.col-xs-12
+								input#txtMeetingTime.form-control(type='text', data-inputmask="'mask': '99:99'")
+						.form-group
+							label.control-label.col-md-3.col-sm-3.col-xs-12
+								| Meeting Address 
+								span.required *
+							.col-md-6.col-sm-6.col-xs-12
+								input#txtMeetingAddress.form-control.col-md-7.col-xs-12(placeholder='', type='text', autocomplete='on', runat='server')
+								input#txtMeetingAddressLat(type='hidden', name='cityLat')
+								input#txtMeetingAddressLng(type='hidden', name='cityLng')
+								#map.col-md-6.col-sm-6.col-xs-12(style='height:200px; margin-top: 20px')
+						.form-group
+							label.control-label.col-md-3.col-sm-3.col-xs-12
+								| Contact Email 
+								span.required *
+							.col-md-6.col-sm-6.col-xs-12
+								input#txtEmail.form-control.col-md-7.col-xs-12(type='text', required='required')
+						.form-group
+							label.control-label.col-md-3.col-sm-3.col-xs-12
+								| Contact Phone 
+								span.required *
+							.col-md-6.col-sm-6.col-xs-12
+								input#txtPhone.form-control.col-md-7.col-xs-12(type='text', required='required')
+						.form-group
+							label.control-label.col-md-3.col-sm-3.col-xs-12
+								| Event Description 
+								span.required *
+							.col-md-6.col-sm-6.col-xs-12
+								textarea#txtDescription.resizable_textarea.form-control(style='height: 100px')
+						.form-group
+							label.control-label.col-md-3.col-sm-3.col-xs-12
+								| Event Image 
+								span.required *
+								br
+								| Must be smaller than 3.5Mb
+							.col-md-6.col-sm-6.col-xs-12
+								input#txtImage(type='text' onchange='readURL();')
+								br
+								img#txtImageSrc(src='#', alt='your image', style='height: 150px')
+						br
+						h3(style='margin-left: 50px') Event Requires
+						hr
+						.form-group
+							label.control-label.col-md-3.col-sm-3.col-xs-12
+								| Volunteers 
+								span.required *
+							.col-md-3.col-sm-3.col-xs-12
+								input#txtVolunteersMin.form-control.col-md-7.col-xs-12(type='text', placeholder='Minimum', required='required')
+							.col-md-3.col-sm-3.col-xs-12
+								input#txtVolunteersMax.form-control.col-md-7.col-xs-12(type='text', placeholder='Maximum', required='required')
+						.form-group
+							label.control-label.col-md-3.col-sm-3.col-xs-12
+								| Budget 
+								span.required *
+							.col-md-6.col-sm-6.col-xs-12
+								input#txtBudget.form-control.col-md-7.col-xs-12(type='text', placeholder='For each volunteer', required='required')
+						.form-group
+							label.control-label.col-md-3.col-sm-3.col-xs-12
+								| Budget Donation Needed 
+								span.required *
+							.col-md-6.col-sm-6.col-xs-12
+								input#txtDonation.form-control.col-md-7.col-xs-12(type='text', placeholder='VND only', required='required')
+						#other1.form-group
+							label.control-label.col-md-3.col-sm-3.col-xs-12 Other Donations
+							input#txtNumberOfDonation(type='hidden', value='0')
+							.col-md-6.col-sm-6.col-xs-12
+								#otherDonationContents.tab-content
+						hr
+						.row
+							.col-md-7.col-sm-7
+							.col-md-2.col-sm-2.col-xs-12
+								a.btn.btn-info.col-xs-12(onclick='goNext()') Continue >>
+					// End SmartWizard Content
+					// /top tiles
+				// /page content
+				// footer content
+				footer
+					.pull-right
+						| Gentelella - Bootstrap Admin Template by 
+						a(href='https://colorlib.com') Colorlib
+					.clearfix
+				// /footer content
+			#edit-donation-form(title='Edit Donation')
+				p.validateTips All form fields are required.
+				form
+					fieldset
+						.form-group
+							label.control-label.col-md-6.col-sm-6.col-xs-12
+								| Donation Item 
+								span.required *
+							.col-md-6.col-sm-6.col-xs-12
+								input#txtEditDonationItem.text.ui-widget-content.ui-corner-all.form-control.col-md-7.col-xs-12(type='text', required='required')
+						.form-group
+							label.control-label.col-md-6.col-sm-6.col-xs-12
+								| Number Required 
+								span.required *
+							.col-md-6.col-sm-6.col-xs-12
+								input#txtEditDonationNumber.text.ui-widget-content.ui-corner-all.form-control.col-md-7.col-xs-12(type='text', required='required')
+			// Bootstrap
+			script(src='../vendors/bootstrap/dist/js/bootstrap.min.js')
+			// FastClick
+			script(src='../vendors/fastclick/lib/fastclick.js')
+			// NProgress
+			script(src='../vendors/nprogress/nprogress.js')
+			// Chart.js
+			script(src='../vendors/Chart.js/dist/Chart.min.js')
+			// gauge.js
+			script(src='../vendors/gauge.js/dist/gauge.min.js')
+			// bootstrap-progressbar
+			script(src='../vendors/bootstrap-progressbar/bootstrap-progressbar.min.js')
+			// iCheck
+			script(src='../vendors/iCheck/icheck.min.js')
+			// Skycons
+			script(src='../vendors/skycons/skycons.js')
+			// Flot
+			script(src='../vendors/Flot/jquery.flot.js')
+			script(src='../vendors/Flot/jquery.flot.pie.js')
+			script(src='../vendors/Flot/jquery.flot.time.js')
+			script(src='../vendors/Flot/jquery.flot.stack.js')
+			script(src='../vendors/Flot/jquery.flot.resize.js')
+			// Flot plugins
+			script(src='../vendors/flot.orderbars/js/jquery.flot.orderBars.js')
+			script(src='../vendors/flot-spline/js/jquery.flot.spline.min.js')
+			script(src='../vendors/flot.curvedlines/curvedLines.js')
+			// DateJS
+			script(src='../vendors/DateJS/build/date.js')
+			// JQVMap
+			script(src='../vendors/jqvmap/dist/jquery.vmap.js')
+			script(src='../vendors/jqvmap/dist/maps/jquery.vmap.world.js')
+			script(src='../vendors/jqvmap/examples/js/jquery.vmap.sampledata.js')
+			// bootstrap-daterangepicker
+			script(src='../vendors/moment/min/moment.min.js')
+			script(src='../vendors/bootstrap-daterangepicker/daterangepicker.js')
+			// jquery.inputmask
+			script(src='../vendors/jquery.inputmask/dist/min/jquery.inputmask.bundle.min.js')
+			// Custom Theme Scripts
+			script(src='../build/js/custom.min.js')

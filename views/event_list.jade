@@ -32,7 +32,7 @@ block content
 			link(href='../vendors/datatables.net-scroller-bs/css/scroller.bootstrap.min.css', rel='stylesheet')
 			// Custom Theme Style
 			link(href='../build/css/custom.min.css', rel='stylesheet')
-			script(src='../javascripts/event_list.js')		
+			script(src='../javascripts/events/event_list.js')		
 		body.nav-md.footer_fixed		
 			.right_col(role='main')
 				// top tiles
@@ -51,7 +51,7 @@ block content
 											span.count_top
 												i.fa.fa-spinner.fa-pulse
 												|  Pending Events
-											.count 4
+											#countPendingEvents.count 4
 											span.count_bottom
 												i.green
 													i.fa.fa-sort-asc
@@ -64,7 +64,7 @@ block content
 											span.count_top
 												i.fa.fa-bar-chart
 												|  Total Events
-											.count 7
+											#countEvents.count 7
 											span.count_bottom
 												i.green 4% 
 												|  From last Week
@@ -75,7 +75,7 @@ block content
 											span.count_top
 												i.fa.fa-thumbs-o-up
 												|  Approved Events
-											.count.green 1
+											#countApprovedEvents.count.green 1
 											span.count_bottom
 												i.green
 													i.fa.fa-sort-asc
@@ -88,7 +88,7 @@ block content
 											span.count_top
 												i.fa.fa-thumbs-o-down
 												|  Disapproved Events
-											.count.red 1
+											#countDisapprovedEvents.count.red 1
 											span.count_bottom
 												i.red
 													i.fa.fa-sort-desc
@@ -101,7 +101,7 @@ block content
 											span.count_top
 												i.fa.fa-close
 												|  Cancelled Events
-											.count 1
+											#countCancelledEvents.count 1
 											span.count_bottom
 												i.green
 													i.fa.fa-sort-asc
@@ -114,7 +114,7 @@ block content
 											span.count_top
 												i.fa.fa-child
 												|  Number of Producers
-											.count 100
+											#countProducers.count 100
 											span.count_bottom
 												i.green
 													i.fa.fa-sort-asc
@@ -138,8 +138,6 @@ block content
 											th Event
 											th Type
 											th User
-											th Full Name
-											th Company Name
 											th Email
 											th Phone
 											th Start Date
@@ -148,94 +146,6 @@ block content
 											th Create Date
 											th Pending For
 									tbody
-										tr
-											td(style='margin:10px') 1
-											td
-												center
-													a.btn.btn-info.btn-xs(data-toggle='tooltip', title='Details', href='#')
-														span.glyphicon.glyphicon-search
-													a.btn.btn-success.btn-xs(data-toggle='tooltip', title='Approve', href='#')
-														span.glyphicon.glyphicon-ok
-													a.btn.btn-danger.btn-xs(data-toggle='tooltip', title='Disapprove', href='#')
-														span.glyphicon.glyphicon-remove
-											td Charity Hospital
-											td Voluntary
-											td HuyNLQ
-											td NLQH
-											td numbuh1 Co.
-											td huynlqse61661@fpt.edu.vn
-											td 09195924629
-											td 12/3/2017
-											td Nhi Đông Hospital, HCMC
-											td 30.000.000
-											td 2/2/2017
-											td Publish
-										tr
-											td(style='margin:10px') 2
-											td
-												center
-													a.btn.btn-info.btn-xs(data-toggle='tooltip', title='Details', href='#')
-														span.glyphicon.glyphicon-search
-													a.btn.btn-success.btn-xs(data-toggle='tooltip', title='Approve', href='#')
-														span.glyphicon.glyphicon-ok
-													a.btn.btn-danger.btn-xs(data-toggle='tooltip', title='Disapprove', href='#')
-														span.glyphicon.glyphicon-remove
-											td Free Library
-											td Voluntary
-											td PhatLN
-											td LNH Phát
-											td EndFast Co.
-											td phatln@gmail.com
-											td 0912345678
-											td 14/1/2017
-											td City Library
-											td 10.000.000
-											td 3/2/2017
-											td Report
-										tr
-											td(style='margin:10px') 3
-											td
-												center
-													a.btn.btn-info.btn-xs(data-toggle='tooltip', title='Details', href='#')
-														span.glyphicon.glyphicon-search
-													a.btn.btn-success.btn-xs(data-toggle='tooltip', title='Approve', href='#')
-														span.glyphicon.glyphicon-ok
-													a.btn.btn-danger.btn-xs(data-toggle='tooltip', title='Disapprove', href='#')
-														span.glyphicon.glyphicon-remove
-											td Free Giveaway
-											td Giveaway
-											td Tobias123
-											td Toby Lee
-											td TL Co.
-											td tby@gmail.com
-											td 01213425829
-											td 12/3/2017
-											td Con Dao Island
-											td 0
-											td 4/2/2017
-											td Edit
-										tr
-											td(style='margin:10px') 4
-											td
-												center
-													a.btn.btn-info.btn-xs(data-toggle='tooltip', title='Details', href='#')
-														span.glyphicon.glyphicon-search
-													a.btn.btn-success.btn-xs(data-toggle='tooltip', title='Approve', href='#')
-														span.glyphicon.glyphicon-ok
-													a.btn.btn-danger.btn-xs(data-toggle='tooltip', title='Disapprove', href='#')
-														span.glyphicon.glyphicon-remove
-											td Charity Something
-											td Charity
-											td SomeDude
-											td Dude Guy
-											td DudeDude Co.
-											td sdude@gmail.com
-											td 0121234215
-											td 12/3/2017
-											td Ben Thanh
-											td 20.000.000
-											td 4/2/2017
-											td Cancel
 					#events.tab-pane.fade
 						.row
 							.col-md-12.col-sm-12.col-xs-12
@@ -254,8 +164,6 @@ block content
 											th Status
 											th Type
 											th User
-											th Full Name
-											th Company Name
 											th Email
 											th Phone
 											th Start Date
@@ -263,132 +171,6 @@ block content
 											th Budget
 											th Create Date
 									tbody
-										tr
-											td(style='margin:10px') 1
-											td
-												center
-													a.btn.btn-info.btn-xs(data-toggle='tooltip', title='Details', href='#')
-														span.glyphicon.glyphicon-search
-											td An Approved Event
-											td Approved
-											td Charity
-											td approve123
-											td Guy Approve
-											td Approval Co.
-											td aaaaa@gmail.com
-											td 0124325621
-											td 12/4/2017
-											td Place
-											td 2.000.000
-											td 1/2/2017
-										tr
-											td(style='margin:10px') 2
-											td
-												center
-													a.btn.btn-info.btn-xs(data-toggle='tooltip', title='Details', href='#')
-														span.glyphicon.glyphicon-search
-											td Charity Hospital
-											td Pending for publish
-											td Voluntary
-											td HuyNLQ
-											td NLQH
-											td numbuh1 Co.
-											td huynlqse61661@fpt.edu.vn
-											td 09195924629
-											td 12/3/2017
-											td Nhi Đông Hospital, HCMC
-											td 30.000.000
-											td 2/2/2017
-										tr
-											td(style='margin:10px') 3
-											td
-												center
-													a.btn.btn-info.btn-xs(data-toggle='tooltip', title='Details', href='#')
-														span.glyphicon.glyphicon-search
-											td Free Library
-											td Rending for report
-											td Voluntary
-											td PhatLN
-											td LNH Phát
-											td EndFast Co.
-											td phatln@gmail.com
-											td 0912345678
-											td 14/1/2017
-											td City Library
-											td 10.000.000
-											td 3/2/2017
-										tr
-											td(style='margin:10px') 4
-											td
-												center
-													a.btn.btn-info.btn-xs(data-toggle='tooltip', title='Details', href='#')
-														span.glyphicon.glyphicon-search
-											td Free Giveaway
-											td Pending for edit
-											td Giveaway
-											td Tobias123
-											td Toby Lee
-											td TL Co.
-											td tby@gmail.com
-											td 01213425829
-											td 12/3/2017
-											td Con Dao Island
-											td 0
-											td 4/2/2017
-										tr
-											td(style='margin:10px') 5
-											td
-												center
-													a.btn.btn-info.btn-xs(data-toggle='tooltip', title='Details', href='#')
-														span.glyphicon.glyphicon-search
-											td Charity Something
-											td Pending for cancel
-											td Charity
-											td SomeDude
-											td Dude Guy
-											td DudeDude Co.
-											td sdude@gmail.com
-											td 0121234215
-											td 12/3/2017
-											td Ben Thanh
-											td 20.000.000
-											td 4/2/2017
-										tr
-											td(style='margin:10px') 6
-											td
-												center
-													a.btn.btn-info.btn-xs(data-toggle='tooltip', title='Details', href='#')
-														span.glyphicon.glyphicon-search
-											td An Disapproved Event
-											td Disapproved
-											td Charity
-											td disapprove123
-											td Guy Disapprove
-											td Disapproval Co.
-											td bbbbb@gmail.com
-											td 0124325621
-											td 12/5/2017
-											td Disapproved Place
-											td 5.000.000
-											td 1/2/2017
-										tr
-											td(style='margin:10px') 7
-											td
-												center
-													a.btn.btn-info.btn-xs(data-toggle='tooltip', title='Details', href='#')
-														span.glyphicon.glyphicon-search
-											td An Cancelled Event
-											td Cancelled
-											td Charity
-											td cancelled123
-											td Guy Cancelled
-											td Cancelled Co.
-											td ccccc@gmail.com
-											td 0124325621
-											td 12/5/2017
-											td Cancelled Place
-											td 5.000.000
-											td 1/2/2017
 					#approvedEvents.tab-pane.fade
 						.row
 							.col-md-12.col-sm-12.col-xs-12
