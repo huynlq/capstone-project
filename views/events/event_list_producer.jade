@@ -1,0 +1,263 @@
+extends ../layout
+
+block content
+	doctype html
+	html(lang='en')
+		head
+			meta(http-equiv='Content-Type', content='text/html; charset=UTF-8')
+			// Meta, title, CSS, favicons, etc.
+			meta(charset='utf-8')
+			meta(http-equiv='X-UA-Compatible', content='IE=edge')
+			meta(name='viewport', content='width=device-width, initial-scale=1')
+			title Charity Project | Event List
+			// Bootstrap
+			link(href='../vendors/bootstrap/dist/css/bootstrap.css', rel='stylesheet')
+			// Font Awesome
+			link(href='../vendors/font-awesome/css/font-awesome.min.css', rel='stylesheet')
+			// NProgress
+			link(href='../vendors/nprogress/nprogress.css', rel='stylesheet')
+			// iCheck
+			link(href='../vendors/iCheck/skins/flat/green.css', rel='stylesheet')
+			// bootstrap-progressbar
+			link(href='../vendors/bootstrap-progressbar/css/bootstrap-progressbar-3.3.4.min.css', rel='stylesheet')
+			// JQVMap
+			link(href='../vendors/jqvmap/dist/jqvmap.min.css', rel='stylesheet')
+			// bootstrap-daterangepicker
+			link(href='../vendors/bootstrap-daterangepicker/daterangepicker.css', rel='stylesheet')
+			// Datatables
+			link(href='../vendors/datatables.net-bs/css/dataTables.bootstrap.min.css', rel='stylesheet')
+			link(href='../vendors/datatables.net-buttons-bs/css/buttons.bootstrap.min.css', rel='stylesheet')
+			link(href='../vendors/datatables.net-fixedheader-bs/css/fixedHeader.bootstrap.min.css', rel='stylesheet')
+			link(href='../vendors/datatables.net-responsive-bs/css/responsive.bootstrap.min.css', rel='stylesheet')
+			link(href='../vendors/datatables.net-scroller-bs/css/scroller.bootstrap.min.css', rel='stylesheet')
+			// Custom Theme Style
+			link(href='../build/css/custom.min.css', rel='stylesheet')
+			script(src='../javascripts/events/event_list.js')		
+		body.nav-md		
+			.right_col(role='main')
+				// top tiles
+				.row.page-title
+					.title(style='margin: 10px')
+						h1 Events
+				br
+				br
+				.container
+					.row.tile_count
+						ul.nav.nav-tabs
+							li.col-md-3.col-sm-6.col-xs-12
+								a#active-tab.count-tab(data-toggle='tab', href='#events')
+									.tileA
+										.tile_stats_count
+											span.count_top
+												i.fa.fa-bar-chart
+												|  Total Events
+											#countEvents.count 7
+											span.count_bottom
+												i.green 4% 
+												|  From last Week
+							li.col-md-3.col-sm-6.col-xs-12
+								a.count-tab(data-toggle='tab', href='#upcomingEvents')
+									.tileA
+										.tile_stats_count
+											span.count_top
+												i.fa.fa-spinner.fa-pulse
+												|  Upcoming Events
+											#countUpcomingEvents.count 4
+											span.count_bottom
+												i.green
+													i.fa.fa-sort-asc
+													| 3%
+												|  From last Week							
+							li.col-md-3.col-sm-6.col-xs-12
+								a.count-tab(data-toggle='tab', href='#pastEvents')
+									.tileA
+										.tile_stats_count
+											span.count_top
+												i.fa.fa-thumbs-o-up
+												|  Past Events
+											#countPastEvents.count.green 1
+											span.count_bottom
+												i.green
+													i.fa.fa-sort-asc
+													| 34%
+												|  From last Week
+							li.col-md-3.col-sm-6.col-xs-12
+								a.count-tab(data-toggle='tab', href='#cancelledEvents')
+									.tileA
+										.tile_stats_count
+											span.count_top
+												i.fa.fa-thumbs-o-down
+												|  Cancelled Events
+											#countCancelledEvents.count.red 1
+											span.count_bottom
+												i.red
+													i.fa.fa-sort-desc
+													| 12%
+												|  From last Week
+				.tab-content
+					#upcomingEvents.tab-pane.fade
+						.row
+							.col-md-12.col-sm-12.col-xs-12
+								.col-md-6
+									h3
+										| Upcoming events 
+										small (sub-title)
+								.clearfix
+							.x_content
+								table#tableUpcomingEvents.table.table-striped.table-bordered.dt-responsive.nowrap.datatable-responsive(cellspacing='0', width='100%')
+									thead
+										tr
+											th #
+											th Action
+											th Event
+											th Type
+											th User
+											th Email
+											th Phone
+											th Start Date
+											th Location
+											th Budget
+											th Create Date
+									tbody
+					#events.tab-pane.fade
+						.row
+							.col-md-12.col-sm-12.col-xs-12
+								.col-md-6
+									h3
+										| All events 
+										small (sub-title)
+								.clearfix
+							.x_content
+								table#tableEvents.table.table-striped.table-bordered.dt-responsive.nowrap.datatable-responsive(cellspacing='0', width='100%')
+									thead
+										tr
+											th #
+											th Action
+											th Event
+											th Status
+											th Type
+											th User
+											th Email
+											th Phone
+											th Start Date
+											th Location
+											th Budget
+											th Create Date
+									tbody
+					#pastEvents.tab-pane.fade
+						.row
+							.col-md-12.col-sm-12.col-xs-12
+								.col-md-6
+									h3
+										| Past events 
+										small (sub-title)
+								.clearfix
+							.x_content
+								table#tablePastEvents.table.table-striped.table-bordered.dt-responsive.nowrap.datatable-responsive(cellspacing='0', width='100%')
+									thead
+										tr
+											th #
+											th Action
+											th Event
+											th Type
+											th User
+											th Full Name
+											th Company Name
+											th Email
+											th Phone
+											th Start Date
+											th Location
+											th Budget
+											th Create Date
+											th Report?
+									tbody				
+					#cancelledEvents.tab-pane.fade
+						.row
+							.col-md-12.col-sm-12.col-xs-12
+								.col-md-6
+									h3
+										| Cancelled events 
+										small (sub-title)
+								.clearfix
+							.x_content
+								table#tableCancelledEvents.table.table-striped.table-bordered.dt-responsive.nowrap.datatable-responsive(cellspacing='0', width='100%')
+									thead
+										tr
+											th #
+											th Action
+											th Event
+											th Type
+											th User
+											th Full Name
+											th Company Name
+											th Email
+											th Phone
+											th Start Date
+											th Location
+											th Budget
+											th Create Date
+									tbody
+					// /top tiles
+				// /page content
+				// footer content
+				footer
+					.pull-right
+						| Gentelella - Bootstrap Admin Template by 
+						a(href='https://colorlib.com') Colorlib
+					.clearfix
+				// /footer content
+			// jQuery
+			script(src='../vendors/jquery/dist/jquery.min.js')
+			// Bootstrap
+			script(src='../vendors/bootstrap/dist/js/bootstrap.min.js')
+			// FastClick
+			script(src='../vendors/fastclick/lib/fastclick.js')
+			// NProgress
+			script(src='../vendors/nprogress/nprogress.js')
+			// Chart.js
+			script(src='../vendors/Chart.js/dist/Chart.min.js')
+			// gauge.js
+			script(src='../vendors/gauge.js/dist/gauge.min.js')
+			// bootstrap-progressbar
+			script(src='../vendors/bootstrap-progressbar/bootstrap-progressbar.min.js')
+			// iCheck
+			script(src='../vendors/iCheck/icheck.min.js')
+			// Skycons
+			script(src='../vendors/skycons/skycons.js')
+			// Flot
+			script(src='../vendors/Flot/jquery.flot.js')
+			script(src='../vendors/Flot/jquery.flot.pie.js')
+			script(src='../vendors/Flot/jquery.flot.time.js')
+			script(src='../vendors/Flot/jquery.flot.stack.js')
+			script(src='../vendors/Flot/jquery.flot.resize.js')
+			// Flot plugins
+			script(src='../vendors/flot.orderbars/js/jquery.flot.orderBars.js')
+			script(src='../vendors/flot-spline/js/jquery.flot.spline.min.js')
+			script(src='../vendors/flot.curvedlines/curvedLines.js')
+			// DateJS
+			script(src='../vendors/DateJS/build/date.js')
+			// JQVMap
+			script(src='../vendors/jqvmap/dist/jquery.vmap.js')
+			script(src='../vendors/jqvmap/dist/maps/jquery.vmap.world.js')
+			script(src='../vendors/jqvmap/examples/js/jquery.vmap.sampledata.js')
+			// bootstrap-daterangepicker
+			script(src='../vendors/moment/min/moment.min.js')
+			script(src='../vendors/bootstrap-daterangepicker/daterangepicker.js')
+			// Datatables
+			script(src='../vendors/datatables.net/js/jquery.dataTables.min.js')
+			script(src='../vendors/datatables.net-bs/js/dataTables.bootstrap.min.js')
+			script(src='../vendors/datatables.net-buttons/js/dataTables.buttons.min.js')
+			script(src='../vendors/datatables.net-buttons-bs/js/buttons.bootstrap.min.js')
+			script(src='../vendors/datatables.net-buttons/js/buttons.flash.min.js')
+			script(src='../vendors/datatables.net-buttons/js/buttons.html5.min.js')
+			script(src='../vendors/datatables.net-buttons/js/buttons.print.min.js')
+			script(src='../vendors/datatables.net-fixedheader/js/dataTables.fixedHeader.min.js')
+			script(src='../vendors/datatables.net-keytable/js/dataTables.keyTable.min.js')
+			script(src='../vendors/datatables.net-responsive/js/dataTables.responsive.min.js')
+			script(src='../vendors/datatables.net-responsive-bs/js/responsive.bootstrap.js')
+			script(src='../vendors/datatables.net-scroller/js/dataTables.scroller.min.js')
+			script(src='../vendors/jszip/dist/jszip.min.js')
+			script(src='../vendors/pdfmake/build/pdfmake.min.js')
+			script(src='../vendors/pdfmake/build/vfs_fonts.js')
+			// Custom Theme Scripts
+			script(src='../build/js/custom.min.js')

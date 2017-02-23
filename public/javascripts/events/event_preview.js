@@ -80,6 +80,12 @@ function goNext() {
   eventObj.image = newImage;
   eventObj.imageName = newImageName;
   eventObj.status = "PendingPublish";
+  eventObj.currentBudget = "0";
+  eventObj.user = readCookie("username");
+
+  for(var i = 0; i < eventObj.otherDonationItem.length; i++){
+    eventObj.otherDonationCurrent[i] = "0";
+  }
 
   $.ajax({
         type: 'POST',

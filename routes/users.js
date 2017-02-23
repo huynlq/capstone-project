@@ -66,4 +66,13 @@ router.put('/updateuser/:id', function(req, res) {
     });
 });
 
+/* GET user role. */
+router.get('/getrole/:user', function(req, res, next) {
+    var db = req.db;
+    var collection = db.get('Users');
+    collection.findOne({'username': req.params.user},{},function(e,docs){
+        res.send({ 'role' : docs.role });
+    });
+});
+
 module.exports = router;

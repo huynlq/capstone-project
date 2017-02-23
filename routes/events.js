@@ -15,22 +15,22 @@ var download = function(uri, filename, callback){
 
 /* GET event listing. */
 router.get('/', function(req, res, next) {
-  res.render('event_list', { title: 'Event Manager' });
+  res.render('events/event_list', { title: 'Event Manager' });
 });
 
 /* GET event creator page. */
 router.get('/creator_event', function(req, res, next) {
-  res.render('event_creator', { title: 'Event Creator' });
+  res.render('events/event_creator', { title: 'Event Creator' });
 });
 
 /* GET activity creator page. */
 router.get('/creator_activity', function(req, res, next) {
-  res.render('activity_creator', { title: 'Activity Creator' });
+  res.render('events/activity_creator', { title: 'Activity Creator' });
 });
 
 /* GET event preview page. */
 router.get('/creator_preview', function(req, res, next) {
-  res.render('event_preview', { title: 'Event Preview' });
+  res.render('events/event_preview', { title: 'Event Preview' });
 });
 
 /* POST new event. */
@@ -62,11 +62,23 @@ router.post('/addactivity', function(req, res) {
 
 /* GET all events. */
 router.get('/all', function(req, res, next) {
-    var db = req.db;
-    var collection = db.get('Events');
-    collection.find({},{},function(e,docs){
-        res.json(docs);
-    });
+    var user = req.cookies.username;
+    if(user != null) {        
+        var db = req.db;
+        var collection = db.get('Users');
+        collection.findOne({'username': user},{},function(e,docs){
+            if(docs.role == "Admin") {
+                collection = db.get('Events');
+                collection.find({},{},function(e,docs){
+                    res.json(docs);
+                });
+            } else {
+                res.render('page_404');
+            }
+        });
+    } else {
+        res.render('page_404');
+    }
 });
 
 /* GET all activities from eventId. */
@@ -75,6 +87,36 @@ router.get('/activities/:id', function(req, res, next) {
     var collection = db.get('Activities');
     collection.find({ 'eventId' : req.params.id },{},function(e,docs){
         res.json(docs);
+    });
+});
+
+/* GET event detail PAGE base on id. */
+router.get('/:id', function(req, res, next) {
+    var db = req.db;
+    var collection = db.get('Events');
+    if(req.params.id.length != 24)
+        res.render('page_404');
+    collection.findOne({ '_id' : req.params.id },{},function(e,docs){
+        if(docs) {
+            res.render('events/event_details', { title: 'Charity Event | ' + docs.eventName, 'docs': docs });
+        } else {
+            res.render('page_404');
+        }
+    });
+});
+
+/* GET event detail DATA base on id. */
+router.get('/details/:id', function(req, res, next) {
+    var db = req.db;
+    var collection = db.get('Events');
+    if(req.params.id.length != 24)
+        res.render('page_404');
+    collection.findOne({ '_id' : req.params.id },{},function(e,docs){
+        if(docs) {
+            res.json(docs);
+        } else {
+            res.render('page_404');
+        }
     });
 });
 

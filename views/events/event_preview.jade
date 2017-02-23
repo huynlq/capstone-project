@@ -1,4 +1,4 @@
-extends layout
+extends ../layout
 
 block content
 	doctype html
@@ -37,6 +37,7 @@ block content
 			script(src='../vendors/jquery/dist/jquery.min.js')
 			link(href='../vendors/jquery-ui-1.12.1/jquery-ui.css', rel='stylesheet')
 			script(src='../javascripts/events/event_preview.js')
+			script(src='../javascripts/global.js')
 			style.
 				.progress {
 				color: white;
@@ -66,7 +67,7 @@ block content
 								p#event-type None
 							li
 								h4
-									b Date:
+									b Date (M/D/Y):
 								p#event-date None							
 							li
 								h4
