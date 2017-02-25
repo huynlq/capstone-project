@@ -120,4 +120,31 @@ router.get('/details/:id', function(req, res, next) {
     });
 });
 
+/* GET events based on userId. */
+router.get('/all', function(req, res, next) {
+    var user = req.cookies.username;
+    var user = req.cookies.username;
+    if(user != null) {        
+        var db = req.db;
+        var collection = db.get('Users');
+        collection.findOne({'username': user},{},function(e,docs){
+            if(docs.role == "Admin") {
+                collection = db.get('Events');
+                collection.find({},{},function(e,docs){
+                    res.json(docs);
+                });
+            } else if(docs.role == "Producer") {
+                collection = db.get('Events');
+                collection.find({ 'user': docs.username },{},function(e,docs){
+                    res.json(docs);
+                });
+            } else {
+                res.render('page_404');
+            }
+        });
+    } else {
+        res.render('page_404');
+    }
+});
+
 module.exports = router;

@@ -26,7 +26,7 @@ function register() {
         'fullName': '',
         'phoneNumber': '',
         'address': '',
-        'avatar': '',
+        'image': '',
         'markBanned': '0',
         'dateCreated': Date(),
         'dateModified': Date(),
@@ -44,6 +44,7 @@ function register() {
         if (response.msg === '') {
             writeCookie('username', username, 7);
             writeCookie('role', 'User', 7);
+            writeCookie('user', response.id, 7);
             window.location.replace(location.origin + '/index');
         }
         else {
@@ -73,6 +74,7 @@ function login() {
         if (response.msg === '') {
             writeCookie('username', username, 7);
             writeCookie('role', response.role, 7);
+            writeCookie('user', response.id, 7);
             window.location.replace(location.origin + '/index');
         }
         else {

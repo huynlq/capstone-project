@@ -1,5 +1,17 @@
 var express = require('express');
 var router = express.Router();
+var fs = require('fs');
+var request = require('request');
+
+var download = function(uri, filename, callback){
+    console.log("Download");
+    request.head(uri, function(err, res, body){
+        console.log('content-type:', res.headers['content-type']);
+        console.log('content-length:', res.headers['content-length']);
+
+        request(uri).pipe(fs.createWriteStream(filename)).on('close', callback);
+    });
+};
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
@@ -7,7 +19,7 @@ router.get('/', function(req, res, next) {
 });
 
 /* GET login page. */
-router.get('/login/', function(req, res, next) {
+router.get('/login', function(req, res, next) {
   res.render('login', { title: 'Login' });
 });
 
@@ -22,11 +34,16 @@ router.post('/register', function(req, res) {
 	var flagEmailExists = false;
 
 	collection.findOne({$or:[{"username": username},{"email": email}]}, function(err, doc) {
-	  if (doc == null) {
+	  if (doc == null) {	  	
 	  	collection.insert(req.body, function(err, result){
-			res.send(
-				(err === null) ? {msg: ''} : {msg: err}
-			);
+	  		download('http://www.infinitemd.com/wp-content/uploads/2017/02/default.jpg', 'public/images/user/' + result._id + '.jpg', function(){
+		        console.log('done');
+		    });
+		    collection.update({ '_id' : result._id }, { $set:{'image':'/images/user/' + result._id + '.jpg'} }, function(err) {
+		        res.send(
+					(err === null) ? {msg: '', id: result._id} : {msg: err}
+				);
+		    });			
 		});
 	  } else {
 	  	res.send(
@@ -50,7 +67,8 @@ router.post('/login', function(req, res) {
 		res.send(
 			{ 
 				msg: "",
-				role: doc.role 
+				role: doc.role,
+				id: doc._id
 			}
 		);
 	  } else {
@@ -59,6 +77,23 @@ router.post('/login', function(req, res) {
         );
 	  }
 	});
+});
+
+/* GET user page. */
+router.get('/my', function(req, res, next) {
+	var user = req.cookies.user;
+	if(user != null) {
+		var db = req.db;
+		var collection = db.get('Users');
+		collection.findOne({"_id": user}, function(err, doc) {
+			if(doc)
+				res.render('my_user_page', { title: 'Charity Project | User Page'});
+			else
+				res.render('login', { title: 'Login' });
+		});  		
+	} else {
+		res.render('login', { title: 'Login' });
+	}	
 });
 
 module.exports = router;

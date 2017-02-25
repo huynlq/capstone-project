@@ -117,7 +117,7 @@ function goNext() {
                   dataType: 'JSON'
               }).done(function( response ) {
                   if (response.msg === '') {
-                    // Redirect to event list page
+                    window.location.replace(location.origin + '/events');
                   }
               });
             }
