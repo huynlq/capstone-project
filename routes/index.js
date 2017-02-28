@@ -87,13 +87,18 @@ router.get('/my', function(req, res, next) {
 		var collection = db.get('Users');
 		collection.findOne({"_id": user}, function(err, doc) {
 			if(doc)
-				res.render('my_user_page', { title: 'Charity Project | User Page'});
+				res.render('users/my_user_page', { title: 'Charity Project | User Page'});
 			else
 				res.render('login', { title: 'Login' });
 		});  		
 	} else {
 		res.render('login', { title: 'Login' });
 	}	
+});
+
+/* GET promote page. */
+router.get('/promote', function(req, res, next) {
+	res.render('users/promote', { title: 'Charity Project | Promotion Request'});
 });
 
 module.exports = router;

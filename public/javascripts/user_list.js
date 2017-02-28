@@ -11,6 +11,10 @@ $(document).ready(function() {
 
     $('#tableAdmins tbody').on('click', 'td a.linkremoveadmin', deleteUser);
 
+    $('#tablePendingUsers tbody').on('click', 'td a.linkapproveuser', approveUser);
+
+    $('#tablePendingUsers tbody').on('click', 'td a.linkdisapproveuser', disapproveUser);
+
     $('#tableUsers tbody').on('click', 'td a.linkbanuser', banUser);
 
     $('#tableProducers tbody').on('click', 'td a.linkbanuser', banUser);
@@ -49,6 +53,37 @@ $(document).ready(function() {
                 text: "Cancel",
                 click: function() {
                     dialog.dialog( "close" );
+                }
+            }
+        }                
+    });
+
+    var dialog2 = $( "#disapprove-reason-form" ).dialog({
+        autoOpen: false,
+        show: {
+            effect: "fade",
+            duration: 200
+          },
+          hide: {
+            effect: "fade",
+            duration: 200
+          },
+        modal: true,
+        width: 400,
+        height: 250,
+        resizable: false,
+        buttons: {
+            "OK" : {
+            text: "OK",
+            id: "confirmDisapproveUser",
+                click: function(){
+                    confirmDisapproveUser();
+                }
+            },
+            "Cancel" : {
+                text: "Cancel",
+                click: function() {
+                    dialog2.dialog( "close" );
                 }
             }
         }                
@@ -107,6 +142,7 @@ function populateTables(){
         var table = $('#tableUsers').DataTable();
 
         // For each item in our JSON, add a table row and cells to the content string
+        showPendingUsers(data);
         showUsers(data);
         showAdmin(data);
         showBannedUser(data);
@@ -114,6 +150,50 @@ function populateTables(){
         showSponsors(data);
         $('[data-toggle="tooltip"]').tooltip(); 
     });    
+}
+
+// Populate PendingUsers Table
+function showPendingUsers(data) {
+    var counter = 0;
+    var dateCreated = "";
+    var tableContent = "";
+    var table = $('#tablePendingUsers').DataTable();
+    table.clear().draw();
+
+    // For each item in our JSON, add a table row and cells to the content string
+    $.each(data, function(){
+        console.log("ROLE: " + this.role);
+        if(this.markBanned != '1' && this.role.indexOf("Pending") !== -1){            
+            counter++;
+            console.log(counter);
+            dateCreated = new Date(this.dateCreated);      
+            table.row.add([
+                counter,
+                '<center>'
+                    + '<a data-toggle="tooltip" title="Details" class="btn btn-info btn-xs" href="users/' + this._id + '">'
+                        + '<span class="glyphicon glyphicon-search"></span>'
+                    + '</a>'
+                    + '<a data-toggle="tooltip" title="Approve" class="btn btn-success btn-xs linkapproveuser" rel="' + this._id + '" href="#">'
+                        + '<span class="glyphicon glyphicon-ok"></span>'
+                    + '</a>'
+                    + '<a data-toggle="tooltip" title="Disapprove" class="btn btn-danger btn-xs linkdisapproveuser" rel="' + this._id + '" href="#">'
+                        + '<span class="glyphicon glyphicon-remove"></span>'
+                    + '</a>'
+                + '</center>',
+                this.username,                
+                this.fullName,
+                this.role.split("Pending")[0],
+                this.companyName,
+                this.companyEmail,
+                this.companyPhoneNumber,
+                this.companyAddress,
+                dateCreated.getDate() + '/' + (dateCreated.getMonth() + 1) + '/' +  dateCreated.getFullYear()
+            ]).draw( false );
+        }
+    });
+    
+    $('#countPendingUsers').html(counter);
+    $('[data-toggle="tooltip"]').tooltip(); 
 }
 
 // Populate All Users Table
@@ -193,7 +273,7 @@ function showProducers(data) {
     table.clear().draw();
     // For each item in our JSON, add a table row and cells to the content string
     $.each(data, function(){
-        if(this.role == "Producer") {
+        if(this.role == "Producer" && this.markBanned != '1') {
             counter++;
             dateCreated = new Date(this.dateCreated);
             table.row.add([
@@ -231,7 +311,7 @@ function showSponsors(data) {
     table.clear().draw();
     // For each item in our JSON, add a table row and cells to the content string
     $.each(data, function(){
-        if(this.role == "Sponsor") {
+        if(this.role == "Sponsor" && this.markBanned != '1') {
             counter++;
             dateCreated = new Date(this.dateCreated);
             table.row.add([
@@ -363,7 +443,6 @@ function confirmBanUser() {
 
 // Unban User
 function unbanUser(event) {
-    console.log('asc');
     event.preventDefault();
 
     var user = {
@@ -372,7 +451,6 @@ function unbanUser(event) {
         'dateModified': Date()
     };
 
-    // If they did, do our delete
     $.ajax({
         type: 'PUT',
         data: user,
@@ -384,6 +462,121 @@ function unbanUser(event) {
         }
         else {
             alert('Error: ' + response.msg);
+        }
+    });
+}
+
+// Approve User
+function approveUser(event) {
+    event.preventDefault();
+
+    var data = $('#tablePendingUsers').DataTable().row( $(this).parents('tr') ).data();
+
+    var user = {
+        'role': data[4],
+        'dateModified' : Date()
+    }
+
+    $.ajax({
+        type: 'PUT',
+        data: user,
+        url: '/users/updateuser/' + $(this).attr('rel')
+    }).done(function( response ) {
+        // Check for a successful (blank) response
+        if (response.msg === '') {
+            populateTables();
+        }
+        else {
+            alert('Error: ' + response.msg);
+        }
+    });
+
+    var newNotification = {
+        'userId': $(this).attr('rel'),
+        'content': 'Your request to promote to ' + data[4] + ' has been approved.',
+        'markedRead': 'Unread',
+        'dateCreated': new Date()
+    }
+
+    // Use AJAX to post the object to our adduser service        
+    $.ajax({
+        type: 'POST',
+        data: newNotification,
+        url: '/notifications/addnotification',
+        dataType: 'JSON'
+    }).done(function( response ) {
+
+        // Check for successful (blank) response
+        if (response.msg !== '') {
+
+            // If something goes wrong, alert the error message that our service returned
+            alert('Error: ' + response.msg);
+
+        }
+    });
+}
+
+// Show reaston to disapprove User
+function disapproveUser(event) {
+    event.preventDefault();
+
+    var data = $('#tablePendingUsers').DataTable().row( $(this).parents('tr') ).data();
+
+    $('#txtUserDisapprove').val(data[2]);
+
+    $('#txtUserDisapproveId').val($(this).attr('rel'));
+    
+    $('#disapprove-reason-form').dialog('open');    
+}
+
+// Confirm disapprove user
+function confirmDisapproveUser() {
+    var user = {
+        'role': 'User',
+        'dateModified': Date()
+    };
+
+    // If they did, do our delete
+    $.ajax({
+        type: 'PUT',
+        data: user,
+        url: '/users/updateuser/' + $('#txtUserBanId').val()
+    }).done(function( response ) {
+        // Check for a successful (blank) response
+        if (response.msg === '') {
+            populateTables();            
+        }
+        else {
+            alert('Error: ' + response.msg);
+        }
+    });
+
+    var newNotification = {
+        'userId': $(this).attr('rel'),
+        'content': 'Your request to promote to ' + data[4] + ' has been disapproved for: ' + $('#txtDisapproveReason').val(),
+        'markedRead': 'Unread',
+        'dateCreated': new Date()
+    }
+
+    // Use AJAX to post the object to our adduser service        
+    $.ajax({
+        type: 'POST',
+        data: newNotification,
+        url: '/notifications/addnotification',
+        dataType: 'JSON'
+    }).done(function( response ) {
+
+        // Check for successful (blank) response
+        if (response.msg !== '') {
+
+            // If something goes wrong, alert the error message that our service returned
+            alert('Error: ' + response.msg);
+
+        } else {
+            $('#txtUserDisapproveId').val("");
+            $('#txtUserDisapprove').val("");
+            $('#txtDisapproveReason').val("");
+            $('#disapprove-reason-form').dialog('close');
         }
     });
 }
