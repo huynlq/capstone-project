@@ -62,12 +62,16 @@ router.post('/addactivity', function(req, res) {
 
 /* GET all events. */
 router.get('/all', function(req, res, next) {
-    var user = req.cookies.username;
-    if(user != null) {        
+    var user = req.cookies.user;
+    console.log("ITS ADMIN");
+    if(user != null) {       
+        console.log("ITS ADMIN"); 
+        console.log("USER: " + user); 
         var db = req.db;
         var collection = db.get('Users');
-        collection.findOne({'username': user},{},function(e,docs){
+        collection.findOne({'_id': user},{},function(e,docs){
             if(docs.role == "Admin") {
+                console.log("ITS ADMIN");
                 collection = db.get('Events');
                 collection.find({},{},function(e,docs){
                     res.json(docs);

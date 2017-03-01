@@ -45,7 +45,7 @@ function register() {
             writeCookie('username', username, 7);
             writeCookie('role', 'User', 7);
             writeCookie('user', response.id, 7);
-            window.location.replace(location.origin + '/index');
+            window.location.replace(location.origin + '/');
         }
         else {
         	$('#errMsg').html(response.msg);
@@ -75,7 +75,7 @@ function login() {
             writeCookie('username', username, 7);
             writeCookie('role', response.role, 7);
             writeCookie('user', response.id, 7);
-            window.location.replace(location.origin + '/index');
+            window.location.replace(location.origin + '/');
         }
         else {
         	$('#errLoginMsg').html(response.msg);

@@ -17,12 +17,6 @@ $(document).ready(function() {
 function populateTables() {
 	// jQuery AJAX call for JSON
     $.getJSON( '/events/all', function( data ) {
-
-        var counter = 1;
-        var dateCreated = "";
-        var tableContent = "";
-        var table = $('#tableUsers').DataTable();
-
         // For each item in our JSON, add a table row and cells to the content string
         showEvents(data);
         showUpcomingEvents(data);

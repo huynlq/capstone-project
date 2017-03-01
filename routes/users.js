@@ -2,9 +2,21 @@ var express = require('express');
 var router = express.Router();
 var fs = require('fs');
 var multer = require('multer');
+var request = require('request');
+var ObjectId = require('mongodb').ObjectID;
+
+var download = function(uri, filename, callback){
+    console.log("Download");
+    request.head(uri, function(err, res, body){
+        console.log('content-type:', res.headers['content-type']);
+        console.log('content-length:', res.headers['content-length']);
+
+        request(uri).pipe(fs.createWriteStream(filename)).on('close', callback);
+    });
+};
 
 var uploading = multer({
-    dest: __dirname + '/public/user/',
+    dest: __dirname.split('routes')[0] + 'public\\images\\user\\',
     limits: {fileSize: 10000000, files:1},
 });
 
@@ -27,8 +39,17 @@ router.get('/id/:id', function(req, res, next) {
 	var db = req.db;
     var collection = db.get('Users');
     var userId = req.params.id;
-    collection.findOne({'_id': userId},{},function(e,docs){
+    collection.findOne({'_id': new ObjectId(userId)},{},function(e,docs){
         res.json(docs);
+    });
+});
+
+/* GET user by username. */
+router.get('/username/:username', function(req, res, next) {
+    var db = req.db;
+    var collection = db.get('Users');
+    collection.findOne({'username': req.params.username},{},function(e,docs){
+        res.json(docs._id);
     });
 });
 
@@ -47,10 +68,17 @@ router.post('/adduser', function(req, res) {
     var db = req.db;
     var collection = db.get('Users');
     collection.insert(req.body, function(err, result){
-        res.send(
-            (err === null) ? { msg: ''} : { msg: err, 'message': 'An error occured. Please try again.' }
-        );
+        download('http://www.infinitemd.com/wp-content/uploads/2017/02/default.jpg', 'public/images/user/' + result._id + '.jpg', function(){
+                        console.log('done');
+                    });
+        collection.update({ '_id' : result._id }, { $set:{'image':'/images/user/' + result._id + '.jpg'} }, function(err) {
+            res.send(
+                (err === null) ? { msg: ''} : { msg: err, 'message': 'An error occured. Please try again.' }
+            );
+        });  
     });
+
+
 });
 
 /* DELETE to deleteuser. */
@@ -94,7 +122,9 @@ router.get('/getrolebyid/:id', function(req, res, next) {
 /*  POST To Update User */
 router.post('/updateuserimage', uploading.single('displayImage'), function(req, res) { 
     var user = req.cookies.user;
+    console.log("PATH: " + __dirname.split('routes')[0] + 'public\\images\\user\\');
     console.log("REQUEST: " + req);
+    console.log("REQUEST: " + req.file.path);
     if(user != null && req.file != null) {
         if(req.file.path != null) {
             fs.readFile(req.file.path, function (err, data) {
@@ -102,6 +132,7 @@ router.post('/updateuserimage', uploading.single('displayImage'), function(req, 
                 var collection = db.get('Users');
                 collection.findOne({'_id': user},{},function(e,docs){
                     var newPath = "public" + docs.image;
+                    console.log(newPath);
                     fs.writeFile(newPath, data, function (err) {
                         res.render('users/my_user_page', { title: 'Charity Project | User Page' });
                     });

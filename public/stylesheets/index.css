@@ -1,8 +1,8 @@
-.owl-item img {
+.new-owl .owl-item img {
 	width: 100%;
 	height: auto;
 }
-.owl-prev, .owl-next {
+.new-owl .owl-prev, .new-owl .owl-next {
 	position: absolute;
 	top: 4%;
 	margin-top: -50px;
@@ -14,23 +14,23 @@
 	opacity: 0.5;
 	background-color: #dddddd;
 }
-.owl-prev:hover, .owl-next:hover {
+.new-owl .owl-prev:hover, .new-owl .owl-next:hover {
 	filter: Alpha(Opacity=100);/*IE7 fix*/
 	opacity: 1;
 }
-.owl-next {
+.new-owl .owl-next {
 	right: 5px;
 }
-.owl-prev {
+.new-owl .owl-prev {
 	right: 40px;
 }
-.owl-controls {
+.new-owl .owl-controls {
 	text-align: center;
 }
-.owl-controls .owl-page {
+.new-owl .owl-controls .owl-page {
 	display: inline-block;
 }
-.owl-controls .owl-page span {
+.new-owl .owl-controls .owl-page span {
 	background-color: #333;
 	-webkit-border-radius: 30px;
 	-moz-border-radius: 30px;
@@ -42,15 +42,16 @@
 	filter: Alpha(Opacity=500);/*IE7 fix*/
 	opacity: 0.5;
 }
-.owl-controls .owl-page.active span, .owl-controls .owl-page:hover span {
+.new-owl .owl-controls .owl-page.active span, .new-owl .owl-controls .owl-page:hover span {
 	filter: Alpha(Opacity=100);/*IE7 fix*/
 	opacity: 1;
 }
 .thumb {
-	display: inline-block;
-	width: 100%;
-	height: 200px;
-	background-position: center center;
+	display: block;
+	width: 400px;
+	height: 250px;
+	max-width: 83.5% !important;
+	background-position: top center;
 	background-size: cover;
 	z-index: 1;
 }
@@ -66,7 +67,7 @@
 }
 .time {
 	position: absolute;
-	right: 0px;
+	left: 0px;
 	top: 20px;
 	background: rgba(0,0,0,0.7);
 	padding: 5px 10px;
@@ -99,8 +100,9 @@
 	background-color: #73879C;
 	color: white;
 }
-.owl-theme {
-	width: 350px;
+.new-owl.owl-theme {
+	width: 100
+	%;
 	margin: 50px;
 }
 .featureText {
@@ -176,8 +178,70 @@
 	margin-left: 0;
 }
 
-#owl-demo .item img{
-    display: block;
-    width: 100%;
-    height: auto;
+#owl-demo .item{
+    display: inline-block;
+	width: 100%;
+	height: 500px;
+	background-blend-mode: darken;
+	background-position: top center;
+	background-size: cover;
+	z-index: 1;
+}
+
+#owl-demo .owl-prev {
+	position: absolute;
+	top:0;
+	left:0;
+	width: 50px;
+	height: 100%;
+	padding: 5px 10px;
+	text-align: center;
+	vertical-align: middle;
+	filter: Alpha(Opacity=50);/*IE7 fix*/
+	opacity: 0.25;
+	background-color: #dddddd;
+	-o-transition:.5s;
+	-ms-transition:.5s;
+	-moz-transition:.5s;
+	-webkit-transition:.5s;
+	transition:.5s;
+}
+
+#owl-demo .owl-next {
+	position: absolute;	
+	top:0;
+	right:0;
+	width: 50px;
+	height: 100%;
+	padding: 5px 10px;
+	text-align: center;
+	vertical-align: middle;
+	filter: Alpha(Opacity=50);/*IE7 fix*/
+	opacity: 0.25;
+	background-color: #dddddd;
+	-o-transition:.5s;
+	-ms-transition:.5s;
+	-moz-transition:.5s;
+	-webkit-transition:.5s;
+	transition:.5s;
+}
+
+#owl-demo .owl-prev:hover, #owl-demo .owl-next:hover {
+	opacity: 1;
+}
+
+#owl-demo .text-item {	
+	background-color: gray;
+	padding: 10px 20px;
+	color: white;
+	margin-left: 30px;
+}
+
+#owl-demo .text-item-des {
+	background-color:rgba(0, 0, 0, 0.75);
+	padding: 10px 20px 20px 20px;
+	position: absolute;
+	bottom: 50px;
+	left: 80px;
+	color: white;
 }

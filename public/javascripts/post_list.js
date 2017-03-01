@@ -40,11 +40,6 @@ function showNews(data) {
         if(this.postType === 'Announcement' || this.postType === 'Report'){            
             counter++;
 
-		    $.getJSON( '/users/id/' + this.userId, function( data ) {
-		        // For each item in our JSON, add a table row and cells to the content string
-		        user = data.username;
-		    });
-
             dateCreated = new Date(this.dateCreated);      
             table.row.add([
                 counter,
@@ -61,7 +56,7 @@ function showNews(data) {
                 + '</center>',
                 this.postName,                
                 this.postType,
-                user,
+                this.userId,
                 this.rating,
                 this.comment,
                 dateCreated.getDate() + '/' + (dateCreated.getMonth() + 1) + '/' +  dateCreated.getFullYear() + ' ' + dateCreated.getHours() + ':'  + dateCreated.getMinutes()
@@ -86,11 +81,6 @@ function showPosts(data) {
         if(this.postType !== 'Announcement' && this.postType !== 'Report'){            
             counter++;
 
-		    $.getJSON( '/users/id/' + this.userId, function( data ) {
-		        // For each item in our JSON, add a table row and cells to the content string
-		        user = data.username;
-		    });
-
             dateCreated = new Date(this.dateCreated);      
             table.row.add([
                 counter,
@@ -104,7 +94,7 @@ function showPosts(data) {
                 + '</center>',
                 this.postName,                
                 this.postType,
-                user,
+                this.user,
                 this.rating,
                 this.comment,
                 dateCreated.getDate() + '/' + (dateCreated.getMonth() + 1) + '/' +  dateCreated.getFullYear()

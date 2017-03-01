@@ -9,11 +9,13 @@ $(document).ready(function() {
 
   $('[data-toggle="tooltip"]').tooltip(); 
 
-  var author = $('#userId').html();
+  var author = $('.userId').html();
 
-  $.getJSON( '/users/id/' + author, function( data ) {
-      // For each item in our JSON, add a table row and cells to the content string
-      $('#author').html(data.username);
+  console.log($('.userId').html());
+
+  $.getJSON( '/users/username/' + author, function( data ) {
+      $('.userId').attr('href','/users/' + data);
+      console.log($('.userId').attr('href'));
   });
 
   var content = $('#content').html();

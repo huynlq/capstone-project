@@ -14,12 +14,13 @@ $(document).ready(function() {
 	  	imagetools_cors_hosts: ['www.tinymce.com', 'codepen.io']
 	});
 
-	if($('#postId').val() != '') {
+	if($('#postId').val() != '' && $('#postId').val() != 'undefined') {
+		
 		$('#creatorForm').attr('action', '/posts/updatepost');
 		$('#txtPostType').val($('#postType').html());
 		console.log($('#postType').html());
 	} else {
-
+		$('#txtPostName').val("");
 	}
 });
 

@@ -1,5 +1,6 @@
 var express = require('express');
 var router = express.Router();
+var ObjectId = require('mongodb').ObjectID;
 
 /* GET users listing. */
 router.get('/', function(req, res, next) {
@@ -15,13 +16,10 @@ router.get('/creator/', function(req, res, next) {
 router.get('/all', function(req, res, next) {
     var user = req.cookies.user;
     if(user != null) {
-        console.log(1);
         var db = req.db;
         var collection = db.get('Users');
-        console.log(2);
         collection.findOne({'_id': user},{},function(e,docs){
-            if(docs.role == "Admin") {
-                console.log(3);            	
+            if(docs.role == "Admin") {  	
                 collection = db.get('Posts');
                 collection.find({},{sort: {dateCreated: -1}},function(e,docs){
                     res.json(docs);
@@ -35,25 +33,50 @@ router.get('/all', function(req, res, next) {
     }
 });
 
+/* GET all news id. */
+router.get('/news', function(req, res, next) {
+    var db = req.db;
+    var collection =  db.get('Posts');
+    collection.find({ $or: [ { postType: 'Announcement' }, { postType: 'Report' } ]},{sort: {dateCreated: -1}},function(e,docs){
+        res.json(docs);
+    })
+});
+
+/* GET all board id. */
+router.get('/board', function(req, res, next) {
+    var db = req.db;
+    var collection =  db.get('Posts');
+    collection.find({ $not: { $or: [ { postType: 'Announcement' }, { postType: 'Report' } ]}},{sort: {dateCreated: -1}},function(e,docs){
+        res.json(docs);
+    })
+});
+
 /*  POST To Add Post */
 router.post('/addpost', function(req, res) { 
     var user = req.cookies.user;
     if(user != null) {
-    	req.body.userId = user;
-    	req.body.rating = 0;
-    	req.body.comment = 0;
-    	req.body.dateCreated = new Date().toString();
-    	req.body.dateModified = new Date().toString();
-
         var db = req.db;
-        var collection = db.get('Posts');
-        collection.insert(req.body, function(err, result){
-        	if(err === null) {
-        		res.render('posts/post_list', { title: 'Post Manager' });
-        	} else {
-        		alert(err);
-        	}
-	    });
+        var collection = db.get('Users');
+        collection.findOne({'_id': new ObjectId(user)},{},function(e,docs){
+            if(e === null) {
+                req.body.user = docs.username;
+                req.body.rating = 0;
+                req.body.comment = 0;
+                req.body.dateCreated = new Date().toString();
+                req.body.dateModified = new Date().toString();
+
+                delete req.body._id;
+
+                collection = db.get('Posts');
+                collection.insert(req.body, function(err, result){
+                    if(err === null) {
+                        res.render('posts/post_list', { title: 'Post Manager' });
+                    } else {
+                        alert(err);
+                    }
+                });
+            }            
+        });    	
     } else {
         res.render('page_404');
     }
@@ -74,7 +97,7 @@ router.get('/updatepost/:id', function(req, res, next) {
     });
 });
 
-/*  POST To Update User */
+/*  POST To Update Post */
 router.post('/updatepost', function(req, res) {
     var db = req.db;
     var collection = db.get('Posts');   

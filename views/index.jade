@@ -1,185 +1,208 @@
 extends layout
 
 block content
-	html
+	doctype html
+	html(lang='en')
 		head
-			// Meta Tags
+			meta(http-equiv='Content-Type', content='text/html; charset=UTF-8')
+			// Meta, title, CSS, favicons, etc.
 			meta(charset='utf-8')
-			meta(name='viewport', content='width=device-width,initial-scale=1.0')
-			meta(http-equiv='content-type', content='text/html; charset=UTF-8')
-			meta(name='description', content='CharityFund - Charity & Crowdfunding HTML Template')
-			meta(name='keywords', content='building,business,construction,cleaning,transport,workshop')
-			meta(name='author', content='ThemeMascot')
-			// Page Title
-			title CharityFund - Charity & Crowdfunding HTML Template
-			// Font Awesome
-			link(href='../vendors/font-awesome/css/font-awesome.min.css', rel='stylesheet')
+			meta(http-equiv='X-UA-Compatible', content='IE=edge')
+			meta(name='viewport', content='width=device-width, initial-scale=1')
+			title Charity Project | Post List
 			// Bootstrap
 			link(href='../vendors/bootstrap/dist/css/bootstrap.css', rel='stylesheet')
-			// OwlCarousel
-			script(src='../vendors/owl-carousel/owl.carousel.min.js')
-			link(rel='stylesheet', href='../vendors/owl-carousel/owl.carousel.min.css')
-			// Countdown JS
-			script(src='../vendors/countdown/countdown.js')
+			// Font Awesome
+			link(href='../vendors/font-awesome/css/font-awesome.min.css', rel='stylesheet')
+			// NProgress
+			link(href='../vendors/nprogress/nprogress.css', rel='stylesheet')
+			// iCheck
+			link(href='../vendors/iCheck/skins/flat/green.css', rel='stylesheet')
+			// bootstrap-progressbar
+			link(href='../vendors/bootstrap-progressbar/css/bootstrap-progressbar-3.3.4.min.css', rel='stylesheet')
+			// JQVMap
+			link(href='../vendors/jqvmap/dist/jqvmap.min.css', rel='stylesheet')
+			// bootstrap-daterangepicker
+			link(href='../vendors/bootstrap-daterangepicker/daterangepicker.css', rel='stylesheet')
+			// Datatables
+			link(href='../vendors/datatables.net-bs/css/dataTables.bootstrap.min.css', rel='stylesheet')
+			link(href='../vendors/datatables.net-buttons-bs/css/buttons.bootstrap.min.css', rel='stylesheet')
+			link(href='../vendors/datatables.net-fixedheader-bs/css/fixedHeader.bootstrap.min.css', rel='stylesheet')
+			link(href='../vendors/datatables.net-responsive-bs/css/responsive.bootstrap.min.css', rel='stylesheet')
+			link(href='../vendors/datatables.net-scroller-bs/css/scroller.bootstrap.min.css', rel='stylesheet')
+			// jQuery
+			script(src='../vendors/jquery/dist/jquery.min.js')
 			// Custom Theme Style
 			link(href='../build/css/custom.min.css', rel='stylesheet')
-			// Scripts
-			script(src='../javascripts/index.js')
-				
+			// Font Awesome
+			link(href='../vendors/font-awesome/css/font-awesome.min.css', rel='stylesheet')
+			// Owl Carousel
+			link(rel='stylesheet', href='../vendors/owl-carousel/owl.carousel.min.css')			
 			// Styles
 			link(href='../stylesheets/index.css', rel='stylesheet')
-				
+			style.
+				li :hover {
+				cursor: pointer;
+				}
+				.action-col {
+				width:1%;
+				}
 		body.nav-md
 			.right_col(role='main')				
 				#page-content-wrapper
 					.container		
 						.row
-							h1 WELCOME
-							#owl-demo.owl-carousel.owl-theme
-								.item
-									img(src='http://ruseller.com/lessons/les1814/demo/demos/assets/fullimage1.jpg', alt='The Last of us')
-								.item
-									img(src='http://ruseller.com/lessons/les1814/demo/demos/assets/fullimage1.jpg', alt='GTA V')
-								.item
-									img(src='http://ruseller.com/lessons/les1814/demo/demos/assets/fullimage1.jpg', alt='Mirror Edge')
+							.row
+							#owl-demo.owl-carousel.owl-tlheme
+								.item(style="background-image: url('/images/system/homepage-1.jpg');")
+									.text-item-des
+										| Become a volunteer and join our
+										br
+										| organized and fully-detailed
+										br
+										| charity events.
+										br
+										br
+										a.text-item(href="/login") JOIN AS A VOLUNTEER
+										br
+								.item(style="background-image: url('/images/system/homepage-2.jpg');")
+									.text-item-des
+										| Become a producer to help us organize more
+										br
+										| heart-warming helping hand activities.
+										br
+										br
+										a.text-item(href="/login") BECOME A PRODUCER / SPONSOR
+										br
+								.item(style="background-image: url('/images/system/homepage-3.jpg');")
+									.text-item-des
+										| Join other volunteers for more
+										br
+										| discussions and requests for help.
+										br
+										br
+										a.text-item(href="/login") VIEW THE COMMUNITY BOARD
+										br
+						hr
+						.row(style="text-align: center")
+							// INSIGHTS
+							h1.col-lg-12.col-xs-12 WE PROMISED
+						.row
+							.col-lg-4.col-sm-4.col-xs-12(style="text-align: center")
+								i.fa.fa-user.fa-5x(style="margin: 30px")
+								br
+								| RELIABLE
+							.col-lg-4.col-sm-4.col-xs-12(style="text-align: center")
+								i.fa.fa-building.fa-5x(style="margin: 30px")								
+								br
+								| FULLY-DETAILED
+							.col-lg-4.col-sm-4.col-xs-12(style="text-align: center")
+								i.fa.fa-credit-card.fa-5x(style="margin: 30px")
+								br
+								| UNIQUE EXPERIENCE
 						hr
 						.row
 							// FEATURED EVENT CAROUSEL
-							.col-sm-12.col-lg-4.wow.fadeInLeft.animation-delay6
-								h4.text-uppercase.featureText Chiến dịch nổi bật
-								.owl-carousel.owl-theme#eventCarousel
-									.eventItem
-										.thumb(style="background-image: url('public/images/event/1.jpg');")
-										script(type='text/javascript').
-											var date = new Date();
-											var date1start = new Date(2017, 1, 4, 9, 0);
-											var date1end = new Date(2017, 1, 5, 9, 0);
-											$('#event1Time').html(CountDown(date1start, date1end));
-											var date2start = new Date(2017, 1, 1, 9, 0);
-											var date2end = new Date(2017, 1, 4, 9, 0);
-											$('#event2Time').html(CountDown(date2start, date2end));
-										#event1Time.time
-										.progress
-											#progress-event-1.progress-bar.progress-bar-striped.active(role='progressbar', aria-valuenow='85', aria-valuemin='0', aria-valuemax='100', style='width:0%')
-												span.percent
-													b
-														span.count 85
-														| %
-										.eventInfo.clearfix.border-bottom.p-15.pt-10(style='height: 228px')
-											p.mb-10.mt-5
-												span.text-uppercase.text-theme-colored
-													strong Bệnh viện từ thiện:
-												|  Lorem ipsum dolor sit amet, consectetur adipisicing elit. Praesentium quos aspernatur cupiditate commodi sunt illo.
-											ul(style='list-style: none')
-												li
-													i.fa.fa-calendar
-														span(style='margin-left: 10px') 4/2 - 9:00
-												li
-													i.fa.fa-crosshairs
-														span(style='margin-left: 10px') Bệnh viện Nhiệt Đới
-											.donate-details
-												a.btn.btnEvent(href='#', role='button') Chi tiết
-												ul.pull-right.mt-15(style='list-style: none; text-align: right')
-													li
-														strong Tích lũy:
-														span.count 1890000
-													li
-														strong Mục tiêu:
-														|  2.500.000
-									.eventItem
-										.thumb(style="background-image: url('public/images/event/2.jpg');")
-										#event2Time.time
-										.progress
-											#progress-event-2.progress-bar.progress-bar-striped.active(role='progressbar', aria-valuenow='100', aria-valuemin='0', aria-valuemax='100', style='width:0%')
-												span.percent
-													b
-														span.count 100
-														| %
-										.eventInfo.clearfix.border-bottom.p-15.pt-10(style='height: 228px')
-											p.mb-10.mt-5
-												span.text-uppercase.text-theme-colored
-													strong Thư viện miễn phí:
-												|  Lorem ipsum dolor sit amet, consectetur adipisicing elit. Praesentium quos aspernatur cupiditate commodi sunt illo.
-											ul(style='list-style: none')
-												li
-													i.fa.fa-calendar
-														span(style='margin-left: 10px') 1/2 - 9:00
-												li
-													i.fa.fa-crosshairs
-														span(style='margin-left: 10px') Thư viện Thành Phố
-											.donate-details
-												a.btn.btnEvent(href='#', role='button') Chi tiết
-												ul.pull-right.mt-15(style='list-style: none; text-align: right')
-													li
-														strong Tích lũy:
-														span.count 12430000
-													li
-														strong Mục tiêu:
-														|  10.000.000
-							// FEATURED NEWS CAROUSEL
-							.col-sm-12.col-lg-4.wow.fadeInLeft.animation-delay6
-								h4.text-uppercase.featureText Bản tin nổi bật
-								.owl-carousel.owl-theme
-									.eventItem
-										.thumb(style="background-image: url('public/images/news/1.jpg');")
-										.time
-											| Tổng kết
-										.progress
-											.progress-bar.progress-bar-striped.active(role='progressbar', aria-valuenow='100', aria-valuemin='0', aria-valuemax='100', style='width:100%')
-										.eventInfo.clearfix.border-bottom.p-15.pt-10(style='height: 228px')
-											p.mb-10.mt-5
-												span.text-uppercase.text-theme-colored
-													strong Tổng kết chiến dịch Mùa Hè Đen
-											p
-												| Lorem ipsum dolor sit amet, consectetur adipisicing elit. Praesentium quos aspernatur cupiditate commodi sunt illo. Lorem ipsum dolor sit amet.
-											.news-details
-												a.btn.btnEvent(href='#', role='button') Chi tiết
-									.eventItem
-										.thumb(style="background-image: url('public/images/news/2.jpg');")
-										.time
-											| Quyên góp
-										.progress
-											.progress-bar.progress-bar-striped.active(role='progressbar', aria-valuenow='100', aria-valuemin='0', aria-valuemax='100', style='width:100%')
-										.eventInfo.clearfix.border-bottom.p-15.pt-10(style='height: 228px')
-											p.mb-10.mt-5
-												span.text-uppercase.text-theme-colored
-													strong Thống kê quyên góp tháng 1
-											p
-												| Lorem ipsum dolor sit amet, consectetur adipisicing elit. Praesentium quos aspernatur cupiditate commodi sunt illo. Lorem ipsum dolor sit amet.
-											.news-details
-												a.btn.btnEvent(href='#', role='button') Chi tiết
-							// STATS
-							.col-sm-12.col-lg-4.wow.fadeInLeft.animation-delay6
-								h4.text-uppercase.featureText Tham gia ngay!
-								.stats(style='width: 350px')
-									.statInfo(style='height: 33%')
-										strong Tình nguyện viên
-										p
-											| Lorem ipsum dolor sit amet, consectetur adipisicing elit. Praesentium quos aspernatur cupiditate commodi sunt illo.
-										p(style='text-align: right')
-											span
-												strong
-													span.count 3000000
-												b thành viên
-										a.btn.btnStat(href='#', role='button') Đăng ký
-									.statInfo(style='height: 34%')
-										strong Ban tổ chức
-										p
-											| Lorem ipsum dolor sit amet, consectetur adipisicing elit. Praesentium quos aspernatur cupiditate commodi sunt illo.
-										p(style='text-align: right')
-											span
-												strong
-													span.count 15432
-												b nhà tổ chức
-										a.btn.btnStat(href='#', role='button') Đăng ký
-									.statInfo(style='height: 33%')
-										strong Đóng góp
-										p
-											| Lorem ipsum dolor sit amet, consectetur adipisicing elit. Praesentium quos aspernatur cupiditate commodi sunt illo.
-										p(style='text-align: right')
-											span
-												strong
-													span.count 12353296000
-												b đồng
-										a.btn.btnStat(href='#', role='button') Đóng góp
+							.col-lg-10.col-sm-10.col-xs-12.wow.fadeInLeft.animation-delay6
+								h4.text-uppercase.featureText
+									a(href="/eventlist", style="position: inline-block") Featured Events >>
+								.owl-carousel.owl-theme.new-owl#eventCarousel		
+						hr
 						.row
+							.col-lg-5.col-sm-12.col-xs-12.wow.fadeInLeft.animation-delay6
+								h4.text-uppercase.featureText
+									a(href="/news", style="position: inline-block") News >>
+								table#newsPanel.table.datatable-scroll.table-striped.table-bordered.dt-responsive.nowrap.datatable-responsive(cellspacing='0', width='90%', style="margin:20px")
+									thead
+										tr
+											th Rate
+											th Title
+											th Type
+											th Aut
+											th Cmt
+											th Date
+									tbody
+							.col-lg-5.col-sm-12.col-xs-12.wow.fadeInLeft.animation-delay6
+								h4.text-uppercase.featureText
+									a(href="/board", style="position: inline-block") Community Board >>
+								table#boardPanel.table.datatable-scroll.table-striped.table-bordered.dt-responsive.nowrap.datatable-responsive(cellspacing='0', width='90%', style="margin:20px")
+									thead
+										tr
+											th Rate
+											th Title
+											th Type
+											th Aut
+											th Cmt
+											th Date
+									tbody
+						hr
+				// /page content
+				// footer content
+				footer
+					.pull-right
+						| Gentelella - Bootstrap Admin Template by 
+						a(href='https://colorlib.com') Colorlib
+					.clearfix
+				// /footer content
+							
+				// jQuery
+				script(src='../vendors/jquery/dist/jquery.min.js')
+				// Bootstrap
+				script(src='../vendors/bootstrap/dist/js/bootstrap.min.js')
+				// FastClick
+				script(src='../vendors/fastclick/lib/fastclick.js')
+				// NProgress
+				script(src='../vendors/nprogress/nprogress.js')
+				// Chart.js
+				script(src='../vendors/Chart.js/dist/Chart.min.js')
+				// gauge.js
+				script(src='../vendors/gauge.js/dist/gauge.min.js')
+				// bootstrap-progressbar
+				script(src='../vendors/bootstrap-progressbar/bootstrap-progressbar.min.js')
+				// iCheck
+				script(src='../vendors/iCheck/icheck.min.js')
+				// Skycons
+				script(src='../vendors/skycons/skycons.js')
+				// Flot
+				script(src='../vendors/Flot/jquery.flot.js')
+				script(src='../vendors/Flot/jquery.flot.pie.js')
+				script(src='../vendors/Flot/jquery.flot.time.js')
+				script(src='../vendors/Flot/jquery.flot.stack.js')
+				script(src='../vendors/Flot/jquery.flot.resize.js')
+				// Flot plugins
+				script(src='../vendors/flot.orderbars/js/jquery.flot.orderBars.js')
+				script(src='../vendors/flot-spline/js/jquery.flot.spline.min.js')
+				script(src='../vendors/flot.curvedlines/curvedLines.js')
+				// DateJS
+				script(src='../vendors/DateJS/build/date.js')
+				// JQVMap
+				script(src='../vendors/jqvmap/dist/jquery.vmap.js')
+				script(src='../vendors/jqvmap/dist/maps/jquery.vmap.world.js')
+				script(src='../vendors/jqvmap/examples/js/jquery.vmap.sampledata.js')
+				// bootstrap-daterangepicker
+				script(src='../vendors/moment/min/moment.min.js')
+				script(src='../vendors/bootstrap-daterangepicker/daterangepicker.js')
+				// Datatables
+				script(src='../vendors/datatables.net/js/jquery.dataTables.min.js')
+				script(src='../vendors/datatables.net-bs/js/dataTables.bootstrap.min.js')
+				script(src='../vendors/datatables.net-buttons/js/dataTables.buttons.min.js')
+				script(src='../vendors/datatables.net-buttons-bs/js/buttons.bootstrap.min.js')
+				script(src='../vendors/datatables.net-buttons/js/buttons.flash.min.js')
+				script(src='../vendors/datatables.net-buttons/js/buttons.html5.min.js')
+				script(src='../vendors/datatables.net-buttons/js/buttons.print.min.js')
+				script(src='../vendors/datatables.net-fixedheader/js/dataTables.fixedHeader.min.js')
+				script(src='../vendors/datatables.net-keytable/js/dataTables.keyTable.min.js')
+				script(src='../vendors/datatables.net-responsive/js/dataTables.responsive.min.js')
+				script(src='../vendors/datatables.net-responsive-bs/js/responsive.bootstrap.js')
+				script(src='../vendors/datatables.net-scroller/js/dataTables.scroller.min.js')
+				script(src='../vendors/jszip/dist/jszip.min.js')
+				script(src='../vendors/pdfmake/build/pdfmake.min.js')
+				script(src='../vendors/pdfmake/build/vfs_fonts.js')
+				// OwlCarousel
+				script(src='../vendors/owl-carousel/owl.carousel.min.js')
+				// Countdown JS
+				script(src='../vendors/countdown/countdown.js')
+				// Scripts
+				script(src='../javascripts/index.js')
+				// Custom Theme Scripts
+				script(src='../build/js/custom.min.js')

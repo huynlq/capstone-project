@@ -51,19 +51,31 @@ block content
 						h3(style='margin-left: 50px') #{docs.postName}
 						small(style='margin-left: 50px')
 							| Posted by 
-							small#author
+							a.userId(href="") #{docs.userId}
 						hr
 						.row
 							.col-md-3.col-sm-3
 							.col-md-6.col-sm-6.col-xs-12
 								#content(style="display:none") #{docs.postContent}
-								div#postContent
-						hr
+								div#postContent						
+				h1 Comments
+				hr
+				.row
+					form#commentForm.form-horizontal.form-label-left(action="/posts/addpost", method="post")
+					.form-group
+						label.control-label.col-md-3.col-sm-3.col-xs-12(style="text-align:right")
+							| Content 
+							span.required *
+						.col-md-6.col-sm-6.col-xs-12
+							textarea#txtDescription(name="postContent", style="width:90%")
+						br
+						br
+						br
+						br
 						.row
-							.col-md-4.col-sm-4.col-xs-12
-							#action-pane.col-md-6.col-sm-6.col-xs-12
-								a#btnSave.btn.btn-info.col-md-5.col-xs-12(onclick='saveInfo()') Save Profile Info
-								a#btnPromote.btn.btn-info.col-md-5.col-xs-12(href='../promote') 
+							.col-md-7.col-sm-7
+							.col-md-1.col-sm-1.col-xs-12
+								button.btn.btn-info.col-xs-12(type="submit", style="float: right") Submit
 					// End SmartWizard Content
 					// /top tiles
 				// /page content
