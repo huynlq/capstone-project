@@ -8,24 +8,40 @@ $(document).ready(function() {
 		console.log(data.otherDonationItem);
 		var current = 0;
 		var required = 0;
-		for (var i = 0; i < data.otherDonationItem.length; i++) {
-			if(!data.otherDonationCurrent){
+		if(data.otherDonationItem.constructor !== Array) {
+			if(!data.otherDonationCurrent)
 				current = 0;
-			} else {
-				if(!data.otherDonationCurrent[i])
-					current = 0;
-				else
-					current = data.otherDonationCurrent[i];
-			}			
-			required = data.otherDonationNumber[i];
+			else
+				current = data.otherDonationCurrent;		
+			required = data.otherDonationNumber;
 			$('#event-donation-progress').html( $('#event-donation-progress').html() +
-					'<label>' + data.otherDonationItem[i] + '</label>' +
+					'<label>' + data.otherDonationItem + '</label>' +
 					'<div class="progress">' + 
 						current + '/<span id="event-donation">' + required + '</span>' +
 						'<div role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" style="width:' + (current/required) + '%" class="progress-bar progress-bar-striped active"></div>' +
 					'</div>'
 				);
-		}
+	    } else {
+	      	for (var i = 0; i < data.otherDonationItem.length; i++) {
+				if(!data.otherDonationCurrent){
+					current = 0;
+				} else {
+					if(!data.otherDonationCurrent[i])
+						current = 0;
+					else
+						current = data.otherDonationCurrent[i];
+				}			
+				required = data.otherDonationNumber[i];
+				$('#event-donation-progress').html( $('#event-donation-progress').html() +
+						'<label>' + data.otherDonationItem[i] + '</label>' +
+						'<div class="progress">' + 
+							current + '/<span id="event-donation">' + required + '</span>' +
+							'<div role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" style="width:' + (current/required) + '%" class="progress-bar progress-bar-striped active"></div>' +
+						'</div>'
+					);
+			}
+	    }
+		
 	});
 
 	$.getJSON( '/events/activities/' + eventId, function( data ) {

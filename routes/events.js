@@ -1,7 +1,9 @@
 var express = require('express');
 var router = express.Router();
 var fs = require('fs');
+var multer = require('multer');
 var request = require('request');
+var ObjectId = require('mongodb').ObjectID;
 
 var download = function(uri, filename, callback){
     console.log("Download");
@@ -12,6 +14,12 @@ var download = function(uri, filename, callback){
         request(uri).pipe(fs.createWriteStream(filename)).on('close', callback);
     });
 };
+
+var uploading = multer({
+    dest: __dirname.split('routes')[0] + 'public\\images\\event\\',
+    limits: {fileSize: 10000000, files:1},
+});
+
 
 /* GET event listing. */
 router.get('/', function(req, res, next) {
@@ -34,19 +42,56 @@ router.get('/creator_preview', function(req, res, next) {
 });
 
 /* POST new event. */
-router.post('/addevent', function(req, res) {
+router.post('/addevent', uploading.single('displayEventImage'), function(req, res) {
+    console.log(req.file);
+    console.log(req.body);
+
+    req.body.status = "Draft";
+    req.body.dateCreated = new Date().toString();
+    req.body.dateModified = new Date().toString();
+    var user = req.cookies.user;
+    if(user != null) {
+
+        var db = req.db;
+        var collection = db.get('Users');
+
+        collection.findOne({'_id': new ObjectId(user)},{},function(e,docs){
+            var username = docs.username;
+            if(req.file != null) {
+                var extension = req.file.mimetype.split("/")[1];
+                var path = "/images/event/" + req.file.filename + "." + extension;
+                var savePath = "public" + path;
+
+                req.body.eventImage = path;
+
+                fs.readFile(req.file.path, function (err, data) {
+                    fs.writeFile(savePath, data);
+                });
+
+                collection = db.get('Events');
+                
+                collection.insert(req.body, function(err, result){
+                    res.render('events/activity_creator', { title: "Activity Creator", eventId: result._id});
+                });
+            }
+        });
+    }                    
+});
+
+/* POST finish drafted event. */
+router.post('/finishevent/:id', function(req, res) {    
+    console.log(req.body);
     var db = req.db;
     var collection = db.get('Events');
-    download(req.body.imageSrc, req.body.imageName, function(){
-        console.log('done');
+
+    collection.update({ '_id' :  new ObjectId(req.params.id)}, { $set: req.body}, function(err) {
+        if(err === null) {
+            res.send({msg: ''});
+        } else {
+            res.send({msg: err});
+        }
     });
-    delete req.body.imageSrc;
-    delete req.body.imageName;
-    collection.insert(req.body, function(err, result){
-        res.send(
-            (err === null) ? { msg: '', '_id': result._id } : { msg: err }
-        );
-    });
+    
 });
 
 /* POST new activities. */
@@ -63,22 +108,11 @@ router.post('/addactivity', function(req, res) {
 /* GET all events. */
 router.get('/all', function(req, res, next) {
     var user = req.cookies.user;
-    console.log("ITS ADMIN");
     if(user != null) {       
-        console.log("ITS ADMIN"); 
-        console.log("USER: " + user); 
         var db = req.db;
-        var collection = db.get('Users');
-        collection.findOne({'_id': user},{},function(e,docs){
-            if(docs.role == "Admin") {
-                console.log("ITS ADMIN");
-                collection = db.get('Events');
-                collection.find({},{},function(e,docs){
-                    res.json(docs);
-                });
-            } else {
-                res.render('page_404');
-            }
+        var collection = db.get('Events');
+        collection.find({},{},function(e,docs){
+            res.json(docs);
         });
     } else {
         res.render('page_404');

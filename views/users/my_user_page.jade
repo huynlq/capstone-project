@@ -49,15 +49,15 @@ block content
 					.form-horizontal.form-label-left
 						h3(style='margin-left: 50px') User Information
 						hr
-						.row
+						form(action="/users/updatemyuserinfo", method="post", enctype="multipart/form-data").row
 							.col-md-1.col-sm-1
 							.col-md-3.col-sm-3.col-xs-12(style='text-align: center')
-								img#txtImageSrc(src='#', alt='Set your profile image!', style='height: 150px; max-width: 300px')
+								img#txtUserImageSrc(src='#', alt='Set your profile image!', style='height: 150px; max-width: 300px')
 								br
-								br								
-								form(action="/users/updateuserimage", method="post", enctype="multipart/form-data").row
-									input.btn.btn-info.col-md-8.col-sm-8.col-xs-12(type="file", name="displayImage")
-									button.btn.btn-info.col-md-3.col-sm-3.col-xs-12(type="submit") Upload
+								br
+								.row										
+									input#inputUserImage.btn.btn-info.col-md-12.col-sm-12.col-xs-12(type="file", name="displayUserImage", accept=".png,.jpg,.jpeg")
+									input#txtImageSrc(type="hidden", name="image")
 							.col-md-7.col-sm-7.col-xs-12
 								.form-group
 									label.control-label.col-md-2.col-sm-2.col-xs-12
@@ -68,58 +68,64 @@ block content
 									label.control-label.col-md-2.col-sm-2.col-xs-12
 										| Full Name
 									.col-md-7.col-sm-7.col-xs-12
-										input#txtFullName.form-control.col-md-7.col-xs-12(type='text')
+										input#txtFullName.form-control.col-md-7.col-xs-12(type='text', name='fullName')
 								.form-group
 									label.control-label.col-md-2.col-sm-2.col-xs-12
 										| Address
 									.col-md-7.col-sm-7.col-xs-12
-										input#txtAddress.form-control.col-md-7.col-xs-12(type='text')
+										input#txtAddress.form-control.col-md-7.col-xs-12(type='text', name='address')
 								.form-group
 									label.control-label.col-md-2.col-sm-2.col-xs-12
 										| Email 
 									.col-md-7.col-sm-7.col-xs-12
-										input#txtEmail.form-control.col-md-7.col-xs-12(type='text')
+										input#txtEmail.form-control.col-md-7.col-xs-12(type='text', name='email')
 								.form-group
 									label.control-label.col-md-2.col-sm-2.col-xs-12
 										| Phone 
 									.col-md-7.col-sm-7.col-xs-12
-										input#txtPhone.form-control.col-md-7.col-xs-12(type='text')
-								.col-md-1.col-sm-1.col-xs-12
+										input#txtPhone.form-control.col-md-7.col-xs-12(type='text', name='phoneNumber')
+								.row
+									.col-md-6.col-sm-6
+									.col-md-1.col-sm-1.col-xs-12
+										button.btn.btn-info(type="submit") Save User Info
 						br
 						#companyInfoDiv
 							h3(style='margin-left: 50px') Company Information
 							hr
-							.row
+							form(action="/users/updatemycompanyinfo", method="post", enctype="multipart/form-data").row
 								.col-md-1.col-sm-1
 								.col-md-3.col-sm-3.col-xs-12(style='text-align: center')
 									img#txtCompanyImageSrc(src='#', alt='Set your company image!', style='height: 150px; max-width: 300px')
 									br
 									br
-									.row
-										form(action="/users/updatecompanyimage", method="post", enctype="multipart/form-data").row
-											input.btn.btn-info.col-md-8.col-sm-8.col-xs-12(type="file", name="displayCompanyImage")
-											button.btn.btn-info.col-md-3.col-sm-3.col-xs-12(type="submit") Upload
+									.row										
+											input#inputCompanyImage.btn.btn-info.col-md-12.col-sm-12.col-xs-12(type="file", name="displayCompanyImage", accept=".png,.jpg,.jpeg")
+											input#txtCompanyImageSrc(type="hidden", name="companyImage")
 								.col-md-7.col-sm-7.col-xs-12
 									.form-group
 										label.control-label.col-md-2.col-sm-2.col-xs-12
 											| Company Name
 										.col-md-7.col-sm-7.col-xs-12
-											input#txtCompanyName.form-control.col-md-7.col-xs-12(type='text')
+											input#txtCompanyName.form-control.col-md-7.col-xs-12(type='text', name='companyName')
 									.form-group
 										label.control-label.col-md-2.col-sm-2.col-xs-12
 											| Company Address
 										.col-md-7.col-sm-7.col-xs-12
-											input#txtCompanyAddress.form-control.col-md-7.col-xs-12(type='text')
+											input#txtCompanyAddress.form-control.col-md-7.col-xs-12(type='text', name='companyAddress')
 									.form-group
 										label.control-label.col-md-2.col-sm-2.col-xs-12
 											| Company Email 
 										.col-md-7.col-sm-7.col-xs-12
-											input#txtCompanyEmail.form-control.col-md-7.col-xs-12(type='text')
+											input#txtCompanyEmail.form-control.col-md-7.col-xs-12(type='text', name='companyEmail')
 									.form-group
 										label.control-label.col-md-2.col-sm-2.col-xs-12
 											| Company Phone 
 										.col-md-7.col-sm-7.col-xs-12
-											input#txtCompanyPhone.form-control.col-md-7.col-xs-12(type='text')
+											input#txtCompanyPhone.form-control.col-md-7.col-xs-12(type='text', name='companyPhoneNumber')
+									.row
+									.col-md-6.col-sm-6
+									.col-md-1.col-sm-1.col-xs-12
+										button.btn.btn-info(type="submit") Save Company Info
 							br
 						h3(style='margin-left: 50px') Events Joined
 						hr
@@ -129,7 +135,6 @@ block content
 						.row
 							.col-md-4.col-sm-4.col-xs-12
 							.col-md-6.col-sm-6.col-xs-12
-								a#btnSave.btn.btn-info.col-md-5.col-xs-12(onclick='saveInfo()') Save Profile Info
 								a#btnPromote.btn.btn-info.col-md-5.col-xs-12(href='../promote') Promote
 						#alert-panel
 							.alert.alert-warning.alert-dismissable.fade.in(style="position:fixed; bottom:50px; right:50px;")

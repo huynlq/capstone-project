@@ -47,21 +47,22 @@ block content
 				.row
 					// Tabs
 					// Smart Wizard
-					form.form-horizontal.form-label-left
+					form(action="/events/addevent", method="post", enctype="multipart/form-data").form-horizontal.form-label-left
 						h3(style='margin-left: 50px') Event Description
+						input#txtUser(type="hidden", name="user")
 						hr
 						.form-group
 							label.control-label.col-md-3.col-sm-3.col-xs-12
 								| Event Name 
 								span.required *
 							.col-md-6.col-sm-6.col-xs-12
-								input#txtEventName.form-control.col-md-7.col-xs-12(type='text', required='required')
+								input#txtEventName.form-control.col-md-7.col-xs-12(type='text', required='required', name="eventName")
 						.form-group
 							label.control-label.col-md-3.col-sm-3.col-xs-12
 								| Event Type 
 								span.required *
 							.col-md-6.col-sm-6.col-xs-12
-								select#txtEventType.form-control
+								select#txtEventType.form-control(name="eventType")
 									option == Choose ==
 									option Type 1
 									option Type 2
@@ -76,73 +77,75 @@ block content
 											span.add-on.input-group-addon
 												i.glyphicon.glyphicon-calendar.fa.fa-calendar
 											input#reservation.form-control(type='text', style='width: 200px', name='reservation', value='', onchange='changeDate()')
-											input#txtDate(type='hidden', value='')
+											input#txtDate(type='hidden', value='', name='eventDate')
 						.form-group
 							label.control-label.col-md-3.col-sm-3.col-xs-3
 								| Meeting Time 
 								span.required *
 							.col-md-6.col-sm-6.col-xs-12
-								input#txtMeetingTime.form-control(type='text', data-inputmask="'mask': '99:99'")
+								input#txtMeetingTime.form-control(type='text', data-inputmask="'mask': '99:99'", name='meetingTime')
 						.form-group
 							label.control-label.col-md-3.col-sm-3.col-xs-12
 								| Meeting Address 
 								span.required *
 							.col-md-6.col-sm-6.col-xs-12
-								input#txtMeetingAddress.form-control.col-md-7.col-xs-12(placeholder='', type='text', autocomplete='on', runat='server')
-								input#txtMeetingAddressLat(type='hidden', name='cityLat')
-								input#txtMeetingAddressLng(type='hidden', name='cityLng')
+								input#txtMeetingAddress.form-control.col-md-7.col-xs-12(placeholder='', type='text', autocomplete='on', runat='server', name='meetingAddress')
+								input#txtMeetingAddressLat(type='hidden', name='meetingAddressLat')
+								input#txtMeetingAddressLng(type='hidden', name='meetingAddressLng')
 								#map.col-md-6.col-sm-6.col-xs-12(style='height:200px; margin-top: 20px')
 						.form-group
 							label.control-label.col-md-3.col-sm-3.col-xs-12
 								| Contact Email 
 								span.required *
 							.col-md-6.col-sm-6.col-xs-12
-								input#txtEmail.form-control.col-md-7.col-xs-12(type='text', required='required')
+								input#txtEmail.form-control.col-md-7.col-xs-12(type='text', required='required', name='contactEmail')
 						.form-group
 							label.control-label.col-md-3.col-sm-3.col-xs-12
 								| Contact Phone 
 								span.required *
 							.col-md-6.col-sm-6.col-xs-12
-								input#txtPhone.form-control.col-md-7.col-xs-12(type='text', required='required')
+								input#txtPhone.form-control.col-md-7.col-xs-12(type='text', required='required', name='contactPhone')
 						.form-group
 							label.control-label.col-md-3.col-sm-3.col-xs-12
 								| Event Description 
 								span.required *
 							.col-md-6.col-sm-6.col-xs-12
-								textarea#txtDescription.resizable_textarea.form-control(style='height: 100px')
+								textarea#txtDescription.resizable_textarea.form-control(style='height: 100px', name='eventDescription')
 						.form-group
 							label.control-label.col-md-3.col-sm-3.col-xs-12
 								| Event Image 
-								span.required *
-								br
-								| Must be smaller than 3.5Mb
+								span.required *								
 							.col-md-6.col-sm-6.col-xs-12
-								input#txtImage(type='text' onchange='readURL();')
+								img#txtImage(src='#', alt='Set your event image!', style='height: 150px; max-width: 300px')
 								br
-								img#txtImageSrc(src='#', alt='your image', style='height: 150px')
+								br
+								.row										
+										input#inputEventImage.btn.btn-info.col-md-8.col-sm-8.col-xs-12(type="file", name="displayEventImage", accept=".png,.jpg,.jpeg")
+										input#txtImageSrc(type="hidden", name="eventImage")
 						br
 						h3(style='margin-left: 50px') Event Requires
 						hr
 						.form-group
 							label.control-label.col-md-3.col-sm-3.col-xs-12
-								| Volunteers 
+								| Volunteers Needed 
 								span.required *
 							.col-md-3.col-sm-3.col-xs-12
-								input#txtVolunteersMin.form-control.col-md-7.col-xs-12(type='text', placeholder='Minimum', required='required')
+								input#txtVolunteersMin.form-control.col-md-7.col-xs-12(type='text', placeholder='Minimum', required='required', name='volunteerMin')
 							.col-md-3.col-sm-3.col-xs-12
-								input#txtVolunteersMax.form-control.col-md-7.col-xs-12(type='text', placeholder='Maximum', required='required')
+								input#txtVolunteersMax.form-control.col-md-7.col-xs-12(type='text', placeholder='Maximum', required='required', name='volunteerMax')
 						.form-group
 							label.control-label.col-md-3.col-sm-3.col-xs-12
 								| Budget 
 								span.required *
 							.col-md-6.col-sm-6.col-xs-12
-								input#txtBudget.form-control.col-md-7.col-xs-12(type='text', placeholder='For each volunteer', required='required')
+								input#txtBudget.form-control.col-md-7.col-xs-12(type='text', placeholder='For each volunteer', required='required', name='budget')
 						.form-group
 							label.control-label.col-md-3.col-sm-3.col-xs-12
 								| Budget Donation Needed 
 								span.required *
 							.col-md-6.col-sm-6.col-xs-12
-								input#txtDonation.form-control.col-md-7.col-xs-12(type='text', placeholder='VND only', required='required')
+								input#txtDonation.form-control.col-md-7.col-xs-12(type='text', placeholder='VND only', required='required', name='donationNeeded')
+								input(type="hidden", value="0", name="currentDonation")
 						#other1.form-group
 							label.control-label.col-md-3.col-sm-3.col-xs-12 Other Donations
 							input#txtNumberOfDonation(type='hidden', value='0')
@@ -152,6 +155,7 @@ block content
 						.row
 							.col-md-7.col-sm-7
 							.col-md-2.col-sm-2.col-xs-12
+								button.btn.btn-info.col-xs-12(type='submit') Submit
 								a.btn.btn-info.col-xs-12(onclick='goNext()') Continue >>
 					// End SmartWizard Content
 					// /top tiles
@@ -163,22 +167,6 @@ block content
 						a(href='https://colorlib.com') Colorlib
 					.clearfix
 				// /footer content
-			#edit-donation-form(title='Edit Donation')
-				p.validateTips All form fields are required.
-				form
-					fieldset
-						.form-group
-							label.control-label.col-md-6.col-sm-6.col-xs-12
-								| Donation Item 
-								span.required *
-							.col-md-6.col-sm-6.col-xs-12
-								input#txtEditDonationItem.text.ui-widget-content.ui-corner-all.form-control.col-md-7.col-xs-12(type='text', required='required')
-						.form-group
-							label.control-label.col-md-6.col-sm-6.col-xs-12
-								| Number Required 
-								span.required *
-							.col-md-6.col-sm-6.col-xs-12
-								input#txtEditDonationNumber.text.ui-widget-content.ui-corner-all.form-control.col-md-7.col-xs-12(type='text', required='required')
 			// Bootstrap
 			script(src='../vendors/bootstrap/dist/js/bootstrap.min.js')
 			// FastClick

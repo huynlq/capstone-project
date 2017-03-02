@@ -2,28 +2,8 @@
 
 $(document).ready(function() {
   initiateDonation();
-  var dialog1 = $( "#edit-donation-form" ).dialog({
-      autoOpen: false,
-      modal: true,
-      resizable: false,
-      width: 500,
-      height: 230,
-      buttons: {
-        "OK" : {
-          text: "OK",
-          id: "saveEditDonation",
-          click: function(){}
-        },
-        "Cancel" : {
-          text: "Cancel",
-          click: function() {
-            dialog.dialog( "close" );
-          }
-        }
-      }                
-    });
 
-  $("#inputImage").change(function(e) {
+  $("#inputEventImage").change(function(e) {
 
       for (var i = 0; i < e.originalEvent.srcElement.files.length; i++) {
           
@@ -32,8 +12,11 @@ $(document).ready(function() {
           var img = document.createElement("img");
           var reader = new FileReader();
           reader.onloadend = function() {
-               img.src = reader.result;
-               $("#image").attr('src', img.src);
+            var date = (new Date).toString().replace(/ /g,'');
+            img.src = reader.result;
+            $("#txtImage").attr('src', img.src);              
+            var extension = img.src.substring(img.src.indexOf("/")+1,img.src.indexOf(";"));
+            $('#txtImageSrc').val("/images/event/" + date + "." + extension);
           }
           reader.readAsDataURL(file);
           
@@ -88,7 +71,11 @@ function initialize() {
 }
 google.maps.event.addDomListener(window, 'load', initialize);      
 
-function initiateDonation() {          
+function initiateDonation() {
+  $.getJSON( '/users/id/' + readCookie("user"), function( data ) {
+    $('#txtUser').val(data.username);
+  });
+
   var content1 = "";
   var content2 = "";
   
@@ -111,16 +98,28 @@ function initiateDonation() {
 }
 
 function addOtherDonation(i) {
+  var item = document.getElementById('donation-item-' + i).value;
+  var num = document.getElementById('donation-number-' + i).value;
   var content1 = 
-    '<td id="donation-item-' + i + '">' + document.getElementById('donation-item-' + i).value + '</td>'
-    + '<td id="donation-number-' + i + '">' + document.getElementById('donation-number-' + i).value + '</td>'
-    + '<td><a id="edit-donation-row-' + i + '" class="btn btn-default glyphicon glyphicon-edit" onclick="editOtherDonation(' + i + ')"></a><a class="btn btn-default glyphicon glyphicon-remove" onclick="removeOtherDonation(' + i +')"></a></td>';
+      '<td id="donation-item-' + i + '">' + 
+        item +         
+      '</td>' +
+      '<td id="donation-number-' + i + '">' + 
+        num +         
+      '</td>' +
+      '<td>' +
+        '<input type="hidden" name="otherDonationItem" value="' + item + '" />' +
+        '<input type="hidden" name="otherDonationNumber" value="' + num + '" />' +
+        '<input type="hidden" name="otherDonationCurrent" value="0" />' +
+        '<a class="btn btn-default glyphicon glyphicon-remove" onclick="removeOtherDonation(' + i +')"></a>' + 
+      '</td>';
   document.getElementById("donation-row-" + i).innerHTML = content1;
+  console.log(num);
 
   var content2 = 
     '<td><input type="text" id="donation-item-' + (i + 1) + '"  placeholder="Donation Item" class="form-control"/></td>'
     + '<td><input type="text" id="donation-number-' + (i + 1) + '" placeholder="Number Required" class="form-control"/></td>'
-    + '<td id="add-donation"><a id="add-donation-button" class="btn btn-default glyphicon glyphicon-plus" onclick="addOtherDonation(' + (i + 1) + ')"></a></td>'
+    + '<td id="add-donation"><a id="add-donation-button" class="btn btn-default glyphicon glyphicon-plus" onclick="addOtherDonation(' + (parseInt(i) + 1) + ')"></a></td>'
   document.getElementById("donation-row-" + (i + 1)).innerHTML = content2;
 
   var content3 = '<tr id="donation-row-' + (i + 2) + '"></tr>';
@@ -132,25 +131,7 @@ function addOtherDonation(i) {
 function removeOtherDonation(i) {
   var element = document.getElementById("donation-row-" + i);
   element.outerHTML = '';
-}        
-
-function editOtherDonation(num) {
-  $("#saveEditDonation").unbind( "click" );
-  $("#saveEditDonation").click(function() {
-    saveEditOtherDonation(num);
-  });  
-  $("#txtEditDonationItem")[0].value = $("#donation-item-" + num)[0].innerHTML;        
-  $("#txtEditDonationNumber")[0].value = $("#donation-number-" + num)[0].innerHTML;
-  
-  //document.getElementById('cancelEditActivity').onclick = closeDialog;               
-  $("#edit-donation-form").dialog( "open" );              
-}
-
-function saveEditOtherDonation(num) {
-  $("#donation-item-" + num)[0].innerHTML = $("#txtEditDonationItem")[0].value;
-  $("#donation-number-" + num)[0].innerHTML = $("#txtEditDonationNumber")[0].value;
-  $( "#edit-donation-form" ).dialog("close");
-}
+}     
 
 function goNext() {  
   if($('#txtImageSrc').attr('src') != '' ) {

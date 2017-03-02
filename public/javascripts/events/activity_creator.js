@@ -2,6 +2,10 @@
 
 $(document).ready(function() {
   initiateSchedule();
+
+  localStorage.setItem("eventId", $('#eventId').html());
+
+
   var diffDays = document.getElementById("txtNumberOfDates").value;
   var table;
   for (var i = 1; i <= diffDays; i++) {
@@ -89,51 +93,53 @@ function saveEditActivity(data, that) {
 }
 
 function initiateSchedule() {
-  var retrievedObject = JSON.parse(localStorage.getItem('eventItem'));
-  var date = retrievedObject.eventDate;
-  var dates = date.split(" - ");
-  var date1 = new Date(dates[0]);
-  var date2 = new Date(dates[1]);
-  var timeDiff = Math.abs(date2.getTime() - date1.getTime());
-  var diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24)) + 1; 
-  document.getElementById("txtNumberOfDates").value = diffDays;
-  var content1 = "";
-  var content2 = "";
-  for (var i = 1; i <= diffDays; i++) {
-    content1 += '<li id="tab-day-' + i + '"><a data-toggle="tab" href="#day' + i + '">Day ' + i + '</a></li>';
-    content2 += '<div id="day' + i + '" class="tab-pane fade"><h3>Day ' + i + '</h3><p>'
-                + '<div class="row clearfix">'
-                  + '<div class="col-md-12 column">'
-                    + '<table id="table-day-' + i + '" class="table table-bordered table-hover dt-responsive">'
-                      + '<thead>'
-                        + '<tr >'
-                          + '<th class="text-center">Time</th>'
-                          + '<th class="text-center">Place</th>'
-                          + '<th class="text-center">Activity</th>'
-                          + '<th class="text-center">Estimated Budget</th>'
-                          + '<th class="text-center">Action</th>'
-                        + '</tr>'
-                      + '</thead>'
-                      + '<tbody id="body-day' + i + '">'  
-                      + '</tbody>'  
-                      + '<tfoot id="body-add-day' + i + '">'    
-                      + '<tr id="addr' + i + '">'
-                          + '<td><input type="text" id="txtDay' + i + '-AddTime"  placeholder="Time" class="form-control"/></td>'
-                          + '<td><input type="text" id="txtDay' + i + '-AddPlace" placeholder="Place" class="form-control"/></td>'
-                          + '<td><input type="text" id="txtDay' + i + '-AddActivity" placeholder="Activity" class="form-control"/></td>'
-                          + '<td><input type="text" id="txtDay' + i + '-AddEstBudget" placeholder="Estimated Budget" class="form-control"/></td>'
-                          + '<td id="day' + i + '_addActivity"><a id="add_row' + i + '" class="btn btn-default glyphicon glyphicon-plus" onclick="addActivity(' + i + ')"></a></td>'
-                        + '</tr>'                          
-                      + '</tfoot>'
-                    + '</table>'
-                    
+  $.getJSON( '/events/details/' + $('#eventId').html(), function( data ) {
+    var retrievedObject = data;
+    var date = retrievedObject.eventDate;
+    var dates = date.split(" - ");
+    var date1 = new Date(dates[0]);
+    var date2 = new Date(dates[1]);
+    var timeDiff = Math.abs(date2.getTime() - date1.getTime());
+    var diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24)) + 1; 
+    document.getElementById("txtNumberOfDates").value = diffDays;
+    var content1 = "";
+    var content2 = "";
+    for (var i = 1; i <= diffDays; i++) {
+      content1 += '<li id="tab-day-' + i + '"><a data-toggle="tab" href="#day' + i + '">Day ' + i + '</a></li>';
+      content2 += '<div id="day' + i + '" class="tab-pane fade"><h3>Day ' + i + '</h3><p>'
+                  + '<div class="row clearfix">'
+                    + '<div class="col-md-12 column">'
+                      + '<table id="table-day-' + i + '" class="table table-bordered table-hover dt-responsive">'
+                        + '<thead>'
+                          + '<tr >'
+                            + '<th class="text-center">Time</th>'
+                            + '<th class="text-center">Place</th>'
+                            + '<th class="text-center">Activity</th>'
+                            + '<th class="text-center">Estimated Budget</th>'
+                            + '<th class="text-center">Action</th>'
+                          + '</tr>'
+                        + '</thead>'
+                        + '<tbody id="body-day' + i + '">'  
+                        + '</tbody>'  
+                        + '<tfoot id="body-add-day' + i + '">'    
+                        + '<tr id="addr' + i + '">'
+                            + '<td><input type="text" id="txtDay' + i + '-AddTime"  placeholder="Time" class="form-control"/></td>'
+                            + '<td><input type="text" id="txtDay' + i + '-AddPlace" placeholder="Place" class="form-control"/></td>'
+                            + '<td><input type="text" id="txtDay' + i + '-AddActivity" placeholder="Activity" class="form-control"/></td>'
+                            + '<td><input type="text" id="txtDay' + i + '-AddEstBudget" placeholder="Estimated Budget" class="form-control"/></td>'
+                            + '<td id="day' + i + '_addActivity"><a id="add_row' + i + '" class="btn btn-default glyphicon glyphicon-plus" onclick="addActivity(' + i + ')"></a></td>'
+                          + '</tr>'                          
+                        + '</tfoot>'
+                      + '</table>'
+                      
+                    + '</div>'
                   + '</div>'
-                + '</div>'
-                // + '<div id="day' + i + '_addActivity"><a id="add_row' + i + '" class="btn btn-default pull-left" onclick="addActivity(' + i + '), 2">Add Row</a></div>'
-                + '</p></div>';
-  }
-  document.getElementById("activityDates").innerHTML = content1;
-  document.getElementById("activityContents").innerHTML = content2;
+                  // + '<div id="day' + i + '_addActivity"><a id="add_row' + i + '" class="btn btn-default pull-left" onclick="addActivity(' + i + '), 2">Add Row</a></div>'
+                  + '</p></div>';
+    }
+    document.getElementById("activityDates").innerHTML = content1;
+    document.getElementById("activityContents").innerHTML = content2;
+  });  
 }
 
 

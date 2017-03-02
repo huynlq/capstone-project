@@ -1,21 +1,48 @@
 // DOM Ready =============================================================
 
 $(document).ready(function() {
-  var eventObj = JSON.parse(localStorage.getItem('eventItem'));
-  var activityObj = JSON.parse(localStorage.getItem('activityItem'));
-  $('#event-title')[0].innerHTML = eventObj.eventName;
-  $('#event-type')[0].innerHTML = eventObj.eventType;
-  $('#event-date')[0].innerHTML = eventObj.eventDate;
-  $('#event-time')[0].innerHTML = eventObj.meetingTime;
-  $('#event-place')[0].innerHTML = eventObj.meetingAddress;
-  $('#event-description')[0].innerHTML = eventObj.eventDescription;
-  $('#event-image')[0].src = eventObj.imageSrc;
-  $('#event-donation')[0].innerHTML = eventObj.donationNeeded;
-  for (var i = 0; i < eventObj.otherDonationItem.length; i++) {
-    var content = '<label>' + eventObj.otherDonationItem[i] + ':</label><div class="progress"><span>0/' + eventObj.otherDonationNumber[i] + '<div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" style="width:70%"></div></div>';
-    $('#event-donation-progress')[0].innerHTML += content;
-  }
 
+ 
+
+  //var eventObj = JSON.parse(localStorage.getItem('eventItem'));
+  
+  populateEvent();
+  
+  
+});
+
+// Functions =============================================================
+
+function populateEvent() {
+  var eventId = localStorage.getItem('eventId');
+
+  $.getJSON( '/events/details/' + eventId, function( data ) {    
+    console.log(data.otherDonationItem.constructor === Array);
+    $('#event-title')[0].innerHTML = data.eventName;
+    $('#event-type')[0].innerHTML = data.eventType;
+    $('#event-date')[0].innerHTML = data.eventDate;
+    $('#event-time')[0].innerHTML = data.meetingTime;
+    $('#event-place')[0].innerHTML = data.meetingAddress;
+    $('#event-description')[0].innerHTML = data.eventDescription;
+    $('#event-image')[0].src = data.eventImage;
+    $('#event-donation')[0].innerHTML = data.donationNeeded;
+    if(data.otherDonationItem.constructor !== Array) {
+      var content = '<label>' + data.otherDonationItem + ':</label><div class="progress"><span>0/' + data.otherDonationNumber + '<div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" style="width:70%"></div></div>';
+      $('#event-donation-progress')[0].innerHTML += content;
+    } else {
+      for (var i = 0; i < data.otherDonationItem.length; i++) {
+        var content = '<label>' + data.otherDonationItem[i] + ':</label><div class="progress"><span>0/' + data.otherDonationNumber[i] + '<div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" style="width:70%"></div></div>';
+        $('#event-donation-progress')[0].innerHTML += content;
+      }  
+    }
+    
+
+    populateActivities();
+  });
+}
+
+function populateActivities() {
+  var activityObj = JSON.parse(localStorage.getItem('activityItem'));
   $('#activityPane').html('' +
     '<ul id="activityDays" class="nav nav-tabs">' +
     '</ul>' +
@@ -62,41 +89,26 @@ $(document).ready(function() {
 
   $('#activity-tab-day-1').addClass('active');
   $('#activity-day-1').addClass('in active');
-});
-
-// Functions =============================================================
+}
 
 function goNext() {
-  var eventObj = JSON.parse(localStorage.getItem('eventItem'));
-  var activityObj = JSON.parse(localStorage.getItem('activityItem'));
-  
-  eventObj.dateCreated = new Date();
-  eventObj.dateModified = new Date();
-  eventObj.deleteFlag = "";
-
-  var newImage = "/images/event/" + Date().split(' ').join('').replace(/:/g,"") + eventObj.imageExt;
-  var newImageName = "public/images/event/" + Date().split(' ').join('').replace(/:/g,"") + eventObj.imageExt;
-
-  eventObj.image = newImage;
-  eventObj.imageName = newImageName;
-  eventObj.status = "PendingPublish";
-  eventObj.currentBudget = "0";
-  eventObj.user = readCookie("username");
-
-  for(var i = 0; i < eventObj.otherDonationItem.length; i++){
-    eventObj.otherDonationCurrent[i] = "0";
-  }
+  var a = new Date();
+  var eventObj = {
+    status: "Published",
+    dateModified: a.toString()
+  };
 
   $.ajax({
         type: 'POST',
         data: eventObj,
-        url: '/events/addevent',
+        url: '/events/finishevent/' + localStorage.getItem('eventId'),
         dataType: 'JSON'
     }).done(function( response ) {
-
+        var id = localStorage.getItem('eventId');
         // Check for successful (blank) response
         if (response.msg === '') {
-            var id = response._id;
+            
+            var activityObj = JSON.parse(localStorage.getItem('activityItem'));
 
             var newActivity;
             for(var i = 0; i < activityObj.length; i++) {
@@ -114,13 +126,20 @@ function goNext() {
                   type: 'POST',
                   data: newActivity,
                   url: '/events/addactivity',
+                  async: false,
                   dataType: 'JSON'
               }).done(function( response ) {
                   if (response.msg === '') {
-                    window.location.replace(location.origin + '/events');
+                    
+                  } else {
+                    alert(response.msg);
                   }
               });
             }
+            localStorage.removeItem("eventId");
+            localStorage.removeItem("activityItem");
+            window.location.replace(location.origin + '/events/' + id);
+            
         }
         else {
 

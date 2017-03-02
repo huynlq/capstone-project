@@ -186,6 +186,8 @@ router.post('/updatecompany', uploading.single('displayCompanyImage'), function(
                 fs.writeFile(savePath, data);
             });
 
+            req.body.companyImage = path;
+
             var db = req.db;
             var collection = db.get('Users');
             collection.update({ '_id' : user }, { $set: req.body}, function(err) {
@@ -196,6 +198,79 @@ router.post('/updatecompany', uploading.single('displayCompanyImage'), function(
                 }
             });
         }
+    }
+});
+
+/*  POST To Update Company Info */
+router.post('/updatemyuserinfo', uploading.single('displayUserImage'), function(req, res) { 
+    var user = req.cookies.user;    
+    req.body.dateModified = new Date().toString();
+    console.log(req.body);
+    console.log(req.file);
+    if(user != null) {
+        var db = req.db;
+        var collection = db.get('Users')
+        collection.findOne({'_id': new ObjectId(user)},{},function(e,docs){
+            if(req.file != null) {
+
+                var extension = req.file.mimetype.split("/")[1];
+                var path = "/images/user/" + req.file.filename;
+                var savePath = "public" + path;
+
+                fs.unlink("public" + docs.image);
+
+                fs.readFile(req.file.path, function (err, data) {
+                    fs.writeFile(savePath, data);
+                });
+
+                req.body.image = path;
+            }
+
+            collection.update({ '_id' : user }, { $set: req.body}, function(err) {
+                if(err === null) {
+                    res.render('users/my_user_page', { title: "Charity Project | User Page" });
+                } else {
+                    res.send({ msg:'error: ' + err, 'message': 'An error occured. Please try again.' });
+                }
+            });
+        });        
+    }
+});
+
+/*  POST To Update Company Info */
+router.post('/updatemycompanyinfo', uploading.single('displayCompanyImage'), function(req, res) { 
+    var user = req.cookies.user;    
+    req.body.dateModified = new Date().toString();
+    if(user != null) {
+        var db = req.db;
+        var collection = db.get('Users')
+        collection.findOne({'_id': new ObjectId(user)},{},function(e,docs){
+            if(req.file != null) {
+                console.log("HEY");
+
+                var extension = req.file.mimetype.split("/")[1];
+                var path = "/images/user/" + req.file.filename;
+                var savePath = "public" + path;
+
+                fs.unlink("public" + docs.companyImage);
+
+                fs.readFile(req.file.path, function (err, data) {
+                    console.log("HO");
+
+                    fs.writeFile(savePath, data);
+                });
+
+                req.body.companyImage = path;
+            }
+
+            collection.update({ '_id' : user }, { $set: req.body}, function(err) {
+                if(err === null) {
+                    res.render('users/my_user_page', { title: "Charity Project | User Page" });
+                } else {
+                    res.send({ msg:'error: ' + err, 'message': 'An error occured. Please try again.' });
+                }
+            });
+        });
     }
 });
 

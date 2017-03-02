@@ -7,6 +7,46 @@ $(document).ready(function() {
 
   $('[data-toggle="tooltip"]').tooltip(); 
 
+  var id = readCookie("user");
+
+  $("#inputUserImage").change(function(e) {
+
+      for (var i = 0; i < e.originalEvent.srcElement.files.length; i++) {
+          
+          var file = e.originalEvent.srcElement.files[i];
+          
+          var img = document.createElement("img");
+          var reader = new FileReader();
+          reader.onloadend = function() {
+               img.src = reader.result;
+               $("#txtUserImageSrc").attr('src', img.src);              
+               var extension = img.src.substring(img.src.indexOf("/")+1,img.src.indexOf(";"));
+               $('#txtImageSrc').val("/images/user/" + id + "." + extension);
+          }
+          reader.readAsDataURL(file);
+          
+      }
+  });
+
+  $("#inputCompanyImage").change(function(e) {
+
+      for (var i = 0; i < e.originalEvent.srcElement.files.length; i++) {
+          
+          var file = e.originalEvent.srcElement.files[i];
+          
+          var img = document.createElement("img");
+          var reader = new FileReader();
+          reader.onloadend = function() {
+               img.src = reader.result;
+               $("#txtCompanyImageSrc").attr('src', img.src);              
+               var extension = img.src.substring(img.src.indexOf("/")+1,img.src.indexOf(";"));
+               $('#txtImageSrc').val("/images/user/company-" + id + "." + extension);
+          }
+          reader.readAsDataURL(file);
+          
+      }
+  });
+
   populateForms();
   populateErrors();
 } );
@@ -21,7 +61,7 @@ function populateForms() {
         $('#txtAddress').val(data.address);
         $('#txtEmail').val(data.email);
         $('#txtPhone').val(data.phoneNumber);
-        $('#txtImageSrc').attr("src", data.image);
+        $('#txtUserImageSrc').attr("src", data.image);
 
         $.getJSON('/users/getrolebyid/' + id, function( data2 ) {
         	if(data2.role != 'Producer' && data2.role != 'Sponsor') {
@@ -29,7 +69,7 @@ function populateForms() {
         	} else {        		
             $('#btnPromote').remove();
 
-        		$('#txtCompanyFullName').val(data.companyName);
+        		$('#txtCompanyName').val(data.companyName);
 		        $('#txtCompanyAddress').val(data.companyAddress);
 		        $('#txtCompanyEmail').val(data.companyEmail);
 		        $('#txtCompanyPhone').val(data.companyPhoneNumber);

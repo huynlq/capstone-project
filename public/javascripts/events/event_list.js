@@ -56,8 +56,8 @@ function showUpcomingEvents(data) {
                 this.eventName,
                 this.eventType,
                 this.user,
-                this.contractEmail,
-                this.contractPhone,
+                this.contactEmail,
+                this.contactPhone,
                 eventStartDate.getDate() + '/' + (eventStartDate.getMonth() + 1) + '/' +  eventStartDate.getFullYear(),
                 this.meetingAddress,
                 this.donationNeeded,
@@ -88,7 +88,7 @@ function showEvents(data) {
                 + '<a data-toggle="tooltip" title="Details" class="btn btn-info btn-xs" href="events/' + this._id + '">'
                     + '<span class="glyphicon glyphicon-search"></span>'
                 + '</a>'
-		        + '<a data-toggle="tooltip" title="Disapprove" class="btn btn-danger btn-xs linkdisapproveevent" rel="' + this._id + '" href="#">'
+		        + '<a data-toggle="tooltip" title="Cancel" class="btn btn-danger btn-xs linkcancelevent" rel="' + this._id + '" href="#">'
                     + '<span class="glyphicon glyphicon-remove"></span>'
                 + '</a>'
             + '</center>',
@@ -96,8 +96,8 @@ function showEvents(data) {
             this.status,
             this.eventType,
             this.user,
-            this.contractEmail,
-            this.contractPhone,
+            this.contactEmail,
+            this.contactPhone,
             this.eventDate.split(" - ")[0],
             this.meetingAddress,
             this.donationNeeded,
@@ -143,8 +143,8 @@ function showPastEvents(data) {
                 this.eventName,
                 this.eventType,
                 this.user,
-                this.contractEmail,
-                this.contractPhone,
+                this.contactEmail,
+                this.contactPhone,
                 eventStartDate.getDate() + '/' + (eventStartDate.getMonth() + 1) + '/' +  eventStartDate.getFullYear(),,
                 this.meetingAddress,
                 this.donationNeeded,
@@ -186,8 +186,8 @@ function showCancelledEvents(data) {
                 this.eventName,
                 this.eventType,
                 this.user,
-                this.contractEmail,
-                this.contractPhone,
+                this.contactEmail,
+                this.contactPhone,
                 eventStartDate.getDate() + '/' + (eventStartDate.getMonth() + 1) + '/' +  eventStartDate.getFullYear(),,
                 this.meetingAddress,
                 this.donationNeeded,

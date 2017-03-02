@@ -12,11 +12,12 @@ function initialize() {
 
 
 	$('#eventCarousel').owlCarousel({
+		nav:true,
+		animateOut: 'fadeOut',
+		navigation:true,
 		singleItem:true,
 		margin:0,
-		loop:true,
-		nav:true,
-		navigation:true,
+		loop:true,		
 		pagination:true,
 		navText: ["<i class='fa fa-angle-double-left'></i>","<i class='fa fa-angle-double-right'></i>"],
 		responsive:{
@@ -28,8 +29,8 @@ function initialize() {
 
 	$("#owl-demo").owlCarousel({
 		nav: true,
-		navText: ["<i class='fa fa-angle-double-left'></i>","<i class='fa fa-angle-double-right'></i>"],
 		lazyLoad: true,
+		navText: ["",""],
 		animateOut: 'fadeOut',
  		pagination: true,
 		navigation : true, 
@@ -63,6 +64,8 @@ function initialize() {
 			return $(this).attr("aria-valuenow") + "%";
 		}
 	)
+
+	$('#eventCarousel .owl-nav').removeClass('disabled');
 }
 
 function CountDown(startTime, endTime) {
@@ -159,11 +162,11 @@ function populateFeaturedEvents() {
 
 			var cd = CountDown(new Date(dayStart), new Date(dayEnd));
 
-			var percent = 1890000 / parseInt(this.donationNeeded) * 100;
+			var percent = parseInt(this.currentDonation) / parseInt(this.donationNeeded) * 100;
 
 	    	var content = "" +
 		        '<div class="eventItem item">' +
-				    '<div class="thumb col-lg-3 col.md-10 col.sm-10 col-xs-10" style="background-image: url(\'' + this.image + '\');">' +
+				    '<div class="thumb col-lg-3 col.md-10 col.sm-10 col-xs-10" style="background-image: url(\'' + this.eventImage + '\');">' +
 				    	'<div id="event' + counter + 'Time" class="time">' +
 					    	cd + 
 					    '</div>' +
@@ -178,7 +181,7 @@ function populateFeaturedEvents() {
 					    	'</ul>' +
 					    	'<div class="donate-details">' +						       	
 						        '<ul class="pull-left mt-15" style="list-style: none; text-align: right">' +
-							        '<li><strong>Tích lũy:</strong> <span class="count">' + parseInt(1890000).toLocaleString() + '</span></li>' +
+							        '<li><strong>Tích lũy:</strong> <span class="count">' + parseInt(this.currentDonation).toLocaleString() + '</span></li>' +
 							        '<li><strong>Mục tiêu:</strong> ' + parseInt(this.donationNeeded).toLocaleString() + '</li>' +
 						        '</ul>' +
 						        '<a href="events/' + this._id + '" class="btn" style="background-color: #73879C; color: white; float: right" role="button">Chi tiết</a>' +
