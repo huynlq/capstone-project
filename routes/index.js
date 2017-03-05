@@ -36,12 +36,12 @@ router.post('/register', function(req, res) {
 	collection.findOne({$or:[{"username": username},{"email": email}]}, function(err, doc) {
 	  if (doc == null) {	  	
 	  	collection.insert(req.body, function(err, result){
-	  		download('http://www.infinitemd.com/wp-content/uploads/2017/02/default.jpg', 'public/images/user/' + result._id + '.jpg', function(){
+	  		download('http://www.infinitemd.com/wp-content/uploads/2017/02/default.jpg', 'public/images/user/' + req.body._id + '.jpg', function(){
 		        console.log('done');
 		    });
-		    collection.update({ '_id' : result._id }, { $set:{'image':'/images/user/' + result._id + '.jpg'} }, function(err) {
+		    collection.update({ '_id' : req.body._id }, { $set:{'image':'/images/user/' + req.body._id + '.jpg'} }, function(err) {
 		        res.send(
-					(err === null) ? {msg: '', id: result._id} : {msg: err}
+					(err === null) ? {msg: '', id: req.body._id} : {msg: err}
 				);
 		    });			
 		});
