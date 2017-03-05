@@ -68,10 +68,10 @@ router.post('/adduser', function(req, res) {
     var db = req.db;
     var collection = db.get('Users');
     collection.insert(req.body, function(err, result){
-        download('http://www.infinitemd.com/wp-content/uploads/2017/02/default.jpg', 'public/images/user/' + req.body._id + '.jpg', function(){
+        download('http://www.infinitemd.com/wp-content/uploads/2017/02/default.jpg', 'public/images/user/' + req.body.username + '.jpg', function(){
                         console.log('done');
                     });
-        collection.update({ '_id' : req.body._id }, { $set:{'image':'/images/user/' + req.body._id + '.jpg'} }, function(err) {
+        collection.update({ '_id' : result._id }, { $set:{'image':'/images/user/' + req.body.username + '.jpg'} }, function(err) {
             res.send(
                 (err === null) ? { msg: ''} : { msg: err, 'message': 'An error occured. Please try again.' }
             );
