@@ -76,8 +76,7 @@ router.post('/adduser', function(req, res) {
         //         (err === null) ? { msg: ''} : { msg: err, 'message': 'An error occured. Please try again.' }
         //     );
         // });  
-        console.log(result);
-        res.send({msg: result});
+        res.send({msg: req.body});
     });
 
 
