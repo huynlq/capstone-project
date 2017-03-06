@@ -10,12 +10,13 @@ var request = require('request');
 // New Code
 var mongo = require('mongodb');
 var monk = require('monk');
-var db = monk('mongodb://numbuh1:numbuh1@ds119370.mlab.com:19370/voluntaryproject');
+var db = monk('localhost:27017/VoluntaryProject');
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
 var posts = require('./routes/posts');
 var events = require('./routes/events');
+var notifications = require('./routes/notifications');
 
 var app = express();
 
@@ -41,6 +42,7 @@ app.use('/', routes);
 app.use('/users', users);
 app.use('/posts', posts);
 app.use('/events', events);
+app.use('/notifications', notifications);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
