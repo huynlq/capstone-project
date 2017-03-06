@@ -41,6 +41,21 @@ router.get('/creator_preview', function(req, res, next) {
   res.render('events/event_preview', { title: 'Event Preview' });
 });
 
+/* GET event update page. */
+router.get('/update/:id', function(req, res, next) {
+    var db = req.db;
+    var collection = db.get('Events');
+    if(req.params.id.length != 24)
+        res.render('page_404');
+    collection.findOne({ '_id' : req.params.id },{},function(e,docs){
+        if(docs) {
+            res.render('events/update_event', { title: 'Charity Event | Updating ' + docs.eventName, 'docs': docs });
+        } else {
+            res.render('page_404');
+        }
+    });
+});
+
 /* POST new event. */
 router.post('/addevent', uploading.single('displayEventImage'), function(req, res) {
     console.log(req.file);
@@ -158,6 +173,51 @@ router.get('/details/:id', function(req, res, next) {
     });
 });
 
+/* GET event donations base on id. */
+router.get('/donations/:id', function(req, res, next) {
+    var db = req.db;
+    var collection = db.get('Donations');
+    if(req.params.id.length != 24)
+        res.render('page_404');    
+    collection.find({ 'eventId' : req.params.id },{sort: {dateCreated: -1}},function(e,docs){
+        if(docs) {
+            res.json(docs);
+        } else {
+            res.render('page_404');
+        }
+    });
+});
+
+/* POST new donation. */
+router.post('/adddonation', function(req, res) {
+    var db = req.db;
+    var collection = db.get('Donations');
+    collection.insert(req.body, function(err, result){                
+        res.send(
+            (err === null) ? { msg: ''} : { msg: err, 'message': 'An error occured. Please try again.' }
+        );
+    });
+});
+
+/*  PUT To Update Donation */
+router.put('/updatedonation/:id', function(req, res) {
+    var db = req.db;
+    var collection = db.get('Donations');
+    collection.update({ '_id' : req.params.id }, { $set: req.body}, function(err) {
+        res.send((err === null) ? { msg: '', 'message' : 'Saved successfully.'  } : { msg:'error: ' + err, 'message': 'An error occured. Please try again.' });
+    });
+});
+
+/* DELETE to Delete Donation. */
+router.delete('/deletedonation/:id', function(req, res) {
+    var db = req.db;
+    var collection = db.get('Donations');
+    collection.remove({ '_id' : req.params.id }, function(err) {
+        res.send((err === null) ? { msg: '' } : { msg:'error: ' + err });
+    });
+});
+
+
 /* GET events based on userId. */
 router.get('/all', function(req, res, next) {
     var user = req.cookies.username;
@@ -183,6 +243,15 @@ router.get('/all', function(req, res, next) {
     } else {
         res.render('page_404');
     }
+});
+
+/*  PUT To Update Event */
+router.put('/updateevent/:id', function(req, res) {
+    var db = req.db;
+    var collection = db.get('Events');
+    collection.update({ '_id' : req.params.id }, { $set: req.body}, function(err) {
+        res.send((err === null) ? { msg: '', 'message' : 'Saved successfully.'  } : { msg:'error: ' + err, 'message': 'An error occured. Please try again.' });
+    });
 });
 
 module.exports = router;
