@@ -13,6 +13,10 @@ $(document).ready(function() {
 
   $('#tableDonation tbody').on('click', 'td a.linkremovedonation', deleteDonation);
 
+  $('#tableParticipants tbody').on('click', 'td a.linkabsent', markAbsent);
+
+  $('#tableParticipants tbody').on('click', 'td a.linkpresent', markPresent);
+
 
 } );
 
@@ -27,7 +31,7 @@ function populateTables() {
 
         // For each item in our JSON, add a table row and cells to the content string
         // showDonations(data);
-        // showParticipants(data);
+        showParticipants(data._id);
         // showActivities(data);
         $('[data-toggle="tooltip"]').tooltip(); 
     }); 
@@ -178,6 +182,111 @@ function deleteDonation(event) {
         }
     });    
 
+}
+
+// Populate Participant Table
+function showParticipants(_id) {
+    console.log(_id);
+    var table = $('#tableParticipants').DataTable();
+    table.clear().draw();
+    var dateJoined = "";
+    var counter = 0;
+    var actionPanel = "";
+
+    $.getJSON( '/events/participants/' + _id, function( data ) {
+        $.each(data, function(){
+            var participantId = this._id;
+            var participantStatus = this.status;
+            counter++;
+            dateJoined = new Date(data.dateCreated);
+            $.getJSON( '/users/id/' + this.userId, function( dataUser ) {
+                if(participantStatus == 'Absent') {
+                    actionPanel = '<a data-toggle="tooltip" title="Mark Present" class="btn btn-info btn-xs linkpresent" rel="' + participantId + '" href="#">'
+                                    + '<span class="glyphicon glyphicon-user"></span>'
+                                + '</a>';
+                } else {
+                    actionPanel = '<a data-toggle="tooltip" title="Mark Absent" class="btn btn-danger btn-xs linkabsent" rel="' + participantId + '" href="#">'
+                                    + '<span class="glyphicon glyphicon-remove"></span>'
+                                + '</a>';
+                }
+                table.row.add([
+                    counter +
+                    '<p class="participantId" style="display:none">' + participantId + '</p>',
+                    '<center>' + actionPanel + '</center>',
+                    dataUser.username,
+                    dataUser.fullName,
+                    dataUser.email,
+                    dataUser.phoneNumber,
+                    dateCreated.getDate() + '/' + (dateCreated.getMonth() + 1) + '/' +  dateCreated.getFullYear()
+                ]).draw(false);
+                $('[data-toggle="tooltip"]').tooltip(); 
+            });
+        });        
+    });    
+}
+
+// Mark absent a user
+function markAbsent(event) {
+    event.preventDefault();
+
+    
+    var table = $('#tableParticipants').DataTable();
+    var data = table.row( $(this).parents('tr') ).data();
+    var dataId = data[0];
+    dataId = dataId.substring(dataId.indexOf(">") + 1, dataId.lastIndexOf("<"));
+    var username = data[2];
+
+    console.log(dataId);
+
+    var participant = {
+        'status': 'Absent'
+    };
+    
+    $.ajax({
+        type: 'PUT',
+        data: participant,
+        url: '/events/updateparticipant/' + dataId
+    }).done(function( response ) {
+        // Check for a successful (blank) response
+        if (response.msg === '') {
+            populateTables();
+        }
+        else {
+            alert('Error: ' + response.msg);
+        }
+    });
+}
+
+// Mark present a user
+function markPresent(event) {
+    event.preventDefault();
+
+    
+    var table = $('#tableParticipants').DataTable();
+    var data = table.row( $(this).parents('tr') ).data();
+    var dataId = data[0];
+    dataId = dataId.substring(dataId.indexOf(">") + 1, dataId.lastIndexOf("<"));
+    var username = data[2];
+
+    console.log(dataId);
+
+    var participant = {
+        'status': 'Present'
+    };
+    
+    $.ajax({
+        type: 'PUT',
+        data: participant,
+        url: '/events/updateparticipant/' + dataId
+    }).done(function( response ) {
+        // Check for a successful (blank) response
+        if (response.msg === '') {
+            populateTables();
+        }
+        else {
+            alert('Error: ' + response.msg);
+        }
+    });
 }
 
 // Populate Upcoming Events Table

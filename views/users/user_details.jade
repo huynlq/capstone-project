@@ -24,21 +24,23 @@ block content
 			// bootstrap-daterangepicker
 			link(href='../vendors/bootstrap-daterangepicker/daterangepicker.css', rel='stylesheet')
 			// Datatables
-			link(href='../vendors/datatables.net-bs/css/dataTables.bootstrap.min.css', rel='stylesheet')
-			link(href='../vendors/datatables.net-buttons-bs/css/buttons.bootstrap.min.css', rel='stylesheet')
-			link(href='../vendors/datatables.net-fixedheader-bs/css/fixedHeader.bootstrap.min.css', rel='stylesheet')
-			link(href='../vendors/datatables.net-responsive-bs/css/responsive.bootstrap.min.css', rel='stylesheet')
-			link(href='../vendors/datatables.net-scroller-bs/css/scroller.bootstrap.min.css', rel='stylesheet')
+			link(href='/vendors/datatables.net-bs/css/dataTables.bootstrap.min.css', rel='stylesheet')
+			link(href='/vendors/datatables.net-buttons-bs/css/buttons.bootstrap.min.css', rel='stylesheet')
+			link(href='/vendors/datatables.net-fixedheader-bs/css/fixedHeader.bootstrap.min.css', rel='stylesheet')
+			link(href='/vendors/datatables.net-responsive-bs/css/responsive.bootstrap.min.css', rel='stylesheet')
+			link(href='/vendors/datatables.net-scroller-bs/css/scroller.bootstrap.min.css', rel='stylesheet')
 			// Custom Theme Style
 			link(href='../build/css/custom.min.css', rel='stylesheet')
 			script(src='https://maps.googleapis.com/maps/api/js?key=AIzaSyAxUeMBUbKnW-LKTWTIL656w7nHABuNMTI&libraries=places')
-			script(src='../javascripts/global.js')			
+			script(src='../javascripts/global.js')		
+			script(src='../javascripts/user_details.js')
 		body.nav-md									
 			.right_col(role='main')
 				// top tiles
 				.row.page-title
 					.title(style='margin: 10px')
 						h1 #{docs.username}'s Page
+						#txtUsername(style="display:none") #{docs.username}
 				br
 				br
 				br
@@ -47,6 +49,7 @@ block content
 					// Smart Wizard					
 					.form-horizontal.form-label-left
 						h3(style='margin-left: 50px') User Information
+						#userId(style="display: none") #{docs._id}
 						hr
 						.row
 							.col-md-1.col-sm-1
@@ -113,12 +116,32 @@ block content
 							h3(style='margin-left: 50px') Events Joined
 							hr
 							.row
-								// MAKE SOME KIND OF SLIDER HERE
+								.col-md-2.col-sm-2
+								.col-md-8.col-sm-8.col-xs-12
+									table#eventJoinedTable.table.table-striped.table-bordered.dt-responsive.nowrap.datatable-responsive(style="width: 100%")
+										thead
+											tr
+												th #
+												th Event
+												th Type
+												th Date
+												th Action
+										tbody
 						#eventProduced-panel
 							h3(style='margin-left: 50px') Events Produced
 							hr
 							.row
-								// MAKE SOME KIND OF SLIDER HERE
+								.col-md-2.col-sm-2
+								.col-md-8.col-sm-8.col-xs-12
+									table#eventProducedTable.table.table-striped.table-bordered.dt-responsive.nowrap.datatable-responsive(style="width: 100%")
+										thead
+											tr
+												th #
+												th Event
+												th Type
+												th Date
+												th Action
+										tbody
 						#eventSponsored-panel
 							h3(style='margin-left: 50px') Events Sponsored
 							hr
@@ -177,5 +200,21 @@ block content
 			script(src='../vendors/bootstrap-daterangepicker/daterangepicker.js')
 			// jquery.inputmask
 			script(src='../vendors/jquery.inputmask/dist/min/jquery.inputmask.bundle.min.js')
+			// Datatables
+			script(src='/vendors/datatables.net/js/jquery.dataTables.min.js')
+			script(src='/vendors/datatables.net-bs/js/dataTables.bootstrap.min.js')
+			script(src='/vendors/datatables.net-buttons/js/dataTables.buttons.min.js')
+			script(src='/vendors/datatables.net-buttons-bs/js/buttons.bootstrap.min.js')
+			script(src='/vendors/datatables.net-buttons/js/buttons.flash.min.js')
+			script(src='/vendors/datatables.net-buttons/js/buttons.html5.min.js')
+			script(src='/vendors/datatables.net-buttons/js/buttons.print.min.js')
+			script(src='/vendors/datatables.net-fixedheader/js/dataTables.fixedHeader.min.js')
+			script(src='/vendors/datatables.net-keytable/js/dataTables.keyTable.min.js')
+			script(src='/vendors/datatables.net-responsive/js/dataTables.responsive.min.js')
+			script(src='/vendors/datatables.net-responsive-bs/js/responsive.bootstrap.js')
+			script(src='/vendors/datatables.net-scroller/js/dataTables.scroller.min.js')
+			script(src='/vendors/jszip/dist/jszip.min.js')
+			script(src='/vendors/pdfmake/build/pdfmake.min.js')
+			script(src='/vendors/pdfmake/build/vfs_fonts.js')
 			// Custom Theme Scripts
 			script(src='../build/js/custom.min.js')

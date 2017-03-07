@@ -279,7 +279,7 @@ function showProducers(data) {
             table.row.add([
                 counter,
                 '<center>'
-                    + '<a data-toggle="tooltip" title="Details" class="btn btn-info btn-xs" href="/producers/' + this._id + '">'
+                    + '<a data-toggle="tooltip" title="Details" class="btn btn-info btn-xs" href="/users/' + this._id + '">'
                         + '<span class="glyphicon glyphicon-search"></span>'
                     + '</a>'
                     + '<a data-toggle="tooltip" title="Remove" class="btn btn-danger btn-xs linkbanuser" rel="' + this._id + '">'
@@ -317,7 +317,7 @@ function showSponsors(data) {
             table.row.add([
                 counter,
                 '<center>'
-                    + '<a data-toggle="tooltip" title="Details" class="btn btn-info btn-xs" href="/sponsors/' + this._id + '">'
+                    + '<a data-toggle="tooltip" title="Details" class="btn btn-info btn-xs" href="/users/' + this._id + '">'
                         + '<span class="glyphicon glyphicon-search"></span>'
                     + '<a data-toggle="tooltip" title="Remove" class="btn btn-danger btn-xs linkremoveadmin" rel="' + this._id + '">'
                         + '<span class="glyphicon glyphicon-remove"></span>'

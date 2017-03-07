@@ -254,4 +254,77 @@ router.put('/updateevent/:id', function(req, res) {
     });
 });
 
+/* POST new participant. */
+router.post('/addparticipant', function(req, res) {
+    var db = req.db;
+    var collection = db.get('EventJoined');
+    collection.insert(req.body, function(err, result){
+        res.send(
+            (err === null) ? { msg: '' } : { msg: err }
+        );
+    });
+});
+
+/* GET participant based on eventId. */
+router.get('/participants/:id', function(req, res, next) {
+    var db = req.db;
+    var collection = db.get('EventJoined');
+    collection.find({'eventId': req.params.id},{},function(e,docs){        
+        res.json(docs);
+    });
+});
+
+/* GET participant based on userId. */
+router.get('/getparticipatedevents/:id', function(req, res, next) {
+    var db = req.db;
+    var collection = db.get('EventJoined');
+    collection.find({'userId': req.params.id},{},function(e,docs){        
+        res.json(docs);
+    });
+});
+
+/* GET participant based on eventId and userId. */
+router.get('/participants/:eventId/:userId', function(req, res, next) {
+    var db = req.db;
+    var collection = db.get('EventJoined');
+    collection.find({
+        'eventId': req.params.eventId,
+        'userId': req.params.userId,
+    },{},function(e,docs){        
+        res.send(
+            (docs) ? {msg: 'true'} : {msg: 'false'}
+        );
+    });
+});
+
+/* DELETE to Delete Participant. */
+router.delete('/deleteparticipant/:eventId/:userId', function(req, res) {
+    var db = req.db;
+    var collection = db.get('EventJoined');
+    collection.remove({ 
+        'eventId' : req.params.eventid,
+        'userId' : req.params.userId
+    }, function(err) {
+        res.send((err === null) ? { msg: '' } : { msg:'error: ' + err });
+    });
+});
+
+/*  PUT To Update Participant */
+router.put('/updateparticipant/:id', function(req, res) {
+    var db = req.db;
+    var collection = db.get('EventJoined');
+    collection.update({'_id': req.params.id}, { $set: req.body}, function(err) {
+        res.send((err === null) ? { msg: ''  } : { msg:'error: ' + err });
+    });
+});
+
+/* GET events by user. */
+router.get('/producedevents/:username', function(req, res, next) {
+    var db = req.db;
+    var collection = db.get('Events');
+    collection.find({'user': req.params.username},{},function(e,docs){        
+        res.json(docs);
+    });
+});
+
 module.exports = router;

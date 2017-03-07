@@ -110,7 +110,6 @@ function addOtherDonation(i) {
       '<td>' +
         '<input type="hidden" name="otherDonationItem" value="' + item + '" />' +
         '<input type="hidden" name="otherDonationNumber" value="' + num + '" />' +
-        '<input type="hidden" name="otherDonationCurrent" value="0" />' +
         '<a class="btn btn-default glyphicon glyphicon-remove" onclick="removeOtherDonation(' + i +')"></a>' + 
       '</td>';
   document.getElementById("donation-row-" + i).innerHTML = content1;
