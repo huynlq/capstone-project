@@ -143,6 +143,15 @@ router.get('/activities/:id', function(req, res, next) {
     });
 });
 
+/* GET all activities by its id. */
+router.get('/activities/id/:id', function(req, res, next) {
+    var db = req.db;
+    var collection = db.get('Activities');
+    collection.findOne({ '_id' : req.params.id },{},function(e,docs){
+        res.json(docs);
+    });
+});
+
 /* GET event detail PAGE base on id. */
 router.get('/:id', function(req, res, next) {
     var db = req.db;
@@ -155,6 +164,15 @@ router.get('/:id', function(req, res, next) {
         } else {
             res.render('page_404');
         }
+    });
+});
+
+/*  PUT To Update Activity */
+router.put('/updateactivity/:id', function(req, res) {
+    var db = req.db;
+    var collection = db.get('Activities');
+    collection.update({ '_id' : req.params.id }, { $set: req.body}, function(err) {
+        res.send((err === null) ? { msg: ''} : { msg:'error: ' + err});
     });
 });
 
@@ -287,7 +305,7 @@ router.get('/getparticipatedevents/:id', function(req, res, next) {
 router.get('/participants/:eventId/:userId', function(req, res, next) {
     var db = req.db;
     var collection = db.get('EventJoined');
-    collection.find({
+    collection.findOne({
         'eventId': req.params.eventId,
         'userId': req.params.userId,
     },{},function(e,docs){        

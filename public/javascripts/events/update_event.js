@@ -1,21 +1,58 @@
 // DOM Ready ===============================================
 
 $(document).ready(function() {
-  $('a[data-toggle="tab"]').on( 'shown.bs.tab', function (e) {
-      $.fn.dataTable.tables( {visible: true, api: true} ).columns.adjust();
-  } );
+    $('a[data-toggle="tab"]').on( 'shown.bs.tab', function (e) {
+        $.fn.dataTable.tables( {visible: true, api: true} ).columns.adjust();
+    } );
 
-  $('[data-toggle="tooltip"]').tooltip(); 
+    $('[data-toggle="tooltip"]').tooltip(); 
 
-  populateTables();
+    populateTables();
 
-  document.getElementById("active-tab").click();
+    document.getElementById("active-tab").click();
 
-  $('#tableDonation tbody').on('click', 'td a.linkremovedonation', deleteDonation);
+    $('#tableDonation tbody').on('click', 'td a.linkremovedonation', deleteDonation);
 
-  $('#tableParticipants tbody').on('click', 'td a.linkabsent', markAbsent);
+    $('#tablePendingDonation tbody').on('click', 'td a.linkapprovedonation', approveDonation);
 
-  $('#tableParticipants tbody').on('click', 'td a.linkpresent', markPresent);
+    $('#tablePendingDonation tbody').on('click', 'td a.linkremovedonation', deleteDonation);
+
+    $('#tableParticipants tbody').on('click', 'td a.linkabsent', markAbsent);
+
+    $('#tableParticipants tbody').on('click', 'td a.linkpresent', markPresent);
+
+    $('#tableActivityCosts tbody').on('click', 'td a.linkeditactualcost', editActualCost);
+
+    //========================== DIALOG HIDING FUNCTIONS ===================
+
+    var dialog = $( "#edit-actual-cost-form" ).dialog({
+        autoOpen: false,
+        show: {
+            effect: "fade",
+            duration: 200
+          },
+        hide: {
+            effect: "fade",
+            duration: 200
+          },
+        modal: true,
+        resizable: false,
+        buttons: {
+            "OK" : {
+            text: "OK",
+            id: "confirmEditActualCost",
+                click: function(){
+                    confirmEditActualCost();
+                }
+            },
+            "Cancel" : {
+                text: "Cancel",
+                click: function() {
+                    dialog.dialog( "close" );
+                }
+            }
+        }                
+    });
 
 
 } );
@@ -27,11 +64,13 @@ function populateTables() {
     $.getJSON( '/events/details/' + $('#eventId').html(), function( data ) {
 
         showDonations(data);
+        showPendingDonations(data);
 
 
         // For each item in our JSON, add a table row and cells to the content string
         // showDonations(data);
         showParticipants(data._id);
+        showActivityCosts(data._id);
         // showActivities(data);
         $('[data-toggle="tooltip"]').tooltip(); 
     }); 
@@ -76,28 +115,30 @@ function showDonations(data) {
         var counter = 0;        
         if(dataDonation != null) {
             $.each(dataDonation, function(){
+                if(this.status != "Pending") {
+                    if(items.hasOwnProperty(this.donationItem)) {
+                        items[this.donationItem] = parseInt(items[this.donationItem]) + parseInt(this.donationNumber);
+                    } else {
+                        items[this.donationItem] = this.donationNumber;
+                    }
 
-                if(items.hasOwnProperty(this.donationItem)) {
-                    items[this.donationItem] = parseInt(items[this.donationItem]) + parseInt(this.donationNumber);
-                } else {
-                    items[this.donationItem] = this.donationNumber;
-                }
-
-                counter++;
-                dateCreated = new Date(this.dateCreated);        
-                table.row.add([
-                    counter,
-                    '<center>'
-                        + '<a data-toggle="tooltip" title="Remove" class="btn btn-danger btn-xs linkremovedonation" rel="' + this._id + '" href="#">'
-                            + '<span class="glyphicon glyphicon-remove"></span>'
-                        + '</a>'
-                    + '</center>',
-                    this.donatorName,
-                    this.donationItem,
-                    this.donationNumber,                    
-                    dateCreated.getDate() + '/' + (dateCreated.getMonth() + 1) + '/' +  dateCreated.getFullYear()
-                ]).draw( false );
+                    counter++;
+                    dateCreated = new Date(this.dateCreated);        
+                    table.row.add([
+                        counter,
+                        '<center>'
+                            + '<a data-toggle="tooltip" title="Remove" class="btn btn-danger btn-xs linkremovedonation" rel="' + this._id + '" href="#">'
+                                + '<span class="glyphicon glyphicon-remove"></span>'
+                            + '</a>'
+                        + '</center>',
+                        this.donatorName,
+                        this.donationItem,
+                        this.donationNumber,                    
+                        dateCreated.getDate() + '/' + (dateCreated.getMonth() + 1) + '/' +  dateCreated.getFullYear()
+                    ]).draw( false );
+                }                
             });
+            $('#countDonations').html(counter);
         }
         $('[data-toggle="tooltip"]').tooltip(); 
         
@@ -161,12 +202,6 @@ function deleteDonation(event) {
 
     event.preventDefault();
 
-    var table = $('#tableDonation').DataTable();
-    var data = table.row( $(this).parents('tr') ).data();
-    
-    var item = data[3];
-    var number = data[4];
-
     //If they did, do our delete
     $.ajax({
         type: 'DELETE',
@@ -181,12 +216,71 @@ function deleteDonation(event) {
             alert('Error: ' + response.msg);
         }
     });    
+}
 
+// Populate Pending Donation Item
+function showPendingDonations(data) {
+    //Get Donation data from the database
+    $.getJSON( '/events/donations/' + $('#eventId').html(), function( dataDonation ) {
+        //Populate the table
+        var table = $('#tablePendingDonation').DataTable();
+        table.clear().draw();
+        var counter = 0;        
+        if(dataDonation != null) {
+            $.each(dataDonation, function(){
+                if(this.status == "Pending") {
+                    counter++;
+                    dateCreated = new Date(this.dateCreated);        
+                    table.row.add([
+                        counter,
+                        '<center>'
+                            + '<a data-toggle="tooltip" title="Approve" class="btn btn-success btn-xs linkapprovedonation" rel="' + this._id + '" href="#">'
+                                + '<span class="glyphicon glyphicon-ok"></span>'
+                            + '</a>'
+                            + '<a data-toggle="tooltip" title="Disapprove" class="btn btn-danger btn-xs linkremovedonation" rel="' + this._id + '" href="#">'
+                                + '<span class="glyphicon glyphicon-remove"></span>'
+                            + '</a>'
+                        + '</center>',
+                        this.donatorName,
+                        this.donatorEmail,
+                        this.donatorPhoneNumber,
+                        this.donationItem,
+                        this.donationNumber,                    
+                        dateCreated.getDate() + '/' + (dateCreated.getMonth() + 1) + '/' +  dateCreated.getFullYear()
+                    ]).draw( false );
+                }                
+            });
+            $('#countPendingDonations').html(counter);
+        }
+        $('[data-toggle="tooltip"]').tooltip(); 
+    }); 
+}
+
+// Approve Pending Donation
+function approveDonation(event) {
+    event.preventDefault();
+
+    var donation = {
+        'status': 'Approved'
+    };
+    
+    $.ajax({
+        type: 'PUT',
+        data: donation,
+        url: '/events/updatedonation/' + $(this).attr('rel')
+    }).done(function( response ) {
+        // Check for a successful (blank) response
+        if (response.msg === '') {
+            populateTables();
+        }
+        else {
+            alert('Error: ' + response.msg);
+        }
+    });
 }
 
 // Populate Participant Table
-function showParticipants(_id) {
-    console.log(_id);
+function showParticipants(_id) {    
     var table = $('#tableParticipants').DataTable();
     table.clear().draw();
     var dateJoined = "";
@@ -222,6 +316,7 @@ function showParticipants(_id) {
                 $('[data-toggle="tooltip"]').tooltip(); 
             });
         });        
+        $('#countParticipants').html(counter);
     });    
 }
 
@@ -287,6 +382,89 @@ function markPresent(event) {
             alert('Error: ' + response.msg);
         }
     });
+}
+
+// Populate Activity Cost Table
+function showActivityCosts(_id) {
+    console.log(_id);
+    var table = $('#tableActivityCosts').DataTable();
+    table.clear().draw();
+    var counter = 0;
+    var actualCost = 0;
+
+    $.getJSON( '/events/activities/' + _id, function( data ) {
+        $.each(data, function(){
+            if(this.actualCost == null)
+                actualCost = "";
+            else
+                actualCost = this.actualCost;
+            counter++;
+            table.row.add([
+                counter + '<input type="hidden" name="txtActivityId" value="' + this._id + '"/>',
+                this.day,
+                this.time,
+                this.place,
+                this.activity,
+                this.estBudget,
+                actualCost,
+                '<center><a data-toggle="tooltip" title="Edit Actual Cost" class="btn btn-info btn-xs linkeditactualcost" rel="' + this._id + '" href="#">'
+                    + '<span class="glyphicon glyphicon-edit"></span>'
+                + '</a></center>'
+            ]).draw(false);
+        });
+        $('#countActivities').html(counter);
+    });
+}
+
+// Show edit actual cost dialog
+function editActualCost(event) {
+    event.preventDefault();
+
+    $.getJSON( '/events/activities/id/' + $(this).attr('rel'), function( data ) {
+        console.log(data);
+        console.log(data.day);
+        $('#txtEditActivityDay').val(data.day);
+        $('#txtEditActivityTime').val(data.time);
+        $('#txtEditActivityPlace').val(data.place);
+        $('#txtEditActivity').val(data.activity);
+        $('#txtEditActivityEstCost').val(data.estBudget);
+        if(data.actualCost != null)
+            $('#txtEditActivityActualCost').val(data.actualCost);
+    });
+
+    $('#txtEditActivityId').val($(this).attr('rel'));
+    
+    $('#edit-actual-cost-form').dialog('open');    
+}
+
+// Confirm edit actual cost
+function confirmEditActualCost() {
+    var activity = {
+        'actualCost': $('#txtEditActivityActualCost').val()
+    };
+
+    // If they did, do our delete
+    $.ajax({
+        type: 'PUT',
+        data: activity,
+        url: '/events/updateactivity/' + $('#txtEditActivityId').val()
+    }).done(function( response ) {
+        // Check for a successful (blank) response
+        if (response.msg === '') {
+            populateTables();
+            $('#txtEditActivityDay').val("");
+            $('#txtEditActivityTime').val("");
+            $('#txtEditActivityPlace').val("");
+            $('#txtEditActivity').val("");
+            $('#txtEditActivityEstCost').val("");
+            $('#txtEditActivityEstCost').val("");
+            $('#txtEditActivityId').val("");
+            $('#edit-actual-cost-form').dialog('close');
+        }
+        else {
+            alert('Error: ' + response.msg);
+        }
+    });  
 }
 
 // Populate Upcoming Events Table

@@ -4,6 +4,7 @@ $(document).ready(function() {
 	$('#event-title').html($('#event-title').html().toUpperCase());
 
 	populateButtons();
+	populateProducer();
 
 	var eventId = window.location.href.split('/')[window.location.href.split('/').length - 1];
 	$.getJSON( '/events/details/' + eventId, function( data ) {
@@ -51,6 +52,81 @@ $(document).ready(function() {
 
 		$('#activityDays li a').first().click();
 	});
+
+	//========================== DIALOG HIDING FUNCTIONS ===================
+
+	var participateDialog = $( "#participate-form" ).dialog({
+        autoOpen: false,
+        show: {
+            effect: "fade",
+            duration: 200
+          },
+        hide: {
+            effect: "fade",
+            duration: 200
+          },
+        modal: true,
+        resizable: false,
+        width: 500,
+        buttons: {
+            "OK" : {
+            text: "OK",
+            id: "confirmInputInfo",
+                click: function(){
+                    confirmInputInfo();
+                }
+            },
+            "Cancel" : {
+                text: "Cancel",
+                click: function() {
+                    participateDialog.dialog( "close" );
+                }
+            }
+        }                
+    });
+
+    var dialog = $( "#donate-form" ).dialog({
+        autoOpen: false,
+        show: {
+            effect: "fade",
+            duration: 200
+          },
+        hide: {
+            effect: "fade",
+            duration: 200
+          },
+        modal: true,   
+        width: 500,     
+        resizable: false,
+        buttons: {
+            "OK" : {
+            text: "OK",
+            id: "confirmDonate",
+                click: function(){
+                    confirmDonate();
+                }
+            },
+            "Cancel" : {
+                text: "Cancel",
+                click: function() {
+                    dialog.dialog( "close" );
+                }
+            }
+        }                
+    });
+
+    $.getJSON( '/events/details/' + eventId, function( data ) {
+	    if(data.otherDonationItem != null && data.otherDonationItem != ""){
+	        if(data.otherDonationItem.constructor !== Array) {
+	        	$('#txtDonateItem').html($('#txtDonateItem').html() + '<option>' + data.otherDonationItem.trim() + '</option>');
+	        } else {
+	            for (var i = 0; i < data.otherDonationItem.length; i++) {
+	            	$('#txtDonateItem').html($('#txtDonateItem').html() + '<option>' + data.otherDonationItem[i].trim() + '</option>');
+	            }
+	        }
+	    }
+    });
+
 });
 
 // Functions =============================================================
@@ -74,20 +150,19 @@ function populateDonations(data) {
         }
     }
 
-    console.log(items);
-    console.log(itemsRequire);
-
     //Get Donation data from the database
     $.getJSON( '/events/donations/' + window.location.href.split('/')[window.location.href.split('/').length - 1], function( dataDonation ) {
 
         //Count donations
         if(dataDonation != null) {
             $.each(dataDonation, function(){
-                if(items.hasOwnProperty(this.donationItem)) {
-                    items[this.donationItem] = parseInt(items[this.donationItem]) + parseInt(this.donationNumber);
-                } else {
-                    items[this.donationItem] = this.donationNumber;
-                }
+            	if(this.status != "Pending") {
+            		if(items.hasOwnProperty(this.donationItem)) {
+	                    items[this.donationItem] = parseInt(items[this.donationItem]) + parseInt(this.donationNumber);
+	                } else {
+	                    items[this.donationItem] = this.donationNumber;
+	                }
+            	}                
             });
         }
         
@@ -118,7 +193,7 @@ function join() {
 	var userId = readCookie("user");
 	if(userId != "") {
 		$.getJSON( '/users/id/' + userId, function( data ) {
-			if(data.fullName != null && data.phoneNumber != null && data.address != null) {
+			if(data.fullName != null && data.fullName != '' && data.phoneNumber != null && data.phoneNumber != '' && data.email != null && data.email != '') {
 				var eventId = window.location.href.split('/')[window.location.href.split('/').length - 1];
 				var newJoin = {
 					'userId': userId,
@@ -150,23 +225,135 @@ function join() {
 			    });
 
 			} else {
+				// If user doesn't have enough information, show information dialog
+				if(data.fullName != null && data.fullName != "")
+					$('#txtParticipantFullName').val(data.fullName);
 
+				if(data.email != null && data.email != "")
+					$('#txtParticipantEmail').val(data.email);
+
+				if(data.phoneNumber != null && data.phoneNumber != "")
+					$('#txtParticipantPhone').val(data.phoneNumber);
+				   
+				    
+				$('#participate-form').dialog('open'); 
 			}
 		});	
-	}	
+	} else {
+		// If user haven't login, redirect to login page
+		window.location.href = "/login";
+	}
+}
+
+function confirmInputInfo() {
+	var userData = {
+		'fullName': $('#txtParticipantFullName').val(),
+		'email': $('#txtParticipantEmail').val(),
+		'phoneNumber': $('#txtParticipantPhone').val(),
+		'dateModified': new Date()
+	};
+
+	$.ajax({
+	      type: 'PUT',
+	      data: userData,
+	      url: '/users/updateuser/' + readCookie('user'),
+	      dataType: 'JSON'
+	}).done(function( response ) {
+		if (response.msg === '') {
+			$('#participate-form').dialog('close'); 
+		    join();
+		} else {
+		    alert(response.msg);
+		}
+	});
+}
+
+function populateProducer() {
+	var user = $('#userIdLink').html();
+	$.getJSON( '/users/username/' + user, function(id) {
+		$('#userIdLink').attr('href', '/users/' + id);
+		$.getJSON( '/users/id/' + id, function(data) {
+			$('#txtCompanyImageSrc').attr('src', data.companyImage);
+			$('#txtCompanyName').html(data.companyName);
+			$('#txtCompanyAddress').html(data.companyAddress);
+			$('#txtCompanyPhone').html(data.companyPhoneNumber);
+			$('#txtCompanyEmail').html(data.companyEmail);
+		});		
+	});
 }
 
 function populateButtons() {
 	var eventId = window.location.href.split('/')[window.location.href.split('/').length - 1];
 	var userId = readCookie("user");
-	$.getJSON( '/events/participants/' + eventId + '/' + userId, function( data ) {
-		if(data.msg == 'true') {
-			$('#btnParticipate').attr('readonly', 'readonly');
-			$('#btnParticipate').attr('disabled', 'disabled');
+	var user = $('#userIdLink').html();
+
+	$.getJSON( '/users/username/' + user, function(id) {				
+		if(userId == id){			
 			$('#btnParticipate').attr('onclick', '');
 			$('#btnParticipate').removeClass('btn-info');
 			$('#btnParticipate').addClass('btn-success');
-			$('#btnParticipate').html('PARTICIPATED');
+			$('#btnParticipate').html('UPDATE EVENT');
+			$('#btnParticipate').attr('href', '/events/update/' + eventId);
+		} else {
+			$.getJSON( '/events/participants/' + eventId + '/' + userId, function( data ) {
+				if(data.msg == 'true') {
+					$('#btnParticipate').attr('readonly', 'readonly');
+					$('#btnParticipate').attr('disabled', 'disabled');
+					$('#btnParticipate').attr('onclick', '');
+					$('#btnParticipate').removeClass('btn-info');
+					$('#btnParticipate').addClass('btn-success');
+					$('#btnParticipate').html('PARTICIPATED');
+				}
+			});
 		}
-	});
+	});	
+}
+
+function donate() {
+	var userId = readCookie("user");
+	$.getJSON( '/users/id/' + userId, function( data ) {
+		if(data.fullName != null && data.fullName != "")
+			$('#txtDonator').val(data.fullName);
+		else
+			$('#txtDonator').val(data.username);
+
+		if(data.email != null)
+			$('#txtDonatorEmail').val(data.email);
+
+		if(data.phoneNumber != null)
+			$('#txtDonatorPhone').val(data.phoneNumber);
+    });
+    
+    $('#donate-form').dialog('open'); 
+}
+
+function confirmDonate() {
+	var donation = {
+		'eventId': window.location.href.split('/')[window.location.href.split('/').length - 1],
+		'donatorName': $('#txtDonator').val(),
+		'donatorEmail': $('#txtDonatorEmail').val(),
+		'donatorPhoneNumber': $('#txtDonatorPhone').val(),
+		'donationItem': $('#txtDonateItem').val(),
+		'donationNumber': $('#txtDonateQuantity').val(),
+		'status': 'Pending',
+		'dateCreated': new Date
+	};
+
+	$.ajax({
+        type: 'POST',
+        data: donation,
+        url: '/events/addDonation',
+        dataType: 'JSON'
+    }).done(function( response ) {
+
+        // Check for successful (blank) response
+        if(response.msg == '') {
+            // Clear the form inputs
+            $('#txtDonateQuantity').val('');
+        } else {
+            alert('Error: ' + response.msg);
+        }
+    });
+
+    $('#donate-form').dialog('close'); 
 }

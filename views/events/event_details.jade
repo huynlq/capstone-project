@@ -33,9 +33,6 @@ block content
 			// Custom Theme Style
 			link(href='../build/css/custom.min.css', rel='stylesheet')
 			script(src='https://maps.googleapis.com/maps/api/js?key=AIzaSyAxUeMBUbKnW-LKTWTIL656w7nHABuNMTI&libraries=places')
-			// jQuery
-			script(src='../vendors/jquery/dist/jquery.min.js')
-			link(href='../vendors/jquery-ui-1.12.1/jquery-ui.css', rel='stylesheet')
 			script(src='../javascripts/events/event_details.js')
 			style.
 				.progress {
@@ -50,11 +47,14 @@ block content
 				// top tiles
 				.row.page-title
 					.title(style='margin: 10px')
-						h1 Event Details
+						h1 Event Details						
 				br
 				br
 				br
 				h3#event-title(style='margin-left: 50px') #{docs.eventName}
+				small(style='margin-left: 50px') Created by&nbsp;
+				a#userIdLink(href="") #{docs.user}
+				#eventUser(style="display:none") #{docs.user}
 				hr
 				.row
 					.col-md-2.col-sm-2.col-xs-12
@@ -77,7 +77,7 @@ block content
 									b Meeting Place:
 								p#event-place #{docs.meetingAddress}
 					.col-md-1.col-sm-1.col-xs-12
-					.col-md-5.col-sm-5.col-xs-12
+					.col-md-5.col-sm-5.col-xs-12(style="text-align: center")
 						img#event-image(src='..#{docs.eventImage}', style='max-height: 300px; max-width: 500px')
 				hr
 				.row
@@ -91,11 +91,44 @@ block content
 						span#event-donation #{docs.budget}
 						.progress
 							#donationProgress.progress-bar.progress-bar-striped.active(role='progressbar', aria-valuenow='70', aria-valuemin='0', aria-valuemax='100', style='width:0%')
-				h3#event-title(style='margin-left: 50px') EVENT ACTIVITIES
-				hr
 				.row
-					.col-md-3.col-sm-3.col-xs-12
-					.col-md-6.col-sm-6.col-xs-12#activityPane			
+					.col-md-7.col-sm-7.col-xs-12
+						h3#event-title(style='margin-left: 50px') EVENT ACTIVITIES
+						hr
+						.row
+							.col-md-2.col-sm-2.col-xs-12
+							.col-md-8.col-sm-8.col-xs-12#activityPane			
+					.col-md-4.col-sm-4.col-xs-12
+						h3#event-title(style='margin-left: 50px') PRODUCER INFORMATION
+						hr
+						.row(style="text-align: center")
+							
+						.row
+							table.table.table-responsive.table-striped
+								tbody
+									tr
+										td(style="text-align: center; vertical-align: middle; width: 40%", rowspan="5")											
+											img#txtCompanyImageSrc(src='#', alt='No company image!', style="max-width: 100%")
+									tr
+										td(style="text-align: right; width: 100px")
+											span(style="font-weight: bold") Company:
+										td
+											span#txtCompanyName
+									tr
+										td(style="text-align: right; width: 100px")
+											span(style="font-weight: bold") Address:
+										td
+											span#txtCompanyAddress
+									tr
+										td(style="text-align: right; width: 100px")
+											span(style="font-weight: bold") Email:
+										td
+											span#txtCompanyEmail
+									tr
+										td(style="text-align: right; width: 100px")
+											span(style="font-weight: bold") Phone:
+										td
+											span#txtCompanyPhone
 				hr
 				.row
 					.col-md-3.col-sm-3
@@ -106,6 +139,64 @@ block content
 				br
 				br
 				br
+			#participate-form(title='Participant Information')
+				p.validateTips All form fields are required.
+				form
+					fieldset
+						.row.form-group
+							label.control-label.col-md-6.col-sm-6.col-xs-12
+								| Full Name 
+								span.required *
+							.col-md-6.col-sm-6.col-xs-12
+								input#txtParticipantFullName.form-control.col-md-7.col-xs-12(type='text', required='required')
+						.row.form-group
+							label.control-label.col-md-6.col-sm-6.col-xs-12
+								| Email 
+								span.required *
+							.col-md-6.col-sm-6.col-xs-12
+								input#txtParticipantEmail.form-control.col-md-7.col-xs-12(type='text', required='required')
+						.row.form-group
+							label.control-label.col-md-6.col-sm-6.col-xs-12
+								| Phone 
+								span.required *
+							.col-md-6.col-sm-6.col-xs-12
+								input#txtParticipantPhone.form-control.col-md-7.col-xs-12(type='text', required='required')
+			#donate-form(title='Donate For Event')
+				p.validateTips All form fields are required.
+				form
+					fieldset
+						.row.form-group
+							label.control-label.col-md-4.col-sm-4.col-xs-12
+								| Name 
+								span.required *
+							.col-md-8.col-sm-8.col-xs-12
+								input#txtDonator.form-control.col-md-7.col-xs-12(type='text', required='required')
+								span#txtEditActivityId(style='display:none')
+						.row.form-group
+							label.control-label.col-md-4.col-sm-4.col-xs-12
+								| Email 
+								span.required *
+							.col-md-8.col-sm-8.col-xs-12
+								input#txtDonatorEmail.form-control.col-md-7.col-xs-12(type='text', required='required')
+						.row.form-group
+							label.control-label.col-md-4.col-sm-4.col-xs-12
+								| Phone 
+								span.required *
+							.col-md-8.col-sm-8.col-xs-12
+								input#txtDonatorPhone.form-control.col-md-7.col-xs-12(type='text', required='required')
+						.row.form-group
+							label.control-label.col-md-4.col-sm-4.col-xs-12
+								| Item 
+								span.required *
+							.col-md-8.col-sm-8.col-xs-12
+								select#txtDonateItem.form-control.col-md-7.col-xs-12
+									option Cash
+						.row.form-group
+							label.control-label.col-md-4.col-sm-4.col-xs-12
+								| Quantity
+								span.required *
+							.col-md-8.col-sm-8.col-xs-12
+								input#txtDonateQuantity.form-control.col-md-7.col-xs-12(type='text', required='required')
 			// Bootstrap
 			script(src='../vendors/bootstrap/dist/js/bootstrap.min.js')
 			// FastClick
