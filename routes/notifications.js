@@ -5,7 +5,7 @@ var router = express.Router();
 router.get('/:id', function(req, res, next) {
     var db = req.db;
     var collection = db.get('Notifications');
-    collection.findOne({'role': req.params.id},{},function(e,docs){
+    collection.find({'userId': req.params.id},{sort: {dateCreated: -1}},function(e,docs){
         res.json(docs);
     });
 });
@@ -18,6 +18,15 @@ router.post('/addnotification', function(req, res) {
         res.send(
             (err === null) ? { msg: ''} : { msg: err }
         );
+    });
+});
+
+/*  PUT To Update Notifications by userId */
+router.put('/markread/:id', function(req, res) {
+    var db = req.db;
+    var collection = db.get('Notifications');
+    collection.update({ 'userId' : req.params.id }, { $set: req.body}, {multi:true}, function(err) {
+        res.send((err === null) ? { msg: ''} : { msg:'error: ' + err});
     });
 });
 

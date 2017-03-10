@@ -176,6 +176,86 @@ router.put('/updateactivity/:id', function(req, res) {
     });
 });
 
+/* POST new sponsor. */
+router.post('/addsponsor', function(req, res) {
+    var db = req.db;
+    var collection = db.get('EventSponsored');
+    collection.findOne({ 
+        'eventId' : req.body.eventId,
+        'userId' : req.body.userId
+    },{},function(e,docs){
+        if(!docs) {
+            collection.insert(req.body, function(err, result){
+                res.send(
+                    (err === null) ? { msg: '' } : { msg: err }
+                );
+            });
+        } else {
+            res.send((err === null) ? { msg: ''} : { msg:'error: ' + err});
+        }
+    });    
+});
+
+/* GET to check if user has donated to the event */
+router.get('/checksponsor/:eventId/:userId', function(req, res, next) {
+    var db = req.db;
+    var collection = db.get('EventSponsored');
+    collection.findOne({ 
+        'eventId' : req.params.eventId,
+        'userId' : req.params.userId
+    },{},function(e,docs){
+        res.json(docs);
+    });
+});
+
+/* GET all sponsor from eventId */
+router.get('/sponsor/:eventId', function(req, res, next) {
+    var db = req.db;
+    var collection = db.get('EventSponsored');
+    collection.find({'eventId' : req.params.eventId},{sort: {dateCreated: -1}},function(e,docs){
+        res.json(docs);
+    });
+});
+
+/* GET all FEATURED sponsor from eventId */
+router.get('/featuredsponsor/:eventId', function(req, res, next) {
+    var db = req.db;
+    var collection = db.get('EventSponsored');
+    collection.find({
+        'eventId' : req.params.eventId,
+        $or: [{'status' : 'Featured'},{'status' : 'Approved'}]
+    },{sort: {dateCreated: -1}},function(e,docs){
+        res.json(docs);
+    });
+});
+
+/* GET sponsor by id */
+router.get('/sponsor/id/:id', function(req, res, next) {
+    var db = req.db;
+    var collection = db.get('EventSponsored');
+    collection.findOne({'_id' : req.params.id},{},function(e,docs){
+        res.json(docs);
+    });
+});
+
+/*  PUT To Update Sponsor Status */
+router.put('/updatesponsor/:id', function(req, res) {
+    var db = req.db;
+    var collection = db.get('EventSponsored');
+    collection.update({ '_id' : req.params.id}, { $set: req.body}, function(err) {
+        res.send((err === null) ? { msg: ''} : { msg:'error: ' + err});
+    });
+});
+
+/* DELETE to Delete Donation. */
+router.delete('/removesponsor/:id', function(req, res) {
+    var db = req.db;
+    var collection = db.get('EventSponsored');
+    collection.remove({ '_id' : req.params.id }, function(err) {
+        res.send((err === null) ? { msg: '' } : { msg:'error: ' + err });
+    });
+});
+
 /* GET event detail DATA base on id. */
 router.get('/details/:id', function(req, res, next) {
     var db = req.db;

@@ -20,6 +20,8 @@ html
 						// menu profile quick info
 						.profile.clearfix
 							.profile_info(style='text-align: center; width: 100%')
+								img#sidebarUserImage(src='', alt='', style='width: 50px;height: 50px;border-radius: 50%;margin-right: 10px;')
+								br
 								span
 									| Welcome, 
 									span(id='usernameCookie', style='color: white')
@@ -97,7 +99,7 @@ html
 												a(href='producer_list_user.php', readonly='readonly') Producer List (WIP)
 											li
 												a(href='producer_details.php', readonly='readonly') Producer Details (WIP)
-				.top_nav
+				.top_nav(style="position:relative;z-index:1000")
 					.nav_menu
 						nav
 							.nav.toggle
@@ -106,12 +108,12 @@ html
 							ul.nav.navbar-nav.navbar-right#nav-bar-ul
 								li
 									a.user-profile.dropdown-toggle(href='javascript:;', data-toggle='dropdown', aria-expanded='false')
-										img(src='', alt='')
+										img#layoutUserImage(src='', alt='')
 										span(id="usernameCookieNav")
 										span.fa.fa-angle-down
 									ul.dropdown-menu.dropdown-usermenu.pull-right
 										li
-											a(href='javascript:;')  Profile
+											a(href='/my')  Profile
 										li
 											a(href='javascript:;')
 												span.badge.bg-red.pull-right 50%
@@ -119,7 +121,8 @@ html
 										li
 											a(href='javascript:;') Help
 										li
-											a(href='login.html')
+											a(href='#' onclick='signOut()')
 												i.fa.fa-sign-out.pull-right
-												|  Log Out								
+												|  Log Out	
+								li#notiBar.dropdown(role="presentation")
 				block content

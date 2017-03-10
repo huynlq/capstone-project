@@ -23,6 +23,16 @@ $(document).ready(function() {
 
     $('#tableActivityCosts tbody').on('click', 'td a.linkeditactualcost', editActualCost);
 
+    $('#tablePendingSponsor tbody').on('click', 'td a.linkapprovesponsor', approveSponsor);
+
+    $('#tablePendingSponsor tbody').on('click', 'td a.linkremovesponsor', removeSponsor);
+
+    $('#tableSponsor tbody').on('click', 'td a.linkfeaturesponsor', featureSponsor);
+
+    $('#tableSponsor tbody').on('click', 'td a.linkunfeaturesponsor', unfeatureSponsor);
+
+    $('#tableSponsor tbody').on('click', 'td a.linkremovesponsor', removeSponsor);
+
     //========================== DIALOG HIDING FUNCTIONS ===================
 
     var dialog = $( "#edit-actual-cost-form" ).dialog({
@@ -71,6 +81,7 @@ function populateTables() {
         // showDonations(data);
         showParticipants(data._id);
         showActivityCosts(data._id);
+        showSponsors(data._id);
         // showActivities(data);
         $('[data-toggle="tooltip"]').tooltip(); 
     }); 
@@ -163,6 +174,91 @@ function showDonations(data) {
             );
         }
     }); 
+}
+
+// Populate Sponsors Tables
+function showSponsors(_id) {
+    $('#tableSponsor_wrapper .row').first().css('margin-left', '30px');
+    $('#tableSponsor_wrapper .row .col-sm-6').first().removeClass("col-sm-6").addClass("col-sm-2");
+
+    $('#tablePendingSponsor_wrapper .row').first().css('margin-left', '30px');
+    $('#tablePendingSponsor_wrapper .row .col-sm-6').first().removeClass("col-sm-6").addClass("col-sm-2");
+
+    var sponsorData;
+
+    //Get Donation data from the database
+    $.getJSON( '/events/sponsor/' + $('#eventId').html(), function( dataSponsor ) {
+        var tableSponsor = $('#tableSponsor').DataTable();
+        var tablePendingSponsor = $('#tablePendingSponsor').DataTable();
+        tableSponsor.clear().draw();
+        tablePendingSponsor.clear().draw();
+        var counter = 0;
+        var pendingCounter = 0;
+        var actionPanel = "";
+        var status = "";
+        if(dataSponsor != null) {
+            $.each(dataSponsor, function(){
+                sponsorData = this;
+                if(this.status == "Pending") {
+                    pendingCounter++;
+                    $.getJSON( '/users/id/' + this.userId, function( dataUser ) {
+                        tablePendingSponsor.row.add([
+                            pendingCounter,
+                            '<center>'
+                                + '<a data-toggle="tooltip" title="Details" class="btn btn-info btn-xs" rel="' + '" href="/users/' + sponsorData.userId + '">'
+                                    + '<span class="glyphicon glyphicon-search"></span>'
+                                + '</a>'
+                                + '<a data-toggle="tooltip" title="Approve" class="btn btn-success btn-xs linkapprovesponsor" rel="' + sponsorData._id + '" href="#">'
+                                    + '<span class="glyphicon glyphicon-ok"></span>'
+                                + '</a>'
+                                + '<a data-toggle="tooltip" title="Disapprove" class="btn btn-danger btn-xs linkremovesponsor" rel="' + sponsorData._id + '" href="#">'
+                                    + '<span class="glyphicon glyphicon-remove"></span>'
+                                + '</a>'
+                            + '</center>',
+                            dataUser.companyName,
+                            dataUser.companyEmail,
+                            dataUser.companyPhoneNumber,
+                        ]).draw('false');
+                        $('[data-toggle="tooltip"]').tooltip(); 
+                    });
+                } else {
+                    counter++;
+                    if(this.status == "Approved") {
+                        actionPanel = '<a data-toggle="tooltip" title="Mark Featured" class="btn btn-success btn-xs linkfeaturesponsor" rel="' + sponsorData._id + '" href="#">'
+                                    + '<span class="glyphicon glyphicon-ok"></span>'
+                                + '</a>';
+                        status = ""
+                    } else {
+                        actionPanel = '<a data-toggle="tooltip" title="Mark Unfeatured" class="btn btn-warning btn-xs linkunfeaturesponsor" rel="' + sponsorData._id + '" href="#">'
+                                    + '<span class="glyphicon glyphicon-arrow-down"></span>'
+                                + '</a>';
+                        status = "Featured"
+                    }
+                    $.getJSON( '/users/id/' + this.userId, function( dataUser ) {
+                        tableSponsor.row.add([
+                            counter,
+                            '<center>'
+                                + '<a data-toggle="tooltip" title="Details" class="btn btn-info btn-xs" rel="' + '" href="/users/' + sponsorData.userId + '">'
+                                    + '<span class="glyphicon glyphicon-search"></span>'
+                                + '</a>'
+                                + actionPanel
+                                + '<a data-toggle="tooltip" title="Remove" class="btn btn-danger btn-xs linkremovesponsor" rel="' + sponsorData._id + '" href="#">'
+                                    + '<span class="glyphicon glyphicon-remove"></span>'
+                                + '</a>'
+                            + '</center>',
+                            dataUser.companyName,
+                            dataUser.companyEmail,
+                            dataUser.companyPhoneNumber,
+                            status
+                        ]).draw('false');
+                        $('[data-toggle="tooltip"]').tooltip(); 
+                    });
+                }
+            });
+        }
+
+        $('#countSponsors').html(counter + ' - ' + pendingCounter);
+    });
 }
 
 // Add new donation
@@ -443,7 +539,6 @@ function confirmEditActualCost() {
         'actualCost': $('#txtEditActivityActualCost').val()
     };
 
-    // If they did, do our delete
     $.ajax({
         type: 'PUT',
         data: activity,
@@ -467,46 +562,119 @@ function confirmEditActualCost() {
     });  
 }
 
-// Populate Upcoming Events Table
-// function showDonations(data) {
-// 	var counter = 0;
-// 	var dateCreated = "";
-// 	var tableContent = "";
-// 	var table = $('#tableUpcomingEvents').DataTable();
-//     table.clear().draw();
-//     var now = new Date();
-//     var eventEndDate = "";
+// Approve sponsor
+function approveSponsor(event) {
+    event.preventDefault();
+    var sponsorId = $(this).attr('rel');
 
-//     // For each item in our JSON, add a table row and cells to the content string
-//     $.each(data, function(){
-//         eventStartDate = new Date(this.eventDate.split(" - ")[0]);
-//         eventEndDate = new Date(this.eventDate.split(" - ")[1]);
-//         if(eventEndDate.getTime() >= now.getTime() && this.status != "Cancelled"){            
-//             counter++;
-//             dateCreated = new Date(this.dateCreated);
-//             table.row.add([
-//                 counter,
-//                 '<center>'
-//                     + '<a data-toggle="tooltip" title="Details" class="btn btn-info btn-xs" href="events/' + this._id + '">'
-//                         + '<span class="glyphicon glyphicon-search"></span>'
-//                     + '</a>'
-//                     + '<a data-toggle="tooltip" title="Cancel" class="btn btn-danger btn-xs linkcancelevent" rel="' + this._id + '" href="#">'
-//                         + '<span class="glyphicon glyphicon-remove"></span>'
-//                     + '</a>'
-//                 + '</center>',
-//                 this.eventName,
-//                 this.eventType,
-//                 this.user,
-//                 this.contactEmail,
-//                 this.contactPhone,
-//                 eventStartDate.getDate() + '/' + (eventStartDate.getMonth() + 1) + '/' +  eventStartDate.getFullYear(),
-//                 this.meetingAddress,
-//                 this.donationNeeded,
-//                 dateCreated.getDate() + '/' + (dateCreated.getMonth() + 1) + '/' +  dateCreated.getFullYear()
-//             ]).draw( false );
-//         }
-//     });
-    
-//     $('#countUpcomingEvents').html(counter);
-//     $('[data-toggle="tooltip"]').tooltip(); 
-// }
+    $.getJSON( '/events/sponsor/id/' + sponsorId, function( data ) {
+        var userId = data.userId;
+        var eventId = data.eventId;
+        var eventName = "";
+        $.getJSON( '/events/details/' + eventId, function( dataEvent ) {
+            eventName = dataEvent.eventName;
+            var status = {
+                'status': 'Featured'
+            }
+
+            $.ajax({
+                type: 'PUT',
+                data: status,
+                url: '/events/updatesponsor/' + sponsorId
+            }).done(function( response ) {
+                // Check for a successful (blank) response
+                
+                    showSponsors();
+                    
+                    var newNotification = {
+                        'userId': userId,
+                        'content': 'Your request to sponsor for ' + eventName + ' has been approved.',
+                        'markedRead': 'Unread',
+                        'dateCreated': new Date()
+                    }
+
+                    // Use AJAX to post the object to our adduser service        
+                    $.ajax({
+                        type: 'POST',
+                        data: newNotification,
+                        url: '/notifications/addnotification',
+                        dataType: 'JSON'
+                    }).done(function( response ) {
+
+                        // Check for successful (blank) response
+                        if (response.msg !== '') {
+
+                            // If something goes wrong, alert the error message that our service returned
+                            alert('Error: ' + response.msg);
+
+                        }
+                    });
+                
+            });  
+        });
+    });    
+}
+
+// Feature sponsor
+function featureSponsor(event) {
+    event.preventDefault();
+
+    var status = {
+        'status': 'Featured'
+    }
+
+    $.ajax({
+        type: 'PUT',
+        data: status,
+        url: '/events/updatesponsor/' + $(this).attr('rel')
+    }).done(function( response ) {
+        // Check for a successful (blank) response
+        if (response.msg === '') {
+            showSponsors();
+        }
+        else {
+            alert('Error: ' + response.msg);
+        }
+    });  
+}
+
+// Unfeature sponsor
+function unfeatureSponsor(event) {
+    event.preventDefault();
+
+    var status = {
+        'status': 'Approved'
+    }
+
+    $.ajax({
+        type: 'PUT',
+        data: status,
+        url: '/events/updatesponsor/' + $(this).attr('rel')
+    }).done(function( response ) {
+        // Check for a successful (blank) response
+        if (response.msg === '') {
+            showSponsors();
+        }
+        else {
+            alert('Error: ' + response.msg);
+        }
+    });  
+}
+
+// Remove sponsor
+function removeSponsor(event) {
+    event.preventDefault();
+
+    $.ajax({
+        type: 'DELETE',
+        url: '/events/removesponsor/' + $(this).attr('rel')
+    }).done(function( response ) {
+        // Check for a successful (blank) response
+        if (response.msg === '') {
+            showSponsors();
+        }
+        else {
+            alert('Error: ' + response.msg);
+        }
+    });  
+}

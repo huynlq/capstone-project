@@ -17,6 +17,7 @@ var users = require('./routes/users');
 var posts = require('./routes/posts');
 var events = require('./routes/events');
 var notifications = require('./routes/notifications');
+var ratings = require('./routes/ratings');
 
 var app = express();
 
@@ -43,6 +44,7 @@ app.use('/users', users);
 app.use('/posts', posts);
 app.use('/events', events);
 app.use('/notifications', notifications);
+app.use('/ratings', ratings);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

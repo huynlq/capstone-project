@@ -187,11 +187,6 @@ function populateFeaturedEvents() {
 						        '<a href="events/' + this._id + '" class="btn" style="background-color: #73879C; color: white; float: right" role="button">Chi tiết</a>' +
 					       '</div>' +
 					    '</div>' +
-					    '<div class="progress">' +
-							'<div id="progress-event-' + counter + '" class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="85" aria-valuemin="0" aria-valuemax="100" style="width:' + percent + '%">' +
-								'<span class="percent"><b><span class="count">' + percent + '</span></b></span>' +
-							'</div>' +
-						'</div>' +
 					'</div>' +
 				'</div>' +
 	    	"";    	

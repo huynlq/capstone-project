@@ -5,8 +5,9 @@ $(document).ready(function() {
 
 	populateButtons();
 	populateProducer();
+	populateSponsors();
 
-	var eventId = window.location.href.split('/')[window.location.href.split('/').length - 1];
+	var eventId = window.location.href.split('/')[window.location.href.split('/').length - 1].split('#')[0];
 	$.getJSON( '/events/details/' + eventId, function( data ) {
 		populateDonations(data);		
 	});
@@ -194,7 +195,7 @@ function join() {
 	if(userId != "") {
 		$.getJSON( '/users/id/' + userId, function( data ) {
 			if(data.fullName != null && data.fullName != '' && data.phoneNumber != null && data.phoneNumber != '' && data.email != null && data.email != '') {
-				var eventId = window.location.href.split('/')[window.location.href.split('/').length - 1];
+				var eventId = window.location.href.split('/')[window.location.href.split('/').length - 1].split('#')[0];
 				var newJoin = {
 					'userId': userId,
 					'eventId': eventId,
@@ -283,7 +284,7 @@ function populateProducer() {
 }
 
 function populateButtons() {
-	var eventId = window.location.href.split('/')[window.location.href.split('/').length - 1];
+	var eventId = window.location.href.split('/')[window.location.href.split('/').length - 1].split('#')[0];
 	var userId = readCookie("user");
 	var user = $('#userIdLink').html();
 
@@ -312,16 +313,27 @@ function populateButtons() {
 function donate() {
 	var userId = readCookie("user");
 	$.getJSON( '/users/id/' + userId, function( data ) {
-		if(data.fullName != null && data.fullName != "")
-			$('#txtDonator').val(data.fullName);
-		else
-			$('#txtDonator').val(data.username);
+		if(data.role != "Sponsor") {
+			$('#txtDonatorId').val(userId);
+			if(data.fullName != null && data.fullName != "")
+				$('#txtDonator').val(data.fullName);
+			else
+				$('#txtDonator').val(data.username);
 
-		if(data.email != null)
-			$('#txtDonatorEmail').val(data.email);
+			if(data.email != null)
+				$('#txtDonatorEmail').val(data.email);
 
-		if(data.phoneNumber != null)
-			$('#txtDonatorPhone').val(data.phoneNumber);
+			if(data.phoneNumber != null)
+				$('#txtDonatorPhone').val(data.phoneNumber);			
+		} else {			
+			$('#txtDonatorId').val(userId);
+			$('#txtDonator').val(data.companyName);
+			$('#txtDonatorEmail').val(data.companyEmail);
+			$('#txtDonatorPhone').val(data.companyPhoneNumber);
+			$('#txtDonator').attr('readonly', 'readonly');
+			$('#txtDonatorEmail').attr('readonly', 'readonly');
+			$('#txtDonatorPhone').attr('readonly', 'readonly');
+		}
     });
     
     $('#donate-form').dialog('open'); 
@@ -329,12 +341,13 @@ function donate() {
 
 function confirmDonate() {
 	var donation = {
-		'eventId': window.location.href.split('/')[window.location.href.split('/').length - 1],
+		'eventId': window.location.href.split('/')[window.location.href.split('/').length - 1].split('#')[0],
+		'userId': $('#txtDonatorId').val(),
 		'donatorName': $('#txtDonator').val(),
 		'donatorEmail': $('#txtDonatorEmail').val(),
 		'donatorPhoneNumber': $('#txtDonatorPhone').val(),
 		'donationItem': $('#txtDonateItem').val(),
-		'donationNumber': $('#txtDonateQuantity').val(),
+		'donationNumber': $('#txtDonateQuantity').val(),		
 		'status': 'Pending',
 		'dateCreated': new Date
 	};
@@ -355,5 +368,60 @@ function confirmDonate() {
         }
     });
 
+    $.getJSON( '/users/id/' + $('#txtDonatorId').val(), function( data ) {
+    	if(data.role == "Sponsor") {
+    		var sponsor = {
+    			'eventId': window.location.href.split('/')[window.location.href.split('/').length - 1].split('#')[0],
+				'userId': $('#txtDonatorId').val(),
+				'status': 'Pending',
+				'dateCreated': new Date()
+    		};
+
+    		console.log(sponsor);
+
+    		$.ajax({
+		        type: 'POST',
+		        data: sponsor,
+		        url: '/events/addsponsor',
+		        dataType: 'JSON'
+		    }).done(function( response ) {
+		    	console.log("DONE");
+		        // Check for successful (blank) response
+		        if(response.msg != '') {
+		            alert('Error: ' + response.msg);
+		        }
+		    });
+    	}
+    });
+
     $('#donate-form').dialog('close'); 
+}
+
+// Populate sponsors function
+function populateSponsors() {
+	var eventId = window.location.href.split('/')[window.location.href.split('/').length - 1].split('#')[0];
+	$.getJSON( '/events/featuredsponsor/' + eventId, function( dataSponsor ) {
+		if(dataSponsor != '') {
+			var content = '<h3 style="margin-left: 50px">SPONSORS</h3>' +
+								'<hr>' +
+								'<div class="row" style="text-align: center">';
+
+			var len = dataSponsor.length
+			$.each(dataSponsor, function(index, element){
+				$.getJSON('/users/id/' + this.userId, function( dataUser ){
+					content += '<a href="/users/' + dataUser._id + '">' +
+								'<img data-toggle="tooltip" title="' + dataUser.companyName + '" src="' + dataUser.companyImage + '" style="margin: 30px; max-width: 200px" />' +
+								'</a>';
+					if(index == len-1){
+						content += '</div>';
+					}
+
+					$('#sponsorPane').html($('#sponsorPane').html() + content);
+
+					$('[data-toggle="tooltip"]').tooltip(); 
+					
+				});				
+			});
+		}		
+	});
 }

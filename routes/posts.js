@@ -125,10 +125,85 @@ router.get('/:id', function(req, res, next) {
     });
 });
 
-/* DELETE to deleteuser. */
+/* DELETE to delete post. */
 router.delete('/deletepost/:id', function(req, res) {
     var db = req.db;
     var collection = db.get('Posts');
+    collection.remove({ '_id' : req.params.id }, function(err) {
+        res.send((err === null) ? { msg: '' } : { msg:'error: ' + err });
+    });
+});
+
+/*  POST To Add Comment */
+router.post('/addcomment', function(req, res) {
+    var db = req.db;
+    var collection = db.get('Comments');
+    collection.insert(req.body, function(err, result){
+        res.send(
+            (err === null) ? { msg: ''} : { msg: err }
+        );
+    });
+});
+
+/* GET comment by post id. */
+router.get('/comment/:id', function(req, res, next) {
+    var db = req.db;
+    var collection = db.get('Comments');
+    var collection2 = db.get('Ratings');
+    var resdocs = [];
+    var id = req.params.id;
+    collection.find({ 'postId' : id },{sort: {dateCreated: -1}},function(e,docs){        
+        for(var i = 0; i < docs.length; i++) {
+            resdocs[i] = docs[i]._id.toString();
+        }
+        collection2.find({ 'subjectId' : { $in: resdocs }},{},function(e,datadata){
+            for(var i = 0; i < docs.length; i++) {
+                for(var j = 0; j < datadata.length; j++) {
+                    if(docs[i]._id.toString() == datadata[j].subjectId.toString()) {
+                        docs[i].rating = parseInt(docs[i].rating) + parseInt(datadata[j].ratingPoint);
+                    }
+                }
+            }
+            docs.sort(function(a,b) {
+                return b.rating - a.rating;
+            });
+            res.json(docs);
+        });
+    });
+});
+
+/* GET comment by id. */
+router.get('/comment/id/:id', function(req, res, next) {
+    var db = req.db;
+    var collection = db.get('Comments');
+    var id = req.params.id;
+    collection.findOne({ '_id' : id },{},function(e,docs){
+        res.json(docs);
+    });
+});
+
+/* GET comment reply by comment id. */
+router.get('/reply/:id', function(req, res, next) {
+    var db = req.db;
+    var collection = db.get('Comments');
+    collection.find({ 'commentId' : req.params.id },{},function(e,docs){
+        res.json(docs);
+    });
+});
+
+/*  POST To Update comment */
+router.post('/updatecomment', function(req, res) {
+    var db = req.db;
+    var collection = db.get('Comments');   
+    collection.update({ '_id' : req.body._id }, { $set: req.body}, function(err) {
+        res.send((err === null) ? { msg: '' } : { msg:'error: ' + err });
+    });
+});
+
+/* DELETE to delete comment. */
+router.delete('/deletecomment/:id', function(req, res) {
+    var db = req.db;
+    var collection = db.get('Comments');
     collection.remove({ '_id' : req.params.id }, function(err) {
         res.send((err === null) ? { msg: '' } : { msg:'error: ' + err });
     });

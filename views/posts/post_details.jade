@@ -48,34 +48,39 @@ block content
 					// Tabs
 					// Smart Wizard					
 					.form-horizontal.form-label-left
-						h3(style='margin-left: 50px') #{docs.postName}
-						small(style='margin-left: 50px')
-							| Posted by 
-							a.userId(href="") #{docs.userId}
-						hr
-						.row
-							.col-md-3.col-sm-3
-							.col-md-6.col-sm-6.col-xs-12
-								#content(style="display:none") #{docs.postContent}
-								div#postContent						
-				h1 Comments
-				hr
+						.col-md-1.col-xs-1#postRating(style="text-align: right")
+						.col-md-11.col-xs-11
+							h3 #{docs.postName}
+							small
+								| Posted by 
+								a.userId(href="") #{docs.userId}
+							hr
+							.row
+								.col-md-1
+								.col-md-10.col-xs-12
+									#content(style="display:none") #{docs.postContent}
+									div#postContent						
+				h1 Comments&nbsp;
+					span#countComments (0)
+				hr				
 				.row
 					form#commentForm.form-horizontal.form-label-left(action="/posts/addpost", method="post")
-					.form-group
-						label.control-label.col-md-3.col-sm-3.col-xs-12(style="text-align:right")
-							| Content 
-							span.required *
-						.col-md-6.col-sm-6.col-xs-12
-							textarea#txtDescription(name="postContent", style="width:90%")
-						br
-						br
-						br
-						br
-						.row
-							.col-md-7.col-sm-7
-							.col-md-1.col-sm-1.col-xs-12
-								button.btn.btn-info.col-xs-12(type="submit", style="float: right") Submit
+						.form-group
+							label.control-label.col-md-3.col-sm-3.col-xs-12(style="text-align:right")
+								| Content 
+								span.required *
+							.col-md-6.col-sm-6.col-xs-12
+								textarea#txtCommentContent(name="postContent", style="width:90%", tabindex="-1")
+								input#txtCommentId(type="hidden")
+							br
+							br
+							br
+							br
+							.row#commentButtons
+								.col-md-7.col-sm-7
+								.col-md-1.col-sm-1.col-xs-12
+									a.btn.btn-info.col-xs-12(style="float: right", onclick="postComment()") Submit
+				.row#commentPane
 					// End SmartWizard Content
 					// /top tiles
 				// /page content
