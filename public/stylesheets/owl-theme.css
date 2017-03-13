@@ -1,0 +1,54 @@
+.new-owl .owl-prev, .new-owl .owl-next {
+	position: absolute;
+	top: 4%;
+	margin-top: -50px;
+	width: auto;
+	height: auto;
+	padding: 5px 10px;
+	text-align: center;
+	filter: Alpha(Opacity=50);/*IE7 fix*/
+	opacity: 0.5;
+	background-color: #dddddd;
+}
+.new-owl .owl-prev:hover, .new-owl .owl-next:hover {
+	filter: Alpha(Opacity=100);/*IE7 fix*/
+	opacity: 1;
+}
+.new-owl .owl-next {
+	right: 40%;
+	top: 140%;
+}
+.new-owl .owl-prev {
+	left: 40%;
+	top: 140%;
+}
+.new-owl .owl-controls {
+	text-align: center;
+}
+.new-owl .owl-controls .owl-page {
+	display: inline-block;
+}
+.new-owl .owl-controls .owl-page span {
+	background-color: #333;
+	-webkit-border-radius: 30px;
+	-moz-border-radius: 30px;
+	border-radius: 30px;
+	display: block;
+	height: 12px;
+	margin: 5px 7px;
+	width: 12px;
+	filter: Alpha(Opacity=500);/*IE7 fix*/
+	opacity: 0.5;
+}
+.new-owl .owl-controls .owl-page.active span, .new-owl .owl-controls .owl-page:hover span {
+	filter: Alpha(Opacity=100);/*IE7 fix*/
+	opacity: 1;
+}
+.thumb {
+	display: block;
+	height: 180px;
+	max-width: 100% !important;
+	background-position: center center;
+	background-size: cover;
+	z-index: 1;
+}

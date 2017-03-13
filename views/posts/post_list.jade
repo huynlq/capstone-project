@@ -60,12 +60,7 @@ block content
 											span.count_top
 												i.fa.fa-newspaper-o
 												|  Posts On News
-											#countNews.count 2
-											span.count_bottom
-												i.green
-													i.fa.fa-sort-asc
-													| 50%
-												|  From last Week
+											#countNews.count 0
 							li.col-md-6.col-xs-12
 								a.count-tab(data-toggle='tab', href='#board')
 									.tileA
@@ -73,12 +68,7 @@ block content
 											span.count_top
 												i.fa.fa-tv
 												|  Posts On Board
-											#countPosts.count 2
-											span.count_bottom
-												i.green
-													i.fa.fa-sort-asc
-													| 50%
-												|  From last Week
+											#countPosts.count 0
 					.tab-content
 						#news.tab-pane.fade.in.active
 							.row
@@ -95,50 +85,17 @@ block content
 												th.action-col #
 												th.action-col Action
 												th Title
-												th Type
 												th Author
 												th Rating
 												th Comments
 												th Date Created
 										tbody
-											tr
-												td(style='margin:10px') 1
-												td
-													center
-														a.btn.btn-success.btn-xs(data-toggle='tooltip', title='Edit', href='#')
-															span.glyphicon.glyphicon-edit
-														a.btn.btn-danger.btn-xs(data-toggle='tooltip', title='Delete', href='#')
-															span.glyphicon.glyphicon-remove
-												td Report from Free Giveaway Events
-												td Report
-												td admin1
-												td 15
-												td 0
-												td 2/2/2017
-											tr
-												td(style='margin:10px') 1
-												td
-													center
-														a.btn.btn-success.btn-xs(data-toggle='tooltip', title='Edit', href='#')
-															span.glyphicon.glyphicon-edit
-														a.btn.btn-danger.btn-xs(data-toggle='tooltip', title='Delete', href='#')
-															span.glyphicon.glyphicon-remove
-												td Announcing Something Is Going On
-												td Announce
-												td admin1
-												td 120
-												td 10
-												td 30/1/2017
-							.col-md-4.col-sm-4.col-xs-12
-								a.btn.btn-info.btn-sm(href='/posts/creator')
-									span.glyphicon.glyphicon-edit
-									|  New Post
 						#board.tab-pane.fade
 							.row
 								.col-md-12.col-sm-12.col-xs-12
 									.col-md-6
 										h3
-											| Board Posts 
+											| Community Board
 											small (sub-title)
 									.clearfix
 								.x_content
@@ -148,40 +105,15 @@ block content
 												th.action-col #
 												th.action-col Action
 												th Title
-												th Type
 												th Author
 												th Ratings
 												th Comments
 												th Date Created
 										tbody
-											tr
-												td(style='margin:10px') 1
-												td
-													center
-														a.btn.btn-info.btn-xs(data-toggle='tooltip', title='Details', href='#')
-															span.glyphicon.glyphicon-search
-														a.btn.btn-danger.btn-xs(data-toggle='tooltip', title='Delete', href='#')
-															span.glyphicon.glyphicon-remove
-												td New Post!
-												td Discuss
-												td im_a_user
-												td 100
-												td 23
-												td 3/2/2017
-											tr
-												td(style='margin:10px') 1
-												td
-													center
-														a.btn.btn-info.btn-xs(data-toggle='tooltip', title='Details', href='#')
-															span.glyphicon.glyphicon-search
-														a.btn.btn-danger.btn-xs(data-toggle='tooltip', title='Delete', href='#')
-															span.glyphicon.glyphicon-remove
-												td Request for charity event
-												td Request
-												td Requester
-												td 134
-												td 5
-												td 1/2/2017
+					.col-md-4.col-sm-4.col-xs-12
+						a.btn.btn-info.btn-sm(href='/posts/creator')
+							span.glyphicon.glyphicon-edit
+							|  New Post
 				// /page content
 				// footer content
 				footer

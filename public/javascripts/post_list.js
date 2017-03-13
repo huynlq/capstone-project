@@ -44,10 +44,10 @@ function showNews(data) {
             table.row.add([
                 counter,
                 '<center>'
-                    + '<a data-toggle="tooltip" title="Details" class="btn btn-info btn-xs" href="posts/' + this._id + '">'
+                    + '<a data-toggle="tooltip" title="Details" class="btn btn-info btn-xs" href="/posts/' + this._id + '">'
                         + '<span class="glyphicon glyphicon-search"></span>'
                     + '</a>'
-                    + '<a data-toggle="tooltip" title="Details" class="btn btn-success btn-xs" href="posts/updatepost/' + this._id + '">'
+                    + '<a data-toggle="tooltip" title="Details" class="btn btn-success btn-xs" href="/posts/updatepost/' + this._id + '">'
                         + '<span class="glyphicon glyphicon-edit"></span>'
                     + '</a>'
                     + '<a data-toggle="tooltip" title="Delete" class="btn btn-danger btn-xs linkdeletepost" rel="' + this._id + '" href="#">'
@@ -55,7 +55,6 @@ function showNews(data) {
                     + '</a>'
                 + '</center>',
                 this.postName,                
-                this.postType,
                 this.userId,
                 this.rating,
                 this.comment,
@@ -85,7 +84,7 @@ function showPosts(data) {
             table.row.add([
                 counter,
                 '<center>'
-                    + '<a data-toggle="tooltip" title="Details" class="btn btn-info btn-xs" href="posts/' + this._id + '">'
+                    + '<a data-toggle="tooltip" title="Details" class="btn btn-info btn-xs" href="/posts/' + this._id + '">'
                         + '<span class="glyphicon glyphicon-search"></span>'
                     + '</a>'
                     + '<a data-toggle="tooltip" title="Delete" class="btn btn-danger btn-xs linkdeletepost" rel="' + this._id + '" href="#">'
@@ -93,7 +92,6 @@ function showPosts(data) {
                     + '</a>'
                 + '</center>',
                 this.postName,                
-                this.postType,
                 this.user,
                 this.rating,
                 this.comment,

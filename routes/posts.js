@@ -14,30 +14,18 @@ router.get('/creator/', function(req, res, next) {
 
 /* GET all posts. */
 router.get('/all', function(req, res, next) {
-    var user = req.cookies.user;
-    if(user != null) {
-        var db = req.db;
-        var collection = db.get('Users');
-        collection.findOne({'_id': user},{},function(e,docs){
-            if(docs.role == "Admin") {  	
-                collection = db.get('Posts');
-                collection.find({},{sort: {dateCreated: -1}},function(e,docs){
-                    res.json(docs);
-                });
-            } else {
-                res.render('page_404');
-            }
+    var db = req.db;
+    var collection  = db.get('Posts');
+        collection.find({},{sort: {dateCreated: -1}},function(e,docs){
+            res.json(docs);
         });
-    } else {
-        res.render('page_404');
-    }
 });
 
 /* GET all news id. */
 router.get('/news', function(req, res, next) {
     var db = req.db;
     var collection =  db.get('Posts');
-    collection.find({ $or: [ { postType: 'Announcement' }, { postType: 'Report' } ]},{sort: {dateCreated: -1}},function(e,docs){
+    collection.find({'postType': 'News'},{sort: {dateCreated: -1}},function(e,docs){
         res.json(docs);
     })
 });
@@ -46,7 +34,7 @@ router.get('/news', function(req, res, next) {
 router.get('/board', function(req, res, next) {
     var db = req.db;
     var collection =  db.get('Posts');
-    collection.find({ $not: { $or: [ { postType: 'Announcement' }, { postType: 'Report' } ]}},{sort: {dateCreated: -1}},function(e,docs){
+    collection.find({'postType': 'Community Board'},{sort: {dateCreated: -1}},function(e,docs){
         res.json(docs);
     })
 });
@@ -128,9 +116,46 @@ router.get('/:id', function(req, res, next) {
 /* DELETE to delete post. */
 router.delete('/deletepost/:id', function(req, res) {
     var db = req.db;
+    var postId = req.params.id;
     var collection = db.get('Posts');
-    collection.remove({ '_id' : req.params.id }, function(err) {
-        res.send((err === null) ? { msg: '' } : { msg:'error: ' + err });
+    collection.remove({ '_id' : postId }, function(err) {
+        if(err === null) {
+            collection = db.get('Comments');
+            collection.find({ 'postId': postId }, function(err, docs){
+                var comment = docs;
+                if(err === null) {
+                    collection.remove({ 'postId' : postId }, function(err){
+                        if(err === null) {
+                            var commentId = [];
+                            for(var i = 0; i < comment.length; i++) {
+                                commentId[i] = comment[i]._id.toString();
+                            }                            
+                            collection = db.get('Ratings');                            
+                            collection.remove({'subjectId': {$in: commentId}}, function(err){
+                                if(err === null) {
+                                    collection.remove({'subjectId': postId}, function(err){
+                                        if(err === null) {
+                                            res.send({ msg:''});
+                                        } else {
+                                            res.send({ msg:'error: ' + err });                
+                                        }
+                                    });
+                                } else {
+                                    res.send({ msg:'error: ' + err });                
+                                }
+                            });
+                        } else {
+                            res.send({ msg:'error: ' + err });                
+                        }
+                        
+                    });
+                } else {
+                    res.send({ msg:'error: ' + err });        
+                }
+            });
+        } else {
+            res.send({ msg:'error: ' + err });
+        }        
     });
 });
 

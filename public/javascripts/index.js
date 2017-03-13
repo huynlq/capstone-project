@@ -13,7 +13,6 @@ function initialize() {
 
 	$('#eventCarousel').owlCarousel({
 		nav:true,
-		animateOut: 'fadeOut',
 		navigation:true,
 		singleItem:true,
 		margin:0,
@@ -166,7 +165,7 @@ function populateFeaturedEvents() {
 
 	    	var content = "" +
 		        '<div class="eventItem item">' +
-				    '<div class="thumb col-lg-3 col.md-10 col.sm-10 col-xs-10" style="background-image: url(\'' + this.eventImage + '\');">' +
+				    '<div class="thumb col-lg-4 col.md-10 col.sm-10 col-xs-10" style="background-image: url(\'' + this.eventImage + '\');">' +
 				    	'<div id="event' + counter + 'Time" class="time">' +
 					    	cd + 
 					    '</div>' +

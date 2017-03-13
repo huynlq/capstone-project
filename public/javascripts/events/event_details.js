@@ -400,28 +400,84 @@ function confirmDonate() {
 // Populate sponsors function
 function populateSponsors() {
 	var eventId = window.location.href.split('/')[window.location.href.split('/').length - 1].split('#')[0];
-	$.getJSON( '/events/featuredsponsor/' + eventId, function( dataSponsor ) {
-		if(dataSponsor != '') {
-			var content = '<h3 style="margin-left: 50px">SPONSORS</h3>' +
-								'<hr>' +
-								'<div class="row" style="text-align: center">';
+	$('#sponsorPane').html("");
+	var content = "";
+	$.ajax({
+        url: '/events/featuredsponsor/' + eventId,
+        dataType: 'json',
+        async: false,
+        success: function( dataSponsor ) {			
+			if(dataSponsor != '') {				
+				var headContent = '<h3>SPONSORS<span id="countSponsors"></span></h3>' +
+									'<hr>' +
+									'<div id="sponsorCarousel" class="row owl-carousel owl-theme new-owl" style="text-align: center">';
 
-			var len = dataSponsor.length
-			$.each(dataSponsor, function(index, element){
-				$.getJSON('/users/id/' + this.userId, function( dataUser ){
-					content += '<a href="/users/' + dataUser._id + '">' +
-								'<img data-toggle="tooltip" title="' + dataUser.companyName + '" src="' + dataUser.companyImage + '" style="margin: 30px; max-width: 200px" />' +
-								'</a>';
-					if(index == len-1){
-						content += '</div>';
+				$('#sponsorPane').html($('#sponsorPane').html() + headContent + '</div>');
+				$('#sponsorCarousel').owlCarousel({
+					lazyLoad:true,
+				    nav:true,
+					navigation:true,
+					margin:0,
+					loop:true,		
+					margin:10,
+					autoplay:300,
+					pagination:false,
+					navText: ["<i class='fa fa-angle-double-left'></i>","<i class='fa fa-angle-double-right'></i>"],
+    				smartSpeed:500,
+					responsive:{
+						0:{
+							items:1
+						},
+						300:{
+							items:2
+						},
+						750:{
+							items:1
+						},		
+						1300:{
+							items:2
+						},
+						1600:{
+							items:3
+						},
 					}
+				});
 
-					$('#sponsorPane').html($('#sponsorPane').html() + content);
 
-					$('[data-toggle="tooltip"]').tooltip(); 
+				var len = dataSponsor.length;
+				$.each(dataSponsor, function(index, element){
 					
-				});				
-			});
-		}		
-	});
+					$.ajax({
+				        url: '/users/id/' + this.userId,
+				        dataType: 'json',
+				        async: false,
+				        success: function( dataUser ){
+				        	content = '<div class="item">' +
+										    '<a href="/users/' + dataUser._id + '">' +
+										    	'<div class="thumb" data-toggle="tooltip" title="' + dataUser.companyName + '" style="background-image: url(\'' + dataUser.companyImage + '\');"/>' +
+											'</a>' +
+										'</div>';							
+							$('#sponsorCarousel').owlCarousel('add', content).owlCarousel('update');
+							
+						}
+					});				
+				});
+
+				if(len < 3) {
+					for(var i = 0; i < 3 - len; i++) {
+						content = '<div class="item">' +
+								    '<a onclick="donate()" href="#">' +
+								    	'<div class="thumb" data-toggle="tooltip" title="Donate Now!" style="background-image: url(\'https://sd.keepcalm-o-matic.co.uk/i/-im-blank-.png\');"/>' +
+									'</a>' +
+								'</div>';							
+						$('#sponsorCarousel').owlCarousel('add', content).owlCarousel('update');
+					}
+				}
+				//$('.owl-nav').removeClass('disabled');
+				
+				$('#countSponsors').html(" (" + len + ")");
+				$('[data-toggle="tooltip"]').tooltip(); 
+			}		
+		}
+	});	
 }

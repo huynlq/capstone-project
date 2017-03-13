@@ -425,4 +425,27 @@ router.get('/producedevents/:username', function(req, res, next) {
     });
 });
 
+/* GET sponsored events by user. */
+router.get('/sponsoredevents/:id', function(req, res, next) {
+    var db = req.db;
+    var collection = db.get('EventSponsored');
+    collection.find({
+        'userId': req.params.id,
+        'status': {'$ne': 'Pending'}
+    },{},function(e,docs){        
+        console.log(docs);
+        collection = db.get('Events');
+        var data = [];
+        var dataId = [];
+        for(var i = 0; i < docs.length; i++) {
+            dataId[i] = new ObjectId(docs[i].eventId);
+        }   
+        console.log(dataId);
+        collection.find({ '_id': {$in: dataId}},{},function(e,eventDocs){
+            console.log("DONE");
+            res.json(eventDocs);
+        });
+    });
+});
+
 module.exports = router;

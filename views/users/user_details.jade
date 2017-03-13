@@ -128,7 +128,7 @@ block content
 												th Action
 										tbody
 						#eventProduced-panel
-							h3(style='margin-left: 50px') Events Produced
+							h3(style='margin-left: 50px') Events Hosted
 							hr
 							.row
 								.col-md-2.col-sm-2
@@ -146,13 +146,17 @@ block content
 							h3(style='margin-left: 50px') Events Sponsored
 							hr
 							.row
-								// MAKE SOME KIND OF SLIDER HERE
-						hr
-						.row
-							.col-md-4.col-sm-4.col-xs-12
-							#action-pane.col-md-6.col-sm-6.col-xs-12
-								a#btnSave.btn.btn-info.col-md-5.col-xs-12(onclick='saveInfo()') Save Profile Info
-								a#btnPromote.btn.btn-info.col-md-5.col-xs-12(href='../promote') 
+								.col-md-2.col-sm-2
+								.col-md-8.col-sm-8.col-xs-12
+									table#eventSponsoredTable.table.table-striped.table-bordered.dt-responsive.nowrap.datatable-responsive(style="width: 100%")
+										thead
+											tr
+												th #
+												th Event
+												th Type
+												th Date
+												th Action
+										tbody					
 					// End SmartWizard Content
 					// /top tiles
 				// /page content

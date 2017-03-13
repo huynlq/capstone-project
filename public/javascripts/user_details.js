@@ -12,6 +12,7 @@ $(document).ready(function() {
   populateInfo();
   populateEventJoined();
   populateEventProduced();
+  populateEventSponsored();
 } );
 
 // Functions ===============================================
@@ -83,6 +84,29 @@ function populateEventProduced() {
             + '</a>'
         ]).draw( false );
       }      
+    });
+  });
+}
+
+// Populate event sponsored
+function populateEventSponsored() {
+  var id = $('#userId').html();
+  var counter = 0;
+  var dateCreated = "";
+  $.getJSON('/events/sponsoredevents/' + id, function( data ) {
+    var table = $('#eventSponsoredTable').DataTable();    
+    $.each(data, function(){      
+      dateCreated = new Date(this.dateCreated);
+      counter++;        
+      table.row.add([
+          counter,
+          this.eventName,
+          this.eventType,
+          this.eventDate,
+          '<a data-toggle="tooltip" title="View" class="btn btn-info btn-xs" href="../events/' + this._id + '">'
+            + '<span class="glyphicon glyphicon-search"></span>'
+          + '</a>'
+      ]).draw( false );
     });
   });
 }

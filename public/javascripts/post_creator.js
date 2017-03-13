@@ -22,10 +22,26 @@ $(document).ready(function() {
 	} else {
 		$('#txtPostName').val("");
 	}
+
+	populateType();
 });
 
 // Functions ===============================================
 
 function submit() {
 	console.debug(tinyMCE.activeEditor.getContent());
+}
+
+function populateType() {
+	var userId = readCookie('user');
+	$.getJSON( '/users/id/' + userId, function( data ) {
+		if(data.role == "Admin") {
+			$('#txtPostType').val("News");
+			$('#txtPostType').html($('#txtPostType').html() + '<option>News</option><option>Community Board</option>');
+		} else {
+			$('#txtPostType').val("Community Board");
+			$('#txtPostType').html($('#txtPostType').html() + '<option>Community Board</option>');
+			$('#txtPostType').attr('readonly','readonly');
+		}
+	});
 }
