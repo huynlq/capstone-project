@@ -7,39 +7,56 @@ $(document).ready(function() {
   //var eventObj = JSON.parse(localStorage.getItem('eventItem'));
   
   populateEvent();
-  
+  populateDonations();  
+  populateProducer();
   
 });
 
 // Functions =============================================================
 
 function populateEvent() {
-  var eventId = localStorage.getItem('eventId');
+  var eventId = readCookie('eventId');
 
   $.getJSON( '/events/details/' + eventId, function( data ) {    
-    console.log(data.otherDonationItem.constructor === Array);
-    $('#event-title')[0].innerHTML = data.eventName;
-    $('#event-type')[0].innerHTML = data.eventType;
-    $('#event-date')[0].innerHTML = data.eventDate;
-    $('#event-time')[0].innerHTML = data.meetingTime;
-    $('#event-place')[0].innerHTML = data.meetingAddress;
-    $('#event-description')[0].innerHTML = data.eventDescription;
-    $('#event-image')[0].src = data.eventImage;
-    $('#event-donation')[0].innerHTML = data.donationNeeded;
-    if(data.otherDonationItem.constructor !== Array) {
-      var content = '<label>' + data.otherDonationItem + ':</label><div class="progress"><span>0/' + data.otherDonationNumber + '<div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" style="width:70%"></div></div>';
-      $('#event-donation-progress')[0].innerHTML += content;
-    } else {
-      for (var i = 0; i < data.otherDonationItem.length; i++) {
-        var content = '<label>' + data.otherDonationItem[i] + ':</label><div class="progress"><span>0/' + data.otherDonationNumber[i] + '<div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" style="width:70%"></div></div>';
-        $('#event-donation-progress')[0].innerHTML += content;
-      }  
-    }
-    
-
+    $('#event-title').html(data.eventName);
+    $('#event-type').html(data.eventType);
+    $('#event-date').html(data.eventDate);
+    $('#event-time').html(data.meetingTime);
+    $('#event-place').html(data.meetingAddress);
+    $('#event-description').html(data.eventDescription);
+    $('#event-image')[0].src = data.eventImage;       
     populateActivities();
   });
 }
+
+function populateDonations()  {
+  var donationObj = JSON.parse(localStorage.getItem('donationItem'));
+  console.log(donationObj);
+  console.log(donationObj[0].donationItem);
+  var content = "";
+  for(var i = 0; i < donationObj.length; i++) {
+    var content = '<label>' + donationObj[i].donationItem + ':</label> 0/' + parseInt(donationObj[i].donationNumber).toLocaleString() + ' ' + donationObj[i].donationUnit +
+                  '<div class="progress">' +
+                    '<div id="donationProgress" role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" style="width:0%" class="progress-bar progress-bar-striped active"></div>' +
+                  '</div>';
+                  
+  }
+  $('#event-donation-progress').html(content);
+}
+
+function populateProducer() {
+  var id = readCookie('user');
+  
+  $.getJSON( '/users/id/' + id, function(data) {
+    $('#txtCompanyImageSrc').attr('src', data.companyImage);
+    $('#txtCompanyName').html(data.companyName);
+    $('#txtCompanyAddress').html(data.companyAddress);
+    $('#txtCompanyPhone').html(data.companyPhoneNumber);
+    $('#txtCompanyEmail').html(data.companyEmail);
+  });   
+  
+}
+
 
 function populateActivities() {
   var activityObj = JSON.parse(localStorage.getItem('activityItem'));
@@ -101,18 +118,17 @@ function goNext() {
   $.ajax({
         type: 'POST',
         data: eventObj,
-        url: '/events/finishevent/' + localStorage.getItem('eventId'),
+        url: '/events/finishevent/' + readCookie('eventId'),
         dataType: 'JSON'
     }).done(function( response ) {
-        var id = localStorage.getItem('eventId');
+        var id = readCookie('eventId');
         // Check for successful (blank) response
         if (response.msg === '') {
             
+            // Insert Activities to Database
             var activityObj = JSON.parse(localStorage.getItem('activityItem'));
-
-            var newActivity;
+            var newActivity = [];
             for(var i = 0; i < activityObj.length; i++) {
-              activityObj[i].eventId = id;
               newActivity = {
                 eventId : id,
                 day: activityObj[i].day,
@@ -120,14 +136,14 @@ function goNext() {
                 place: activityObj[i].place,
                 activity: activityObj[i].activity,
                 estBudget: activityObj[i].estBudget
-              }
+              };
 
               $.ajax({
-                  type: 'POST',
-                  data: newActivity,
-                  url: '/events/addactivity',
-                  async: false,
-                  dataType: 'JSON'
+                type: 'POST',
+                data: newActivity,
+                url: '/events/addactivity',
+                async: false,
+                dataType: 'JSON'
               }).done(function( response ) {
                   if (response.msg === '') {
                     
@@ -136,10 +152,40 @@ function goNext() {
                   }
               });
             }
-            localStorage.removeItem("eventId");
-            localStorage.removeItem("activityItem");
-            window.location.replace(location.origin + '/events/' + id);
+
             
+
+            // Insert Donations to Database
+            var donationObj = JSON.parse(localStorage.getItem('donationItem'));
+            var newDonation = [];
+            for(var i = 0; i < donationObj.length; i++) {
+              newDonation = {
+                eventId : id,
+                item: donationObj[i].donationItem,
+                number: donationObj[i].donationNumber,
+                unit: donationObj[i].donationUnit,
+                minimum: donationObj[i].donationMinimum,                
+              };
+
+              $.ajax({
+                type: 'POST',
+                data: newDonation,
+                url: '/events/adddonationrequire',
+                async: false,
+                dataType: 'JSON'
+              }).done(function( response ) {
+                  if (response.msg === '') {
+                    
+                  } else {
+                    alert(response.msg);
+                  }
+              });
+            }
+
+            // deleteCookie('eventId');
+            // localStorage.removeItem("donationItem");
+            // localStorage.removeItem("activityItem");
+            window.location.replace(location.origin + '/events/' + id);            
         }
         else {
 

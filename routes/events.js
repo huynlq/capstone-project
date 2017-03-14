@@ -86,7 +86,19 @@ router.post('/addevent', uploading.single('displayEventImage'), function(req, re
                 collection = db.get('Events');
                 
                 collection.insert(req.body, function(err, result){
-                    res.render('events/activity_creator', { title: "Activity Creator", eventId: result._id});
+                    if(err === null) {
+                        console.log("RESULT: ");
+                        console.log(result);
+                        console.log("ID: " + result._id);
+                        res.cookie('eventId',result._id.toString(), { maxAge: 900000, httpOnly: false });
+                        res.writeHead(302, {
+                          'Location': '/events/creator_activity',
+                          'eventId': result._id
+                        });
+                        res.end();
+                    } else {
+                        res.send({msg: err});
+                    }
                 });
             }
         });
@@ -263,6 +275,32 @@ router.get('/details/:id', function(req, res, next) {
     if(req.params.id.length != 24)
         res.render('page_404');
     collection.findOne({ '_id' : req.params.id },{},function(e,docs){
+        if(docs) {
+            res.json(docs);
+        } else {
+            res.render('page_404');
+        }
+    });
+});
+
+/* POST new donation require. */
+router.post('/adddonationrequire', function(req, res) {
+    var db = req.db;
+    var collection = db.get('RequiredDonations');
+    collection.insert(req.body, function(err, result){                
+        res.send(
+            (err === null) ? { msg: ''} : { msg: err, 'message': 'An error occured. Please try again.' }
+        );
+    });
+});
+
+/* GET donations require base on eventid. */
+router.get('/donationrequire/:id', function(req, res, next) {
+    var db = req.db;
+    var collection = db.get('RequiredDonations');
+    if(req.params.id.length != 24)
+        res.render('page_404');    
+    collection.find({ 'eventId' : req.params.id },{},function(e,docs){
         if(docs) {
             res.json(docs);
         } else {

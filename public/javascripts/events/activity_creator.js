@@ -1,10 +1,10 @@
 // DOM Ready =============================================================
 
 $(document).ready(function() {
+  $('#eventId').html(readCookie('eventId'));
+
   initiateSchedule();
-
-  localStorage.setItem("eventId", $('#eventId').html());
-
+  initiateDonation();
 
   var diffDays = document.getElementById("txtNumberOfDates").value;
   var table;
@@ -23,12 +23,8 @@ $(document).ready(function() {
           var data = $('#table-day-' + i).DataTable().row( $(this).parents('tr') ).data();
           console.log("data");
           alert( data );
-      });
-      
+      });      
   }
-
-  $("#tab-day-1").addClass("active");
-  $("#day1").addClass("active in");
 
   var dialog = $( "#edit-activity-form" ).dialog({
       autoOpen: false,
@@ -139,6 +135,11 @@ function initiateSchedule() {
     }
     document.getElementById("activityDates").innerHTML = content1;
     document.getElementById("activityContents").innerHTML = content2;
+
+
+    $("#tab-day-1").addClass("active");
+    $("#day1").addClass("active in");
+    $('#tab-day-1').click();
   });  
 }
 
@@ -200,26 +201,141 @@ function removeActivity(day, num) {
   element.outerHTML = '';
 }
 
+function initiateDonation() {
+  var content1 = "";
+  var content2 = "";
+  
+    content1 += '<div class="row clearfix">'
+                  + '<div class="col-md-12 column">'
+                    + '<table class="table table-bordered table-hover" id="tab_logic">'
+                      + '<tbody id="donation-body">'
+                        + '<tr id="donation-row-1">'
+                          + '<td><input type="text" id="donation-item-1"  placeholder="Donation Item" class="form-control"/></td>'
+                          + '<td><input type="text" id="donation-number-1" placeholder="Number Required" class="form-control"/></td>'
+                          + '<td><input type="text" id="donation-unit-1" placeholder="Unit" class="form-control"/></td>'
+                          + '<td><input type="text" id="donation-minimum-1" placeholder="Sponsor Minimum" class="form-control"/></td>'
+                          + '<td id="add-donation"><a id="add-donation-button" class="btn btn-default glyphicon glyphicon-plus" onclick="addOtherDonation(1)"></a></td>'
+                        + '</tr>'
+                        + '<tr id="donation-row-2"></tr>'
+                      + '</tbody>'
+                    + '</table>'
+                  + '</div>'
+                + '</div>';
+  
+  document.getElementById("otherDonationContents").innerHTML = content1;
+}
+
+function addOtherDonation(i) {
+  var item = document.getElementById('donation-item-' + i).value;
+  var num = document.getElementById('donation-number-' + i).value;
+  var unit = document.getElementById('donation-unit-' + i).value;
+  var min = document.getElementById('donation-minimum-' + i).value;
+  var content1 = 
+      '<td id="donation-item-' + i + '">' + 
+        item +         
+      '</td>' +
+      '<td id="donation-number-' + i + '">' + 
+        num +         
+      '</td>' +
+      '<td id="donation-unit-' + i + '">' + 
+        unit +         
+      '</td>' +
+      '<td id="donation-minimum-' + i + '">' + 
+        min +         
+      '</td>' +
+      '<td>' +
+        '<input type="hidden" name="otherDonationItem" value="' + item + '" />' +
+        '<input type="hidden" name="otherDonationNumber" value="' + num + '" />' +
+        '<input type="hidden" name="otherDonationUnit" value="' + num + '" />' +
+        '<input type="hidden" name="otherDonationMinimum" value="' + num + '" />' +
+        '<a class="btn btn-default glyphicon glyphicon-remove" onclick="removeOtherDonation(' + i +')"></a>' + 
+      '</td>';
+  document.getElementById("donation-row-" + i).innerHTML = content1;
+  console.log(num);
+
+  var content2 = 
+    '<td><input type="text" id="donation-item-' + (i + 1) + '"  placeholder="Donation Item" class="form-control"/></td>'
+    + '<td><input type="text" id="donation-number-' + (i + 1) + '" placeholder="Number Required" class="form-control"/></td>'
+    + '<td><input type="text" id="donation-unit-' + (i + 1) + '" placeholder="Unit" class="form-control"/></td>'
+    + '<td><input type="text" id="donation-minimum-' + (i + 1) + '" placeholder="Sponsor Minimum" class="form-control"/></td>'
+    + '<td id="add-donation"><a id="add-donation-button" class="btn btn-default glyphicon glyphicon-plus" onclick="addOtherDonation(' + (parseInt(i) + 1) + ')"></a></td>'
+  document.getElementById("donation-row-" + (i + 1)).innerHTML = content2;
+
+  var content3 = '<tr id="donation-row-' + (i + 2) + '"></tr>';
+  document.getElementById("donation-body").innerHTML += content3;
+
+  document.getElementById("txtNumberOfDonation").value = i;
+}
+
+function removeOtherDonation(i) {
+  var element = document.getElementById("donation-row-" + i);
+  element.outerHTML = '';
+}     
+
 function goNext() {
-  var schedule = [];
-  var activity = new Object();
-  var diffDays = document.getElementById("txtNumberOfDates").value;
-  for (var i = 1; i <= diffDays; i++) {
-    var oTable = $('#table-day-' + i).dataTable();
-    oTable.fnGetData();
-    for (var j = 0; j < oTable.fnGetData().length; j++) {
-      activity = {
-        day:        i,
-        time:       oTable.fnGetData()[j][0],
-        place:      oTable.fnGetData()[j][1],
-        activity:   oTable.fnGetData()[j][2],
-        estBudget:  oTable.fnGetData()[j][3]
+  var eventId = readCookie("eventId");
+  if(eventId != '') {
+
+    // Save Requirement Data
+    var content = {
+      volunteerMax: $('#txtVolunteersMax').val(),
+      volunteerMin: $('#txtVolunteersMin').val(),
+      budget: $('#txtBudget').val()
+    }
+    $.ajax({
+        type: 'PUT',
+        data: content,
+        url: '/events/updateevent/' + eventId,
+        dataType: 'JSON'
+    }).done(function( response ) {    
+      if (response.msg !== '') 
+        alert(response.msg);
+    });
+
+    // Save Donations Data
+
+    var donateNo = parseInt(document.getElementById("txtNumberOfDonation").value);
+    var otherDonationItem = [];
+    var otherDonationNumber = [];
+    var donations = [];
+    for (var i = 0; i < donateNo; i++) {
+      if(document.getElementById("donation-row-" + (i + 1)) != null) {
+        // otherDonationItem.push(document.getElementById("donation-item-" + (i + 1)).innerHTML);
+        // otherDonationNumber.push(document.getElementById("donation-number-" + (i + 1)).innerHTML);              
+        donations.push({
+          donationItem    : $('#donation-item-' + (i + 1)).html(),
+          donationNumber  : $('#donation-number-' + (i + 1)).html(),
+          donationUnit    : $('#donation-unit-' + (i + 1)).html(),
+          donationMinimum : $('#donation-minimum-' + (i + 1)).html()
+        });
       }
-      schedule.push(activity);
-    } 
-  }
+    }
+    localStorage.setItem("donationItem", JSON.stringify(donations));
 
-  localStorage.setItem("activityItem", JSON.stringify(schedule));          
 
-  window.location = "creator_preview";
+    // Save Activities Data
+
+    var schedule = [];
+    var activity = new Object();
+    var diffDays = document.getElementById("txtNumberOfDates").value;
+    for (var i = 1; i <= diffDays; i++) {
+      var oTable = $('#table-day-' + i).dataTable();
+      oTable.fnGetData();
+      for (var j = 0; j < oTable.fnGetData().length; j++) {
+        activity = {
+          day:        i,
+          time:       oTable.fnGetData()[j][0],
+          place:      oTable.fnGetData()[j][1],
+          activity:   oTable.fnGetData()[j][2],
+          estBudget:  oTable.fnGetData()[j][3]
+        }
+        schedule.push(activity);
+      } 
+    }
+    localStorage.setItem("activityItem", JSON.stringify(schedule));          
+
+    window.location = "creator_preview";  
+  } else {
+    alert('Something goes horribly wrong, please restart the event creator process.')
+  }  
 }  

@@ -80,27 +80,70 @@ block content
 					.col-md-1.col-sm-1.col-xs-12
 					.col-md-5.col-sm-5.col-xs-12
 						img#event-image(src='#', style='max-height: 300px; max-width: 500px')
-				hr
+				br
 				.row
-					.col-md-2.col-sm-2.col-xs-12
-					#event-description.col-md-5.col-sm-5.col-xs-12
-						p
-							| Lorem ipsum dolor sit amet, consectetur adipisicing elit. Praesentium quos aspernatur cupiditate commodi sunt illo, dolorum iste molestias. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Praesentium quos aspernatur cupiditate commodi sunt illo, dolorum iste molestias. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Praesentium quos aspernatur cupiditate commodi sunt illo, dolorum iste molestias.
-						p
-							| Lorem ipsum dolor sit amet, consectetur adipisicing elit. Praesentium quos aspernatur cupiditate commodi sunt illo, dolorum iste molestias. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Praesentium quos aspernatur cupiditate commodi sunt illo, dolorum iste molestias. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Praesentium quos aspernatur cupiditate commodi sunt illo, dolorum iste molestias.
-						p
-							| Lorem ipsum dolor sit amet, consectetur adipisicing elit. Praesentium quos aspernatur cupiditate commodi sunt illo, dolorum iste molestias. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Praesentium quos aspernatur cupiditate commodi sunt illo, dolorum iste molestias. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Praesentium quos aspernatur cupiditate commodi sunt illo, dolorum iste molestias.
-					#event-donation-progress.col-md-3.col-sm-3.col-xs-12.well(style='margin: 20px')
-						label Donation:
-						.progress
-							| 0/
-							span#event-donation
-							.progress-bar.progress-bar-striped.active(role='progressbar', aria-valuenow='70', aria-valuemin='0', aria-valuemax='100', style='width:70%')
-				h3#event-title(style='margin-left: 50px') EVENT ACTIVITIES
-				hr
+					.col-md-1.col-sm-1
+					.col-md-5.col-sm-5.col-xs-12
+						h3 DESCRIPTION
+						hr
+						p#event-description
+					.col-md-4.col-sm-4.col-xs-12
+						h3 DONATIONS
+						hr
+						#event-donation-progress.well(style='margin: 20px')													
 				.row
-					.col-md-3.col-sm-3.col-xs-12
-					.col-md-6.col-sm-6.col-xs-12#activityPane
+					.col-md-1.col-sm-1					
+					.col-md-4.col-sm-4.col-xs-12
+						h3 PRODUCER INFORMATION
+						hr
+						.row(style="text-align: center")
+							
+						.row
+							table.table.table-responsive.table-striped
+								tbody
+									tr
+										td(style="text-align: center; vertical-align: middle; width: 40%", rowspan="6")											
+											img#txtCompanyImageSrc(src='#', alt='No company image!', style="max-width: 100%")
+									tr
+										td(style="text-align: right; width: 100px")
+											span(style="font-weight: bold") Company:
+										td
+											span#txtCompanyName
+									tr
+										td(style="text-align: right; width: 100px")
+											span(style="font-weight: bold") Address:
+										td
+											span#txtCompanyAddress
+									tr
+										td(style="text-align: right; width: 100px")
+											span(style="font-weight: bold") Email:
+										td
+											span#txtCompanyEmail
+									tr
+										td(style="text-align: right; width: 100px")
+											span(style="font-weight: bold") Phone:
+										td
+											span#txtCompanyPhone
+									tr
+										td(style="text-align: right; width: 100px")
+											span(style="font-weight: bold") Website:
+										td
+											span#txtCompanyWebsite
+					.col-md-1.col-sm-1					
+					.col-md-4.col-sm-4.col-xs-12#sponsorPane
+				.row.col-sm-12.col-xs-12
+					br
+					br
+					br
+					br
+				.row
+					.col-md-1.col-sm-1					
+					.col-md-9.col-sm-9.col-xs-12
+						h3 EVENT ACTIVITIES
+						hr
+						.row
+							.col-md-2.col-sm-2.col-xs-12
+							.col-md-8.col-sm-8.col-xs-12#activityPane
 				hr
 				.row
 					.col-md-5.col-sm-5

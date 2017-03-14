@@ -55,14 +55,35 @@ block content
 					// Tabs
 					// Smart Wizard
 					form.form-horizontal.form-label-left
+						h3(style='margin-left: 50px') Event Requires
+						hr
+						.form-group
+							label.control-label.col-md-3.col-sm-3.col-xs-12
+								| Volunteers Needed 
+								span.required *
+							.col-md-3.col-sm-3.col-xs-12
+								input#txtVolunteersMin.form-control.col-md-7.col-xs-12(type='text', placeholder='Minimum', required='required', name='volunteerMin')
+							.col-md-3.col-sm-3.col-xs-12
+								input#txtVolunteersMax.form-control.col-md-7.col-xs-12(type='text', placeholder='Maximum', required='required', name='volunteerMax')
+						.form-group
+							label.control-label.col-md-3.col-sm-3.col-xs-12
+								| Volunteer Budget 
+								span.required *
+							.col-md-6.col-sm-6.col-xs-12
+								input#txtBudget.form-control.col-md-7.col-xs-12(type='text', placeholder='For each volunteer', required='required', name='budget')
+						#other1.form-group
+							label.control-label.col-md-3.col-sm-3.col-xs-12 Donations Require
+							input#txtNumberOfDonation(type='hidden', value='0')
+							.col-md-6.col-sm-6.col-xs-12
+								#otherDonationContents.tab-content
 						h3(style='margin-left: 50px') Event Activities
 						hr
 						input#txtNumberOfDates(type='hidden', value='0')
-						.col-md-2.col-sm-2.col-xs-12
-						.col-md-8.col-sm-8.col-xs-12
+						.col-md-2.col-sm-2
+						.col-md-7.col-sm-7.col-xs-12
 							ul#activityDates.nav.nav-tabs
 							#activityContents.tab-content
-						.col-md-3.col-sm-3.col-xs-12
+						.col-md-3.col-sm-3
 					hr
 					.row
 						.col-md-7.col-sm-7

@@ -1,7 +1,7 @@
 // DOM Ready =============================================================
 
 $(document).ready(function() {
-  initiateDonation();
+  $('#txtUser').val(readCookie('user'));
 
   $("#inputEventImage").change(function(e) {
 
@@ -71,66 +71,6 @@ function initialize() {
 }
 google.maps.event.addDomListener(window, 'load', initialize);      
 
-function initiateDonation() {
-  $.getJSON( '/users/id/' + readCookie("user"), function( data ) {
-    $('#txtUser').val(data.username);
-  });
-
-  var content1 = "";
-  var content2 = "";
-  
-    content1 += '<div class="row clearfix">'
-                  + '<div class="col-md-12 column">'
-                    + '<table class="table table-bordered table-hover" id="tab_logic">'
-                      + '<tbody id="donation-body">'
-                        + '<tr id="donation-row-1">'
-                          + '<td><input type="text" id="donation-item-1"  placeholder="Donation Item" class="form-control"/></td>'
-                          + '<td><input type="text" id="donation-number-1" placeholder="Number Required" class="form-control"/></td>'
-                          + '<td id="add-donation"><a id="add-donation-button" class="btn btn-default glyphicon glyphicon-plus" onclick="addOtherDonation(1)"></a></td>'
-                        + '</tr>'
-                        + '<tr id="donation-row-2"></tr>'
-                      + '</tbody>'
-                    + '</table>'
-                  + '</div>'
-                + '</div>';
-  
-  document.getElementById("otherDonationContents").innerHTML = content1;
-}
-
-function addOtherDonation(i) {
-  var item = document.getElementById('donation-item-' + i).value;
-  var num = document.getElementById('donation-number-' + i).value;
-  var content1 = 
-      '<td id="donation-item-' + i + '">' + 
-        item +         
-      '</td>' +
-      '<td id="donation-number-' + i + '">' + 
-        num +         
-      '</td>' +
-      '<td>' +
-        '<input type="hidden" name="otherDonationItem" value="' + item + '" />' +
-        '<input type="hidden" name="otherDonationNumber" value="' + num + '" />' +
-        '<a class="btn btn-default glyphicon glyphicon-remove" onclick="removeOtherDonation(' + i +')"></a>' + 
-      '</td>';
-  document.getElementById("donation-row-" + i).innerHTML = content1;
-  console.log(num);
-
-  var content2 = 
-    '<td><input type="text" id="donation-item-' + (i + 1) + '"  placeholder="Donation Item" class="form-control"/></td>'
-    + '<td><input type="text" id="donation-number-' + (i + 1) + '" placeholder="Number Required" class="form-control"/></td>'
-    + '<td id="add-donation"><a id="add-donation-button" class="btn btn-default glyphicon glyphicon-plus" onclick="addOtherDonation(' + (parseInt(i) + 1) + ')"></a></td>'
-  document.getElementById("donation-row-" + (i + 1)).innerHTML = content2;
-
-  var content3 = '<tr id="donation-row-' + (i + 2) + '"></tr>';
-  document.getElementById("donation-body").innerHTML += content3;
-
-  document.getElementById("txtNumberOfDonation").value = i;
-}
-
-function removeOtherDonation(i) {
-  var element = document.getElementById("donation-row-" + i);
-  element.outerHTML = '';
-}     
 
 function goNext() {  
   if($('#txtImageSrc').attr('src') != '' ) {
@@ -141,10 +81,17 @@ function goNext() {
       var donateNo = parseInt(document.getElementById("txtNumberOfDonation").value);
       var otherDonationItem = [];
       var otherDonationNumber = [];
+      var donations = [];
       for (var i = 0; i < donateNo; i++) {
         if(document.getElementById("donation-row-" + (i + 1)) != null) {
-          otherDonationItem.push(document.getElementById("donation-item-" + (i + 1)).innerHTML);
-          otherDonationNumber.push(document.getElementById("donation-number-" + (i + 1)).innerHTML);              
+          // otherDonationItem.push(document.getElementById("donation-item-" + (i + 1)).innerHTML);
+          // otherDonationNumber.push(document.getElementById("donation-number-" + (i + 1)).innerHTML);              
+          donations.push({
+            'donationItem'    : $('#donation-item-' + (i + 1)).html(),
+            'donationNumber'  : $('#donation-number-' + (i + 1)).html(),
+            'donationUnit'    : $('#donation-unit-' + (i + 1)).html(),
+            'donationMinimum' : $('#donation-minimum-' + (i + 1)).html()
+          });
         }
       }
 
@@ -160,22 +107,19 @@ function goNext() {
         contractPhone: document.getElementById("txtPhone").value,
         eventDescription: document.getElementById("txtDescription").value.replace(/\n/g,"<br />"),
         volunteerMax: document.getElementById("txtVolunteersMax").value,
-        budget: document.getElementById("txtBudget").value,
-        donationNeeded: document.getElementById("txtDonation").value,
-        otherDonationItem: otherDonationItem,
-        otherDonationNumber: otherDonationNumber,
+        budget: document.getElementById("txtBudget").value,        
         imageSrc: document.getElementById('txtImage').value,
         imageExt: ext
       };
       localStorage.setItem("eventItem", JSON.stringify(content));
+      localStorage.setItem("eventDonation", JSON.stringify(donations));
 
       window.location = "creator_activity";
     }
   }
 }
 
-function readURL() {
-    
+function readURL() {    
             $('#txtImageSrc')
                 .attr('src', $('#txtImage').val())
                 .height(150);
