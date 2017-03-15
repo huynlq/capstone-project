@@ -1,0 +1,137 @@
+extends ../layout
+
+block content
+	doctype html
+	html(lang='en')
+		head
+			meta(http-equiv='Content-Type', content='text/html; charset=UTF-8')
+			// Meta, title, CSS, favicons, etc.
+			meta(charset='utf-8')
+			meta(http-equiv='X-UA-Compatible', content='IE=edge')
+			meta(name='viewport', content='width=device-width, initial-scale=1')
+			title Charity Project | Event List
+			// Bootstrap
+			link(href='/vendors/bootstrap/dist/css/bootstrap.css', rel='stylesheet')
+			// Font Awesome
+			link(href='/vendors/font-awesome/css/font-awesome.min.css', rel='stylesheet')
+			// NProgress
+			link(href='/vendors/nprogress/nprogress.css', rel='stylesheet')
+			// iCheck
+			link(href='/vendors/iCheck/skins/flat/green.css', rel='stylesheet')
+			// bootstrap-progressbar
+			link(href='/vendors/bootstrap-progressbar/css/bootstrap-progressbar-3.3.4.min.css', rel='stylesheet')
+			// JQVMap
+			link(href='/vendors/jqvmap/dist/jqvmap.min.css', rel='stylesheet')
+			// bootstrap-daterangepicker
+			link(href='/vendors/bootstrap-daterangepicker/daterangepicker.css', rel='stylesheet')
+			// Owl Carousel
+			link(rel='stylesheet', href='../vendors/owl-carousel/owl.carousel.css')
+			// Datatables
+			link(href='/vendors/datatables.net-bs/css/dataTables.bootstrap.min.css', rel='stylesheet')
+			link(href='/vendors/datatables.net-buttons-bs/css/buttons.bootstrap.min.css', rel='stylesheet')
+			link(href='/vendors/datatables.net-fixedheader-bs/css/fixedHeader.bootstrap.min.css', rel='stylesheet')
+			link(href='/vendors/datatables.net-responsive-bs/css/responsive.bootstrap.min.css', rel='stylesheet')
+			link(href='/vendors/datatables.net-scroller-bs/css/scroller.bootstrap.min.css', rel='stylesheet')
+			// Custom Theme Style
+			link(href='/build/css/custom.min.css', rel='stylesheet')
+			// Styles
+			link(href='../stylesheets/index.css', rel='stylesheet')
+			script(src='/javascripts/events/event_list_user.js')		
+		body.nav-md		
+			.right_col(role='main')
+				// top tiles
+				.row.page-title
+					.title(style='margin: 10px')
+						h1 Events
+				br
+				br
+				.row
+					.col-md-5.col-sm-5.col-xs-12(style='float:right')
+						input#txtSearch(type="text", placeholder="Search Event", class="form-control")						
+				hr
+				.row#upEvents
+					.col-md-1.col-sm-1					
+					.col-md-10.col-sm-10.col-xs-12
+						h3 Upcoming
+						hr
+						#upcomingEvents						
+				br
+				.row#inEvents
+					.col-md-1.col-sm-1					
+					.col-md-10.col-sm-10.col-xs-12
+						h3 In Progress
+						hr
+						#inProgressEvents		
+				br
+				.row#paEvents
+					.col-md-1.col-sm-1					
+					.col-md-10.col-sm-10.col-xs-12
+						h3 Past
+						hr
+						#pastEvents		
+					// /top tiles
+				// /page content
+				// footer content
+				footer
+					.pull-right
+						| Gentelella - Bootstrap Admin Template by 
+						a(href='https://colorlib.com') Colorlib
+					.clearfix
+				// /footer content
+			// jQuery
+			script(src='/vendors/jquery/dist/jquery.min.js')
+			// Bootstrap
+			script(src='/vendors/bootstrap/dist/js/bootstrap.min.js')
+			// FastClick
+			script(src='/vendors/fastclick/lib/fastclick.js')
+			// NProgress
+			script(src='/vendors/nprogress/nprogress.js')
+			// Chart.js
+			script(src='/vendors/Chart.js/dist/Chart.min.js')
+			// gauge.js
+			script(src='/vendors/gauge.js/dist/gauge.min.js')
+			// bootstrap-progressbar
+			script(src='/vendors/bootstrap-progressbar/bootstrap-progressbar.min.js')
+			// iCheck
+			script(src='/vendors/iCheck/icheck.min.js')
+			// Skycons
+			script(src='/vendors/skycons/skycons.js')
+			// Flot
+			script(src='/vendors/Flot/jquery.flot.js')
+			script(src='/vendors/Flot/jquery.flot.pie.js')
+			script(src='/vendors/Flot/jquery.flot.time.js')
+			script(src='/vendors/Flot/jquery.flot.stack.js')
+			script(src='/vendors/Flot/jquery.flot.resize.js')
+			// Flot plugins
+			script(src='/vendors/flot.orderbars/js/jquery.flot.orderBars.js')
+			script(src='/vendors/flot-spline/js/jquery.flot.spline.min.js')
+			script(src='/vendors/flot.curvedlines/curvedLines.js')
+			// DateJS
+			script(src='/vendors/DateJS/build/date.js')
+			// JQVMap
+			script(src='/vendors/jqvmap/dist/jquery.vmap.js')
+			script(src='/vendors/jqvmap/dist/maps/jquery.vmap.world.js')
+			script(src='/vendors/jqvmap/examples/js/jquery.vmap.sampledata.js')
+			// bootstrap-daterangepicker
+			script(src='/vendors/moment/min/moment.min.js')
+			script(src='/vendors/bootstrap-daterangepicker/daterangepicker.js')
+			// Datatables
+			script(src='/vendors/datatables.net/js/jquery.dataTables.min.js')
+			script(src='/vendors/datatables.net-bs/js/dataTables.bootstrap.min.js')
+			script(src='/vendors/datatables.net-buttons/js/dataTables.buttons.min.js')
+			script(src='/vendors/datatables.net-buttons-bs/js/buttons.bootstrap.min.js')
+			script(src='/vendors/datatables.net-buttons/js/buttons.flash.min.js')
+			script(src='/vendors/datatables.net-buttons/js/buttons.html5.min.js')
+			script(src='/vendors/datatables.net-buttons/js/buttons.print.min.js')
+			script(src='/vendors/datatables.net-fixedheader/js/dataTables.fixedHeader.min.js')
+			script(src='/vendors/datatables.net-keytable/js/dataTables.keyTable.min.js')
+			script(src='/vendors/datatables.net-responsive/js/dataTables.responsive.min.js')
+			script(src='/vendors/datatables.net-responsive-bs/js/responsive.bootstrap.js')
+			script(src='/vendors/datatables.net-scroller/js/dataTables.scroller.min.js')
+			script(src='/vendors/jszip/dist/jszip.min.js')
+			script(src='/vendors/pdfmake/build/pdfmake.min.js')
+			script(src='/vendors/pdfmake/build/vfs_fonts.js')
+			// OwlCarousel
+			script(src='../vendors/owl-carousel/owl.carousel.min.js')
+			// Custom Theme Scripts
+			script(src='/build/js/custom.min.js')

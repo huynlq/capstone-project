@@ -51,7 +51,8 @@
 	height: 250px;
 	max-width: 83.5% !important;
 	background-position: center center;
-	background-size: cover;
+	background-size: contain;
+	background-repeat: no-repeat;
 	z-index: 1;
 }
 .progress {

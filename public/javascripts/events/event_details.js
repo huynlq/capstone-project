@@ -5,6 +5,7 @@ $(document).ready(function() {
 	$('#event-title').html($('#event-title').html().toUpperCase());
 
 	$.getJSON('/events/details/' + eventId, function(data) {
+		google.maps.event.addDomListener(window, 'load', populateMap(data));
 		$.getJSON('/users/id/' + data.userId, function(dataUser) {
 			$('#userIdLink').attr('href', '/users/' + dataUser._id);
 			$('#userIdLink').html(dataUser.username);
@@ -140,6 +141,28 @@ $(document).ready(function() {
 
 // Functions =============================================================
 
+function populateMap(data) {
+	console.log(data.eventName);
+    var mapOptions = {
+        zoom: 17,
+        center: new google.maps.LatLng(data.meetingAddressLat, data.meetingAddressLng),
+        disableDefaultUI: true,
+        mapTypeId: google.maps.MapTypeId.ROADMAP,              
+    };            
+    var myCenter = new google.maps.LatLng(data.meetingAddressLat, data.meetingAddressLng);
+    var map = new google.maps.Map(document.getElementById('map'), mapOptions);                    	
+    var marker = new google.maps.Marker({
+    	position: myCenter,
+    	animation:google.maps.Animation.BOUNCE    	
+    });
+	marker.setMap(map);
+
+	var infowindow = new google.maps.InfoWindow({
+	    content:data.eventName
+	});
+	infowindow.open(map,marker)
+}
+
 function populateDonations(data) {
 
 	//Set donation items variables
@@ -176,11 +199,12 @@ function populateDonations(data) {
         var current;
         var required;
         $('#event-other-donation-progress').html('');
-        for(var i = 1; i < items.length; i++) {
+        for(var i = 0; i < items.length; i++) {
             current = parseInt(items[i].current);
             required = parseInt(items[i].number);
+            console.log(items[i].item + ": " + current + '/' + required);
             $('#event-donation-progress').html( $('#event-donation-progress').html() +
-				'<label>' + items[i].item + ': </label> ' + current.toLocaleString() + '/<span id="event-donation">' + required.toLocaleString() + '</span>' +
+				'<label>' + items[i].item + ': </label> ' + current.toLocaleString() + '/<span id="event-donation">' + required.toLocaleString() + ' (' + items[i].unit + ')</span>' +
                 '<div class="progress">' +                                 
                     '<div role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" style="width:' + (current/required)*100 + '%" class="progress-bar progress-bar-striped active"></div>' +
                 '</div>'
@@ -271,13 +295,14 @@ function confirmInputInfo() {
 function populateProducer() {
 	var user = $('#userIdLink').html();
 	$.getJSON( '/users/username/' + user, function(id) {
+		$('#linkCompany').attr('href','/users/' + id);
 		$('#userIdLink').attr('href', '/users/' + id);
 		$.getJSON( '/users/id/' + id, function(data) {
 			$('#txtCompanyImageSrc').attr('src', data.companyImage);
 			$('#txtCompanyName').html(data.companyName);
 			$('#txtCompanyAddress').html(data.companyAddress);
 			$('#txtCompanyPhone').html(data.companyPhoneNumber);
-			$('#txtCompanyEmail').html(data.companyEmail);
+			$('#txtCompanyEmail').html(data.companyEmail);			
 		});		
 	});
 }
@@ -311,8 +336,12 @@ function populateButtons() {
 
 function donate() {
 	var userId = readCookie("user");
+	var eventId = window.location.href.split('/')[window.location.href.split('/').length - 1].split('#')[0];
+	$('#donationFormItems').html("");
+	var content = "";
 	$.getJSON( '/users/id/' + userId, function( data ) {
-		if(data.role != "Sponsor") {
+		var role = data.role;
+		if(role != "Sponsor") {
 			$('#txtDonatorId').val(userId);
 			if(data.fullName != null && data.fullName != "")
 				$('#txtDonator').val(data.fullName);
@@ -333,63 +362,116 @@ function donate() {
 			$('#txtDonatorEmail').attr('readonly', 'readonly');
 			$('#txtDonatorPhone').attr('readonly', 'readonly');
 		}
+		$.getJSON( '/events/donationrequire/' + eventId, function( dataDonation ) {
+			var counter = 1;
+			var placeholder = "";
+			$.each(dataDonation, function(){
+				if(role = "Sponsor") {
+					placeholder = "Sponsor Minimum: " + parseInt(this.minimum).toLocaleString() + " (" + this.unit + ")";
+				} else {
+					placeholder = "(" + this.unit + ")";
+				}
+				content += '<div class="row form-group">' +
+							  '<label id="txtDonation' + counter + '" class="control-label col-md-2 col-sm-2 col-xs-12">' + this.item + '</label>' +
+							  '<div class="col-md-9 col-sm-9 col-xs-12">' +
+							    '<input id="txtDonation' + counter + 'Number" type="number" placeholder="' + placeholder + '" required="required" class="form-control col-md-7 col-xs-12"/>' +
+							  '</div>' +
+							'</div>';
+				counter++;
+			});
+			$('#numOfDonations').html(counter);
+			$('#donationFormItems').html(content);
+		});
     });
     
     $('#donate-form').dialog('open'); 
 }
 
 function confirmDonate() {
-	var donation = {
-		'eventId': window.location.href.split('/')[window.location.href.split('/').length - 1].split('#')[0],
-		'userId': $('#txtDonatorId').val(),
-		'donatorName': $('#txtDonator').val(),
-		'donatorEmail': $('#txtDonatorEmail').val(),
-		'donatorPhoneNumber': $('#txtDonatorPhone').val(),
-		'donationItem': $('#txtDonateItem').val(),
-		'donationNumber': $('#txtDonateQuantity').val(),		
-		'status': 'Pending',
-		'dateCreated': new Date
-	};
+	var eventId = window.location.href.split('/')[window.location.href.split('/').length - 1].split('#')[0];
+	var donation;
 
-	$.ajax({
-        type: 'POST',
-        data: donation,
-        url: '/events/addDonation',
-        dataType: 'JSON'
-    }).done(function( response ) {
-
-        // Check for successful (blank) response
-        if(response.msg == '') {
-            // Clear the form inputs
-            $('#txtDonateQuantity').val('');
-        } else {
-            alert('Error: ' + response.msg);
-        }
-    });
-
-    $.getJSON( '/users/id/' + $('#txtDonatorId').val(), function( data ) {
-    	if(data.role == "Sponsor") {
-    		var sponsor = {
-    			'eventId': window.location.href.split('/')[window.location.href.split('/').length - 1].split('#')[0],
+	// POST donation request
+	for(var i = 1; i <= parseInt($('#numOfDonations').html()); i++) {
+		if($('#txtDonation' + i + 'Number').val() != "" && $('#txtDonation' + i + 'Number').val() > 0) {
+			donation = {
+				'eventId': window.location.href.split('/')[window.location.href.split('/').length - 1].split('#')[0],
 				'userId': $('#txtDonatorId').val(),
+				'donatorName': $('#txtDonator').val(),
+				'donatorEmail': $('#txtDonatorEmail').val(),
+				'donatorPhoneNumber': $('#txtDonatorPhone').val(),
+				'donationItem': $('#txtDonation' + i).html(),
+				'donationNumber': $('#txtDonation' + i + 'Number').val(),
 				'status': 'Pending',
-				'dateCreated': new Date()
-    		};
+				'dateCreated': new Date
+			};
 
-    		console.log(sponsor);
-
-    		$.ajax({
+			$.ajax({
 		        type: 'POST',
-		        data: sponsor,
-		        url: '/events/addsponsor',
+		        data: donation,
+		        url: '/events/addDonation',
 		        dataType: 'JSON'
 		    }).done(function( response ) {
-		    	console.log("DONE");
+
 		        // Check for successful (blank) response
-		        if(response.msg != '') {
+		        if(response.msg == '') {
+		            // Clear the form inputs
+		        } else {
 		            alert('Error: ' + response.msg);
 		        }
 		    });
+		}		
+	}	
+
+	// POST sponsor request
+    $.getJSON( '/users/id/' + $('#txtDonatorId').val(), function( data ) {
+    	if(data.role == "Sponsor") {
+    		$.getJSON( '/events/donations/' + eventId, function( dataDonationEvent ) {
+
+    			// Check if user is in sponsor list
+    			var flagSponsor = false;
+    			for(var i = 0; i < dataDonationEvent.length; i++) {
+    				if(dataDonationEvent[i].userId == readCookie('user'))
+    					flagSponsor = true;
+    			}
+
+    			// If not, add to pending sponsors
+    			if(flagSponsor == false) {
+    				$.getJSON( '/events/donationrequire/' + eventId, function( dataDonation ) {
+						var counter = 1;
+						var flag = false;
+						for(var i = 1; i <= dataDonation.length; i++) {
+							console.log(dataDonation[i-1].item + ": " + parseInt($('#txtDonation' + i + 'Number').val()) + " >= " + parseInt(dataDonation[i-1].minimum));
+							if(parseInt($('#txtDonation' + i + 'Number').val()) >= parseInt(dataDonation[i-1].minimum))
+								flag = true;
+						}
+
+						if(flag == true) {
+							var sponsor = {
+				    			'eventId': window.location.href.split('/')[window.location.href.split('/').length - 1].split('#')[0],
+								'userId': $('#txtDonatorId').val(),
+								'status': 'Pending',
+								'dateCreated': new Date()
+				    		};
+
+				    		console.log(sponsor);
+
+				    		$.ajax({
+						        type: 'POST',
+						        data: sponsor,
+						        url: '/events/addsponsor',
+						        dataType: 'JSON'
+						    }).done(function( response ) {
+						    	console.log("DONE");
+						        // Check for successful (blank) response
+						        if(response.msg != '') {
+						            alert('Error: ' + response.msg);
+						        }
+						    });
+						}
+					}); 
+    			}
+    		});    		   	
     	}
     });
 
@@ -423,6 +505,8 @@ function populateSponsors() {
 					pagination:false,
 					navText: ["<i class='fa fa-angle-double-left'></i>","<i class='fa fa-angle-double-right'></i>"],
     				smartSpeed:500,
+    				autoplayHoverPause:true,
+					responsiveRefreshRate : 10,
 					responsive:{
 						0:{
 							items:1
@@ -441,6 +525,14 @@ function populateSponsors() {
 						},
 					}
 				});
+
+				$('#sponsorCarousel li').on('mouseenter',function(e){
+					$(this).closest('.owl-carousel').trigger('play.owl.autoplay');
+				})
+
+				$('#sponsorCarousel li').on('mouseleave',function(e){
+					$(this).closest('.owl-carousel').trigger('stop.owl.autoplay');
+				})
 
 
 				var len = dataSponsor.length;

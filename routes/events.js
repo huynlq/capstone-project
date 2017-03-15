@@ -26,6 +26,11 @@ router.get('/', function(req, res, next) {
   res.render('events/event_list', { title: 'Event Manager' });
 });
 
+/* GET event listing. */
+router.get('/list', function(req, res, next) {
+  res.render('events/event_list_user', { title: 'Events' });
+});
+
 /* GET event creator page. */
 router.get('/creator_event', function(req, res, next) {
   res.render('events/event_creator', { title: 'Event Creator' });
@@ -309,6 +314,21 @@ router.get('/donationrequire/:id', function(req, res, next) {
     });
 });
 
+/* GET donation base on id. */
+router.get('/donations/id/:id', function(req, res, next) {
+    var db = req.db;
+    var collection = db.get('Donations');
+    if(req.params.id.length != 24)
+        res.render('page_404');    
+    collection.findOne({ '_id' : req.params.id },{},function(e,docs){
+        if(docs) {
+            res.json(docs);
+        } else {
+            res.render('page_404');
+        }
+    });
+});
+
 /* GET event donations base on id. */
 router.get('/donations/:id', function(req, res, next) {
     var db = req.db;
@@ -410,6 +430,18 @@ router.get('/participants/:id', function(req, res, next) {
     });
 });
 
+/* GET number of participant based on eventId. */
+router.get('/participantsnumber/:id', function(req, res, next) {
+    var db = req.db;
+    var collection = db.get('EventJoined');
+    collection.count({
+        'eventId': req.params.id,
+        'status': 'Present'
+    },{}, function(e,docs){
+        res.json(docs);
+    });
+});
+
 /* GET participant based on userId. */
 router.get('/getparticipatedevents/:id', function(req, res, next) {
     var db = req.db;
@@ -483,6 +515,18 @@ router.get('/sponsoredevents/:id', function(req, res, next) {
             console.log("DONE");
             res.json(eventDocs);
         });
+    });
+});
+
+/* GET number of sponsor based on eventId. */
+router.get('/sponsornumber/:id', function(req, res, next) {
+    var db = req.db;
+    var collection = db.get('EventSponsored');
+    collection.count({
+        'eventId': req.params.id,
+        'status': {'$ne': 'Pending'}
+    },{}, function(e,docs){
+        res.json(docs);
     });
 });
 

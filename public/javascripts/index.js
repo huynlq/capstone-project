@@ -142,8 +142,25 @@ function populateFeaturedEvents() {
 
 	// jQuery AJAX call for JSON
     $.getJSON( '/events/all', function( data ) {
+    	var currentParticipants;
+		var currentSponsors;
     	$.each(data, function(){
-    		console.log(counter);
+    		$.ajax({
+                url: '/events/participantsnumber/' + this._id,
+                dataType: 'json',
+                async: false,
+                success: function( dataParticipants ) {
+                    currentParticipants = dataParticipants;
+                }
+            });
+            $.ajax({
+                url: '/events/sponsornumber/' + this._id,
+                dataType: 'json',
+                async: false,
+                success: function( dataSponsors ) {
+                    currentSponsors = dataSponsors;
+                }
+            });
 	    	counter++;
 	    	dates = this.eventDate.split(" - ");
 
@@ -175,14 +192,12 @@ function populateFeaturedEvents() {
 					    	'<p><span class="text-uppercase text-theme-colored"><strong style="font-size: 20px">' + this.eventName + '</strong></span></p>' + 
 					    	'<p class="mb-10 mt-5">' + this.eventDescription.replace(/^(.{200}[^\s]*).*/, "$1") + '...</p>' +
 					    	'<ul style="list-style: none">' +
+					    	    '<li><i class="fa fa-users"><span style="margin-left: 10px; font-family: sans-serif">' + currentParticipants + '/' + this.volunteerMax + ' Joined</span></i></li>' +
+                                '<li><i class="fa fa-heart"><span style="margin-left: 10px; font-family: sans-serif">' + currentSponsors + ' Sponsor(s)</span></i></li>' +
 					    		'<li><i class="fa fa-calendar"><span style="margin-left: 10px">' + this.eventDate.split(" - ")[0] + ' - ' + this.meetingTime + '</span></i></li>' +
 					    		'<li><i class="fa fa-crosshairs"><span style="margin-left: 10px">' + this.meetingAddress + '</span></i></li>' +
 					    	'</ul>' +
 					    	'<div class="donate-details">' +						       	
-						        '<ul class="pull-left mt-15" style="list-style: none; text-align: right">' +
-							        '<li><strong>Tích lũy:</strong> <span class="count">' + parseInt(this.currentDonation).toLocaleString() + '</span></li>' +
-							        '<li><strong>Mục tiêu:</strong> ' + parseInt(this.donationNeeded).toLocaleString() + '</li>' +
-						        '</ul>' +
 						        '<a href="events/' + this._id + '" class="btn" style="background-color: #73879C; color: white; float: right" role="button">Chi tiết</a>' +
 					       '</div>' +
 					    '</div>' +

@@ -47,10 +47,7 @@ block content
 				}
 		body.nav-md					
 			.right_col(role='main')
-				// top tiles
-				.row.page-title
-					.title(style='margin: 10px')
-						h1 Event Details						
+				// top tiles				
 				br
 				br
 				br
@@ -83,6 +80,12 @@ block content
 					.col-md-4.col-sm-4.col-xs-12(style="text-align: center")
 						img#event-image(src='..#{docs.eventImage}', style='max-height: 280px; max-width: 500px')
 				br
+				hr
+				.row
+					.col-md-1.col-sm-1
+					#map.col-md-9.col-sm-9.col-xs-12(style='height:200px; margin: 0')
+				br
+				hr
 				.row
 					.col-md-1.col-sm-1
 					#event-description.col-md-5.col-sm-5.col-xs-12
@@ -92,13 +95,7 @@ block content
 					.col-md-4.col-sm-4.col-xs-12
 						h3 DONATIONS
 						hr
-						#event-donation-progress.well(style='margin: 20px')						
-							label Cash:&nbsp;
-							span#event-currentDonation #{docs.currentDonation}
-							| /
-							span#event-donation #{docs.budget}
-							.progress
-								#donationProgress.progress-bar.progress-bar-striped.active(role='progressbar', aria-valuenow='70', aria-valuemin='0', aria-valuemax='100', style='width:0%')
+						#event-donation-progress.well(style='margin: 20px')													
 				.row
 					.col-md-1.col-sm-1					
 					.col-md-4.col-sm-4.col-xs-12
@@ -110,8 +107,9 @@ block content
 							table.table.table-responsive.table-striped
 								tbody
 									tr
-										td(style="text-align: center; vertical-align: middle; width: 40%", rowspan="6")											
-											img#txtCompanyImageSrc(src='#', alt='No company image!', style="max-width: 100%")
+										td(style="text-align: center; vertical-align: middle; width: 40%", rowspan="6")		
+											a#linkCompany(href="#")									
+												img#txtCompanyImageSrc(src='#', alt='No company image!', style="max-width: 100%")
 									tr
 										td(style="text-align: right; width: 100px")
 											span(style="font-weight: bold") Company:
@@ -209,20 +207,8 @@ block content
 									span.required *
 								.col-md-9.col-sm-9.col-xs-12
 									input#txtDonatorPhone.form-control.col-md-7.col-xs-12(type='text', required='required')
-						.col-md-6.col-sm-6.col-xs-12
-							.row.form-group
-								label.control-label.col-md-2.col-sm-2.col-xs-12
-									| Item 
-									span.required *
-								.col-md-9.col-sm-9.col-xs-12
-									select#txtDonateItem.form-control.col-md-7.col-xs-12
-										option Cash
-							.row.form-group
-								label.control-label.col-md-2.col-sm-2.col-xs-12(for='number')
-									| Number 
-									span.required *
-								.col-md-9.col-sm-9.col-xs-12
-									input#txtDonateQuantity.form-control.col-md-7.col-xs-12(type='number', name='number', required='required', data-validate-minmax='10,100')
+						.col-md-6.col-sm-6.col-xs-12#donationFormItems
+						#numOfDonations(style="display:none")
 			// Bootstrap
 			script(src='../vendors/bootstrap/dist/js/bootstrap.min.js')
 			// FastClick

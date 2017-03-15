@@ -71,9 +71,11 @@ $(document).ready(function() {
 
 function populateTables() {
 	// jQuery AJAX call for JSON
-    $.getJSON( '/events/details/' + $('#eventId').html(), function( data ) {
-
+    $.getJSON( '/events/donationrequire/' + $('#eventId').html(), function( data ) {        
         showDonations(data);
+    });
+    
+    $.getJSON( '/events/details/' + $('#eventId').html(), function( data ) {        
         showPendingDonations(data);
 
 
@@ -89,34 +91,57 @@ function populateTables() {
 
 // Populate Donation Item
 function showDonations(data) {
-    
+
     //Set donation items variables
-    var items = { 'Cash': 0 };
-    var itemsRequire = { 'Cash': data.donationNeeded };
+    var items = [];
+    $('#event-donation-progress').html('');
+    $('#txtDonationItem').html('');
 
-    //Populate select input and get required items
-    $('#txtDonationItem').html('<option>Cash</option>');
-    if(data.otherDonationItem != null && data.otherDonationItem != ""){
-        if(data.otherDonationItem.constructor !== Array) {
+    //Get required items
+    for(var i = 0; i < data.length; i++) {
+        items.push({
+            item: data[i].item.trim(),
+            number: parseInt(data[i].number),
+            unit: data[i].unit.trim(),
+            minimum: parseInt(data[i].minimum),
+            current: 0
+        });
 
-            items[data.otherDonationItem.trim()] = 0;
-            itemsRequire[data.otherDonationItem.trim()] = data.otherDonationNumber;
+        $('#txtDonationItem').html( $('#txtDonationItem').html() +
+            '<option>' + data[i].item.trim() + '</option>'
+        );
+    }
 
-            $('#txtDonationItem').html( $('txtDonationItem').html() +
-                    '<option>' + data.otherDonationItem + '</option>'
-                );
-        } else {
-            for (var i = 0; i < data.otherDonationItem.length; i++) {
+    //Get Donation data from the database
+    $.getJSON( '/events/donations/' + window.location.href.split('/')[window.location.href.split('/').length - 1], function( dataDonation ) {
 
-                items[data.otherDonationItem[i].trim()] = 0;
-                itemsRequire[data.otherDonationItem[i].trim()] = data.otherDonationNumber[i];
-
-                $('#txtDonationItem').html( $('#txtDonationItem').html() +
-                        '<option>' + data.otherDonationItem[i] + '</option>'
-                    );
+        //Count donations
+        if(dataDonation != null) {
+            for(var i = 0; i < items.length; i++) {
+                for(var j = 0; j < dataDonation.length; j++) {
+                    if(dataDonation[j].status != "Pending") {
+                        if(dataDonation[j].donationItem.trim() == items[i].item) {
+                            items[i].current = parseInt(items[i].current) + parseInt(dataDonation[j].donationNumber);
+                        }
+                    }
+                }
             }
         }
-    }
+        
+        //Populate the progressbar panel
+        var current;
+        var required;        
+        for(var i = 0; i < items.length; i++) {
+            current = parseInt(items[i].current);
+            required = parseInt(items[i].number);
+            $('#event-donation-progress').html( $('#event-donation-progress').html() +
+                '<label>' + items[i].item + ': </label> ' + current.toLocaleString() + '/<span id="event-donation">' + required.toLocaleString() + ' (' + items[i].unit + ')</span>' +
+                '<div class="progress">' +                                 
+                    '<div role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" style="width:' + (current/required)*100 + '%" class="progress-bar progress-bar-striped active"></div>' +
+                '</div>'
+            );
+        }
+    }); 
 
     //Get Donation data from the database
     $.getJSON( '/events/donations/' + $('#eventId').html(), function( dataDonation ) {
@@ -127,12 +152,6 @@ function showDonations(data) {
         if(dataDonation != null) {
             $.each(dataDonation, function(){
                 if(this.status != "Pending") {
-                    if(items.hasOwnProperty(this.donationItem)) {
-                        items[this.donationItem] = parseInt(items[this.donationItem]) + parseInt(this.donationNumber);
-                    } else {
-                        items[this.donationItem] = this.donationNumber;
-                    }
-
                     counter++;
                     dateCreated = new Date(this.dateCreated);        
                     table.row.add([
@@ -152,27 +171,6 @@ function showDonations(data) {
             $('#countDonations').html(counter);
         }
         $('[data-toggle="tooltip"]').tooltip(); 
-        
-        //Populate the progressbar panel
-        $('#event-currentDonation').html(parseInt(items['Cash']).toLocaleString());
-        $('#event-donation').html(parseInt(itemsRequire['Cash']).toLocaleString());
-        var percent = (parseInt(items['Cash']) / parseInt(itemsRequire['Cash'])) * 100;
-        $('#donationProgress').attr("style", "width: " + percent + "%");
-
-        var key = Object.keys(itemsRequire);
-        var current;
-        var required;
-        $('#event-other-donation-progress').html('');
-        for(var i = 1; i < key.length; i++) {
-            current = parseInt(items[key[i]]);
-            required = parseInt(itemsRequire[key[i]]);
-            $('#event-other-donation-progress').html( $('#event-other-donation-progress').html() +
-                '<label>' + key[i] + ': </label> ' + current.toLocaleString() + '/<span id="event-donation">' + required.toLocaleString() + '</span>' +
-                '<div class="progress">' +                                 
-                    '<div role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" style="width:' + (current/required)*100 + '%" class="progress-bar progress-bar-striped active"></div>' +
-                '</div>'
-            );
-        }
     }); 
 }
 
@@ -356,6 +354,8 @@ function showPendingDonations(data) {
 function approveDonation(event) {
     event.preventDefault();
 
+    var donationId = $(this).attr('rel');
+
     var donation = {
         'status': 'Approved'
     };
@@ -368,6 +368,36 @@ function approveDonation(event) {
         // Check for a successful (blank) response
         if (response.msg === '') {
             populateTables();
+
+            $.getJSON( '/events/donations/id/' + donationId, function( data ) {
+                var eventId = data.eventId;
+                $.getJSON( '/events/details/' + eventId, function( dataEvent ) {
+                    eventName = dataEvent.eventName;
+                    var newNotification = {
+                        'userId': data.userId,
+                        'content': 'Your donation for ' + eventName + ' has been approved.',
+                        'markedRead': 'Unread',
+                        'dateCreated': new Date()
+                    }
+
+                    // Use AJAX to post the object to our adduser service        
+                    $.ajax({
+                        type: 'POST',
+                        data: newNotification,
+                        url: '/notifications/addnotification',
+                        dataType: 'JSON'
+                    }).done(function( response ) {
+
+                        // Check for successful (blank) response
+                        if (response.msg !== '') {
+
+                        // If something goes wrong, alert the error message that our service returned
+                        alert('Error: ' + response.msg);
+
+                        }
+                    });
+                });    
+            });
         }
         else {
             alert('Error: ' + response.msg);
