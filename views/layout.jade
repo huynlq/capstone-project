@@ -29,76 +29,23 @@ html
 						br
 						#sidebar-menu.main_menu_side.hidden-print.main_menu
 							.menu_section
-								h3 Capstone
-								ul.nav.side-menu
+								ul#sidebar_menu.nav.side-menu
 									li
-										a
-											i.fa.fa-user
-											|  Page 
-											span.fa.fa-chevron-down
-										ul.nav.child_menu
-											li
-												a(href='/') Index
+										a(href='/')
+											i.fa.fa-home
+											| Index
 									li
-										a
-											i.fa.fa-user
-											|  Admin 
-											span.fa.fa-chevron-down
-										ul.nav.child_menu
-											li
-												a(href='admin_dashboard.php') Dashboard (WIP)
-											li
-												a(href='report_list.php') Report List (WIP)
-											li
-												a(href='donation_list.php') Donation List (WIP)
-											li
-												a(href='/events') Event List
-											li
-												a(href='/users') User List
-											li
-												a(href='/posts') Post List
-											li
-												a(href='/posts/creator') Post Creator
+										a(href='/events/list')
+											i.fa.fa-heart
+											| Events
 									li
-										a
-											i.fa.fa-street-view
-											|  Producer 
-											span.fa.fa-chevron-down
-										ul.nav.child_menu
-											li
-												a(href='event_list_producer.php') Event List (WIP)
-											li
-												a(href='/events/creator_event') Event Creator
+										a(href='/users/list')
+											i.fa.fa-user-secret
+											| Producers / Sponsors
 									li
-										a
-											i.fa.fa-users
-											|  User 
-											span.fa.fa-chevron-down
-										ul.nav.child_menu
-											li
-												a(href='/my', readonly='readonly') My User Page
-											li
-												a(href='edit_user_page.php', readonly='readonly') User Page (WIP)
-											li
-												a(href='donate.php', readonly='readonly') Donate (WIP)
-											li
-												a(href='report.php', readonly='readonly') Report (WIP)
-									li
-										a
-											i.fa.fa-users
-											|  Guest 
-											span.fa.fa-chevron-down
-										ul.nav.child_menu
-											li
-												a(href='login.php', readonly='readonly') Log In (WIP)
-											li
-												a(href='event_list_user.php', readonly='readonly') Event List (WIP)
-											li
-												a(href='event_details.php', readonly='readonly') Event Details (WIP)
-											li
-												a(href='producer_list_user.php', readonly='readonly') Producer List (WIP)
-											li
-												a(href='producer_details.php', readonly='readonly') Producer Details (WIP)
+										a(href='/posts')
+											i.fa.fa-newspaper-o
+											| News / Board
 				.top_nav(style="position:relative;z-index:1000")
 					.nav_menu
 						nav
@@ -126,3 +73,26 @@ html
 												|  Log Out	
 								li#notiBar.dropdown(role="presentation")
 				block content
+				footer(style="background-color:#2A3F54; color:white")
+					hr
+					.col-md-4.col-sm-4.col-xs-12
+					.col-md-4.col-sm-4.col-xs-12
+						br
+						h3 Contact Us
+						p(style="margin-left:20px")
+							i.fa.fa-user &nbsp;&nbsp;
+							| Nguyễn Lê Quốc Huy
+						p(style="margin-left:20px")
+							i.fa.fa-home &nbsp;&nbsp;
+							| 353 Nguyễn Xí, Q.Bình Thạnh, TP.HCM
+						p(style="margin-left:20px")
+							i.fa.fa-phone &nbsp;&nbsp;
+							| 083.8653163
+						br						
+						div(style="text-align:right")
+							| Copyright@2017 All rights reserved
+						br
+						br
+					.col-md-4.col-sm-4.col-xs-12(style="text-align:right")
+						br
+						

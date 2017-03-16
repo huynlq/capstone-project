@@ -46,8 +46,22 @@ block content
 				br
 				br
 				.row
-					.col-md-5.col-sm-5.col-xs-12(style='float:right')
-						input#txtSearch(type="text", placeholder="Search Event", class="form-control")						
+					.col-md-5.col-sm-5
+					.col-md-5.col-sm-5.col-xs-12
+						input#txtSearch(type="text", placeholder="Search Event", onkeyup="search()", class="form-control")
+						.checkbox
+							label.checkbox-inline
+								input#txtSearchName(type="checkbox" checked="checked", name="searchName")
+								| Name
+							label.checkbox-inline
+								input#txtSearchDesc(type="checkbox" checked="checked", name="searchDesc")
+								| Description
+							label.checkbox-inline
+								input#txtSearchType(type="checkbox" checked="checked", name="searchType")
+								| Type
+							label.checkbox-inline
+								input#txtSearchAddress(type="checkbox" checked="checked", name="searchAddress")
+								| Address
 				hr
 				.row#upEvents
 					.col-md-1.col-sm-1					

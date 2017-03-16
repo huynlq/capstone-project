@@ -14,7 +14,7 @@ $(document).ready(function() {
 
     populateNotifications();
     populateNavBar();
-
+    populateSidebar();
 });
 
 // Functions =============================================================
@@ -38,6 +38,53 @@ function readCookie(name) {
 //Delete cookie
 function deleteCookie(name) {
   document.cookie = name +'=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+}
+
+//Get Sidebar
+function populateSidebar() {
+    var id = readCookie('user');
+    var content = '';
+    if(id == '') {
+        content +=  '<li><a><i class="fa fa-users"></i> Guest <span class="fa fa-chevron-down"></span></a>'+
+                        '<ul class="nav child_menu">'+
+                          '<li><a href="/login" readonly="readonly">Log In</a></li>'+
+                        '</ul>'+
+                      '</li>';
+        $('#sidebar_menu').html($('#sidebar_menu').html() + content);
+    } else {
+        content +=  '<li><a><i class="fa fa-user"></i>User<span class="fa fa-chevron-down"></span></a>' +
+                        '<ul class="nav child_menu">' +
+                          '<li><a href="/my">My User Page</a></li>' +
+                          '<li><a href="#" onclick="signOut()">Sign Out</a></li>' +
+                        '</ul>' +
+                      '</li>';
+
+        $.ajax({
+            url: '/users/id/' + id,
+            dataType: 'json',
+            async: false,
+            success: function( data ) {
+                if(data.role == 'Admin') {
+                    content += '<li><a><i class="fa fa-user"></i> Admin<span class="fa fa-chevron-down"></span></a>'+
+                                    '<ul class="nav child_menu">'+
+                                      '<li><a href="/admin_dashboard">Dashboard (WIP)</a></li>'+
+                                      '<li><a href="/events">Event List</a></li>'+
+                                      '<li><a href="/users">User List</a></li>'+
+                                      '<li><a href="/posts">Post List</a></li>'+
+                                    '</ul>'+
+                                  '</li>';
+                } else if(data.role == 'Producer') {
+                    content += '<li><a><i class="fa fa-street-view"></i> Producer <span class="fa fa-chevron-down"></span></a>'+
+                                    '<ul class="nav child_menu">'+
+                                      '<li><a href="/events">My Events</a></li>'+
+                                    '</ul>'+
+                                  '</li>';
+                }
+
+                $('#sidebar_menu').html($('#sidebar_menu').html() + content);
+            }
+        });
+    }
 }
 
 //Get Notifications

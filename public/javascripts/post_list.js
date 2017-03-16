@@ -32,30 +32,50 @@ function showNews(data) {
     var table = $('#tableNews').DataTable();
     table.clear().draw();
     var user = "";
+    var role = "User";
+    var content = "";
+    $.ajax({
+        url: '/users/id/' + readCookie('user'),
+        dataType: 'json',
+        async: false,
+        success: function( data ) {
+            if(data.role == 'Admin') {
+                role = 'Admin';
+            }
+        }
+    });
 
 
     // For each item in our JSON, add a table row and cells to the content string
     $.each(data, function(){
     	console.log(this.postType === 'Announcement' || this.postType === 'Report');
-        if(this.postType === 'Announcement' || this.postType === 'Report'){            
+        if(this.postType === 'Announcement' || this.postType === 'Report'){
             counter++;
-
+            if(role == "Admin") {
+                content = '<center>'
+                            + '<a data-toggle="tooltip" title="Details" class="btn btn-info btn-xs" href="/posts/' + this._id + '">'
+                                + '<span class="glyphicon glyphicon-search"></span>'
+                            + '</a>'
+                            + '<a data-toggle="tooltip" title="Edit" class="btn btn-success btn-xs" href="/posts/updatepost/' + this._id + '">'
+                                + '<span class="glyphicon glyphicon-edit"></span>'
+                            + '</a>'
+                            + '<a data-toggle="tooltip" title="Delete" class="btn btn-danger btn-xs linkdeletepost" rel="' + this._id + '" href="#">'
+                                + '<span class="glyphicon glyphicon-remove"></span>'
+                            + '</a>'
+                        + '</center>';
+            } else {
+                content = '<center>'
+                            + '<a data-toggle="tooltip" title="Details" class="btn btn-info btn-xs" href="/posts/' + this._id + '">'
+                                + '<span class="glyphicon glyphicon-search"></span>'
+                            + '</a>'
+                        + '</center>';
+            }
             dateCreated = new Date(this.dateCreated);      
             table.row.add([
                 counter,
-                '<center>'
-                    + '<a data-toggle="tooltip" title="Details" class="btn btn-info btn-xs" href="/posts/' + this._id + '">'
-                        + '<span class="glyphicon glyphicon-search"></span>'
-                    + '</a>'
-                    + '<a data-toggle="tooltip" title="Details" class="btn btn-success btn-xs" href="/posts/updatepost/' + this._id + '">'
-                        + '<span class="glyphicon glyphicon-edit"></span>'
-                    + '</a>'
-                    + '<a data-toggle="tooltip" title="Delete" class="btn btn-danger btn-xs linkdeletepost" rel="' + this._id + '" href="#">'
-                        + '<span class="glyphicon glyphicon-remove"></span>'
-                    + '</a>'
-                + '</center>',
+                content,
                 this.postName,                
-                this.userId,
+                this.user,
                 this.rating,
                 this.comment,
                 dateCreated.getDate() + '/' + (dateCreated.getMonth() + 1) + '/' +  dateCreated.getFullYear() + ' ' + dateCreated.getHours() + ':'  + dateCreated.getMinutes()
@@ -74,23 +94,50 @@ function showPosts(data) {
     var table = $('#tablePosts').DataTable();
     table.clear().draw();
     var user = "";
+    var username = "";
+    var role = "User";
+    var content = "";
+    $.ajax({
+        url: '/users/id/' + readCookie('user'),
+        dataType: 'json',
+        async: false,
+        success: function( data ) {
+            if(data.role == 'Admin') {
+                role = 'Admin';
+            }
+
+            username = data.username;
+        }
+    });
 
     // For each item in our JSON, add a table row and cells to the content string
     $.each(data, function(){
         if(this.postType !== 'Announcement' && this.postType !== 'Report'){            
             counter++;
+            if(role == "Admin" || username == this.user) {
+                content = '<center>'
+                            + '<a data-toggle="tooltip" title="Details" class="btn btn-info btn-xs" href="/posts/' + this._id + '">'
+                                + '<span class="glyphicon glyphicon-search"></span>'
+                            + '</a>'
+                            + '<a data-toggle="tooltip" title="Edit" class="btn btn-success btn-xs" href="/posts/updatepost/' + this._id + '">'
+                                + '<span class="glyphicon glyphicon-edit"></span>'
+                            + '</a>'
+                            + '<a data-toggle="tooltip" title="Delete" class="btn btn-danger btn-xs linkdeletepost" rel="' + this._id + '" href="#">'
+                                + '<span class="glyphicon glyphicon-remove"></span>'
+                            + '</a>'
+                        + '</center>';
+            } else {
+                content = '<center>'
+                            + '<a data-toggle="tooltip" title="Details" class="btn btn-info btn-xs" href="/posts/' + this._id + '">'
+                                + '<span class="glyphicon glyphicon-search"></span>'
+                            + '</a>'
+                        + '</center>';
+            }
 
             dateCreated = new Date(this.dateCreated);      
             table.row.add([
                 counter,
-                '<center>'
-                    + '<a data-toggle="tooltip" title="Details" class="btn btn-info btn-xs" href="/posts/' + this._id + '">'
-                        + '<span class="glyphicon glyphicon-search"></span>'
-                    + '</a>'
-                    + '<a data-toggle="tooltip" title="Delete" class="btn btn-danger btn-xs linkdeletepost" rel="' + this._id + '" href="#">'
-                        + '<span class="glyphicon glyphicon-remove"></span>'
-                    + '</a>'
-                + '</center>',
+                content,
                 this.postName,                
                 this.user,
                 this.rating,

@@ -47,6 +47,7 @@ $(document).ready(function() {
           },
         modal: true,
         resizable: false,
+        width: $(window).width() * 50 / 100,
         buttons: {
             "OK" : {
             text: "OK",
@@ -582,8 +583,8 @@ function confirmEditActualCost() {
             $('#txtEditActivityPlace').val("");
             $('#txtEditActivity').val("");
             $('#txtEditActivityEstCost').val("");
-            $('#txtEditActivityEstCost').val("");
             $('#txtEditActivityId').val("");
+            $('#txtEditActivityActualCost').val("");
             $('#edit-actual-cost-form').dialog('close');
         }
         else {

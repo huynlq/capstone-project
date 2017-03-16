@@ -91,10 +91,7 @@ router.post('/addevent', uploading.single('displayEventImage'), function(req, re
                 collection = db.get('Events');
                 
                 collection.insert(req.body, function(err, result){
-                    if(err === null) {
-                        console.log("RESULT: ");
-                        console.log(result);
-                        console.log("ID: " + result._id);
+                    if(err === null) {                        
                         res.cookie('eventId',result._id.toString(), { maxAge: 900000, httpOnly: false });
                         res.writeHead(302, {
                           'Location': '/events/creator_activity',
@@ -314,6 +311,23 @@ router.get('/donationrequire/:id', function(req, res, next) {
     });
 });
 
+/* GET donations require base on eventid. */
+router.get('/donationrequirebyname/:eventId/:name', function(req, res, next) {
+    var db = req.db;
+    var collection = db.get('RequiredDonations');
+    collection.findOne({ 
+        'item' : req.params.name,
+        'eventId' : req.params.eventId
+    },{},function(e,docs){
+        if(docs) {
+            res.json(docs);
+        } else {
+            res.render('page_404');
+        }
+    });
+});
+
+
 /* GET donation base on id. */
 router.get('/donations/id/:id', function(req, res, next) {
     var db = req.db;
@@ -512,7 +526,6 @@ router.get('/sponsoredevents/:id', function(req, res, next) {
         }   
         console.log(dataId);
         collection.find({ '_id': {$in: dataId}},{},function(e,eventDocs){
-            console.log("DONE");
             res.json(eventDocs);
         });
     });

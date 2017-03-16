@@ -4,7 +4,7 @@ var ObjectId = require('mongodb').ObjectID;
 
 /* GET users listing. */
 router.get('/', function(req, res, next) {
-  res.render('posts/post_list', { title: 'Post Manager' });
+  res.render('posts/post_list', { title: 'Posts' });
 });
 
 /* GET users listing. */
@@ -58,7 +58,8 @@ router.post('/addpost', function(req, res) {
                 collection = db.get('Posts');
                 collection.insert(req.body, function(err, result){
                     if(err === null) {
-                        res.render('posts/post_list', { title: 'Post Manager' });
+                        res.writeHead(302, {'Location': '/posts'});
+                        res.end();
                     } else {
                         alert(err);
                     }
@@ -91,7 +92,8 @@ router.post('/updatepost', function(req, res) {
     var collection = db.get('Posts');   
     collection.update({ '_id' : req.body._id }, { $set: req.body}, function(err) {
         if(err === null) {
-            res.render('posts/post_list', { title: 'Post Manager' });
+            res.writeHead(302, {'Location': '/posts'});
+            res.end();
         } else {
             alert(err);
         }

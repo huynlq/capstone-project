@@ -11,7 +11,7 @@ $(document).ready(function() {
 			$('#userIdLink').html(dataUser.username);
 			populateButtons();
 			populateProducer();
-			populateSponsors();
+			populateSponsors();	
 		});		
 	});
 	
@@ -59,7 +59,7 @@ $(document).ready(function() {
 		}
 
 		$('#activityDays li a').first().click();
-	});
+	});	
 
 	//========================== DIALOG HIDING FUNCTIONS ===================
 
@@ -319,6 +319,7 @@ function populateButtons() {
 			$('#btnParticipate').addClass('btn-success');
 			$('#btnParticipate').html('UPDATE EVENT');
 			$('#btnParticipate').attr('href', '/events/update/' + eventId);
+			populateSummary();
 		} else {
 			$.getJSON( '/events/participants/' + eventId + '/' + userId, function( data ) {
 				if(data.msg == 'true') {
@@ -328,6 +329,7 @@ function populateButtons() {
 					$('#btnParticipate').removeClass('btn-info');
 					$('#btnParticipate').addClass('btn-success');
 					$('#btnParticipate').html('PARTICIPATED');
+					populateSummary();
 				}
 			});
 		}
@@ -571,4 +573,200 @@ function populateSponsors() {
 			}		
 		}
 	});	
+}
+
+//Populate Event Summary
+function populateSummary() {
+	var eventId = window.location.href.split('/')[window.location.href.split('/').length - 1].split('#')[0];
+	var now = new Date();
+	var eventEndDate = new Date($('#event-date').html().split(" - ")[1]);
+	if(eventEndDate.getTime() < now.getTime()){
+
+		$('#btnParticipate').attr('disabled','disabled');
+		$('#btnParticipate').removeClass('btn-info');
+		$('#btnParticipate').removeClass('btn-success');
+		$('#btnParticipate').addClass('btn-dark');
+		$('#btnParticipate').html('EVENT ENDED');
+
+		var content = "";
+		content = 	'<div class="col-md-1 col-sm-1"></div>'+
+					'<div class="col-md-9 col-sm-9 col-xs-12">'+
+						'<h3>EVENT SUMMARY</h3>'+
+						'<hr/>'+
+						'<div class="row">'+
+							'<div class="col-md-6 col-sm-6 col-xs-12">' +
+								'<h4>Donations</h4>' +
+								'<table id="tableDonations" cellspacing="0" width="100%" class="table table-striped table-bordered dt-responsive nowrap datatable-responsive">' +
+									'<thead>' +
+										'<tr>' +
+											'<th>#</th>' +
+											'<th>Donator</th>' +
+											'<th>Donation Item</th>'+
+											'<th>Quantity</th>'+
+										'</tr>'+
+									'</thead>'+
+									'<tbody></tbody>'+
+								'</table>'+
+							'</div>' +
+							'<div class="col-md-1 col-sm-1 col-xs-12"></div>' +
+							'<div class="col-md-5 col-sm-5 col-xs-12">' +
+								'<h4>Participants</h4>' +
+								'<table id="tableParticipants" cellspacing="0" width="100%" class="table table-striped table-bordered dt-responsive nowrap datatable-responsive">'+
+									'<thead>'+
+										'<tr>'+
+											'<th>#</th>'+
+											'<th>Participant</th>'+
+										'</tr>'+
+									'</thead>'+
+									'<tbody></tbody>'+
+								'</table>'+
+							'</div>' +
+						'</div>' +
+						'<br>' +
+						'<div class="col-md-12 col-sm-12 col-xs-12">' +
+							'<h4>Activity Costs</h4>' +
+							'<table id="tableActivityCosts" cellspacing="0" width="100%" class="table table-striped table-bordered dt-responsive nowrap datatable-responsive">'+
+								'<thead>'+
+									'<tr>'+
+										'<th>#</th>'+
+										'<th>Day</th>'+
+										'<th>Place</th>'+
+										'<th>Activity</th>'+
+										'<th>Est. Cost</th>'+
+										'<th>Actual Cost</th>'+
+									'</tr>'+
+								'</thead>'+
+								'<tbody></tbody>'+
+							'</table>'+
+						'</div>' +
+					'</div>';
+		console.log(content);
+		$('#eventSummary').html(content);
+
+		var tableParticipants = $('#tableParticipants').DataTable({"columnDefs": [{ "width": "10px", "targets": 0 }]});
+		tableParticipants.clear().draw();
+		tableParticipants.columns.adjust().draw();
+
+		var tableDonations = $('#tableDonations').DataTable({"columnDefs": [{ "width": "10px", "targets": 0 }]});
+		tableDonations.clear().draw();
+		var tableActivityCosts = $('#tableActivityCosts').DataTable({"columnDefs": [{ "width": "10px", "targets": 0 }]});
+		tableActivityCosts.clear().draw();
+
+		$('#tableParticipants_wrapper .row').first().css('margin-left', '30px');
+		$('#tableParticipants_wrapper .row .col-sm-6').first().removeClass("col-sm-6").addClass("col-sm-2");
+
+		$('#tableDonations_wrapper .row').first().css('margin-left', '30px');
+		$('#tableDonations_wrapper .row .col-sm-6').first().removeClass("col-sm-6").addClass("col-sm-2");
+
+		// Populate Participants
+		$.ajax({
+	        url: '/events/participants/' + eventId,
+	        dataType: 'json',
+	        async: false,
+	        success: function( data ) {
+	        	var counter = 0;
+	        	var participant;
+	        	$.each(data, function(){
+	        		$.getJSON( '/users/id/' + this.userId, function( userData ) {
+	        			counter++;
+		        		tableParticipants.row.add([
+		        			counter,
+		        			'<a href="/users/' + userData._id + '">' + userData.username + '</a>'
+		        		]).draw('false');
+	        		});        		
+	        	});
+	        }
+	    });
+
+		// Populate Donations
+		$.ajax({
+	        url: '/events/donations/' + eventId,
+	        dataType: 'json',
+	        async: false,
+	        success: function( data ) {
+	        	var counter = 0;
+	        	var participant;
+	        	var item;
+	        	var number;
+	        	var unit;
+	        	var donator;
+	        	$.each(data, function(){
+	        		counter++;
+	        		item = this.donationItem;
+	    			number = this.donationNumber;
+	    			$.ajax({
+				        url: '/events/donationrequirebyname/' + eventId + '/' + this.donationItem,
+				        dataType: 'json',
+				        async: false,
+				        success: function( data ) {
+				        	unit = data.unit;
+				        }
+				    });
+	        		if(this.userId != '' && this.userId != null) {        			
+	        			$.ajax({
+					        url: '/users/id/' + this.userId,
+					        dataType: 'json',
+					        async: false,
+					        success: function( data ) {
+					        	if(data.companyName != '' && data.companyName != null) {
+					        		donator = data.companyName;
+					        	} else {
+					        		donator = data.username;
+					        	}
+					        	tableDonations.row.add([
+				        			counter,
+				        			'<a href="/users/' + data._id + '">' + donator + '</a>',
+				        			item,
+				        			number + ' ' + unit
+				        		]).draw('false');
+					        }
+					    });
+	        		} else {
+	        			tableDonations.row.add([
+		        			counter,
+		        			this.donatorName,
+		        			item,
+				        	number + ' ' + unit
+		        		]).draw('false');
+	        		}
+	        		
+	        	});
+	        }
+	    });
+
+		// Populate Activity Costs
+		$.ajax({
+	        url: '/events/activities/' + eventId,
+	        dataType: 'json',
+	        async: false,
+	        success: function( data ) {
+	        	var estimate;
+	        	var actual;
+	        	var counter = 0;
+	        	$.each(data, function(){
+	        		if((this.estBudget != '' && this.estBudget != null) || (this.actualCost != '' && this.actualCost != null)) {
+	        			if(this.estBudget != '' && this.estBudget != null)
+	        				estimate = this.estBudget;
+	        			else
+	        				estimate = '';        				
+
+	        			if(this.actualCost != '' && this.actualCost != null)
+	        				actual = this.actualCost;
+	        			else
+	        				actual = '';        				
+
+	        			counter++;
+	        			tableActivityCosts.row.add([
+	        				counter,
+	        				this.day,
+	        				this.place,
+	        				this.activity,
+	        				estimate,
+	        				actual
+	        			]).draw('false');
+	        		}
+	        	});
+	        }
+	    });				 
+	}
 }

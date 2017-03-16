@@ -12,6 +12,58 @@ $(document).ready(function() {
 
 // Functions ===============================================
 
+function search() {
+    var input, filter, search, i, value;
+    var flag;
+    input = $('#txtSearch').val();
+    filter = input.toUpperCase();
+    searchName = $('.eventSearchName');
+    searchDesc = $('.eventSearchDesc');
+    searchAddress = $('.eventSearchAddress');
+    searchType = $('.eventSearchType');
+
+    // Loop through all table rows, and hide those who don't match the search query
+    for (i = 0; i < searchName.length; i++) {
+        flag = false;
+        if($('input[name="searchName"]').is(':checked')) {
+            if(searchName[i].innerHTML.toUpperCase().indexOf(filter) > -1) {
+                flag = true;
+            }
+        }
+        if($('input[name="searchDesc"]').is(':checked')) {
+            if(searchDesc[i].innerHTML.toUpperCase().indexOf(filter) > -1) {
+                flag = true;
+            }
+        }
+        if($('input[name="searchAddress"]').is(':checked')) {
+            if(searchAddress[i].innerHTML.toUpperCase().indexOf(filter) > -1) {
+                flag = true;
+            }
+        }
+        if($('input[name="searchType"]').is(':checked')) {
+            if(searchType[i].innerHTML.toUpperCase().indexOf(filter) > -1) {
+                flag = true;
+            }
+        }
+
+        if (flag) {
+            searchName[i].closest('.item').style.display = "";
+        } else {
+            searchName[i].closest('.item').style.display = "none";
+        }
+
+
+
+        // if (searchName[i].innerHTML && searchDesc[i].innerHTML && searchType[i].innerHTML && searchAddress[i].innerHTML) {            
+        //     if (searchName[i].innerHTML.toUpperCase().indexOf(filter) > -1 || searchDesc[i].innerHTML.toUpperCase().indexOf(filter) > -1 || searchType[i].innerHTML.toUpperCase().indexOf(filter) > -1 || searchAddress[i].innerHTML.toUpperCase().indexOf(filter) > -1) {
+        //         searchName[i].closest('.item').style.display = "";
+        //     } else {
+        //         searchName[i].closest('.item').style.display = "none";
+        //     }
+        // } 
+    }
+}
+
 function populateEvents() {
 	// jQuery AJAX call for JSON
     $.getJSON( '/events/all', function( data ) {
@@ -54,17 +106,18 @@ function populateEvents() {
                             '<div class="thumb" style="background-image: url(' + data[i].eventImage + '); max-width: 100% !important"></div>' +
                             '<div class="eventInfo clearfix border-bottom p-15 pt-10" style="height: 228px">' +
                                 '<p class="mb-10 mt-5">' + 
-                                    '<span class="text-uppercase text-theme-colored"><strong>' + data[i].eventName + ': </strong></span>' + 
-                                    data[i].eventDescription.replace(/^(.{200}[^\s]*).*/, "$1") + '...' +
+                                    '<span class="text-uppercase text-theme-colored"><strong class="eventSearchName">' + data[i].eventName + ': </strong></span>' + 
+                                    '<span class="eventSearchDesc">' + data[i].eventDescription.replace(/^(.{200}[^\s]*).*/, "$1") + '</span>...' +
                                 '</p>' +
                                 '<ul style="list-style: none; font-family: Arial">' +
+                                    '<li><i class="fa fa-hashtag"><span class="eventSearchType" style="margin-left: 10px; font-family: sans-serif">' + data[i].eventType + '</span></i></li>' +
                                     '<li><i class="fa fa-users"><span style="margin-left: 10px; font-family: sans-serif">' + currentParticipants + '/' + data[i].volunteerMax + ' Joined</span></i></li>' +
                                     '<li><i class="fa fa-heart"><span style="margin-left: 10px; font-family: sans-serif">' + currentSponsors + ' Sponsor(s)</span></i></li>' +
                                     '<li><i class="fa fa-calendar"><span style="margin-left: 10px; font-family: sans-serif">' + startDate + ' - ' + data[i].meetingTime + '</span></i></li>' +
-                                    '<li><i class="fa fa-crosshairs"><span style="margin-left: 10px; font-family: sans-serif">' + data[i].meetingAddress + '</span></i></li>' +                                    
+                                    '<li><i class="fa fa-crosshairs"><span class="eventSearchAddress" style="margin-left: 10px; font-family: sans-serif">' + data[i].meetingAddress + '</span></i></li>' +                                    
                                 '</ul>' +
                                 '<div class="donate-details">' +
-                                    '<a href="/events/' + data[i]._id + '" class="btn btnEvent pull-right" role="button">Chi tiết</a>' +
+                                    '<a href="/events/' + data[i]._id + '" class="btn" style="background-color: #73879C; color: white; float: right" role="button">Chi tiết</a>' +
                                '</div>' +
                             '</div>' +
                         '</div>';
