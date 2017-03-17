@@ -25,6 +25,11 @@ router.get('/', function(req, res, next) {
   res.render('users/user_list', { title: 'Users Manager' });
 });
 
+/* GET event listing. */
+router.get('/list', function(req, res, next) {
+  res.render('users/user_list_user', { title: 'Producers & Sponsors' });
+});
+
 /* GET all users. */
 router.get('/all', function(req, res, next) {
 	var db = req.db;

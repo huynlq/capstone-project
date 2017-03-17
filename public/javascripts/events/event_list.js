@@ -35,14 +35,24 @@ function showUpcomingEvents(data) {
     table.clear().draw();
     var now = new Date();
     var eventEndDate = "";
+    var user = "";
 
     // For each item in our JSON, add a table row and cells to the content string
     $.each(data, function(){
         eventStartDate = new Date(this.eventDate.split(" - ")[0]);
         eventEndDate = new Date(this.eventDate.split(" - ")[1]);
+        eventEndDate.setDate(eventEndDate.getDate() + 1);
         if(eventEndDate.getTime() >= now.getTime() && this.status != "Cancelled"){            
             counter++;
             dateCreated = new Date(this.dateCreated);
+            $.ajax({
+                url: '/users/id/' + this.userId,
+                dataType: 'json',
+                async: false,
+                success: function( dataUser ){
+                    user = dataUser.username;
+                }
+            }); 
             table.row.add([
                 counter,
                 '<center>'
@@ -55,12 +65,11 @@ function showUpcomingEvents(data) {
                 + '</center>',
                 this.eventName,
                 this.eventType,
-                this.user,
+                user,
                 this.contactEmail,
                 this.contactPhone,
                 eventStartDate.getDate() + '/' + (eventStartDate.getMonth() + 1) + '/' +  eventStartDate.getFullYear(),
                 this.meetingAddress,
-                this.donationNeeded,
                 dateCreated.getDate() + '/' + (dateCreated.getMonth() + 1) + '/' +  dateCreated.getFullYear()
             ]).draw( false );
         }
@@ -76,12 +85,21 @@ function showEvents(data) {
 	var dateCreated = "";
 	var tableContent = "";
 	var table = $('#tableEvents').DataTable();
+    var user = "";
     table.clear().draw();
 
     // For each item in our JSON, add a table row and cells to the content string
     $.each(data, function(){
         counter++;
-        dateCreated = new Date(this.dateCreated);        
+        dateCreated = new Date(this.dateCreated);     
+        $.ajax({
+            url: '/users/id/' + this.userId,
+            dataType: 'json',
+            async: false,
+            success: function( dataUser ){
+                user = dataUser.username;
+            }
+        });    
         table.row.add([
             counter,
             '<center>'
@@ -95,12 +113,11 @@ function showEvents(data) {
             this.eventName,
             this.status,
             this.eventType,
-            this.user,
+            user,
             this.contactEmail,
             this.contactPhone,
             this.eventDate.split(" - ")[0],
             this.meetingAddress,
-            this.donationNeeded,
             dateCreated.getDate() + '/' + (dateCreated.getMonth() + 1) + '/' +  dateCreated.getFullYear()
         ]).draw( false );
         
@@ -120,19 +137,24 @@ function showPastEvents(data) {
     var now = new Date();
     var eventEndDate = "";
     var eventStatus = "";
+    var user = "";
 
     // For each item in our JSON, add a table row and cells to the content string
     $.each(data, function(){
         eventStartDate = new Date(this.eventDate.split(" - ")[0]);
         eventEndDate = new Date(this.eventDate.split(" - ")[1]);
+        eventEndDate.setDate(eventEndDate.getDate() + 1);
         if(eventEndDate.getTime() < now.getTime() && this.status != "Cancelled"){            
-            if(this.status == "Published") {
-                eventStatus = 'Not yet';
-            } else {
-                eventStatus = "Done";
-            }
             counter++;
             dateCreated = new Date(this.dateCreated);
+            $.ajax({
+                url: '/users/id/' + this.userId,
+                dataType: 'json',
+                async: false,
+                success: function( dataUser ){
+                    user = dataUser.username;
+                }
+            }); 
             table.row.add([
                 counter,
                 '<center>'
@@ -142,14 +164,12 @@ function showPastEvents(data) {
                 + '</center>',
                 this.eventName,
                 this.eventType,
-                this.user,
+                user,
                 this.contactEmail,
                 this.contactPhone,
-                eventStartDate.getDate() + '/' + (eventStartDate.getMonth() + 1) + '/' +  eventStartDate.getFullYear(),,
+                eventStartDate.getDate() + '/' + (eventStartDate.getMonth() + 1) + '/' +  eventStartDate.getFullYear(),
                 this.meetingAddress,
-                this.donationNeeded,
                 dateCreated.getDate() + '/' + (dateCreated.getMonth() + 1) + '/' +  dateCreated.getFullYear(),
-                eventStatus
             ]).draw( false );
         }
     });
@@ -168,6 +188,7 @@ function showCancelledEvents(data) {
     var now = new Date();
     var eventEndDate = "";
     var eventStatus = "";
+    var user = "";
 
     // For each item in our JSON, add a table row and cells to the content string
     $.each(data, function(){
@@ -176,6 +197,14 @@ function showCancelledEvents(data) {
         if(this.status == "Cancelled"){                        
             counter++;
             dateCreated = new Date(this.dateCreated);
+            $.ajax({
+                url: '/users/id/' + this.userId,
+                dataType: 'json',
+                async: false,
+                success: function( dataUser ){
+                    user = dataUser.username;
+                }
+            }); 
             table.row.add([
                 counter,
                 '<center>'
@@ -185,12 +214,11 @@ function showCancelledEvents(data) {
                 + '</center>',
                 this.eventName,
                 this.eventType,
-                this.user,
+                user,
                 this.contactEmail,
                 this.contactPhone,
                 eventStartDate.getDate() + '/' + (eventStartDate.getMonth() + 1) + '/' +  eventStartDate.getFullYear(),,
                 this.meetingAddress,
-                this.donationNeeded,
                 dateCreated.getDate() + '/' + (dateCreated.getMonth() + 1) + '/' +  dateCreated.getFullYear(),
                 eventStatus
             ]).draw( false );

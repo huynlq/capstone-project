@@ -127,10 +127,51 @@ block content
 									.col-md-1.col-sm-1.col-xs-12
 										button.btn.btn-info(type="submit") Save Company Info
 							br
-						h3(style='margin-left: 50px') Events Joined
-						hr
-						.row
-							// MAKE SOME KIND OF SLIDER HERE
+						#eventJoined-panel
+							h3(style='margin-left: 50px') Events Joined
+							hr
+							.row
+								.col-md-2.col-sm-2
+								.col-md-8.col-sm-8.col-xs-12
+									table#eventJoinedTable.table.table-striped.table-bordered.dt-responsive.nowrap.datatable-responsive(style="width: 100%")
+										thead
+											tr
+												th #
+												th Event
+												th Type
+												th Date
+												th Action
+										tbody
+						#eventProduced-panel
+							h3(style='margin-left: 50px') Events Hosted
+							hr
+							.row
+								.col-md-2.col-sm-2
+								.col-md-8.col-sm-8.col-xs-12
+									table#eventProducedTable.table.table-striped.table-bordered.dt-responsive.nowrap.datatable-responsive(style="width: 100%")
+										thead
+											tr
+												th #
+												th Event
+												th Type
+												th Date
+												th Action
+										tbody
+						#eventSponsored-panel
+							h3(style='margin-left: 50px') Events Sponsored
+							hr
+							.row
+								.col-md-2.col-sm-2
+								.col-md-8.col-sm-8.col-xs-12
+									table#eventSponsoredTable.table.table-striped.table-bordered.dt-responsive.nowrap.datatable-responsive(style="width: 100%")
+										thead
+											tr
+												th #
+												th Event
+												th Type
+												th Date
+												th Action
+										tbody
 						hr
 						.row
 							.col-md-4.col-sm-4.col-xs-12
@@ -187,5 +228,22 @@ block content
 			script(src='../vendors/bootstrap-daterangepicker/daterangepicker.js')
 			// jquery.inputmask
 			script(src='../vendors/jquery.inputmask/dist/min/jquery.inputmask.bundle.min.js')
+			
+			// Datatables
+			script(src='/vendors/datatables.net/js/jquery.dataTables.min.js')
+			script(src='/vendors/datatables.net-bs/js/dataTables.bootstrap.min.js')
+			script(src='/vendors/datatables.net-buttons/js/dataTables.buttons.min.js')
+			script(src='/vendors/datatables.net-buttons-bs/js/buttons.bootstrap.min.js')
+			script(src='/vendors/datatables.net-buttons/js/buttons.flash.min.js')
+			script(src='/vendors/datatables.net-buttons/js/buttons.html5.min.js')
+			script(src='/vendors/datatables.net-buttons/js/buttons.print.min.js')
+			script(src='/vendors/datatables.net-fixedheader/js/dataTables.fixedHeader.min.js')
+			script(src='/vendors/datatables.net-keytable/js/dataTables.keyTable.min.js')
+			script(src='/vendors/datatables.net-responsive/js/dataTables.responsive.min.js')
+			script(src='/vendors/datatables.net-responsive-bs/js/responsive.bootstrap.js')
+			script(src='/vendors/datatables.net-scroller/js/dataTables.scroller.min.js')
+			script(src='/vendors/jszip/dist/jszip.min.js')
+			script(src='/vendors/pdfmake/build/pdfmake.min.js')
+			script(src='/vendors/pdfmake/build/vfs_fonts.js')
 			// Custom Theme Scripts
 			script(src='../build/js/custom.min.js')

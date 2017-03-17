@@ -501,10 +501,10 @@ router.put('/updateparticipant/:id', function(req, res) {
 });
 
 /* GET events by user. */
-router.get('/producedevents/:username', function(req, res, next) {
+router.get('/producedevents/:userId', function(req, res, next) {
     var db = req.db;
     var collection = db.get('Events');
-    collection.find({'user': req.params.username},{},function(e,docs){        
+    collection.find({'userId': req.params.userId},{},function(e,docs){        
         res.json(docs);
     });
 });
@@ -538,6 +538,30 @@ router.get('/sponsornumber/:id', function(req, res, next) {
     collection.count({
         'eventId': req.params.id,
         'status': {'$ne': 'Pending'}
+    },{}, function(e,docs){
+        res.json(docs);
+    });
+});
+
+/* GET number of event sponsored based on userId. */
+router.get('/sponsoredbyuser/:id', function(req, res, next) {
+    var db = req.db;
+    var collection = db.get('EventSponsored');
+    collection.count({
+        'userId': req.params.id,
+        'status': {'$ne': 'Pending'}
+    },{}, function(e,docs){
+        res.json(docs);
+    });
+});
+
+/* GET number of event created based on userId. */
+router.get('/createdbyuser/:id', function(req, res, next) {
+    var db = req.db;
+    var collection = db.get('Events');
+    collection.count({
+        'userId': req.params.id,
+        'status': 'Published'
     },{}, function(e,docs){
         res.json(docs);
     });

@@ -72,6 +72,7 @@ function initialize() {
 
 function CountDown(startTime, endTime) {
 	var date = new Date();
+	endTime.setDate(endTime.getDate() + 1);
 	if(date.valueOf() < startTime.valueOf()) {
 		return countdown(null, startTime, "HOURS", 2).toString();
 	} else if(date.valueOf() >= startTime.valueOf() && date.valueOf() < endTime.valueOf()) {
@@ -82,7 +83,7 @@ function CountDown(startTime, endTime) {
 }
 
 function populateNews() {
-	var table = $('#newsPanel').DataTable({"order": [[ 5, "desc" ]]});
+	var table = $('#newsPanel').DataTable({"order": [[ 4, "desc" ]]});
 	var user = "";
 	var counter = 1;
 	$.getJSON( '/posts/news', function( data ) {
@@ -91,7 +92,6 @@ function populateNews() {
             table.row.add([
                 this.rating,
                	'<a href="/posts/' + this._id + '">' + this.postName + '</a>',              
-                this.postType,
                 this.user,
                 this.comment,
                 dateCreated.getDate() + '/' + (dateCreated.getMonth() + 1) + '/' +  dateCreated.getFullYear() + ' ' + dateCreated.getHours() + ':'  + dateCreated.getMinutes()
@@ -105,7 +105,7 @@ function populateNews() {
 
 
 function populateBoard() {
-	var table = $('#boardPanel').DataTable({"order": [[ 5, "desc" ]]});
+	var table = $('#boardPanel').DataTable({"order": [[ 4, "desc" ]]});
 	var user = "";
 	var counter = 1;
 	$.getJSON( '/posts/board', function( data ) {
@@ -114,7 +114,6 @@ function populateBoard() {
             table.row.add([
                 this.rating,
                	'<a href="/posts/' + this._id + '">' + this.postName + '</a>',              
-                this.postType,
                 this.user,
                 this.comment,
                 dateCreated.getDate() + '/' + (dateCreated.getMonth() + 1) + '/' +  dateCreated.getFullYear() + ' ' + dateCreated.getHours() + ':'  + dateCreated.getMinutes()

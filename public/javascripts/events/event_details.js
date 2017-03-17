@@ -9,8 +9,8 @@ $(document).ready(function() {
 		$.getJSON('/users/id/' + data.userId, function(dataUser) {
 			$('#userIdLink').attr('href', '/users/' + dataUser._id);
 			$('#userIdLink').html(dataUser.username);
-			populateButtons();
 			populateProducer();
+			populateButtons();			
 			populateSponsors();	
 		});		
 	});
@@ -302,7 +302,31 @@ function populateProducer() {
 			$('#txtCompanyName').html(data.companyName);
 			$('#txtCompanyAddress').html(data.companyAddress);
 			$('#txtCompanyPhone').html(data.companyPhoneNumber);
-			$('#txtCompanyEmail').html(data.companyEmail);			
+			$('#txtCompanyEmail').html(data.companyEmail);		
+			$('#txtProducerId').val(data._id);			
+			$.ajax({
+			    url: '/ratings/general/' + data._id,
+			    dataType: 'json',
+			    async: false,
+			    success: function(dataRating) {
+			    	var currentProducerRatingContent = "";
+					var currentProducerRating = 0;
+			    	if(dataRating == '' || dataRating == null || dataRating.ratingPoint == null) {
+			    		currentProducerRating = 0;
+			    	} else {
+			    		currentProducerRating = parseFloat(dataRating.ratingPoint);
+			    	}
+			    	for(var i = 1; i <= 5; i++) {
+			        	if(i <= Math.floor(currentProducerRating)) {
+			        		currentProducerRatingContent += '<img id="producerRating' + i + '" class="producerRating" src="/images/system/rated-star.png" height="15" style="margin:2px" />';
+			        	} else {
+			        		currentProducerRatingContent += '<img id="producerRating' + i + '" class="producerRating" src="/images/system/unrated-star.png" height="15" style="margin:2px" />';
+			        	}
+			        }
+			        currentProducerRatingContent += '<span style="margin-left: 15px">' + currentProducerRating + '/5 (' + dataRating.count + ' votes)</span>';
+			        $('#txtCompanyRating').html(currentProducerRatingContent);
+			    }
+			});
 		});		
 	});
 }
@@ -328,9 +352,9 @@ function populateButtons() {
 					$('#btnParticipate').attr('onclick', '');
 					$('#btnParticipate').removeClass('btn-info');
 					$('#btnParticipate').addClass('btn-success');
-					$('#btnParticipate').html('PARTICIPATED');
-					populateSummary();
+					$('#btnParticipate').html('PARTICIPATED');					
 				}
+				populateSummary();
 			});
 		}
 	});	
@@ -577,10 +601,157 @@ function populateSponsors() {
 
 //Populate Event Summary
 function populateSummary() {
-	var eventId = window.location.href.split('/')[window.location.href.split('/').length - 1].split('#')[0];
+	var eventId = window.location.href.split('/')[window.location.href.split('/').length - 1].split('#')[0];	
 	var now = new Date();
 	var eventEndDate = new Date($('#event-date').html().split(" - ")[1]);
+	//eventEndDate.setDate(eventEndDate.getDate() + 1);
 	if(eventEndDate.getTime() < now.getTime()){
+
+		// Populate Rating Panel
+		var currentEventRatingContent = "";
+		var currentEventRating = 0;
+		$.ajax({
+		    url: '/ratings/general/' + eventId,
+		    dataType: 'json',
+		    async: false,
+		    success: function(dataRating) {
+		    	if(dataRating == '' || dataRating == null || dataRating.ratingPoint == null) {
+		    		currentEventRating = 0;
+		    	} else {
+		    		currentEventRating = parseFloat(dataRating.ratingPoint);
+		    	}
+		    	currentEventRatingContent = "<p>Rating: " + currentEventRating + "/5 by " + dataRating.count + " user(s).</p>";
+		    	currentEventRating = parseFloat(dataRating.ratingPoint);
+		    }
+		});
+
+
+
+		var currentProducerRatingContent = "";
+		var currentProducerRating = 0;
+		$.ajax({
+		    url: '/ratings/general/' + $('#txtProducerId').val(),
+		    dataType: 'json',
+		    async: false,
+		    success: function(dataRating) {
+		    	if(dataRating == '' || dataRating == null || dataRating.ratingPoint == null) {
+		    		currentProducerRating = 0;
+		    	} else {
+		    		currentProducerRating = parseFloat(dataRating.ratingPoint);
+		    	}
+		    	currentProducerRatingContent = "<p>Rating: " + currentProducerRating + "/5 by " + dataRating.count + " user(s).</p>";
+		    	
+		    }
+		});
+
+		$.getJSON( '/events/participants/' + eventId + '/' + readCookie('user'), function( data ) {
+			var eventRating = 0;
+			var producerRating = 0;
+			var ratedContent = "";
+			var ratingContent = "";
+			var eventRateContent = '<p><i class="fa fa-street-view" style="font-size:48px;"></i></p><p><h2><strong>EVENT RATING</strong></h2></p>';
+			var producerRateContent = '<p><i class="fa fa-user-secret" style="font-size:48px;"></i></p><p><h2><strong>PRODUCER RATING</strong></h2></p>';
+
+			if(data.msg == 'true') {				
+				$.getJSON('/events/details/' + eventId, function(eventData) {
+					$.ajax({
+					    url: '/ratings/id/' + eventId + '/' + readCookie('user'),
+					    dataType: 'json',
+					    async: false,
+					    success: function(dataUserRating) {
+					      if(dataUserRating != '' && dataUserRating != null) {
+					        eventRating = dataUserRating.ratingPoint;
+					        ratedContent =  '<p>You have rated ' + eventRating + ' stars for this event.</p>';
+					        for(var i = 1; i <= 5; i++) {
+					        	if(i <= eventRating) {
+					        		ratedContent += '<img id="eventRating' + i + '" class="eventRating" src="/images/system/rated-star.png" height="50" style="margin:5px" onmouseover="seeRate(\'event\',' + i + ')" onclick="rate(\'' + eventId + '\',' + i  +')" />';
+					        	} else {
+					        		ratedContent += '<img id="eventRating' + i + '" class="eventRating" src="/images/system/unrated-star.png" height="50" style="margin:5px" onmouseover="seeRate(\'event\',' + i + ')"  onclick="rate(\'' + eventId + '\',' + i  +')" />';
+					        	}
+					        }
+					        ratedContent += '<p>' + currentEventRatingContent + '</p>';
+					      } else {
+					      	ratedContent =  '<p>Please rate this event!</p>';
+					      	for(var i = 1; i <= 5; i++) {
+					        	ratedContent += '<img id="eventRating' + i + '" class="eventRating" src="/images/system/unrated-star.png" height="50" style="margin:5px" onmouseover="seeRate(\'event\',' + i + ')"  onclick="rate(\'' + eventId + '\',' + i  +')" />';
+					        }
+					      }
+					    }
+					});
+
+					ratingContent += 	'<div class="col-md-6 col-sm-6 col-xs-12" style="text-align:center">' +
+											eventRateContent + 
+											ratedContent +
+										'</div>';
+
+
+					var userId = eventData.userId
+					$.ajax({
+					    url: '/ratings/id/' + eventData.userId + '/' + readCookie('user'),
+					    dataType: 'json',
+					    async: false,
+					    success: function(dataUserRating) {
+					      if(dataUserRating != '' && dataUserRating != null) {
+					        producerRating = dataUserRating.ratingPoint;
+					        ratedContent =  '<p>You have rated ' + producerRating + ' stars for this producer.</p>';
+					        for(var i = 1; i <= 5; i++) {
+					        	if(i <= producerRating) {
+					        		ratedContent += '<img id="producerRating' + i + '" class="producerRating" src="/images/system/rated-star.png" height="50" style="margin:5px" onmouseover="seeRate(\'producer\',' + i + ')"  onclick="rate(\'' + userId + '\',' + i  +')" />';
+					        	} else {
+					        		ratedContent += '<img id="producerRating' + i + '" class="producerRating" src="/images/system/unrated-star.png" height="50" style="margin:5px" onmouseover="seeRate(\'producer\',' + i + ')"  onclick="rate(\'' + userId + '\',' + i  +')" />';
+					        	}
+					        }
+					        ratedContent += '<p>' + currentProducerRatingContent + '</p>';
+					      } else {
+					      	ratedContent =  '<p>Please rate this producer!</p>';
+					      	for(var i = 1; i <= 5; i++) {
+					        	ratedContent += '<img id="producerRating' + i + '" class="producerRating" src="/images/system/unrated-star.png" height="50" style="margin:5px" onmouseover="seeRate(\'producer\',' + i + ')"  onclick="rate(\'' + userId + '\',' + i  +')" />';
+					        }
+					      }
+					    }
+					});
+					console.log("RATE: " + ratedContent);
+					ratingContent += 	'<div class="col-md-6 col-sm-6 col-xs-12" style="text-align:center">' +
+											producerRateContent +
+											ratedContent +
+										'</div>';
+
+					$('#ratingPane').html('<hr><div class="col-md-1 col-sm-1"></div><div class="col-md-10 col-sm-10 col-xs-12">' + ratingContent + '</div>');
+				});
+			} else {
+				ratedContent =  '<p>Only participants can rate.</p>';
+		        for(var i = 1; i <= 5; i++) {
+		        	if(i <= Math.floor(currentEventRating)) {
+		        		ratedContent += '<img id="eventRating' + i + '" class="eventRating" src="/images/system/rated-star.png" height="50" style="margin:5px" />';
+		        	} else {
+		        		ratedContent += '<img id="eventRating' + i + '" class="eventRating" src="/images/system/unrated-star.png" height="50" style="margin:5px" />';
+		        	}
+		        }
+		        ratedContent += '<p>' + currentEventRatingContent + '</p>';
+
+		        ratingContent += 	'<div class="col-md-6 col-sm-6 col-xs-12" style="text-align:center">' +
+		        							eventRateContent + 
+											ratedContent +
+										'</div>';
+
+				ratedContent =  '<p>Only participants can rate.</p>';
+		        for(var i = 1; i <= 5; i++) {
+		        	if(i <= Math.floor(currentProducerRating)) {
+		        		ratedContent += '<img id="producerRating' + i + '" class="producerRating" src="/images/system/rated-star.png" height="50" style="margin:5px" />';
+		        	} else {
+		        		ratedContent += '<img id="producerRating' + i + '" class="producerRating" src="/images/system/unrated-star.png" height="50" style="margin:5px" />';
+		        	}
+		        }
+		        ratedContent += '<p>' + currentProducerRatingContent + '</p>';
+
+		        ratingContent += 	'<div class="col-md-6 col-sm-6 col-xs-12" style="text-align:center">' +
+		        							producerRateContent +
+											ratedContent +
+										'</div>';
+
+				$('#ratingPane').html('<hr><div class="col-md-1 col-sm-1"></div><div class="col-md-10 col-sm-10 col-xs-12">' + ratingContent + '</div>');
+			}
+		});
 
 		$('#btnParticipate').attr('disabled','disabled');
 		$('#btnParticipate').removeClass('btn-info');
@@ -769,4 +940,43 @@ function populateSummary() {
 	        }
 	    });				 
 	}
+}
+
+function seeRate(name, rate) {
+	for(var i = 1; i <= 5; i++) {
+		if(i <= rate) {
+			$('#' + name + 'Rating' + i).attr('src','/images/system/rated-star.png');
+		} else {
+			$('#' + name + 'Rating' + i).attr('src','/images/system/unrated-star.png');
+		}
+	}
+}
+
+function rate(id, rate) {
+	var userId = readCookie('user');
+	var rating = {
+		'userId': userId,
+		'subjectId': id,
+		'ratingPoint': rate
+	};
+
+	$.ajax({
+		type: 'POST',
+		data: rating,
+		url: '/ratings/updaterating',
+		dataType: 'JSON'
+	}).done(function( response ) {
+
+		// Check for successful (blank) response
+		if (response.msg !== '') {
+
+			// If something goes wrong, alert the error message that our service returned
+			alert('Error: ' + response.msg);
+
+		} else {
+
+			populateSummary();
+
+		}
+	});
 }

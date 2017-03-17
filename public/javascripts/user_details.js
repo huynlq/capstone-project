@@ -65,13 +65,13 @@ function populateEventJoined() {
 
 // Populate event produced
 function populateEventProduced() {
-  var username = $('#txtUsername').html();
+  var id = $('#userId').html();
   var counter = 0;
   var dateCreated = "";
-  $.getJSON('/events/producedevents/' + username, function( data ) {
+  $.getJSON('/events/producedevents/' + id, function( data ) {
     var table = $('#eventProducedTable').DataTable();    
     $.each(data, function(){
-      if(this.status != "Absent") {
+      if(this.status != "Cancelled") {
         dateCreated = new Date(this.dateCreated);
         counter++;        
         table.row.add([

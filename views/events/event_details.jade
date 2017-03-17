@@ -85,6 +85,7 @@ block content
 					.col-md-1.col-sm-1
 					#map.col-md-9.col-sm-9.col-xs-12(style='height:200px; margin: 0')
 				br
+				#ratingPane.row
 				hr
 				.row
 					.col-md-1.col-sm-1
@@ -107,7 +108,8 @@ block content
 							table.table.table-responsive.table-striped
 								tbody
 									tr
-										td(style="text-align: center; vertical-align: middle; width: 40%", rowspan="6")		
+										td(style="text-align: center; vertical-align: middle; width: 40%", rowspan="7")		
+											input#txtProducerId(type="hidden", value="")
 											a#linkCompany(href="#")									
 												img#txtCompanyImageSrc(src='#', alt='No company image!', style="max-width: 100%")
 									tr
@@ -135,6 +137,11 @@ block content
 											span(style="font-weight: bold") Website:
 										td
 											span#txtCompanyWebsite
+									tr
+										td(style="text-align: right; width: 100px")
+											span(style="font-weight: bold") Rating:
+										td
+											span#txtCompanyRating
 					.col-md-1.col-sm-1					
 					.col-md-4.col-sm-4.col-xs-12#sponsorPane
 				.row.col-sm-12.col-xs-12

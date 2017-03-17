@@ -29,6 +29,25 @@ router.get('/id/:id', function(req, res, next) {
     });
 });
 
+/* GET general rating by subjectId. */
+router.get('/general/:id', function(req, res, next) {
+    var db = req.db;
+    var collection = db.get('Ratings');    
+    collection.find({ 'subjectId' : req.params.id },{},function(e,docs){
+        var rating = 0;        
+        for(var i = 0; i < docs.length; i++) {
+            rating += parseInt(docs[i].ratingPoint);
+        }
+        collection.count({ 'subjectId' : req.params.id },{},function(e,count){
+            rating = {
+                'ratingPoint': parseFloat(rating / parseInt(count)),
+                'count': count
+            };
+            res.json(rating);
+        });        
+    });
+});
+
 /* GET rating for subjectId by userId. */
 router.get('/id/:subjectId/:userId', function(req, res, next) {
     var db = req.db;

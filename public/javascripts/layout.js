@@ -77,6 +77,7 @@ function populateSidebar() {
                     content += '<li><a><i class="fa fa-street-view"></i> Producer <span class="fa fa-chevron-down"></span></a>'+
                                     '<ul class="nav child_menu">'+
                                       '<li><a href="/events">My Events</a></li>'+
+                                      '<li><a href="/events/creator_event">Event Creator</a></li>'+
                                     '</ul>'+
                                   '</li>';
                 }

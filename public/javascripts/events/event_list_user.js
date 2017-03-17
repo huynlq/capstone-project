@@ -99,9 +99,35 @@ function populateEvents() {
                     currentSponsors = dataSponsors;
                 }
             });
+            
             eventStartDate = new Date(data[i].eventDate.split(" - ")[0]);
             eventEndDate = new Date(data[i].eventDate.split(" - ")[1]);
+            eventEndDate.setDate(eventEndDate.getDate() + 1);
             startDate = eventStartDate.getDate() + "-" + eventStartDate.getMonth() + "-" + eventStartDate.getFullYear();
+            var currentRatingContent = "";
+            var currentRating = 0;
+            if(eventEndDate.getTime() < now.getTime() && data[i].status != "Cancelled") {                    
+                $.ajax({
+                    url: '/ratings/general/' + data[i]._id,
+                    dataType: 'json',
+                    async: false,
+                    success: function(dataRating) {                        
+                        if(dataRating == '' || dataRating == null || dataRating.ratingPoint == null) {
+                            currentRating = 0;
+                        } else {
+                            currentRating = parseFloat(dataRating.ratingPoint);
+                        }
+                        for(var i = 1; i <= 5; i++) {
+                            if(i <= Math.floor(currentRating)) {
+                                currentRatingContent += '<img src="/images/system/rated-star.png" height="15" style="margin:2px;width:15px;display:inline-block"/>';
+                            } else {
+                                currentRatingContent += '<img src="/images/system/unrated-star.png" height="15" style="margin:2px;width:15px;display:inline-block"/>';
+                            }
+                        }
+                        currentRatingContent += '<span style="margin-left: 15px">' + currentRating + '/5 (' + dataRating.count + ' votes)</span>';
+                    }
+                });
+            }
             content =   '<div class="item" style="background-color: #F2F6FF">' +
                             '<div class="thumb" style="background-image: url(' + data[i].eventImage + '); max-width: 100% !important"></div>' +
                             '<div class="eventInfo clearfix border-bottom p-15 pt-10" style="height: 228px">' +
@@ -117,6 +143,7 @@ function populateEvents() {
                                     '<li><i class="fa fa-crosshairs"><span class="eventSearchAddress" style="margin-left: 10px; font-family: sans-serif">' + data[i].meetingAddress + '</span></i></li>' +                                    
                                 '</ul>' +
                                 '<div class="donate-details">' +
+                                    '<p style="float: left">' + currentRatingContent + '</p>' +
                                     '<a href="/events/' + data[i]._id + '" class="btn" style="background-color: #73879C; color: white; float: right" role="button">Chi tiết</a>' +
                                '</div>' +
                             '</div>' +
@@ -164,6 +191,7 @@ function populateEvents() {
             smartSpeed:500,
             autoplayTimeout:500,
             autoplayHoverPause:true,
+            navText: ["<i class='fa fa-angle-double-left'></i>","<i class='fa fa-angle-double-right'></i>"],
             responsive:{
                 0:{
                     items:1
@@ -176,5 +204,8 @@ function populateEvents() {
                 }
             }
         })
+
+        $('.owl-prev').addClass('btn');
+        $('.owl-next').addClass('btn');
     }); 
 }
