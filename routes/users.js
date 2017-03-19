@@ -237,7 +237,7 @@ router.post('/updatemyuserinfo', uploading.single('displayUserImage'), function(
 
             collection.update({ '_id' : user }, { $set: req.body}, function(err) {
                 if(err === null) {
-                    res.writeHead(302, {'Location': '/users/my_user_page'});
+                    res.writeHead(302, {'Location': '/my'});
                     res.end();
                 } else {
                     alert(err);
