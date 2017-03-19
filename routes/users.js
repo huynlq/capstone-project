@@ -6,6 +6,7 @@ var request = require('request');
 var ObjectId = require('mongodb').ObjectID;
 
 var download = function(uri, filename, callback){
+    console.log("Download");
     request.head(uri, function(err, res, body){
         console.log('content-type:', res.headers['content-type']);
         console.log('content-length:', res.headers['content-length']);
@@ -219,7 +220,7 @@ router.post('/updatemyuserinfo', uploading.single('displayUserImage'), function(
 
                 var extension = req.file.mimetype.split("/")[1];
                 var path = "/images/user/" + req.file.filename;
-                var savePath = "app/public" + path;
+                var savePath = window.location.origin + path;
 
                 fs.stat("public" + docs.image, function(err, stat) {
                     if(err == null) {
