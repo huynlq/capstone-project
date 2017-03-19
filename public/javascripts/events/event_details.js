@@ -9,8 +9,8 @@ $(document).ready(function() {
 		$.getJSON('/users/id/' + data.userId, function(dataUser) {
 			$('#userIdLink').attr('href', '/users/' + dataUser._id);
 			$('#userIdLink').html(dataUser.username);
-			populateProducer();
 			populateButtons();			
+			populateProducer();
 			populateSponsors();	
 		});		
 	});
@@ -303,12 +303,13 @@ function populateProducer() {
 			$('#txtCompanyAddress').html(data.companyAddress);
 			$('#txtCompanyPhone').html(data.companyPhoneNumber);
 			$('#txtCompanyEmail').html(data.companyEmail);		
-			$('#txtProducerId').val(data._id);			
+			$('#txtProducerId').val(data._id);
 			$.ajax({
 			    url: '/ratings/general/' + data._id,
 			    dataType: 'json',
 			    async: false,
 			    success: function(dataRating) {
+			    	console.log("POPULATE");
 			    	var currentProducerRatingContent = "";
 					var currentProducerRating = 0;
 			    	if(dataRating == '' || dataRating == null || dataRating.ratingPoint == null) {
@@ -325,6 +326,7 @@ function populateProducer() {
 			        }
 			        currentProducerRatingContent += '<span style="margin-left: 15px">' + currentProducerRating + '/5 (' + dataRating.count + ' votes)</span>';
 			        $('#txtCompanyRating').html(currentProducerRatingContent);
+			        populateSummary();
 			    }
 			});
 		});		
@@ -342,8 +344,7 @@ function populateButtons() {
 			$('#btnParticipate').removeClass('btn-info');
 			$('#btnParticipate').addClass('btn-success');
 			$('#btnParticipate').html('UPDATE EVENT');
-			$('#btnParticipate').attr('href', '/events/update/' + eventId);
-			populateSummary();
+			$('#btnParticipate').attr('href', '/events/update/' + eventId);			
 		} else {
 			$.getJSON( '/events/participants/' + eventId + '/' + userId, function( data ) {
 				if(data.msg == 'true') {
@@ -354,7 +355,6 @@ function populateButtons() {
 					$('#btnParticipate').addClass('btn-success');
 					$('#btnParticipate').html('PARTICIPATED');					
 				}
-				populateSummary();
 			});
 		}
 	});	
@@ -601,6 +601,8 @@ function populateSponsors() {
 
 //Populate Event Summary
 function populateSummary() {
+	var userId = $('#txtProducerId').val();
+	console.log("ID: " + userId);
 	var eventId = window.location.href.split('/')[window.location.href.split('/').length - 1].split('#')[0];	
 	var now = new Date();
 	var eventEndDate = new Date($('#event-date').html().split(" - ")[1]);
@@ -630,7 +632,7 @@ function populateSummary() {
 		var currentProducerRatingContent = "";
 		var currentProducerRating = 0;
 		$.ajax({
-		    url: '/ratings/general/' + $('#txtProducerId').val(),
+		    url: '/ratings/general/' + userId,
 		    dataType: 'json',
 		    async: false,
 		    success: function(dataRating) {
@@ -753,11 +755,22 @@ function populateSummary() {
 			}
 		});
 
-		$('#btnParticipate').attr('disabled','disabled');
-		$('#btnParticipate').removeClass('btn-info');
-		$('#btnParticipate').removeClass('btn-success');
-		$('#btnParticipate').addClass('btn-dark');
-		$('#btnParticipate').html('EVENT ENDED');
+	
+		// MAY NEED MORE WORK ON THIS ONE
+		if($('#txtProducerId').val() == readCookie('user')) {
+			$('#btnParticipate').attr('onclick', '');
+			$('#btnParticipate').removeClass('btn-info');
+			$('#btnParticipate').addClass('btn-success');
+			$('#btnParticipate').html('UPDATE EVENT');
+			$('#btnParticipate').attr('href', '/events/update/' + eventId);
+		} else {				
+			$('#btnParticipate').attr('disabled','disabled');
+			$('#btnParticipate').removeClass('btn-info');
+			$('#btnParticipate').removeClass('btn-success');
+			$('#btnParticipate').addClass('btn-dark');
+			$('#btnParticipate').html('EVENT ENDED');
+		}
+		
 
 		var content = "";
 		content = 	'<div class="col-md-1 col-sm-1"></div>'+

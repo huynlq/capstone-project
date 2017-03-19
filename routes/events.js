@@ -136,16 +136,11 @@ router.post('/addactivity', function(req, res) {
 
 /* GET all events. */
 router.get('/all', function(req, res, next) {
-    var user = req.cookies.user;
-    if(user != null) {       
-        var db = req.db;
-        var collection = db.get('Events');
-        collection.find({},{},function(e,docs){
-            res.json(docs);
-        });
-    } else {
-        res.render('page_404');
-    }
+    var db = req.db;
+    var collection = db.get('Events');
+    collection.find({},{},function(e,docs){
+        res.json(docs);
+    });
 });
 
 /* GET all activities from eventId. */

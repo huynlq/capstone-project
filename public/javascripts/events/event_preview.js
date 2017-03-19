@@ -36,7 +36,7 @@ function populateDonations()  {
   $('#event-donation-progress').html("");
   var content = "";
   for(var i = 0; i < donationObj.length; i++) {
-    var content += '<label>' + donationObj[i].donationItem + ':</label> 0/' + parseInt(donationObj[i].donationNumber).toLocaleString() + ' ' + donationObj[i].donationUnit +
+    content += '<label>' + donationObj[i].donationItem + ':</label> 0/' + parseInt(donationObj[i].donationNumber).toLocaleString() + ' ' + donationObj[i].donationUnit +
                   '<div class="progress">' +
                     '<div id="donationProgress" role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" style="width:0%" class="progress-bar progress-bar-striped active"></div>' +
                   '</div>';

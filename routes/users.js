@@ -222,7 +222,11 @@ router.post('/updatemyuserinfo', uploading.single('displayUserImage'), function(
                 var path = "/images/user/" + req.file.filename;
                 var savePath = "public" + path;
 
-                fs.unlink("public" + docs.image);
+                fs.stat("public" + docs.image, function(err, stat) {
+                    if(err == null) {
+                        fs.unlink("public" + docs.image);
+                    }
+                });
 
                 fs.readFile(req.file.path, function (err, data) {
                     fs.writeFile(savePath, data);
@@ -233,9 +237,10 @@ router.post('/updatemyuserinfo', uploading.single('displayUserImage'), function(
 
             collection.update({ '_id' : user }, { $set: req.body}, function(err) {
                 if(err === null) {
-                    res.render('users/my_user_page', { title: "Charity Project | User Page" });
+                    res.writeHead(302, {'Location': '/users/my_user_page'});
+                    res.end();
                 } else {
-                    res.send({ msg:'error: ' + err, 'message': 'An error occured. Please try again.' });
+                    alert(err);
                 }
             });
         });        
