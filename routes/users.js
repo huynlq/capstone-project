@@ -6,7 +6,6 @@ var request = require('request');
 var ObjectId = require('mongodb').ObjectID;
 
 var download = function(uri, filename, callback){
-    console.log("Download");
     request.head(uri, function(err, res, body){
         console.log('content-type:', res.headers['content-type']);
         console.log('content-length:', res.headers['content-length']);
