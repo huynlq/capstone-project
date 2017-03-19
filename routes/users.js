@@ -4,6 +4,7 @@ var fs = require('fs');
 var multer = require('multer');
 var request = require('request');
 var ObjectId = require('mongodb').ObjectID;
+var path = require('path');
 
 var download = function(uri, filename, callback){
     console.log("Download");
@@ -220,7 +221,7 @@ router.post('/updatemyuserinfo', uploading.single('displayUserImage'), function(
 
                 var extension = req.file.mimetype.split("/")[1];
                 var path = "/images/user/" + req.file.filename;
-                var savePath = window.location.origin + path;
+                var savePath = path.resolve(__dirname) + path;
 
                 fs.stat("public" + docs.image, function(err, stat) {
                     if(err == null) {
