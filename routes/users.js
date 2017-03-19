@@ -220,7 +220,7 @@ router.post('/updatemyuserinfo', uploading.single('displayUserImage'), function(
 
                 var extension = req.file.mimetype.split("/")[1];
                 var path = "/images/user/" + req.file.filename;
-                var savePath = "public" + path;
+                var savePath = "app/public" + path;
 
                 fs.stat("public" + docs.image, function(err, stat) {
                     if(err == null) {
