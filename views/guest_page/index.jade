@@ -1,0 +1,193 @@
+extends layout
+
+block content
+	doctype html
+	html.no-js
+		head
+			meta(charset='utf-8')
+			title SADAKA | Charity / Non-profit responsive Bootstrap HTML5 template
+			meta(name='description', content='')
+			meta(name='viewport', content='width=device-width, initial-scale=1')
+			// Fonts
+			link(href='http://fonts.googleapis.com/css?family=Open+Sans:400,300,700', rel='stylesheet', type='text/css')
+			link(href='http://fonts.googleapis.com/css?family=Dosis:400,700', rel='stylesheet', type='text/css')
+			// Bootsrap
+			link(rel='stylesheet', href='guest_page/css/bootstrap.min.css')
+			// Font awesome
+			link(rel='stylesheet', href='guest_page/css/font-awesome.min.css')
+			// Owl carousel
+			link(rel='stylesheet', href='guest_page/css/owl.carousel.css')
+			// Template main Css
+			link(rel='stylesheet', href='guest_page/css/style.css')
+			// Font Awesome
+			link(href='../vendors/font-awesome/css/font-awesome.min.css', rel='stylesheet')
+			// Modernizr
+			script(src='guest_page/js/modernizr-2.6.2.min.js')
+		body			
+			//
+				Carousel
+				==================================================
+			#homeCarousel.carousel.slide.carousel-home(data-ride='carousel')
+				// Indicators
+				ol.carousel-indicators
+					li.active(data-target='#homeCarousel', data-slide-to='0')
+					li(data-target='#homeCarousel', data-slide-to='1')
+					li(data-target='#homeCarousel', data-slide-to='2')
+				.carousel-inner(role='listbox')
+					.item.active
+						img(src='guest_page/images/slider/home-slider-1.jpg', alt='')
+						.container
+							.carousel-caption
+								h2.carousel-title.bounceInDown.animated.slow Because they need your help
+								h4.carousel-subtitle.bounceInUp.animated.slow Do not let them down
+								a.btn.btn-lg.btn-secondary.hidden-xs.bounceInUp.animated.slow(href='#', data-toggle='modal', data-target='#donateModal') DONATE NOW
+							// /.carousel-caption
+					// /.item
+					.item
+						img(src='guest_page/images/slider/home-slider-2.jpg', alt='')
+						.container
+							.carousel-caption
+								h2.carousel-title.bounceInDown.animated.slow Together we can improve their lives
+								h4.carousel-subtitle.bounceInUp.animated.slow  So let's do it !
+								a.btn.btn-lg.btn-secondary.hidden-xs.bounceInUp.animated(href='#', data-toggle='modal', data-target='#donateModal') DONATE NOW
+							// /.carousel-caption
+					// /.item
+					.item
+						img(src='guest_page/images/slider/home-slider-3.jpg', alt='')
+						.container
+							.carousel-caption
+								h2.carousel-title.bounceInDown.animated.slow A penny is a lot of money, if you have not got a penny.
+								h4.carousel-subtitle.bounceInUp.animated.slow You can make the diffrence !
+								a.btn.btn-lg.btn-secondary.hidden-xs.bounceInUp.animated.slow(href='#', data-toggle='modal', data-target='#donateModal') DONATE NOW
+							// /.carousel-caption
+					// /.item
+				a.left.carousel-control(href='#homeCarousel', role='button', data-slide='prev')
+					span.fa.fa-angle-left(aria-hidden='true')
+					span.sr-only Previous
+				a.right.carousel-control(href='#homeCarousel', role='button', data-slide='next')
+					span.fa.fa-angle-right(aria-hidden='true')
+					span.sr-only Next
+			// /.carousel
+			.section-home.about-us.fadeIn.animated
+				.container
+					.row
+						.col-md-3.col-sm-6
+							.about-us-col
+								.col-icon-wrapper
+									img(src='guest_page/images/icons/our-mission-icon.png', alt='')
+								h3.col-title
+									strong Our Mission
+								.col-details
+									p
+										| We aims to help people in need, for the disadvantages, and for the unfortunates.
+								a.btn.btn-primary(href='#')
+									strong Read more 
+						.col-md-3.col-sm-6
+							.about-us-col
+								.col-icon-wrapper
+									img(src='guest_page/images/icons/make-donation-icon.png', alt='')
+								h3.col-title
+									strong Help Us
+								.col-details
+									p
+										| You can get involved by donate to our events as a donator or even a sponsor company.
+								a.btn.btn-primary(href='#')
+									strong Read more 
+						.col-md-3.col-sm-6
+							.about-us-col
+								.col-icon-wrapper
+									img(src='guest_page/images/icons/help-icon.png', alt='')
+								h3.col-title
+									strong Join Us
+								.col-details
+									p
+										| Give us a hand by participating as a energetic volunteer to our events.
+								a.btn.btn-primary(href='#')
+									strong Read more 
+						.col-md-3.col-sm-6
+							.about-us-col
+								.col-icon-wrapper
+									img(src='guest_page/images/icons/programs-icon.png', alt='')
+								h3.col-title
+									strong Create Your Event
+								.col-details
+									p
+										| You can help us providing your ideas to become reality by create your very own event for the needed.
+								a.btn.btn-primary(href='#')
+									strong Read more 
+			// /.about-us
+			.section-home.our-sponsors.animate-onscroll.fadeIn
+				.container
+					h2.title-style-1
+						| Our Events 
+						span.title-under
+					#real-event-carousel.owl-carousel.list-unstyled.list-sponsors					
+					.section-home.our-sponsors.animate-onscroll.fadeIn
+			// /.home-reasons
+			.section-home.our-sponsors.animate-onscroll.fadeIn
+				.container
+					h2.title-style-1
+						| Our Sponsors 
+						span.title-under
+					ul#sponsor-carousel.owl-carousel.list-unstyled.list-sponsors
+			// /.our-sponsors			
+			// main-footer
+			// Donate Modal
+			#donateModal.modal.fade(tabindex='-1', role='dialog', aria-labelledby='donateModalLabel', aria-hidden='true')
+				.modal-dialog
+					.modal-content
+						.modal-header
+							button.close(type='button', data-dismiss='modal', aria-label='Close')
+								span(aria-hidden='true') ×
+							h4#donateModalLabel.modal-title DONATE NOW
+						.modal-body
+							form.form-donation
+								h3.title-style-1.text-center
+									| Thank you for your donation 
+									span.title-under
+								.row
+									.form-group.col-md-12
+										input#amount.form-control(type='text', placeholder='AMOUNT(€)')
+								.row
+									.form-group.col-md-6
+										input.form-control(type='text', name='firstName', placeholder='First name*')
+									.form-group.col-md-6
+										input.form-control(type='text', name='lastName', placeholder='Last name*')
+								.row
+									.form-group.col-md-6
+										input.form-control(type='text', name='email', placeholder='Email*')
+									.form-group.col-md-6
+										input.form-control(type='text', name='phone', placeholder='Phone')
+								.row
+									.form-group.col-md-12
+										input.form-control(type='text', name='address', placeholder='Address')
+								.row
+									.form-group.col-md-12
+										textarea.form-control(cols='30', rows='4', name='note', placeholder='Additional note')
+								.row
+									.form-group.col-md-12
+										button.btn.btn-primary.pull-right(type='submit', name='donateNow') DONATE NOW
+			// /.modal
+			//
+				Scripts
+				==================================================
+			// jQuery
+			script(src='//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js')
+			script.
+				window.jQuery || document.write('<script src="guest_page/js/jquery-1.11.1.min.js"><\\/script>')
+			// Bootsrap javascript file
+			script(src='guest_page/js/bootstrap.min.js')
+			// owl carouseljavascript file
+			script(src='guest_page/js/owl.carousel.min.js')
+			// Countdown JS
+			script(src='vendors/countdown/countdown.js')
+			// Template main javascript
+			script(src='guest_page/js/main.js')
+			// Google Analytics: change UA-XXXXX-X to be your site's ID.
+			script.
+				(function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=
+				function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;
+				e=o.createElement(i);r=o.getElementsByTagName(i)[0];
+				e.src='//www.google-analytics.com/analytics.js';
+				r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));
+				ga('create','UA-XXXXX-X');ga('send','pageview');

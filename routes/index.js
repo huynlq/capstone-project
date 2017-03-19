@@ -15,7 +15,12 @@ var download = function(uri, filename, callback){
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Express' });
+  res.render('guest_page/index');
+});
+
+/* GET login page. */
+router.get('/events_list', function(req, res, next) {
+  res.render('guest_page/list_events');
 });
 
 /* GET login page. */

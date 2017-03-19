@@ -4,7 +4,6 @@ var fs = require('fs');
 var multer = require('multer');
 var request = require('request');
 var ObjectId = require('mongodb').ObjectID;
-var path = require('path');
 
 var download = function(uri, filename, callback){
     console.log("Download");
@@ -64,7 +63,7 @@ router.get('/role/:role', function(req, res, next) {
     var db = req.db;
     var collection = db.get('Users');
     var userRole = req.params.role;
-    collection.findOne({'role': userRole},{},function(e,docs){
+    collection.find({'role': userRole},{},function(e,docs){
         res.json(docs);
     });
 });
@@ -221,13 +220,9 @@ router.post('/updatemyuserinfo', uploading.single('displayUserImage'), function(
 
                 var extension = req.file.mimetype.split("/")[1];
                 var path = "/images/user/" + req.file.filename;
-                var savePath = process.cwd() + path;
+                var savePath = "public" + path;
 
-                fs.stat("public" + docs.image, function(err, stat) {
-                    if(err == null) {
-                        fs.unlink("public" + docs.image);
-                    }
-                });
+                fs.unlink("public" + docs.image);
 
                 fs.readFile(req.file.path, function (err, data) {
                     fs.writeFile(savePath, data);
@@ -238,10 +233,9 @@ router.post('/updatemyuserinfo', uploading.single('displayUserImage'), function(
 
             collection.update({ '_id' : user }, { $set: req.body}, function(err) {
                 if(err === null) {
-                    res.writeHead(302, {'Location': '/my'});
-                    res.end();
+                    res.render('users/my_user_page', { title: "Charity Project | User Page" });
                 } else {
-                    alert(err);
+                    res.send({ msg:'error: ' + err, 'message': 'An error occured. Please try again.' });
                 }
             });
         });        

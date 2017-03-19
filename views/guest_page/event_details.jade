@@ -1,0 +1,117 @@
+extends layout
+
+block content
+	doctype html
+	html.no-js
+		head
+			meta(charset='utf-8')
+			title Single cause | Charity / Non-profit responsive Bootstrap HTML5 template
+			meta(name='description', content='')
+			meta(name='viewport', content='width=device-width, initial-scale=1')
+			// Fonts
+			link(href='http://fonts.googleapis.com/css?family=Open+Sans:400,300,700', rel='stylesheet', type='text/css')
+			link(href='http://fonts.googleapis.com/css?family=Dosis:400,700', rel='stylesheet', type='text/css')
+			// Bootsrap
+			link(rel='stylesheet', href='/guest_page/css/bootstrap.min.css')
+			// Font awesome
+			link(rel='stylesheet', href='/guest_page/css/font-awesome.min.css')
+			// PrettyPhoto
+			link(rel='stylesheet', href='/guest_page/css/prettyPhoto.css')
+			// Template main Css
+			link(rel='stylesheet', href='/guest_page/css/style.css')
+			// Modernizr
+			script(src='/guest_page/js/modernizr-2.6.2.min.js')
+		body			
+			.row(style="height:80px")
+			.page-heading.text-center
+				.container.zoomIn.animated
+					h1.page-title(style="text-transform: uppercase;") #{docs.eventName}
+						span.title-under
+					p.page-description
+						| Give us a hand and join this project.
+			.main-container
+				.container
+					.row
+						.col-md-8.col-xs-12.fadeIn.animated
+							img(src='#{docs.eventImage}', alt='', style="max-width:100%")
+							.timePane(style="right: 0")
+								.month-time.fleft
+									span.day.fleft#eventDay
+									span.month#eventMonthYear
+									br
+									span.stime
+										strong#eventTime						
+						.col-md-4.col-xs-12.fadeIn.animate-onscroll
+							h2.title-style-2
+								| Producer
+								span.title-under
+							table.table.table-responsive.table-striped
+								tbody
+									tr
+										td(style="text-align: center; vertical-align: middle; width:30%", rowspan="4")		
+											input#txtProducerId(type="hidden", value="#{docs.userId}")
+											a#linkCompany(href="#")									
+												img#txtCompanyImageSrc(src='#', alt='No company image!', style="max-width: 100%")
+									tr
+										td(style="text-align: right; width: 50px")
+											i.fa.fa-user(style="font-weight:bold")  :
+										td
+											span#txtCompanyName
+									tr
+										td(style="text-align: right; width: 50px")
+											i.fa.fa-envelope(style="font-weight:bold")  :
+										td
+											span#txtCompanyEmail
+									tr
+										td(style="text-align: right; width: 50px")
+											i.fa.fa-phone(style="font-weight:bold")  :
+										td
+											span#txtCompanyPhone
+							h2.title-style-2
+								| Location
+								span.title-under
+							p #{docs.meetingAddress}
+							#map(style='height:200px; margin: 0; width: 100%')
+					br
+					.row.fadeIn.animated
+						.col-md-12
+							h2.title-style-2
+								| Description
+								span.title-under
+							p #{docs.eventDescription}						
+					.row
+						.col-md-12.col-xs-12.fadeIn.animate-onscroll
+							h2.title-style-2
+								| Activities 
+								span.title-under
+							div(role='tabpanel')
+								#activityPane
+					.row
+						.col-md-1
+						.col-md-5.col-xs-12
+							a.btn.btn-info(style="background-color:#1f76bd; float:right; width: 50%")
+								strong PARTICIPATE
+						.col-md-5.col-xs-12
+							a.btn.btn-info(style="background-color:#1f76bd; width: 50%")
+								strong DONATE
+			// jQuery
+			script(src='//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js')
+			script.
+				window.jQuery || document.write('<script src="/guest_page/js/jquery-1.11.1.min.js"><\\/script>')
+			// Bootsrap javascript file
+			script(src='/guest_page/js/bootstrap.min.js')
+			// PrettyPhoto javascript file
+			script(src='/guest_page/js/jquery.prettyPhoto.js')
+			// Google map
+			script(src='https://maps.googleapis.com/maps/api/js?key=AIzaSyAxUeMBUbKnW-LKTWTIL656w7nHABuNMTI&libraries=places')
+			// Template main javascript
+			script(src='/guest_page/js/main.js')
+			script(src='/guest_page/js/event_details.js')
+			// Google Analytics: change UA-XXXXX-X to be your site's ID.
+			script.
+				(function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=
+				function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;
+				e=o.createElement(i);r=o.getElementsByTagName(i)[0];
+				e.src='//www.google-analytics.com/analytics.js';
+				r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));
+				ga('create','UA-XXXXX-X');ga('send','pageview');

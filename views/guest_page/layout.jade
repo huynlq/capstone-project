@@ -1,0 +1,128 @@
+doctype html
+html
+	head
+		title= title
+		link(rel='stylesheet', href='/stylesheets/style.css')
+		script(src='/vendors/jquery/dist/jquery.min.js')
+		link(href='/vendors/jquery-ui-1.12.1/jquery-ui.css', rel='stylesheet')
+		script(src='/vendors/jquery-ui-1.12.1/jquery-ui.js')
+		script(src='/guest_page/js/layout.js')
+	body
+		header.main-header
+				nav.navbar.navbar-static-top.navbar-inverse(data-spy="affix")
+					.navbar-top
+						.container
+							.row.navbar-top
+								.col-sm-6.col-xs-12
+									ul.list-unstyled.list-inline.header-contact
+										li
+											i.fa.fa-phone&nbsp;&nbsp;
+											a(href='tel:') 091 959 4629
+										li
+											i.fa.fa-envelope&nbsp;&nbsp;
+											a(href='mailto:huynlqse61661@fpt.edu.vn') huynlqse61661@fpt.edu.vn
+									// /.header-contact
+								.col-sm-6.col-xs-12.text-right
+									ul#navbar.list-unstyled.list-inline.navbar-collapse.collapse
+										li
+											| Welcome, Guest										
+										li
+											| |
+										li
+											a(href="/login") Sign In
+									// /.header-social
+					.navbar-main
+						.container
+							.navbar-header
+								button.navbar-toggle.collapsed(type='button', data-toggle='collapse', data-target='#navbar', aria-expanded='false', aria-controls='navbar')
+									span.sr-only Toggle navigation
+									span.icon-bar
+									span.icon-bar
+									span.icon-bar
+								a.navbar-brand(href='/')
+									img(src='/guest_page/images/sadaka-logo.png', alt='')
+							#navbar.navbar-collapse.collapse.pull-right
+								ul.nav.navbar-nav
+									li
+										a.is-active(href='/') HOME
+									li
+										a(href='about.html') ABOUT
+									li.has-child
+										a(href='/events_list') EVENTS
+									li
+										a(href='gallery.html') GALLERY									
+										ul.submenu
+											li.submenu-item
+												a(href='causes.html') Causes list 
+											li.submenu-item
+												a(href='causes-single.html') Single cause 
+											li.submenu-item
+												a(href='causes-single.html') Single cause 
+											li.submenu-item
+												a(href='causes-single.html') Single cause 
+									li
+										a(href='contact.html') CONTACT
+							// /#navbar
+						// /.container
+					// /.navbar-main
+			// /. main-header
+		block content
+		footer.main-footer
+			.footer-top
+			.footer-main
+				.container
+					.row
+						.col-md-4
+							.footer-col
+								h4.footer-title
+									| About us 
+									span.title-under
+								.footer-content
+									p
+										strong Sadaka
+										|  is a non-profit information portal for charity events.
+									p
+										| Created by a team of five students who wish for helping hands to create a better world.
+						.col-md-4
+							.footer-col
+								h4.footer-title
+									| Our Team
+									span.title-under
+								.footer-content
+									ul.tweets.list-unstyled
+										li.tweet
+											i.fa.fa-user&nbsp;&nbsp;
+											| Nguyễn Lê Quốc Huy
+											br
+											i.fa.fa-envelope&nbsp;&nbsp;
+											a(href="mailto:huynlqse61661@fpt.edu.vn") huynlqse61661@fpt.edu.vn
+										li.tweet
+											i.fa.fa-user&nbsp;&nbsp;
+											| Phạm Đức Nguyên
+											br
+											i.fa.fa-phone&nbsp;&nbsp;
+											a(href="mailto:nguyenpdse61435@fpt.edu.vn") nguyenpdse61435@fpt.edu.vn
+						.col-md-4
+							.footer-col
+								h4.footer-title
+									| Contact us 
+									span.title-under
+								.footer-content
+									.footer-form
+										.footer-form
+											form.ajax-form(action='php/mail.php')
+												.form-group
+													input.form-control(type='text', name='name', placeholder='Name', required='')
+												.form-group
+													input.form-control(type='email', name='email', placeholder='E-mail', required='')
+												.form-group
+													textarea.form-control(name='message', placeholder='Message', required='')
+												.form-group.alerts
+													.alert.alert-success(role='alert')
+													.alert.alert-danger(role='alert')
+												.form-group
+													button.btn.btn-submit.pull-right(type='submit') Send message
+						.clearfix
+			.footer-bottom
+				.container.text-right
+					| Sadaka @ copyrights 2017 - by numbuh1

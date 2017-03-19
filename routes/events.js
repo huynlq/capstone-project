@@ -138,7 +138,7 @@ router.post('/addactivity', function(req, res) {
 router.get('/all', function(req, res, next) {
     var db = req.db;
     var collection = db.get('Events');
-    collection.find({},{},function(e,docs){
+    collection.find({},{sort: {eventDate: -1}},function(e,docs){
         res.json(docs);
     });
 });
@@ -169,7 +169,7 @@ router.get('/:id', function(req, res, next) {
         res.render('page_404');
     collection.findOne({ '_id' : req.params.id },{},function(e,docs){
         if(docs) {
-            res.render('events/event_details', { title: 'Charity Event | ' + docs.eventName, 'docs': docs });
+            res.render('guest_page/event_details', { title: 'Charity Event | ' + docs.eventName, 'docs': docs });
         } else {
             res.render('page_404');
         }
