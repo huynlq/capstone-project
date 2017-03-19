@@ -10,7 +10,7 @@ var request = require('request');
 // New Code
 var mongo = require('mongodb');
 var monk = require('monk');
-var db = monk('localhost:27017/VoluntaryProject');
+var db = monk('mongodb://admin:admin@ds119370.mlab.com:19370/voluntaryproject');
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
