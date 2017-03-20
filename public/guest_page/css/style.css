@@ -27,6 +27,9 @@ a {
 a:hover, a:focus, a:active {
   color: inherit;
 }
+.btn-info {
+  background-color: #1f76bd;
+}
 
 /* =============================================================================
   Layout
@@ -279,7 +282,7 @@ a:hover, a:focus, a:active {
 
 .thumb {
   display: block;
-  height: 190px;
+  height: 250px;
   max-width: 100% !important;
   background-position: center center;
   background-size: cover;
@@ -473,7 +476,7 @@ a:hover, a:focus, a:active {
 }
 
 .main-container {
-  margin-bottom: 50px;
+  margin-bottom: 50px;  
 }
 
 /* Pages/Gallery 
@@ -906,6 +909,13 @@ form .alert {
     bottom: 0;
   }
 }
+/* =============================================================================
+  Layout
+========================================================================== */
+.noti-bar:active {
+    background-color: yellow;
+}
+
 /* =============================================================================
   Event Details
 ========================================================================== */

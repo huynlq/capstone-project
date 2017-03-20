@@ -18,9 +18,19 @@ router.get('/', function(req, res, next) {
   res.render('guest_page/index');
 });
 
-/* GET login page. */
+/* GET event list page. */
 router.get('/events_list', function(req, res, next) {
   res.render('guest_page/list_events');
+});
+
+/* GET sponsor list page. */
+router.get('/sponsors_list', function(req, res, next) {
+  res.render('guest_page/list_sponsors');
+});
+
+/* GET sponsor list page. */
+router.get('/about', function(req, res, next) {
+  res.render('guest_page/about_us');
 });
 
 /* GET login page. */
@@ -92,7 +102,7 @@ router.get('/my', function(req, res, next) {
 		var collection = db.get('Users');
 		collection.findOne({"_id": user}, function(err, doc) {
 			if(doc)
-				res.render('users/my_user_page', { title: 'Charity Project | User Page'});
+				res.render('guest_page/my_user_page', { title: 'Charity Project | User Page'});
 			else
 				res.render('login', { title: 'Login' });
 		});  		

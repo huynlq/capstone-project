@@ -9,8 +9,10 @@ $(document).ready(function() {
         $('#navbar').html('<li>Welcome, ' + data.username + '</li>' +
                           '<li>|</li>' +
                           '<li class="has-child" id="navbar-notification">' +
-                            '<i class="fa fa-envelope"></i>&nbsp;&nbsp;' +
-                            '<span class="badge" style="background-color:darkred">' + 1 + '</span>' +
+                            '<a href="/notifications" style="text-decoration : none">' +
+                              '<i class="fa fa-envelope"></i>&nbsp;&nbsp;' +
+                            '</a>' +
+                            '<span class="badge" style="background-color:darkred">' + 1 + '</span>' +                            
                           '</li>' +
                           '<li>|</li>' +
                           '<li><a onclick="signOut()">Sign Out</a>' +

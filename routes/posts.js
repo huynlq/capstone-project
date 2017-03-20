@@ -108,7 +108,7 @@ router.get('/:id', function(req, res, next) {
         res.render('page_404');
     collection.findOne({ '_id' : req.params.id },{},function(e,docs){
         if(docs) {
-            res.render('posts/post_details', { title: 'Charity Event | ' + docs.postName, 'docs': docs });
+            res.render('guest_page/post_details', { title: 'Charity Event | ' + docs.postName, 'docs': docs });
         } else {
             res.render('page_404');
         }

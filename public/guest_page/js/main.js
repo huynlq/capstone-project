@@ -6,6 +6,7 @@ $(function(){
 
  	populateEvents();
  	populateSponsors();
+ 	populateNews();
 
 
 	/*  Gallery lightBox
@@ -86,13 +87,30 @@ $(function(){
 		        0:{
 		            items:1
 		        },
-		        500:{
+		        1000:{
 		        	items:2
 		        }
 		    }
 
 		});
 	}	
+
+	if( $("#news-carousel").length > 0 ) {
+		$("#news-carousel").owlCarousel({
+			 margin:25,
+			 stagePadding: 25,
+	   		 nav:true,
+	   		 navText: [
+		      "<i class='glyphicon glyphicon-chevron-left'></i>",
+		      "<i class='glyphicon glyphicon-chevron-right'></i>"
+		    ],
+		    responsive:{
+		        0:{
+		            items:1
+		        }
+		    }
+		});
+	}
 
 	 /* Contact form ajax Handler
     ================================================*/
@@ -281,6 +299,52 @@ function populateSponsors() {
         }
     });	
 }
+
+function populateNews() {
+	$.ajax({
+        url: '/posts/news',
+        dataType: 'json',
+        async: false,
+        success: function( data ) {
+        	var counter = 0;
+        	var content = "";
+        	var date = "";
+        	var dateString = "";
+        	$.each(data, function(){
+        		date = new Date(this.dateCreated);
+        		dateString =
+        			date.getHours() + ":" + (date.getMinutes()<10?'0':'') + date.getMinutes() + " " +
+        			date.getDate() + "/" + date.getMonth() + "/" + date.getFullYear();
+        		counter ++;
+        		content = 	'<li>' +
+							  '<div class="col-md-6 col-xs-12">' +
+							    '<a href="/posts/' + this._id + '"><div style="background-image:url(\'' + this.postImage + '\')" class="thumb"></div></a>' +
+							  '</div>' +
+							  '<div class="col-md-6 col-xs-12">' +
+							    '<a href="/posts/' + this._id + '"><h3 style="text-transform: uppercase;">' +
+							    	this.postName +
+							    '</h3></a>' +
+							    '<p>' + this.postShortDesc + '</p>' +
+							  '</div>' +
+							  '<div style="position:absolute; bottom: 20px; right: 0px">' +
+							  	'<span style="margin-right: 20px">' + dateString + '</span>' +
+							  	'<a href="/posts/' + this._id + '" class="btn btn-primary"><strong>Read More</strong></a>' +
+							  '</div>' +
+							'</li>';
+        		$('#news-carousel').html($('#news-carousel').html() + content);
+        	});        	
+        	if(counter < 1) {
+        		for(var i = counter; i <= 1; i++) {
+        			content = '<li></li>';
+        			$('#news-carousel').html($('#news-carousel').html() + content);
+        		}
+        	}
+        }
+    });	
+}
+
+//db.Posts.insert({'postName':'Announcement of New Page','postType':'News','postShortDesc': 'Testing News Like Usual','postContent':'<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero. Sed cursus ante dapibus diam. Sed nisi. Nulla quis sem at nibh elementum imperdiet. Duis sagittis ipsum. Praesent mauris. Fusce nec tellus sed augue semper porta. Mauris massa. Vestibulum lacinia arcu eget nulla. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Curabitur sodales ligula in libero. </p><p>Sed dignissim lacinia nunc. Curabitur tortor. Pellentesque nibh. Aenean quam. In scelerisque sem at dolor. Maecenas mattis. Sed convallis tristique sem. Proin ut ligula vel nunc egestas porttitor. Morbi lectus risus, iaculis vel, suscipit quis, luctus non, massa. Fusce ac turpis quis ligula lacinia aliquet. Mauris ipsum. </p><p>Nulla metus metus, ullamcorper vel, tincidunt sed, euismod in, nibh. Quisque volutpat condimentum velit. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Nam nec ante. Sed lacinia, urna non tincidunt mattis, tortor neque adipiscing diam, a cursus ipsum ante quis turpis. Nulla facilisi. Ut fringilla. Suspendisse potenti. Nunc feugiat mi a tellus consequat imperdiet. Vestibulum sapien. Proin quam. </p><p>Etiam ultrices. Suspendisse in justo eu magna luctus suscipit. Sed lectus. Integer euismod lacus luctus magna. Quisque cursus, metus vitae pharetra auctor, sem massa mattis sem, at interdum magna augue eget diam. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Morbi lacinia molestie dui. Praesent blandit dolor. Sed non quam. In vel mi sit amet augue congue elementum. Morbi in ipsum sit amet pede facilisis laoreet. Donec lacus nunc, viverra nec, blandit vel, egestas et, augue. Vestibulum tincidunt malesuada tellus. Ut ultrices ultrices enim. Curabitur sit amet mauris. </p><p>Morbi in dui quis est pulvinar ullamcorper. Nulla facilisi. Integer lacinia sollicitudin massa. Cras metus. Sed aliquet risus a tortor. Integer id quam. Morbi mi. Quisque nisl felis, venenatis tristique, dignissim in, ultrices sit amet, augue. Proin sodales libero eget ante. Nulla quam. Aenean laoreet. Vestibulum nisi lectus, commodo ac, facilisis ac, ultricies eu, pede. Ut orci risus, accumsan porttitor, cursus quis, aliquet eget, justo. </p>','postImage':'/images/event/837da2f71c5143e6959267c9e6653a5b.jpeg','userId':'58c2969f0637fb97d8eadf28','dateCreated':new Date()});
+
 
 function populateEvents() {
 	var counter = 0;

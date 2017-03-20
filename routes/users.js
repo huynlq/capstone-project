@@ -155,7 +155,7 @@ router.post('/updateuserimage', uploading.single('displayImage'), function(req, 
 router.post('/updatecompanyimage', uploading.any(), function(req, res) { 
     var user = req.cookies.user;
     if(user != null && req.file != null) {
-        if(req.file.path != null) {
+        if(req.file.path != null && req.file.path != '') {
             fs.readFile(req.file.path, function (err, data) {
                 var db = req.db;
                 var collection = db.get('Users');
@@ -216,19 +216,23 @@ router.post('/updatemyuserinfo', uploading.single('displayUserImage'), function(
         var db = req.db;
         var collection = db.get('Users')
         collection.findOne({'_id': new ObjectId(user)},{},function(e,docs){
-            if(req.file != null) {
+            if(req.file != null && req.file != '') {
 
                 var extension = req.file.mimetype.split("/")[1];
                 var path = "/images/user/" + req.file.filename;
                 var savePath = "public" + path;
 
-                fs.unlink("public" + docs.image);
+                if(docs.image != null && docs.image != '') {
+                    fs.unlink("public" + docs.image);
+                }
 
                 fs.readFile(req.file.path, function (err, data) {
                     fs.writeFile(savePath, data);
                 });
 
                 req.body.image = path;
+            } else {
+                req.body.image = docs.image;
             }
 
             collection.update({ '_id' : user }, { $set: req.body}, function(err) {
@@ -250,14 +254,16 @@ router.post('/updatemycompanyinfo', uploading.single('displayCompanyImage'), fun
         var db = req.db;
         var collection = db.get('Users')
         collection.findOne({'_id': new ObjectId(user)},{},function(e,docs){
-            if(req.file != null) {
+            if(req.file != null && req.file != '') {
                 console.log("HEY");
 
                 var extension = req.file.mimetype.split("/")[1];
                 var path = "/images/user/" + req.file.filename;
                 var savePath = "public" + path;
 
-                fs.unlink("public" + docs.companyImage);
+                if(docs.comapnyImage != null && docs.comapnyImage != '') {
+                    fs.unlink("public" + docs.companyImage);    
+                }
 
                 fs.readFile(req.file.path, function (err, data) {
                     console.log("HO");
@@ -266,13 +272,16 @@ router.post('/updatemycompanyinfo', uploading.single('displayCompanyImage'), fun
                 });
 
                 req.body.companyImage = path;
+            } else {
+                req.body.companyImage = docs.companyImage;
             }
 
             collection.update({ '_id' : user }, { $set: req.body}, function(err) {
                 if(err === null) {
-                    res.render('users/my_user_page', { title: "Charity Project | User Page" });
+                    res.writeHead(302, {'Location': '/my'});
+                    res.end();
                 } else {
-                    res.send({ msg:'error: ' + err, 'message': 'An error occured. Please try again.' });
+                    alert(err);
                 }
             });
         });
@@ -287,7 +296,7 @@ router.get('/:id', function(req, res, next) {
         res.render('page_404');
     collection.findOne({ '_id' : req.params.id },{},function(e,docs){
         if(docs) {
-            res.render('users/user_details', { title: 'Charity Event | ' + docs.username + '\'s Page', 'docs': docs });
+            res.render('guest_page/user_page', { title: 'Charity Event | ' + docs.username + '\'s Page', 'docs': docs });
         } else {
             res.render('page_404');
         }

@@ -1,0 +1,187 @@
+extends layout
+
+block content
+	doctype html
+	html.no-js
+		head
+			meta(charset='utf-8')
+			title About | Charity / Non-profit responsive Bootstrap HTML5 template
+			meta(name='description', content='')
+			meta(name='viewport', content='width=device-width, initial-scale=1')
+			// Fonts
+			link(href='http://fonts.googleapis.com/css?family=Open+Sans:400,300,700', rel='stylesheet', type='text/css')
+			link(href='http://fonts.googleapis.com/css?family=Dosis:400,700', rel='stylesheet', type='text/css')
+			// Bootsrap
+			link(rel='stylesheet', href='/guest_page/css/bootstrap.min.css')
+			// Font awesome
+			link(rel='stylesheet', href='/guest_page/css/font-awesome.min.css')
+			// Template main Css
+			link(rel='stylesheet', href='/guest_page/css/style.css')
+			// Modernizr
+			script(src='/guest_page/js/modernizr-2.6.2.min.js')
+		body
+			.row(style="height:80px")
+			.page-heading.text-center
+				.container.zoomIn.animated
+					h1.page-title
+						| ABOUT US 
+						span.title-under
+					p.page-description
+						| Lorem ipsum dolor sit amet, consectetur adipisicing elit Necessitatibus.
+			.main-container
+				.container
+					.row.fadeIn.animated
+						.col-md-6
+							img.img-responsive(src='/guest_page/images/about-us.jpg', alt='')
+						.col-md-6
+							h2.title-style-2
+								| ABOUT VEP
+								span.title-under
+							p
+								strong VEP 
+								| is a non-profit, events creating portal that helps connecting sponsors and volunteers to establish a mutual trust between them, so that producers can host events easier and more effectively.
+							p
+								| We are a team consists of five university students who desire to join hands in creating and building a better world for communities and societies.
+					// /.row
+					.section-home.about-us
+						.row
+							ul.nav.nav-tabs(style="border:none")
+								li.col-md-3.col-sm-6.col-xs-6
+									a(href="#mission" aria-controls="mission" data-toggle="tab")
+										.about-us-col(style="height:200px")
+											.col-icon-wrapper
+												img(src='/guest_page/images/icons/our-mission-icon.png', alt='')
+											h3.col-title our mission
+								li.col-md-3.col-sm-6.col-xs-6
+									a(href="#help" aria-controls="help" data-toggle="tab")
+										.about-us-col(style="height:200px")
+											.col-icon-wrapper
+												img(src='/guest_page/images/icons/make-donation-icon.png', alt='')
+											h3.col-title Help Us
+								li.col-md-3.col-sm-6.col-xs-6
+									a(href="#join" aria-controls="join" data-toggle="tab")
+										.about-us-col(style="height:200px")
+											.col-icon-wrapper
+												img(src='/guest_page/images/icons/help-icon.png', alt='')
+											h3.col-title Join Us
+								li.col-md-3.col-sm-6.col-xs-6
+									a(href="#create" aria-controls="create" data-toggle="tab")
+										.about-us-col(style="height:200px")
+											.col-icon-wrapper
+												img(src='/guest_page/images/icons/programs-icon.png', alt='')
+											h3.col-title Create Your Event
+							.tab-content(style="margin: 50px;")
+								#mission.tab-pane.active.animate-onscroll.fadeIn(role='tabpanel')
+									| Lorem ipsum dolor sit amet, consectetur adipisicing elit. In consequatur mollitia, libero quisquam impedit obcaecati, dignissimos, eum similique minima ab amet eos sequi distinctio qui modi? Possimus quos, fugit quia.
+								#help.tab-pane.animate-onscroll.fadeIn(role='tabpanel')
+									| Lorem ipsum dolor sit amet, consectetur adipisicing elit. Molestiae aut culpa a commodi. Quidem asperiores aliquid sequi incidunt quas soluta eum ab fugiat deleniti in at iste, illum ipsam nisi.
+								#join.tab-pane.animate-onscroll.fadeIn(role='tabpanel')
+									| Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ex aliquam corrupti quibusdam nostrum, aspernatur iure illo, alias vitae, reiciendis culpa explicabo minus iusto ipsum cum tempore incidunt iste praesentium nihil.
+								#create.tab-pane.animate-onscroll.fadeIn(role='tabpanel')
+									| Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ea ducimus ullam distinctio fugiat voluptates! Vero quis adipisci asperiores aliquam ullam doloremque dolor, reprehenderit, accusamus nisi ut eveniet quas reiciendis dolore.
+
+						// /.row
+				// /.about-us
+				.our-team.animate-onscroll.fadeIn
+					.container
+						h2.title-style-1
+							| Our Team 
+							span.title-under
+						.row
+							.col-md-4.col-sm-6.col-xs-6
+								.team-member
+									.thumnail
+										img.cause-img(src='/guest_page/images/team/member-1.jpg', alt='')
+									h4.member-name
+										a(href='#') Robert C. Numbers
+									.member-position
+										| CO-FOUNDER
+									.btn-holder(style="position:inherit")
+										a.btn(href='#')
+											i.fa.fa-envelope
+										a.btn(href='#')
+											i.fa.fa-phone
+										a.btn(href='#')
+											i.fa.fa-facebook
+								// /.team-member
+							.col-md-4.col-sm-6.col-xs-6
+								.team-member
+									.thumnail
+										img.cause-img(src='/guest_page/images/team/member-3.jpg', alt='')
+									h4.member-name
+										a(href='#') Marjorie R. Echevarria
+									.member-position
+										| CO-FOUNDER
+									.btn-holder(style="position:inherit")
+										a.btn(href='#')
+											i.fa.fa-envelope
+										a.btn(href='#')
+											i.fa.fa-phone
+										a.btn(href='#')
+											i.fa.fa-facebook
+								// /.team-member
+							.col-md-4.col-sm-6.col-xs-6
+								.team-member
+									.thumnail
+										img.cause-img(src='/guest_page/images/team/member-4.jpg', alt='')
+									h4.member-name
+										a(href='#') Allison J. Falls
+									.member-position
+										| CO-FOUNDER
+									.btn-holder(style="position:inherit")
+										a.btn(href='#')
+											i.fa.fa-envelope
+										a.btn(href='#')
+											i.fa.fa-phone
+										a.btn(href='#')
+											i.fa.fa-facebook
+								// /.team-member							
+							.col-md-4.col-sm-6.col-xs-6
+								.team-member
+									.thumnail
+										img.cause-img(src='/guest_page/images/team/member-2.jpg', alt='')
+									h4.member-name
+										a(href='#') Bryan B. Stevens
+									.member-position
+										| CO-FOUNDER
+									.btn-holder(style="position:inherit")
+										a.btn(href='#')
+											i.fa.fa-envelope
+										a.btn(href='#')
+											i.fa.fa-phone
+										a.btn(href='#')
+											i.fa.fa-facebook
+								// /.team-member
+							.col-md-4.col-sm-6.col-xs-6
+								.team-member
+									.thumnail
+										img.cause-img(src='/guest_page/images/team/member-2.jpg', alt='')
+									h4.member-name
+										a(href='#') Bryan B. Stevens
+									.member-position
+										| CO-FOUNDER
+									.btn-holder(style="position:inherit")
+										a.btn(href='#')
+											i.fa.fa-envelope
+										a.btn(href='#')
+											i.fa.fa-phone
+										a.btn(href='#')
+											i.fa.fa-facebook
+								// /.team-member
+						// /.row
+			// jQuery
+			script(src='//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js')
+			script.
+				window.jQuery || document.write('<script src="/guest_page/js/jquery-1.11.1.min.js"><\\/script>')
+			// Bootsrap javascript file
+			script(src='/guest_page/js/bootstrap.min.js')
+			// Template main javascript
+			script(src='/guest_page/js/main.js')
+			// Google Analytics: change UA-XXXXX-X to be your site's ID.
+			script.
+				(function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=
+				function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;
+				e=o.createElement(i);r=o.getElementsByTagName(i)[0];
+				e.src='//www.google-analytics.com/analytics.js';
+				r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));
+				ga('create','UA-XXXXX-X');ga('send','pageview');
