@@ -155,14 +155,14 @@ function populateEventJoined() {
               if(eventData.status != "Cancelled") {
                 counter++;
                 var content = "" +
-                                '<div class="reasons-col fadeIn"><img src="' + eventData.eventImage + '" alt=""/>' +
+                                '<div class="reasons-col fadeIn" style="height: 350px; margin: 20px 0"><img src="' + eventData.eventImage + '" alt=""/>' +
                                 '<div class="reasons-titles">' +
                                   '<h3 class="reasons-title"><a href="/events/' + eventData._id + '">' + eventData.eventName + '<a/></h3>' +
                                   '<h5 class="reason-subtitle">' + eventData.meetingAddress + '</h5>' + 
                                   '<h4><i class="fa fa-clock-o"></i> ' + eventData.meetingTime + ' - <i class="fa fa-calendar"></i> ' + eventData.eventDate.split(' - ')[0] + '</h4>' +
                                 '</div>' +
                                 '<div class="on-hover hidden-xs">' +
-                                  '<p>' + eventData.eventDescription + '</p>' +
+                                  '<p>' + eventData.eventShortDescription + '</p>' +
                                 '</div>' +
                               '</div>' +
                               "";     
@@ -226,14 +226,14 @@ function populateEventProduced() {
             if(this.status != "Cancelled") {
               counter++;
               var content = "" +
-                              '<div class="reasons-col fadeIn"><img src="' + this.eventImage + '" alt=""/>' +
+                              '<div class="reasons-col fadeIn" style="height: 350px; margin: 20px 0"><img src="' + this.eventImage + '" alt=""/>' +
                               '<div class="reasons-titles">' +
                                 '<h3 class="reasons-title"><a href="/events/' + this._id + '">' + this.eventName + '<a/></h3>' +
                                 '<h5 class="reason-subtitle">' + this.meetingAddress + '</h5>' + 
                                 '<h4><i class="fa fa-clock-o"></i> ' + this.meetingTime + ' - <i class="fa fa-calendar"></i> ' + this.eventDate.split(' - ')[0] + '</h4>' +
                               '</div>' +
                               '<div class="on-hover hidden-xs">' +
-                                '<p>' + this.eventDescription + '</p>' +
+                                '<p>' + this.eventShortDescription + '</p>' +
                               '</div>' +
                             '</div>' +
                             "";     

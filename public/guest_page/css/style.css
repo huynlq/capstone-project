@@ -18,7 +18,7 @@ h1,
 h2,
 h3,
 h4 {
-  font-family: "Dosis", sans-serif;
+  
 }
 
 a {
@@ -460,7 +460,7 @@ a:hover, a:focus, a:active {
 /* Pages 
 ================================= */
 .page-heading {
-  background: url('../images/heading-bg.jpg?1428795369') no-repeat center;
+  background: url('/images/system/banner.jpg') no-repeat center;
   background-size: cover;
   min-height: 190px;
   color: #fff;

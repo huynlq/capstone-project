@@ -42,14 +42,14 @@ function populateEventJoined() {
               if(eventData.status != "Cancelled") {
                 counter++;
                 var content = "" +
-                                '<div class="reasons-col fadeIn"><img src="' + eventData.eventImage + '" alt=""/>' +
+                                '<div class="reasons-col fadeIn" style="height: 350px; margin: 20px 0"><img src="' + eventData.eventImage + '" alt=""/>' +
                                 '<div class="reasons-titles">' +
                                   '<h3 class="reasons-title"><a href="/events/' + eventData._id + '">' + eventData.eventName + '<a/></h3>' +
                                   '<h5 class="reason-subtitle">' + eventData.meetingAddress + '</h5>' + 
                                   '<h4><i class="fa fa-clock-o"></i> ' + eventData.meetingTime + ' - <i class="fa fa-calendar"></i> ' + eventData.eventDate.split(' - ')[0] + '</h4>' +
                                 '</div>' +
                                 '<div class="on-hover hidden-xs">' +
-                                  '<p>' + eventData.eventDescription + '</p>' +
+                                  '<p>' + eventData.eventShortDescription + '</p>' +
                                 '</div>' +
                               '</div>' +
                               "";     
@@ -63,7 +63,7 @@ function populateEventJoined() {
         }      
       });
 
-      if( counter > 0 ) {
+      if( counter > 1 ) {
         $("#joined-events").owlCarousel({
            margin:25,
            stagePadding: 25,
@@ -78,6 +78,26 @@ function populateEventJoined() {
                 },
                 1000:{
                   items:2
+                }
+            }
+
+        });
+      } else if (counter == 1) {
+        $("#joined-events").owlCarousel({
+           margin:25,
+           stagePadding: 25,
+           center:true,
+             nav:true,
+             navText: [
+              "<i class='glyphicon glyphicon-chevron-left'></i>",
+              "<i class='glyphicon glyphicon-chevron-right'></i>"
+            ],
+            responsive:{
+                0:{
+                    items:1
+                },
+                900:{
+                    items:2
                 }
             }
 
@@ -113,14 +133,14 @@ function populateEventProduced() {
             if(this.status != "Cancelled") {
               counter++;
               var content = "" +
-                              '<div class="reasons-col fadeIn"><img src="' + this.eventImage + '" alt=""/>' +
+                              '<div class="reasons-col fadeIn" style="height: 350px; margin: 20px 0"><img src="' + this.eventImage + '" alt=""/>' +
                               '<div class="reasons-titles">' +
                                 '<h3 class="reasons-title"><a href="/events/' + this._id + '">' + this.eventName + '<a/></h3>' +
                                 '<h5 class="reason-subtitle">' + this.meetingAddress + '</h5>' + 
                                 '<h4><i class="fa fa-clock-o"></i> ' + this.meetingTime + ' - <i class="fa fa-calendar"></i> ' + this.eventDate.split(' - ')[0] + '</h4>' +
                               '</div>' +
                               '<div class="on-hover hidden-xs">' +
-                                '<p>' + this.eventDescription + '</p>' +
+                                '<p>' + this.eventShortDescription + '</p>' +
                               '</div>' +
                             '</div>' +
                             "";     
@@ -133,7 +153,7 @@ function populateEventProduced() {
         }
       });
 
-      if( counter  > 0 ) {
+      if( counter  > 1 ) {
         $("#hosted-events").owlCarousel({
            margin:25,
            stagePadding: 25,
@@ -152,11 +172,28 @@ function populateEventProduced() {
             }
 
         });
+       } else if( counter == 1 ) {
+        $("#hosted-events").owlCarousel({
+           margin:25,
+           stagePadding: 25,
+           center:true,
+           nav:false,
+            responsive:{
+                0:{
+                    items:1
+                },
+                900:{
+                    items:2
+                }
+            }
+
+        });
       } else {
         $('#eventProduced-panel').html($('#eventProduced-panel').html() + '<center>None at the moment.</center>');
       }
     } else {
       $('#eventProduced-panel').html('');
+      $('#companyInfoDiv').html('');
     }
   });  
 }

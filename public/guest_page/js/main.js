@@ -388,7 +388,9 @@ function populateEvents() {
 				var cd = CountDown(new Date(dayStart), new Date(dayEnd));
 
 		    	var content = "" +
-						        '<div class="reasons-col animate-onscroll fadeIn"><img src="' + this.eventImage + '" alt=""/>' +
+						        '<div class="reasons-col animate-onscroll fadeIn" style="height: 350px; margin: 20px 0">' +
+						          //'<div class="thumb" style="background-image:url(\'' + this.eventImage + '\'); height: 350px" />' +
+						          '<img src="' + this.eventImage + '" alt=""/>' +
 						          '<div id="event' + counter + 'Time" class="time">' +
 							      	  cd + 
 							      '</div>' +
@@ -398,7 +400,7 @@ function populateEvents() {
 								    '<h4><i class="fa fa-clock-o"></i> ' + this.meetingTime + ' - <i class="fa fa-calendar"></i> ' + this.eventDate.split(' - ')[0] + '</h4>' +
 								  '</div>' +
 								  '<div class="on-hover hidden-xs">' +
-								    '<p>' + this.eventDescription + '</p>' +
+								    '<p>' + this.eventShortDescription + '</p>' +
 								  '</div>' +
 								'</div>' +
 					    	"";    	

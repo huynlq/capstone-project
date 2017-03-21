@@ -7,8 +7,6 @@ html
 		link(href='/vendors/jquery-ui-1.12.1/jquery-ui.css', rel='stylesheet')
 		script(src='/vendors/jquery-ui-1.12.1/jquery-ui.js')
 		script(src='/guest_page/js/layout.js')
-		// Countdown JS
-		script(src='/vendors/countdown/countdown.js')
 	body
 		header.main-header
 				nav.navbar.navbar-static-top.navbar-inverse(data-spy="affix")
@@ -43,8 +41,8 @@ html
 									span.icon-bar
 								a.navbar-brand(href='/')
 									img(src='/guest_page/images/sadaka-logo.png', alt='')
-							.navbar-collapse.collapse.pull-right
-								ul#navbar-below.nav.navbar-nav
+							#navbar.navbar-collapse.collapse.pull-right
+								ul.nav.navbar-nav
 									li
 										a(href='/') HOME
 									li
@@ -54,7 +52,16 @@ html
 									li
 										a(href='/sponsors_list') SPONSORS
 									li
-										a(href='gallery.html') GALLERY																			
+										a(href='gallery.html') GALLERY									
+										ul.submenu
+											li.submenu-item
+												a(href='causes.html') Causes list 
+											li.submenu-item
+												a(href='causes-single.html') Single cause 
+											li.submenu-item
+												a(href='causes-single.html') Single cause 
+											li.submenu-item
+												a(href='causes-single.html') Single cause 
 									li
 										a(href='contact.html') CONTACT
 							// /#navbar

@@ -1,0 +1,158 @@
+extends ../guest_page/layout
+
+block content
+	doctype html
+	html.no-js
+		head
+			meta(charset='utf-8')
+			title Single cause | Charity / Non-profit responsive Bootstrap HTML5 template
+			meta(name='description', content='')
+			meta(name='viewport', content='width=device-width, initial-scale=1')
+			// Fonts
+			link(href='http://fonts.googleapis.com/css?family=Open+Sans:400,300,700', rel='stylesheet', type='text/css')
+			link(href='http://fonts.googleapis.com/css?family=Dosis:400,700', rel='stylesheet', type='text/css')
+			// Bootsrap
+			link(rel='stylesheet', href='/guest_page/css/bootstrap.min.css')
+			// Font awesome
+			link(rel='stylesheet', href='/guest_page/css/font-awesome.min.css')
+			// PrettyPhoto
+			link(rel='stylesheet', href='/guest_page/css/prettyPhoto.css')
+			// bootstrap-daterangepicker
+			link(href='/vendors/bootstrap-daterangepicker/daterangepicker.css', rel='stylesheet')
+			// Datatables
+			link(href='/vendors/datatables.net-bs/css/dataTables.bootstrap.min.css', rel='stylesheet')
+			link(href='/vendors/datatables.net-buttons-bs/css/buttons.bootstrap.min.css', rel='stylesheet')
+			link(href='/vendors/datatables.net-fixedheader-bs/css/fixedHeader.bootstrap.min.css', rel='stylesheet')
+			link(href='/vendors/datatables.net-responsive-bs/css/responsive.bootstrap.min.css', rel='stylesheet')
+			link(href='/vendors/datatables.net-scroller-bs/css/scroller.bootstrap.min.css', rel='stylesheet')			
+			// Template main Css
+			link(rel='stylesheet', href='/guest_page/css/style.css')
+			// Modernizr
+			script(src='/guest_page/js/modernizr-2.6.2.min.js')
+		body			
+			.row(style="height:80px")
+			.page-heading.text-center
+				.container.zoomIn.animated
+					h1.page-title(style="text-transform: uppercase;") Event Creator
+						span.title-under
+					p.page-description
+						| Create your very own event with our support!
+			.main-container
+				.container
+					.row
+						.col-md-12
+							h2.title-style-2
+								| Event Details
+								span.title-under
+							form(action="/events/addevent", method="post", enctype="multipart/form-data").form-horizontal.form-label-left
+								input#txtUserId(type='hidden', name='userId', value='#{docs.userId}')
+								input#txtEventId.form-control.col-md-7.col-xs-12(type='hidden', name="_id", value="#{docs._id}")
+								.form-group
+									label.control-label.col-md-3.col-sm-3.col-xs-12
+										| Event Name 
+										span.required *
+									.col-md-6.col-sm-6.col-xs-12
+										input#txtEventName.form-control.col-md-7.col-xs-12(type='text', required='required', name="eventName", value="#{docs.eventName}")
+								.form-group
+									label.control-label.col-md-3.col-sm-3.col-xs-12
+										| Event Date 
+										span.required *
+									.controls.col-md-3.col-sm-3.col-xs-12
+										.control-group
+											.controls
+												.input-prepend.input-group
+													span.add-on.input-group-addon
+														i.glyphicon.glyphicon-calendar.fa.fa-calendar
+													input#reservation.form-control(type='text', style='width: 200px', name='eventDate', value='#{docs.eventDate}')
+								.form-group
+									label.control-label.col-md-3.col-sm-3.col-xs-3
+										| Meeting Time 
+										span.required *
+									.col-md-6.col-sm-6.col-xs-12
+										input#txtMeetingTime.form-control(type='text', data-inputmask="'mask': '99:99'", name='meetingTime', value='#{docs.meetingTime}')
+								.form-group
+									label.control-label.col-md-3.col-sm-3.col-xs-12
+										| Meeting Address 
+										span.required *
+									.col-md-6.col-sm-6.col-xs-12
+										input#txtMeetingAddress.form-control.col-md-7.col-xs-12(placeholder='', type='text', autocomplete='on', runat='server', name='meetingAddress', value='#{docs.meetingAddress}')
+										input#txtMeetingAddressLat(type='hidden', name='meetingAddressLat', value='#{docs.meetingAddressLat}')
+										input#txtMeetingAddressLng(type='hidden', name='meetingAddressLng', value='#{docs.meetingAddressLng}')
+										#map.col-md-12.col-sm-12.col-xs-12(style='height:200px; margin-top: 20px')
+								.form-group
+									label.control-label.col-md-3.col-sm-3.col-xs-12
+										| Event Image 
+										span.required *								
+									.col-md-6.col-sm-6.col-xs-12								
+										.row
+											input#txtImageSrc(type="hidden", name="eventImage")									
+											input#inputEventImage.btn.btn-info.col-md-8.col-sm-8.col-xs-12(type="file", name="displayEventImage", accept=".png,.jpg,.jpeg")
+										.row
+											br
+											img#txtImage(src='#{docs.eventImage}', alt='Please chooose another image!', style='height: 150px; max-width: 300px; display:none')
+								.form-group
+									label.control-label.col-md-3.col-sm-3.col-xs-12
+										| Event Short Description 
+										span.required *
+									.col-md-6.col-sm-6.col-xs-12
+										textarea#txtShortDescription.resizable_textarea.form-control(style='height: 150px', name='eventShortDescription') #{docs.eventShortDescription}
+								.form-group
+									label.control-label.col-md-3.col-sm-3.col-xs-12
+										| Event Description 
+										span.required *
+									.col-md-6.col-sm-6.col-xs-12
+										textarea#txtDescription.mceEditor.resizable_textarea.form-control(style='height: 500px', name='eventDescription') #{docs.eventDescription}
+								br						
+								hr
+								.row
+									.col-md-7.col-sm-7
+									.col-md-2.col-sm-2.col-xs-12
+										button.btn.btn-info.col-xs-12(type='submit') Continue >>	
+			// Bootsrap javascript file
+			script(src='/guest_page/js/bootstrap.min.js')
+			// PrettyPhoto javascript file
+			script(src='/guest_page/js/jquery.prettyPhoto.js')
+			// Google map
+			script(src='https://maps.googleapis.com/maps/api/js?key=AIzaSyAxUeMBUbKnW-LKTWTIL656w7nHABuNMTI&libraries=places')
+			// Datatables
+			script(src='/vendors/datatables.net/js/jquery.dataTables.min.js')
+			script(src='/vendors/datatables.net-bs/js/dataTables.bootstrap.min.js')
+			script(src='/vendors/datatables.net-buttons/js/dataTables.buttons.min.js')
+			script(src='/vendors/datatables.net-buttons-bs/js/buttons.bootstrap.min.js')
+			script(src='/vendors/datatables.net-buttons/js/buttons.flash.min.js')
+			script(src='/vendors/datatables.net-buttons/js/buttons.html5.min.js')
+			script(src='/vendors/datatables.net-buttons/js/buttons.print.min.js')
+			script(src='/vendors/datatables.net-fixedheader/js/dataTables.fixedHeader.min.js')
+			script(src='/vendors/datatables.net-keytable/js/dataTables.keyTable.min.js')
+			script(src='/vendors/datatables.net-responsive/js/dataTables.responsive.min.js')
+			script(src='/vendors/datatables.net-responsive-bs/js/responsive.bootstrap.js')
+			script(src='/vendors/datatables.net-scroller/js/dataTables.scroller.min.js')
+			script(src='/vendors/jszip/dist/jszip.min.js')
+			script(src='/vendors/pdfmake/build/pdfmake.min.js')
+			script(src='/vendors/pdfmake/build/vfs_fonts.js')			
+			// Flot
+			script(src='/vendors/Flot/jquery.flot.js')
+			script(src='/vendors/Flot/jquery.flot.pie.js')
+			script(src='/vendors/Flot/jquery.flot.time.js')
+			script(src='/vendors/Flot/jquery.flot.stack.js')
+			script(src='/vendors/Flot/jquery.flot.resize.js')
+			// bootstrap-daterangepicker
+			script(src='	/vendors/moment/min/moment.min.js')
+			script(src='	/vendors/bootstrap-daterangepicker/daterangepicker.js')
+			// jquery.inputmask
+			script(src='	/vendors/jquery.inputmask/dist/min/jquery.inputmask.bundle.min.js')
+			// DateJS
+			script(src='/vendors/DateJS/build/date.js')
+			// TinyMCE
+			script(src='/vendors/tinymce/tinymce.min.js')
+			// Template main javascript
+			script(src='/producer_page/js/event_creator.js')
+			script(src='/javascripts/global.js')
+			// Google Analytics: change UA-XXXXX-X to be your site's ID.
+			script.
+				(function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=
+				function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;
+				e=o.createElement(i);r=o.getElementsByTagName(i)[0];
+				e.src='//www.google-analytics.com/analytics.js';
+				r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));
+				ga('create','UA-XXXXX-X');ga('send','pageview');

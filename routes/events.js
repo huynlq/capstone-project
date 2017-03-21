@@ -33,17 +33,63 @@ router.get('/list', function(req, res, next) {
 
 /* GET event creator page. */
 router.get('/creator_event', function(req, res, next) {
-  res.render('events/event_creator', { title: 'Event Creator' });
+    var docs = {
+        '_id' : '',
+        'eventName' : '',
+        'eventDescription' : '',
+        'eventDate' : '',
+        'meetingTime' : '',
+        'meetingAddress' : '',
+        'meetingAddressLat' : '',
+        'meetingAddressLng' : '',
+        'eventImage' : ''
+    }
+  res.render('producer_page/event_creator', { title: 'Event Creator', 'docs': docs });
 });
 
 /* GET activity creator page. */
 router.get('/creator_activity', function(req, res, next) {
-  res.render('events/activity_creator', { title: 'Activity Creator' });
+    var docs = {
+        '_id' : ''
+    }
+  res.render('producer_page/activity_creator', { title: 'Activity Creator' , 'docs': docs});
 });
 
 /* GET event preview page. */
 router.get('/creator_preview', function(req, res, next) {
-  res.render('events/event_preview', { title: 'Event Preview' });
+  res.render('producer_page/event_preview', { title: 'Event Preview' });
+});
+
+/* GET event edit page. */
+router.get('/edit/:id', function(req, res, next) {
+    var db = req.db;
+    var collection = db.get('Events');
+    if(req.params.id.length != 24)
+        res.render('page_404');
+    collection.findOne({ '_id' : req.params.id },{},function(e,docs){
+        console.log(docs);
+        if(docs) {
+            res.render('producer_page/event_creator', { title: 'Edit Event', 'docs': docs });
+        } else {
+            res.render('page_404');
+        }
+    });
+});
+
+/* GET activities edit page. */
+router.get('/edit_activities/:id', function(req, res, next) {
+    var db = req.db;
+    var collection = db.get('Events');
+    if(req.params.id.length != 24)
+        res.render('page_404');
+    collection.findOne({ '_id' : req.params.id },{},function(e,docs){
+        console.log(docs);
+        if(docs) {
+            res.render('producer_page/activity_creator', { title: 'Edit Event Activities', 'docs': docs });
+        } else {
+            res.render('page_404');
+        }
+    });
 });
 
 /* GET event update page. */
@@ -63,9 +109,6 @@ router.get('/update/:id', function(req, res, next) {
 
 /* POST new event. */
 router.post('/addevent', uploading.single('displayEventImage'), function(req, res) {
-    console.log(req.file);
-    console.log(req.body);
-
     req.body.status = "Draft";
     req.body.dateCreated = new Date().toString();
     req.body.dateModified = new Date().toString();
@@ -76,33 +119,60 @@ router.post('/addevent', uploading.single('displayEventImage'), function(req, re
         var collection = db.get('Users');
 
         collection.findOne({'_id': new ObjectId(user)},{},function(e,docs){
-            var username = docs.username;
-            if(req.file != null) {
-                var extension = req.file.mimetype.split("/")[1];
-                var path = "/images/event/" + req.file.filename + "." + extension;
-                var savePath = "public" + path;
+            var username = docs.username;        
+                if(req.body._id == "") {
+                    if(req.file != null) {
+                        var extension = req.file.mimetype.split("/")[1];
+                        var path = "/images/event/" + req.file.filename + "." + extension;
+                        var savePath = "public" + path;                
 
-                req.body.eventImage = path;
+                        delete req.body._id;
 
-                fs.readFile(req.file.path, function (err, data) {
-                    fs.writeFile(savePath, data);
-                });
+                        req.body.eventImage = path;
 
-                collection = db.get('Events');
-                
-                collection.insert(req.body, function(err, result){
-                    if(err === null) {                        
-                        res.cookie('eventId',result._id.toString(), { maxAge: 900000, httpOnly: false });
-                        res.writeHead(302, {
-                          'Location': '/events/creator_activity',
-                          'eventId': result._id
+                        fs.readFile(req.file.path, function (err, data) {
+                            fs.writeFile(savePath, data);
                         });
-                        res.end();
+
+                        collection = db.get('Events');
+                    
+                        collection.insert(req.body, function(err, result){
+                            if(err === null) {                        
+                                res.cookie('eventId',result._id.toString(), { maxAge: 900000, httpOnly: false });
+                                res.writeHead(302, {
+                                  'Location': '/events/creator_activity',
+                                  'eventId': result._id
+                                });
+                                res.end();
+                            } else {
+                                res.send({msg: err});
+                            }
+                        });
+                    }                    
+                } else {
+                    if(req.file != null) {
+                        var extension = req.file.mimetype.split("/")[1];
+                        var path = "/images/event/" + req.file.filename + "." + extension;
+                        var savePath = "public" + path;                
+
+                        req.body.eventImage = path;
+
+                        fs.readFile(req.file.path, function (err, data) {
+                            fs.writeFile(savePath, data);
+                        });
                     } else {
-                        res.send({msg: err});
+                        delete req.body.eventImage;
                     }
-                });
-            }
+
+                    collection = db.get('Events');
+                    
+                    collection.update({'_id': req.body._id}, { $set: req.body}, function(err, result){
+                        if(err === null) {                             
+                            res.writeHead(302, {'Location': '/events/edit_activities/' + req.body._id});
+                            res.end();
+                        }
+                    });
+                }                
         });
     }                    
 });
@@ -182,6 +252,15 @@ router.put('/updateactivity/:id', function(req, res) {
     var collection = db.get('Activities');
     collection.update({ '_id' : req.params.id }, { $set: req.body}, function(err) {
         res.send((err === null) ? { msg: ''} : { msg:'error: ' + err});
+    });
+});
+
+/* DELETE all activities by eventId. */
+router.delete('/removeactivities/:id', function(req, res) {
+    var db = req.db;
+    var collection = db.get('Activities');
+    collection.remove({ 'eventId' : req.params.id }, function(err) {
+        res.send((err === null) ? { msg: '' } : { msg:'error: ' + err });
     });
 });
 

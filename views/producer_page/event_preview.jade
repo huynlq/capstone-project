@@ -31,18 +31,17 @@ block content
 			.row(style="height:80px")
 			.page-heading.text-center
 				.container.zoomIn.animated
-					h1.page-title(style="text-transform: uppercase;") #{docs.eventName}
+					h1.page-title(style="text-transform: uppercase;")#event-title
 						span.title-under
 					p.page-description
-						| Give us a hand and join this project.
+						| This is a preview of your event, it's not published yet.
 			.main-container
 				.container
 					.row
 						.col-md-8.col-xs-12.fadeIn.animated
-							img(src='#{docs.eventImage}', alt='', style="max-width:100%")
+							img#eventImage(src='', alt='', style="max-width:100%")
 							.timePane(style="right: 0")
 								.month-time.fleft
-									span#event-date(style="display:none")
 									span.day.fleft#eventDay
 									span.month#eventMonthYear
 									br
@@ -55,10 +54,9 @@ block content
 							table.table.table-responsive.table-striped
 								tbody
 									tr
-										td(style="text-align: center; vertical-align: middle; width:30%", rowspan="4")		
-											input#txtProducerId(type="hidden", value="#{docs.userId}")
+										td(style="text-align: center; vertical-align: middle; width:30%", rowspan="4")
 											a#linkCompany(href="#")									
-												img#txtCompanyImageSrc(src='#', alt='No company image!', style="max-width: 100%")
+												img#txtCompanyImageSrc(src='', alt='No company image!', style="max-width: 100%")
 									tr
 										td(style="text-align: right; width: 50px")
 											i.fa.fa-user(style="font-weight:bold")  :
@@ -77,7 +75,7 @@ block content
 							h2.title-style-2
 								| Location
 								span.title-under
-							p #{docs.meetingAddress}
+							p#meetingAddress
 							#map(style='height:200px; margin: 0; width: 100%')
 					br
 					.row.fadeIn.animated
@@ -85,7 +83,7 @@ block content
 							h2.title-style-2
 								| Description
 								span.title-under
-							p#eventDescription					
+							p#eventDescription				
 					.row
 						.col-md-12.col-xs-12.fadeIn.animate-onscroll
 							h2.title-style-2
@@ -94,14 +92,14 @@ block content
 							div(role='tabpanel')
 								#activityPane
 					.row
-						#eventSummary.col-md-12.col-xs-12.fadeIn.animate-onscroll
+						.col-md-12.col-xs-12.fadeIn.animate-onscroll
 							.col-md-3
 							.col-md-3.col-xs-11
-								a.btn.btn-info(style="background-color:#1f76bd; width: 100%")
-									strong PARTICIPATE
+								a#btnEditEvent.btn.btn-info(style="background-color:#1f76bd; width: 100%")
+									strong << EDIT
 							.col-md-3.col-xs-11
-								a.btn.btn-info(style="background-color:#1f76bd; width: 100%")
-									strong DONATE
+								a#btnFinishEvent.btn.btn-info(style="background-color:#1f76bd; width: 100%", onclick="goNext()")
+									strong FINISH >>
 			// jQuery
 			script(src='//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js')
 			script.
@@ -132,7 +130,7 @@ block content
 			script(src='/vendors/countdown/countdown.js')
 			// Template main javascript
 			script(src='/guest_page/js/main.js')
-			script(src='/guest_page/js/event_details.js')
+			script(src='/producer_page/js/event_preview.js')
 			// Google Analytics: change UA-XXXXX-X to be your site's ID.
 			script.
 				(function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=

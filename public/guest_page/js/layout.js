@@ -19,6 +19,14 @@ $(document).ready(function() {
                           '</li>');
         $('#navbar-user').html("Welcome, " + data.username);
         $('#navbar-signlink').html("<a onclick='signOut()'>Sign Out</a>");
+        if(data.role == "Producer") {
+          $('#navbar-below').html($('#navbar-below').html() + '<li><a>PRODUCER</a>' +
+                                                                '<ul class="submenu">' +
+                                                                  '<li class="submenu-item"><a href="/events">Event List</a></li>' +
+                                                                  '<li class="submenu-item"><a href="/events/creator_event">Create New Event</a></li>' +
+                                                                '</ul>' +
+                                                              '</li>');
+        }
       });
     }
 });

@@ -223,7 +223,12 @@ router.post('/updatemyuserinfo', uploading.single('displayUserImage'), function(
                 var savePath = "public" + path;
 
                 if(docs.image != null && docs.image != '') {
-                    fs.unlink("public" + docs.image);
+                    try {
+                        fs.unlink("public" + docs.image);
+                    }
+                    catch(err) {
+                        console.log(err);
+                    }
                 }
 
                 fs.readFile(req.file.path, function (err, data) {
@@ -237,9 +242,10 @@ router.post('/updatemyuserinfo', uploading.single('displayUserImage'), function(
 
             collection.update({ '_id' : user }, { $set: req.body}, function(err) {
                 if(err === null) {
-                    res.render('users/my_user_page', { title: "Charity Project | User Page" });
+                    res.writeHead(302, {'Location': '/my'});
+                    res.end();
                 } else {
-                    res.send({ msg:'error: ' + err, 'message': 'An error occured. Please try again.' });
+                    alert(err);
                 }
             });
         });        
@@ -262,7 +268,12 @@ router.post('/updatemycompanyinfo', uploading.single('displayCompanyImage'), fun
                 var savePath = "public" + path;
 
                 if(docs.comapnyImage != null && docs.comapnyImage != '') {
-                    fs.unlink("public" + docs.companyImage);    
+                    try {
+                        fs.unlink("public" + docs.companyImage);   
+                    }
+                    catch(err) {
+                        console.log(err);
+                    }                    
                 }
 
                 fs.readFile(req.file.path, function (err, data) {
