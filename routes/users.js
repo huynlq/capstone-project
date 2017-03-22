@@ -22,7 +22,7 @@ var uploading = multer({
 
 /* GET users listing. */
 router.get('/', function(req, res, next) {
-  res.render('users/user_list', { title: 'Users Manager' });
+  res.render('admin_page/user_list', { title: 'Users Manager' });
 });
 
 /* GET event listing. */

@@ -48,7 +48,7 @@ block content
 									br
 									span.stime
 										strong#eventTime						
-						.col-md-4.col-xs-12.fadeIn.animate-onscroll
+						.col-md-4.col-xs-12
 							h2.title-style-2
 								| Posted by
 								span.title-under
@@ -74,6 +74,10 @@ block content
 											i.fa.fa-phone(style="font-weight:bold")  :
 										td
 											span#txtUserPhone
+							span#dateCreated(style="display:none") #{docs.dateCreated}
+							span#dateModified(style="display:none") #{docs.dateModified}
+							span#lastEditedUser(style="display:none") #{docs.lastEditedUser}
+							#editPostPane
 					br
 					.row.fadeIn.animated
 						.col-md-12

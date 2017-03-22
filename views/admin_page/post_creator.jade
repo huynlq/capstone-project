@@ -33,10 +33,8 @@ block content
 			.row(style="height:80px")
 			.page-heading.text-center
 				.container.zoomIn.animated
-					h1.page-title(style="text-transform: uppercase;") Event Creator
+					h1.page-title(style="text-transform: uppercase;") Post Creator
 						span.title-under
-					p.page-description
-						| Create your very own event with our support!
 			.main-container
 				.container
 					.row
@@ -44,75 +42,46 @@ block content
 							h2.title-style-2
 								| Event Details
 								span.title-under
-							form(action="/events/addevent", method="post", enctype="multipart/form-data").form-horizontal.form-label-left
+							form(action="/posts/addpost", method="post", enctype="multipart/form-data").form-horizontal.form-label-left
 								input#txtUserId(type='hidden', name='userId', value='#{docs.userId}')
-								input#txtEventId.form-control.col-md-7.col-xs-12(type='hidden', name="_id", value="#{docs._id}")
+								input#txtLastEditedUser(type='hidden', name='lastEditedUser', value='')
+								input#txtPostId.form-control.col-md-7.col-xs-12(type='hidden', name="_id", value="#{docs._id}")
 								.form-group
 									label.control-label.col-md-3.col-sm-3.col-xs-12
-										| Event Name 
+										| Title 
 										span.required *
 									.col-md-6.col-sm-6.col-xs-12
-										input#txtEventName.form-control.col-md-7.col-xs-12(type='text', required='required', name="eventName", value="#{docs.eventName}")
+										input#txtPostName.form-control.col-md-7.col-xs-12(type='text', required='required', name="postName", value="#{docs.postName}")
 								.form-group
 									label.control-label.col-md-3.col-sm-3.col-xs-12
-										| Event Date 
-										span.required *
-									.controls.col-md-3.col-sm-3.col-xs-12
-										.control-group
-											.controls
-												.input-prepend.input-group
-													span.add-on.input-group-addon
-														i.glyphicon.glyphicon-calendar.fa.fa-calendar
-													input#eventDate.form-control(type='text', style='width: 200px', name='eventDate', value='#{docs.eventDate}')
-								.form-group
-									label.control-label.col-md-3.col-sm-3.col-xs-12
-										| Participate Deadline
-										span.required *
-									.controls.col-md-3.col-sm-3.col-xs-12
-										.control-group
-											.controls
-												.input-prepend.input-group
-													span.add-on.input-group-addon
-														i.glyphicon.glyphicon-calendar.fa.fa-calendar
-													input#eventDeadline.form-control(type='text', style='width: 200px', name='eventDeadline', value='#{docs.eventDeadline}')
-								.form-group
-									label.control-label.col-md-3.col-sm-3.col-xs-3
-										| Meeting Time 
+										| Post To
 										span.required *
 									.col-md-6.col-sm-6.col-xs-12
-										input#txtMeetingTime.form-control(type='text', data-inputmask="'mask': '99:99'", name='meetingTime', value='#{docs.meetingTime}')
+										div#postType(style="display: none") #{docs.postType}
+										select#txtPostType.form-control(name="postType")
 								.form-group
 									label.control-label.col-md-3.col-sm-3.col-xs-12
-										| Meeting Address 
+										| Short Description
 										span.required *
 									.col-md-6.col-sm-6.col-xs-12
-										input#txtMeetingAddress.form-control.col-md-7.col-xs-12(placeholder='', type='text', autocomplete='on', runat='server', name='meetingAddress', value='#{docs.meetingAddress}')
-										input#txtMeetingAddressLat(type='hidden', name='meetingAddressLat', value='#{docs.meetingAddressLat}')
-										input#txtMeetingAddressLng(type='hidden', name='meetingAddressLng', value='#{docs.meetingAddressLng}')
-										#map.col-md-12.col-sm-12.col-xs-12(style='height:200px; margin-top: 20px')
+										textarea#txtDescription(name="postDescription", style="height: 200px; width: 100%") #{docs.postDescription}
 								.form-group
 									label.control-label.col-md-3.col-sm-3.col-xs-12
-										| Event Image 
+										| Content 
+										span.required *
+									.col-md-6.col-sm-6.col-xs-12
+										textarea#txtDescription.mceEditor(name="postContent", style="height: 500px") #{docs.postContent}
+								.form-group
+									label.control-label.col-md-3.col-sm-3.col-xs-12
+										| Image 
 										span.required *								
 									.col-md-6.col-sm-6.col-xs-12								
 										.row
-											input#txtImageSrc(type="hidden", name="eventImage")									
-											input#inputEventImage.btn.btn-info.col-md-8.col-sm-8.col-xs-12(type="file", name="displayEventImage", accept=".png,.jpg,.jpeg")
+											input#txtImageSrc(type="hidden", name="postImage")
+											input#inputPostImage.btn.btn-info.col-md-8.col-sm-8.col-xs-12(type="file", name="displayPostImage", accept=".png,.jpg,.jpeg")
 										.row
 											br
-											img#txtImage(src='#{docs.eventImage}', alt='Please chooose another image!', style='height: 150px; max-width: 300px; display:none')
-								.form-group
-									label.control-label.col-md-3.col-sm-3.col-xs-12
-										| Event Short Description 
-										span.required *
-									.col-md-6.col-sm-6.col-xs-12
-										textarea#txtShortDescription.resizable_textarea.form-control(style='height: 150px', name='eventShortDescription') #{docs.eventShortDescription}
-								.form-group
-									label.control-label.col-md-3.col-sm-3.col-xs-12
-										| Event Description 
-										span.required *
-									.col-md-6.col-sm-6.col-xs-12
-										textarea#txtDescription.mceEditor.resizable_textarea.form-control(style='height: 500px', name='eventDescription') #{docs.eventDescription}
+											img#txtImage(src='#{docs.postImage}', alt='Please chooose another image!', style='height: 150px; max-width: 300px; display:none')
 								br						
 								hr
 								.row
@@ -157,7 +126,7 @@ block content
 			// TinyMCE
 			script(src='/vendors/tinymce/tinymce.min.js')
 			// Template main javascript
-			script(src='/producer_page/js/event_creator.js')
+			script(src='/admin_page/js/post_creator.js')
 			script(src='/javascripts/global.js')
 			// Google Analytics: change UA-XXXXX-X to be your site's ID.
 			script.

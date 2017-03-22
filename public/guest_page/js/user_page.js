@@ -191,7 +191,7 @@ function populateEventProduced() {
       } else {
         $('#eventProduced-panel').html($('#eventProduced-panel').html() + '<center>None at the moment.</center>');
       }
-    } else {
+    } else if(data.role != "Sponsor") {
       $('#eventProduced-panel').html('');
       $('#companyInfoDiv').html('');
     }

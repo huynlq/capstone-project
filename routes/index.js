@@ -28,6 +28,11 @@ router.get('/sponsors_list', function(req, res, next) {
   res.render('guest_page/list_sponsors');
 });
 
+/* GET news list page. */
+router.get('/news_list', function(req, res, next) {
+  res.render('guest_page/list_posts');
+});
+
 /* GET sponsor list page. */
 router.get('/about', function(req, res, next) {
   res.render('guest_page/about_us');

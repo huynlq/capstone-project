@@ -22,14 +22,33 @@ $(document).ready(function() {
 
   populateAuthor();
   populateComments();
+  populateEditPane(postId);
 
-    $('#commentPane').on('click', 'a.linkeditcomment', editComment);
+  $('#commentPane').on('click', 'a.linkeditcomment', editComment);
   $('#commentPane').on('click', 'a.linkdeletecomment', deleteComment);  
+
+  
 });
 
 // Functions ===============================================
 
-function populateAuthor(postId) {
+function populateEditPane(postId) {
+  var content = "";  
+
+  if($('#dateCreated').html() != $('#dateModified').html()) {    
+    $.getJSON( '/users/id/' + $("#lastEditedUser").html(), function(data) {
+      var date = new Date($('#dateModified').html());
+      content += '<i style="float:right"><b>Last edited in ' + date.toLocaleString("vn", { date:"long"}) + ' by ' +
+                  '<a href="/users/' + data._id + '">' + data.username + '</a></b></i>';
+      $('#editPostPane').html(content);
+      if($('#txtUserId').val() == readCookie('user')) {
+        $('#editPostPane').html($('#editPostPane').html() + '<br><br><a class="col-sm-12 btn btn-info" href="/posts/updatepost/' + postId + '">Edit Post</a>');
+      }
+    });    
+  }
+}
+
+function populateAuthor() {
   $.getJSON( '/users/id/' + $("#txtUserId").val(), function(data) {
     $("#linkUser").attr('href', '/users/' + data._id);
     $('#txtUserImageSrc').attr('src', data.image);

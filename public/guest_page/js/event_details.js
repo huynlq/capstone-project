@@ -11,7 +11,7 @@ $(function(){
 		var date = new Date(data.eventDate.split(' - ')[0]);
 		$('#event-date').html(data.eventDate);
 		$('#eventDay').html(date.getDate());
-		$('#eventMonthYear').html(date.toLocaleString("en-us", { month: "long" }) + ', ' + date.getFullYear());
+		$('#eventMonthYear').html(date.toLocaleString("vi", { month: "long" }) + ', ' + date.getFullYear());
 		$('#eventTime').html(data.meetingTime);
 		$('#eventDescription').html(data.eventDescription.replace(/&lt;/g, '<').replace(/&gt;/g, '>'));
 		populateSummary(eventId);
@@ -19,7 +19,49 @@ $(function(){
 
 	populateActivities(eventId);
 	populateProducer(eventId);	
+	populateTimeline(eventId)
 });
+
+function populateTimeline(eventId) {
+  $.getJSON( '/events/details/' + eventId, function( data ) {     
+    var published = {'name':'Ngày tạo','date':new Date(data.dateCreated)};
+    var deadline = {'name':'Hạn chót','date':new Date(data.eventDeadline)};
+    var start = {'name':'Bắt đầu','date':new Date(data.eventDate.split(' - ')[0])};
+    var end = {'name':'Kết thúc','date':new Date(data.eventDate.split(' - ')[1])};
+    var now = {'name':'Hiện tại','date':new Date()};
+    var now2 = new Date();
+
+    var dates = [published, deadline, start, end, now];
+
+    dates.sort(function(a,b){
+      // Turn your strings into dates, and then subtract them
+      // to get a value that is either negative, positive, or zero.
+      return new Date(a.date.getTime()) - new Date(b.date.getTime());
+    });
+
+    var fullPercent = dates[4].date.getTime() - dates[0].date.getTime();
+    var part = 0;
+    var background = "#115c9b";
+    $('#progress-1').attr('aria-valuenow', '0%');
+    $('#tooltip-1').attr('title', dates[0].name + '<br>' + dates[0].date.toLocaleDateString()).tooltip('fixTitle').tooltip('show');
+    for(var i = 1; i <= 4; i++) {
+      part = parseFloat((dates[i].date.getTime() - dates[i - 1].date.getTime()) / fullPercent * 100);      
+      $('#progress-' + (i + 1)).attr('aria-valuenow', part + '%');
+      $('#progress-' + (i + 1)).attr('style', 'width: ' + part + '%;background: ' + background);
+      $('#tooltip-' + (i + 1)).attr('title', dates[i].name + '<br>' + dates[i].date.toLocaleDateString()).tooltip('fixTitle').tooltip('show');
+      if(dates[i].name == "Hiện tại") {
+        background = "none";
+        var now = i + 1;
+      }
+    }  
+    $('[data-toggle="tooltip"]').tooltip({trigger: 'manual'}).tooltip('show');
+
+    // $(".progress-bar").each(function(){
+    //   each_bar_width = $(this).attr('aria-valuenow');
+    //   $(this).width(each_bar_width);
+    // });
+  });  
+}
 
 function populateMap(data) {
 	console.log(data.eventName);
@@ -61,10 +103,10 @@ function populateActivities(eventId) {
 			        '<table class="table table-striped">' +
 			          '<thead>' +
 			            '<tr>' +
-			              '<th>Time</th>' +
-			              '<th>Place</th>' +
-			              '<th>Activity</th>' +
-			              '<th>Note</th>' +
+			              '<th>Thời gian</th>' +
+			              '<th>Địa điểm</th>' +
+			              '<th>Hoạt động</th>' +
+			              '<th>Ghi chú</th>' +
 			            '</tr>' +
 			          '</thead>' +
 			          '<tbody id="activity-table-content-day' + data[i].day + '">' +
@@ -108,21 +150,21 @@ function populateSummary(eventId) {
 		var content = "";
 			content =   '<hr><div class="page-heading text-center">' +
 							'<div class="container zoomIn animated">' +
-						    	'<h1 style="text-transform: uppercase;" class="page-title">THIS EVENT HAS ENDED.<span class="title-under"></span></h1>' +
-						    	'<p class="page-description">Thank you for your support.</p>' +
+						    	'<h1 style="text-transform: uppercase;" class="page-title">ĐÃ HẾT HẠN DĂNG KÍ.<span class="title-under"></span></h1>' +
+						    	'<p class="page-description">Cám ơn mọi người đã giúp đỡ.</p>' +
 						  	'</div>' +
 						'</div>' +
-						'<h2 class="title-style-2">Summary <span class="title-under"></span></h2>' +
+						'<h2 class="title-style-2">Thông tin <span class="title-under"></span></h2>' +
 						'<div class="row">'+
 							'<div class="col-md-6 col-sm-6 col-xs-12">' +
-								'<h3><strong>Donations</strong></h3>' +
+								'<h3><strong>Đóng góp</strong></h3>' +
 								'<table id="tableDonations" cellspacing="0" width="100%" class="table table-style-1 table-striped table-bordered dt-responsive nowrap datatable-responsive">' +
 									'<thead>' +
 										'<tr>' +
 											'<th>#</th>' +
-											'<th>Donator</th>' +
-											'<th>Donation Item</th>'+
-											'<th>Quantity</th>'+
+											'<th>Người góp</th>' +
+											'<th>Đồ quyên góp</th>'+
+											'<th>Số lượng</th>'+
 										'</tr>'+
 									'</thead>'+
 									'<tbody></tbody>'+
@@ -130,12 +172,12 @@ function populateSummary(eventId) {
 							'</div>' +
 							'<div class="col-md-1 col-sm-1 col-xs-12"></div>' +
 							'<div class="col-md-5 col-sm-5 col-xs-12">' +
-								'<h3><strong>Participants</strong></h3>' +
+								'<h3><strong>Người tham gia</strong></h3>' +
 								'<table id="tableParticipants" cellspacing="0" width="100%" class="table table-style-1 table-striped table-bordered dt-responsive nowrap datatable-responsive">'+
 									'<thead>'+
 										'<tr>'+
 											'<th>#</th>'+
-											'<th>Participant</th>'+
+											'<th>Tên</th>'+
 										'</tr>'+
 									'</thead>'+
 									'<tbody></tbody>'+
@@ -144,15 +186,15 @@ function populateSummary(eventId) {
 						'</div>' +
 						'<br>' +
 						'<div class="col-md-12 col-sm-12 col-xs-12">' +
-							'<h3><strong>Activity Costs</strong></h3>' +
+							'<h3><strong>Chi phí hoạt động</strong></h3>' +
 							'<table id="tableActivityCosts" cellspacing="0" width="100%" class="table table-style-1 table-striped table-bordered dt-responsive nowrap datatable-responsive">'+
 								'<thead>'+
 									'<tr>'+
 										'<th>#</th>'+
-										'<th>Day</th>'+
-										'<th>Place</th>'+
-										'<th>Activity</th>'+
-										'<th>Cost</th>'+
+										'<th>Ngày</th>'+
+										'<th>Địa điểm</th>'+
+										'<th>Hoạt động</th>'+
+										'<th>Chi phí</th>'+
 									'</tr>'+
 								'</thead>'+
 								'<tbody></tbody>'+

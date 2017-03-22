@@ -6,24 +6,34 @@ $(document).ready(function() {
 
     if(loginSession != '') {
       $.getJSON( '/users/id/' + loginSession, function( data ) {
-        $('#navbar').html('<li>Welcome, ' + data.username + '</li>' +
+        $('#navbar').html('<li>Xin chào, ' + data.username + '</li>' +
                           '<li>|</li>' +
-                          '<li class="has-child" id="navbar-notification">' +
-                            '<a href="/notifications" style="text-decoration : none">' +
-                              '<i class="fa fa-envelope"></i>&nbsp;&nbsp;' +
-                            '</a>' +
-                            '<span class="badge" style="background-color:darkred">' + 1 + '</span>' +                            
-                          '</li>' +
-                          '<li>|</li>' +
-                          '<li><a onclick="signOut()">Sign Out</a>' +
+                          '<li><a onclick="signOut()">Đăng xuất</a>' +
                           '</li>');
-        $('#navbar-user').html("Welcome, " + data.username);
-        $('#navbar-signlink').html("<a onclick='signOut()'>Sign Out</a>");
+        $('#navbar-user').html("Xin chào, " + data.username);
+        $('#navbar-signlink').html("<a onclick='signOut()'>Đăng xuất</a>");
         if(data.role == "Producer") {
-          $('#navbar-below').html($('#navbar-below').html() + '<li><a>PRODUCER</a>' +
+          $('#navbar-below').html($('#navbar-below').html() + '<li><a>QUYỀN BTC</a>' +
                                                                 '<ul class="submenu">' +
-                                                                  '<li class="submenu-item"><a href="/events">Event List</a></li>' +
-                                                                  '<li class="submenu-item"><a href="/events/creator_event">Create New Event</a></li>' +
+                                                                  '<li class="submenu-item"><a href="/my">Trang cá nhân</a></li>' +
+                                                                  '<li class="submenu-item"><a href="/events">Quản lý sự kiện</a></li>' +
+                                                                  '<li class="submenu-item"><a href="/events/creator_event">Tạo sự kiện</a></li>' +
+                                                                '</ul>' +
+                                                              '</li>');
+        } else if(data.role == "Admin") {
+          $('#navbar-below').html($('#navbar-below').html() + '<li><a>QUYỀN ADMIN</a>' +
+                                                                '<ul class="submenu">' +
+                                                                  '<li class="submenu-item"><a href="/my">Trang cá nhân</a></li>' +
+                                                                  '<li class="submenu-item"><a href="/users">Quản lý người dùng</a></li>' +
+                                                                  '<li class="submenu-item"><a href="/events">Quản lý sự kiện</a></li>' +
+                                                                  '<li class="submenu-item"><a href="/posts">Quan lý bài viết</a></li>' +
+                                                                  '<li class="submenu-item"><a href="/posts/creator">Tạo bài viết</a></li>' +                                                                  
+                                                                '</ul>' +
+                                                              '</li>');
+        } else {
+          $('#navbar-below').html($('#navbar-below').html() + '<li><a>NGƯỜI DÙNG</a>' +
+                                                                '<ul class="submenu">' +
+                                                                  '<li class="submenu-item"><a href="/my">Trang cá nhân</a></li>' +
                                                                 '</ul>' +
                                                               '</li>');
         }

@@ -4,12 +4,55 @@ $(document).ready(function() {
   
   populateEvent();
   populateProducer();
-  
+  populateTimeline();
+  $('[data-toggle="tooltip"]').tooltip(); 
   $('#btnEditEvent').attr('href','/events/edit/' + readCookie('eventId'));
 
 });
 
 // Functions =============================================================
+
+function populateTimeline() {
+  var eventId = readCookie('eventId');
+  $.getJSON( '/events/details/' + eventId, function( data ) {     
+    var published = {'name':'Published','date':new Date(data.dateCreated)};
+    var deadline = {'name':'Deadline','date':new Date(data.eventDeadline)};
+    var start = {'name':'Start','date':new Date(data.eventDate.split(' - ')[0])};
+    var end = {'name':'End','date':new Date(data.eventDate.split(' - ')[1])};
+    var now = {'name':'Now','date':new Date()};
+    var now2 = new Date();
+
+    var dates = [published, deadline, start, end, now];
+
+    dates.sort(function(a,b){
+      // Turn your strings into dates, and then subtract them
+      // to get a value that is either negative, positive, or zero.
+      return new Date(a.date.getTime()) - new Date(b.date.getTime());
+    });
+
+    var fullPercent = dates[4].date.getTime() - dates[0].date.getTime();
+    var part = 0;
+    var background = "#115c9b";
+    $('#progress-1').attr('aria-valuenow', '0%');
+    $('#tooltip-1').attr('title', dates[0].name + '<br>' + dates[0].date.toLocaleDateString()).tooltip('fixTitle').tooltip('show');
+    for(var i = 1; i <= 4; i++) {
+      part = parseFloat((dates[i].date.getTime() - dates[i - 1].date.getTime()) / fullPercent * 100);      
+      $('#progress-' + (i + 1)).attr('aria-valuenow', part + '%');
+      $('#progress-' + (i + 1)).attr('style', 'width: ' + part + '%;background: ' + background);
+      $('#tooltip-' + (i + 1)).attr('title', dates[i].name + '<br>' + dates[i].date.toLocaleDateString()).tooltip('fixTitle').tooltip('show');
+      if(dates[i].name == "Now") {
+        background = "none";
+        var now = i + 1;
+      }
+    }  
+    $('[data-toggle="tooltip"]').tooltip({trigger: 'manual'}).tooltip('show');
+
+    // $(".progress-bar").each(function(){
+    //   each_bar_width = $(this).attr('aria-valuenow');
+    //   $(this).width(each_bar_width);
+    // });
+  });  
+}
 
 function populateEvent() {
   var eventId = readCookie('eventId');

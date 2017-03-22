@@ -40,81 +40,79 @@ block content
 						| Get to know everyone.
 			.main-container
 				.container
-					.row
-					// Tabs
-					// Smart Wizard					
-					.form-horizontal.form-label-left
-						.col-md-6
-							h2.title-style-1
-								| User Info
-								span.title-under
-							table.table.table-responsive.table-striped
-								tbody
-									tr
-										td(style="text-align: center; vertical-align: middle; width:30%", rowspan="6")		
-											img(src='#{docs.image}', alt='Set your profile image!', style='height: 150px; max-width: 300px')
-									tr
-										td(style="text-align: right; width: 50px")
-											i.fa.fa-tag
-										td
-											span.col-md-7.col-xs-12 #{docs.username}
-									tr
-										td(style="text-align: right; width: 50px")
-											i.fa.fa-user
-										td
-											span.col-md-7.col-xs-12 #{docs.fullName}
-									tr
-										td(style="text-align: right; width: 50px")
-											i.fa.fa-building
-										td
-											span.col-md-7.col-xs-12 #{docs.address}
-									tr
-										td(style="text-align: right; width: 50px")
-											i.fa.fa-envelope
-										td
-											span.col-md-7.col-xs-12 #{docs.email}
-									tr
-										td(style="text-align: right; width: 50px")
-											i.fa.fa-phone
-										td
-											span.col-md-7.col-xs-12 #{docs.phoneNumber}
-						.col-md-6
-							#companyInfoDiv
+					.row			
+						.form-horizontal.form-label-left
+							.col-md-6
 								h2.title-style-1
-									| Company Info
+									| User Info
 									span.title-under
 								table.table.table-responsive.table-striped
 									tbody
 										tr
 											td(style="text-align: center; vertical-align: middle; width:30%", rowspan="6")		
-												img(src='#{docs.companyImage}', alt='Set your profile image!', style='height: 150px; max-width: 300px')
+												img(src='#{docs.image}', alt='Set your profile image!', style='height: 150px; max-width: 300px')
 										tr
 											td(style="text-align: right; width: 50px")
-												i.fa.fa-users
+												i.fa.fa-tag
 											td
-												span.col-md-7.col-xs-12 #{docs.companyName}
+												span.col-md-7.col-xs-12 #{docs.username}
+										tr
+											td(style="text-align: right; width: 50px")
+												i.fa.fa-user
+											td
+												span.col-md-7.col-xs-12 #{docs.fullName}
 										tr
 											td(style="text-align: right; width: 50px")
 												i.fa.fa-building
 											td
-												span.col-md-7.col-xs-12 #{docs.companyAddress}
+												span.col-md-7.col-xs-12 #{docs.address}
 										tr
 											td(style="text-align: right; width: 50px")
 												i.fa.fa-envelope
 											td
-												span.col-md-7.col-xs-12 #{docs.companyEmail}
+												span.col-md-7.col-xs-12 #{docs.email}
 										tr
 											td(style="text-align: right; width: 50px")
 												i.fa.fa-phone
 											td
-												span.col-md-7.col-xs-12 #{docs.companyPhoneNumber}
-										tr
-											td(style="text-align: right; width: 50px")
-												i.fa.fa-globe
-											td
-												span.col-md-7.col-xs-12 #{docs.companyWebsite}
-						#eventJoined-panel
-						#eventProduced-panel
+												span.col-md-7.col-xs-12 #{docs.phoneNumber}
+							.col-md-6
+								#companyInfoDiv
+									h2.title-style-1
+										| Company Info
+										span.title-under
+									table.table.table-responsive.table-striped
+										tbody
+											tr
+												td(style="text-align: center; vertical-align: middle; width:30%", rowspan="6")		
+													img(src='#{docs.companyImage}', alt='Set your profile image!', style='height: 150px; max-width: 300px')
+											tr
+												td(style="text-align: right; width: 50px")
+													i.fa.fa-users
+												td
+													span.col-md-7.col-xs-12 #{docs.companyName}
+											tr
+												td(style="text-align: right; width: 50px")
+													i.fa.fa-building
+												td
+													span.col-md-7.col-xs-12 #{docs.companyAddress}
+											tr
+												td(style="text-align: right; width: 50px")
+													i.fa.fa-envelope
+												td
+													span.col-md-7.col-xs-12 #{docs.companyEmail}
+											tr
+												td(style="text-align: right; width: 50px")
+													i.fa.fa-phone
+												td
+													span.col-md-7.col-xs-12 #{docs.companyPhoneNumber}
+											tr
+												td(style="text-align: right; width: 50px")
+													i.fa.fa-globe
+												td
+													span.col-md-7.col-xs-12 #{docs.companyWebsite}
+					.row#eventJoined-panel							
+					.row#eventProduced-panel							
 			// jQuery
 			script(src='//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js')
 			script.

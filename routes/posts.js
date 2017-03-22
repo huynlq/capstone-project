@@ -1,6 +1,24 @@
 var express = require('express');
 var router = express.Router();
+var fs = require('fs');
+var multer = require('multer');
+var request = require('request');
 var ObjectId = require('mongodb').ObjectID;
+
+var download = function(uri, filename, callback){
+    console.log("Download");
+    request.head(uri, function(err, res, body){
+        console.log('content-type:', res.headers['content-type']);
+        console.log('content-length:', res.headers['content-length']);
+
+        request(uri).pipe(fs.createWriteStream(filename)).on('close', callback);
+    });
+};
+
+var uploading = multer({
+    dest: __dirname.split('routes')[0] + 'public\\images\\post\\',
+    limits: {fileSize: 10000000, files:1},
+});
 
 /* GET users listing. */
 router.get('/', function(req, res, next) {
@@ -9,7 +27,14 @@ router.get('/', function(req, res, next) {
 
 /* GET users listing. */
 router.get('/creator/', function(req, res, next) {
-  res.render('posts/post_creator', { title: 'Post Creator', docs: '' });
+    var docs = {
+        '_id':'',
+        'postContent':'',
+        'postDescription':'',
+        'postImage':'',
+        'postName':'',
+    };
+    res.render('admin_page/post_creator', { title: 'Post Creator', docs: docs });
 });
 
 /* GET all posts. */
@@ -40,30 +65,79 @@ router.get('/board', function(req, res, next) {
 });
 
 /*  POST To Add Post */
-router.post('/addpost', function(req, res) { 
-    var user = req.cookies.user;
+router.post('/addpost', uploading.single('displayPostImage'), function(req, res) { 
+    console.log(req.body);
+    console.log(req.file);
+    var user = req.body.userId;
     if(user != null) {
         var db = req.db;
         var collection = db.get('Users');
         collection.findOne({'_id': new ObjectId(user)},{},function(e,docs){
             if(e === null) {
-                req.body.user = docs.username;
-                req.body.rating = 0;
-                req.body.comment = 0;
-                req.body.dateCreated = new Date().toString();
                 req.body.dateModified = new Date().toString();
+                // If there's postId exists => Update the post                    
+                if(req.body._id != '') {
+                    collection = db.get('Posts');
+                    collection.findOne({'_id': new ObjectId(user)},{},function(e,docs){
+                        if(req.file != null) {
+                            var extension = req.file.mimetype.split("/")[1];
+                            var path = "/images/post/" + req.file.filename + "." + extension;
+                            var savePath = "public" + path;                
 
-                delete req.body._id;
+                            req.body.postImage = path;
 
-                collection = db.get('Posts');
-                collection.insert(req.body, function(err, result){
-                    if(err === null) {
-                        res.writeHead(302, {'Location': '/posts'});
-                        res.end();
-                    } else {
-                        alert(err);
-                    }
-                });
+                            fs.readFile(req.file.path, function (err, data) {
+                                fs.writeFile(savePath, data);
+                            });
+
+                            try {
+                                fs.unlink("public" + docs.postImage);   
+                            }
+                            catch(err) {
+                                console.log(err);
+                            }
+
+                        } else {
+                            delete req.body.postImage;
+                        }
+
+                        collection = db.get('Posts');
+                        collection.update({ '_id' : req.body._id }, { $set: req.body}, function(err, result){
+                            if(err === null) {
+                                res.writeHead(302, {'Location': '/posts/' + req.body._id});
+                                res.end();
+                            } else {
+                                alert(err);
+                            }
+                        });
+                    });
+                } else {
+                    // If postId NOT exists => Insert the post
+                    if(req.file != null) {
+                        var extension = req.file.mimetype.split("/")[1];
+                        var path = "/images/post/" + req.file.filename + "." + extension;
+                        var savePath = "public" + path;                
+
+                        delete req.body._id;
+
+                        req.body.postImage = path;
+
+                        fs.readFile(req.file.path, function (err, data) {
+                            fs.writeFile(savePath, data);
+                        });
+
+                        req.body.dateCreated = new Date().toString();
+                        collection = db.get('Posts');
+                        collection.insert(req.body, function(err, result){
+                            if(err === null) {
+                                res.writeHead(302, {'Location': '/posts/' + result._id});
+                                res.end();
+                            } else {
+                                alert(err);
+                            }
+                        });
+                    }  
+                }                
             }            
         });    	
     } else {
@@ -79,7 +153,7 @@ router.get('/updatepost/:id', function(req, res, next) {
         res.render('page_404');
     collection.findOne({ '_id' : req.params.id },{},function(e,docs){
         if(docs) {
-            res.render('posts/post_creator', { title: 'Charity Event | Post Creator', 'docs': docs });
+            res.render('admin_page/post_creator', { title: 'Charity Event | Post Creator', 'docs': docs });
         } else {
             res.render('page_404');
         }

@@ -4,6 +4,7 @@ $(function(){
 	/*  Populate countdown
  	================================================*/ 
 
+ 	populateLang();
  	populateEvents();
  	populateSponsors();
  	populateNews();
@@ -311,27 +312,27 @@ function populateNews() {
         	var date = "";
         	var dateString = "";
         	$.each(data, function(){
-        		date = new Date(this.dateCreated);
-        		dateString =
-        			date.getHours() + ":" + (date.getMinutes()<10?'0':'') + date.getMinutes() + " " +
-        			date.getDate() + "/" + date.getMonth() + "/" + date.getFullYear();
-        		counter ++;
-        		content = 	'<li>' +
-							  '<div class="col-md-6 col-xs-12">' +
-							    '<a href="/posts/' + this._id + '"><div style="background-image:url(\'' + this.postImage + '\')" class="thumb"></div></a>' +
-							  '</div>' +
-							  '<div class="col-md-6 col-xs-12">' +
-							    '<a href="/posts/' + this._id + '"><h3 style="text-transform: uppercase;">' +
-							    	this.postName +
-							    '</h3></a>' +
-							    '<p>' + this.postShortDesc + '</p>' +
-							  '</div>' +
-							  '<div style="position:absolute; bottom: 20px; right: 0px">' +
-							  	'<span style="margin-right: 20px">' + dateString + '</span>' +
-							  	'<a href="/posts/' + this._id + '" class="btn btn-primary"><strong>Read More</strong></a>' +
-							  '</div>' +
-							'</li>';
-        		$('#news-carousel').html($('#news-carousel').html() + content);
+        		if(counter < 5) {
+        			date = new Date(this.dateCreated);
+	        		dateString = date.toLocaleDateString();
+	        		counter ++;
+	        		content = 	'<li>' +
+								  '<div class="col-md-6 col-xs-12">' +
+								    '<a href="/posts/' + this._id + '"><div style="background-image:url(\'' + this.postImage + '\')" class="thumb"></div></a>' +
+								  '</div>' +
+								  '<div class="col-md-6 col-xs-12">' +
+								    '<a href="/posts/' + this._id + '"><h3 style="text-transform: uppercase;">' +
+								    	this.postName +
+								    '</h3></a>' +
+								    '<p>' + this.postDescription + '</p>' +
+								  '</div>' +
+								  '<div style="position:absolute; bottom: 20px; right: 0px">' +
+								  	'<span style="margin-right: 20px">' + dateString + '</span>' +
+								  	'<a href="/posts/' + this._id + '" class="btn btn-primary"><strong>Read More</strong></a>' +
+								  '</div>' +
+								'</li>';
+	        		$('#news-carousel').html($('#news-carousel').html() + content);
+        		}        		
         	});        	
         	if(counter < 1) {
         		for(var i = counter; i <= 1; i++) {
@@ -370,47 +371,57 @@ function populateEvents() {
             var currentParticipants;
 			var currentSponsors;
 	    	$.each(data, function(){
-		    	counter++;
-		    	dates = this.eventDate.split(" - ");
+	    		if(this.status == "Published") {
+	    			counter++;
+			    	dates = this.eventDate.split(" - ");
 
-		    	yearStart = dates[0].split("/")[2];
-				monthStart = dates[0].split("/")[0];
-				dateStart = dates[0].split("/")[1];
-				hourStart = this.meetingTime.split(":")[0];
-				minStart = this.meetingTime.split(":")[1];
-				yearEnd = dates[1].split("/")[2];
-				monthEnd = dates[1].split("/")[0];
-				dateEnd = dates[1].split("/")[1];
+			    	yearStart = dates[0].split("/")[2];
+					monthStart = dates[0].split("/")[0];
+					dateStart = dates[0].split("/")[1];
+					hourStart = this.meetingTime.split(":")[0];
+					minStart = this.meetingTime.split(":")[1];
+					yearEnd = dates[1].split("/")[2];
+					monthEnd = dates[1].split("/")[0];
+					dateEnd = dates[1].split("/")[1];
 
-				dayStart = yearStart + '-' + monthStart + '-' + dateStart + 'T' + this.meetingTime + ':00+07:00';
-				dayEnd = yearEnd + '-' + monthEnd + '-' + dateEnd + 'T' + this.meetingTime + ':00+07:00';
+					dayStart = yearStart + '-' + monthStart + '-' + dateStart + 'T' + this.meetingTime + ':00+07:00';
+					dayEnd = yearEnd + '-' + monthEnd + '-' + dateEnd + 'T' + this.meetingTime + ':00+07:00';
 
-				var cd = CountDown(new Date(dayStart), new Date(dayEnd));
+					var date = new Date(this.eventDate.split(' - ')[0]);
+					var cd = CountDown(new Date(dayStart), new Date(dayEnd));
 
-		    	var content = "" +
-						        '<div class="reasons-col animate-onscroll fadeIn" style="height: 350px; margin: 20px 0">' +
-						          //'<div class="thumb" style="background-image:url(\'' + this.eventImage + '\'); height: 350px" />' +
-						          '<img src="' + this.eventImage + '" alt=""/>' +
-						          '<div id="event' + counter + 'Time" class="time">' +
-							      	  cd + 
-							      '</div>' +
-								  '<div class="reasons-titles">' +
-								    '<h3 class="reasons-title"><a href="/events/' + this._id + '">' + this.eventName + '<a/></h3>' +
-								    '<h5 class="reason-subtitle">' + this.meetingAddress + '</h5>' + 
-								    '<h4><i class="fa fa-clock-o"></i> ' + this.meetingTime + ' - <i class="fa fa-calendar"></i> ' + this.eventDate.split(' - ')[0] + '</h4>' +
-								  '</div>' +
-								  '<div class="on-hover hidden-xs">' +
-								    '<p>' + this.eventShortDescription + '</p>' +
-								  '</div>' +
-								'</div>' +
-					    	"";    	
+			    	var content = "" +
+							        '<div class="reasons-col animate-onscroll fadeIn" style="height: 350px; margin: 20px 0">' +
+							          //'<div class="thumb" style="background-image:url(\'' + this.eventImage + '\'); height: 350px" />' +
+							          '<img src="' + this.eventImage + '" alt=""/>' +
+							          '<div id="event' + counter + 'Time" class="time">' +
+								      	  cd + 
+								      '</div>' +
+									  '<div class="reasons-titles">' +
+									    '<h3 class="reasons-title"><a href="/events/' + this._id + '">' + this.eventName + '<a/></h3>' +
+									    '<h5 class="reason-subtitle">' + this.meetingAddress + '</h5>' + 
+									    '<h4><i class="fa fa-clock-o"></i> ' + this.meetingTime + ' - <i class="fa fa-calendar"></i> ' + date.toLocaleDateString() + '</h4>' +
+									  '</div>' +
+									  '<div class="on-hover hidden-xs">' +
+									    '<p>' + this.eventShortDescription + '</p>' +
+									  '</div>' +
+									'</div>' +
+						    	"";    	
 
-		    	//$('#eventCarousel').html($('#eventCarousel').html() + content);
+			    	//$('#eventCarousel').html($('#eventCarousel').html() + content);
 
-		    	$('#real-event-carousel').html($('#real-event-carousel').html() + content);
+			    	$('#real-event-carousel').html($('#real-event-carousel').html() + content);
 
-		    	$('#event' + counter + 'Time').html(CountDown(new Date(dayStart), new Date(dayEnd)));
+			    	$('#event' + counter + 'Time').html(CountDown(new Date(dayStart), new Date(dayEnd)));
+	    		}		    	
 	    	});
         }
     });
 }	
+
+function populateLang() {
+	$('#feature1').html($HOMEPAGE_FEATURE_1);
+	$('#feature2').html($HOMEPAGE_FEATURE_2);
+	$('#feature3').html($HOMEPAGE_FEATURE_3);
+	$('#feature4').html($HOMEPAGE_FEATURE_4);
+}

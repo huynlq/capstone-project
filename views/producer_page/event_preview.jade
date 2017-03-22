@@ -1,4 +1,4 @@
-extends layout
+extends ../guest_page/layout
 
 block content
 	doctype html
@@ -23,6 +23,10 @@ block content
 			link(href='/vendors/datatables.net-fixedheader-bs/css/fixedHeader.bootstrap.min.css', rel='stylesheet')
 			link(href='/vendors/datatables.net-responsive-bs/css/responsive.bootstrap.min.css', rel='stylesheet')
 			link(href='/vendors/datatables.net-scroller-bs/css/scroller.bootstrap.min.css', rel='stylesheet')
+			// Ion.RangeSlider
+			link(href='../vendors/normalize-css/normalize.css', rel='stylesheet')
+			link(href='../vendors/ion.rangeSlider/css/ion.rangeSlider.css', rel='stylesheet')
+			link(href='../vendors/ion.rangeSlider/css/ion.rangeSlider.skinFlat.css', rel='stylesheet')
 			// Template main Css
 			link(rel='stylesheet', href='/guest_page/css/style.css')
 			// Modernizr
@@ -78,6 +82,21 @@ block content
 							p#meetingAddress
 							#map(style='height:200px; margin: 0; width: 100%')
 					br
+					.row.fadeIn.animated(style="margin-top: 70px")
+						.barWrapper							
+							.progress
+								#progress-1.progress-bar(role='progressbar', aria-valuenow='0', aria-valuemin='0', aria-valuemax='100')
+									span#tooltip-1.popOver(data-html="true", data-toggle='tooltip', data-placement='top', title='')
+								#progress-2.progress-bar(role='progressbar', aria-valuenow='0', aria-valuemin='0', aria-valuemax='100')
+									span#tooltip-2.popOver(data-html="true", data-toggle='tooltip', data-placement='top', title='')
+								#progress-3.progress-bar(role='progressbar', aria-valuenow='0', aria-valuemin='0', aria-valuemax='100')
+									span#tooltip-3.popOver(data-html="true", data-toggle='tooltip', data-placement='top', title='')
+								#progress-4.progress-bar(role='progressbar', aria-valuenow='0', aria-valuemin='0', aria-valuemax='100')
+									span#tooltip-4.popOver(data-html="true", data-toggle='tooltip', data-placement='top', title='')
+								#progress-5.progress-bar(role='progressbar', aria-valuenow='0', aria-valuemin='0', aria-valuemax='100')
+									span#tooltip-5.popOver(data-html="true", data-toggle='tooltip', data-placement='top', title='')
+					br
+					br
 					.row.fadeIn.animated
 						.col-md-12
 							h2.title-style-2
@@ -92,7 +111,7 @@ block content
 							div(role='tabpanel')
 								#activityPane
 					.row
-						.col-md-12.col-xs-12.fadeIn.animate-onscroll
+						.col-md-12.col-xs-12
 							.col-md-3
 							.col-md-3.col-xs-11
 								a#btnEditEvent.btn.btn-info(style="background-color:#1f76bd; width: 100%")
@@ -127,8 +146,14 @@ block content
 			script(src='../vendors/pdfmake/build/pdfmake.min.js')
 			script(src='../vendors/pdfmake/build/vfs_fonts.js')
 			// Countdown JS
-			script(src='/vendors/countdown/countdown.js')
+			script(src='../vendors/countdown/countdown.js')
+			// Moment.JS
+			script(src='../vendors/moment/min/moment.min.js')
+			
+			// Ion.RangeSlider
+			script(src='../vendors/ion.rangeSlider/js/ion.rangeSlider.min.js')
 			// Template main javascript
+			script(src='/javascripts/global.js')
 			script(src='/guest_page/js/main.js')
 			script(src='/producer_page/js/event_preview.js')
 			// Google Analytics: change UA-XXXXX-X to be your site's ID.

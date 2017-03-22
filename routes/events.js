@@ -38,6 +38,7 @@ router.get('/creator_event', function(req, res, next) {
         'eventName' : '',
         'eventDescription' : '',
         'eventDate' : '',
+        'eventDeadline' : '',
         'meetingTime' : '',
         'meetingAddress' : '',
         'meetingAddressLat' : '',
@@ -100,7 +101,7 @@ router.get('/update/:id', function(req, res, next) {
         res.render('page_404');
     collection.findOne({ '_id' : req.params.id },{},function(e,docs){
         if(docs) {
-            res.render('events/update_event', { title: 'Charity Event | Updating ' + docs.eventName, 'docs': docs });
+            res.render('producer_page/update_event', { title: 'Charity Event | Updating ' + docs.eventName, 'docs': docs });
         } else {
             res.render('page_404');
         }

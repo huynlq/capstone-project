@@ -1,0 +1,296 @@
+extends ../guest_page/layout
+
+block content
+	doctype html
+	html.no-js
+		head
+			meta(charset='utf-8')
+			title Single cause | Charity / Non-profit responsive Bootstrap HTML5 template
+			meta(name='description', content='')
+			meta(name='viewport', content='width=device-width, initial-scale=1')
+			// Fonts
+			link(href='http://fonts.googleapis.com/css?family=Open+Sans:400,300,700', rel='stylesheet', type='text/css')
+			link(href='http://fonts.googleapis.com/css?family=Dosis:400,700', rel='stylesheet', type='text/css')
+			// Bootsrap
+			link(rel='stylesheet', href='/guest_page/css/bootstrap.min.css')
+			// Font awesome
+			link(rel='stylesheet', href='/guest_page/css/font-awesome.min.css')
+			// PrettyPhoto
+			link(rel='stylesheet', href='/guest_page/css/prettyPhoto.css')
+			// bootstrap-daterangepicker
+			link(href='/vendors/bootstrap-daterangepicker/daterangepicker.css', rel='stylesheet')
+			// Datatables
+			link(href='/vendors/datatables.net-bs/css/dataTables.bootstrap.min.css', rel='stylesheet')
+			link(href='/vendors/datatables.net-buttons-bs/css/buttons.bootstrap.min.css', rel='stylesheet')
+			link(href='/vendors/datatables.net-fixedheader-bs/css/fixedHeader.bootstrap.min.css', rel='stylesheet')
+			link(href='/vendors/datatables.net-responsive-bs/css/responsive.bootstrap.min.css', rel='stylesheet')
+			link(href='/vendors/datatables.net-scroller-bs/css/scroller.bootstrap.min.css', rel='stylesheet')			
+			// Template main Css
+			link(rel='stylesheet', href='/guest_page/css/style.css')
+			// Modernizr
+			script(src='/guest_page/js/modernizr-2.6.2.min.js')
+		body			
+			.row(style="height:100px")
+			.main-container
+				.container
+					.row
+						.col-md-12
+							h2.title-style-2
+								| User List
+								span.title-under
+					.row.tile_count
+						ul.nav.nav-tabs
+							li.active.col-md-2.col-sm-4.col-xs-12
+								a.count-tab(data-toggle='tab', href='#pendingUsers')
+									.tileA
+										.tile_stats_count(style='padding-top: 10px;')
+											span.count_top
+												i.fa.fa-thumbs-o-down
+												|  Pending Users
+											#countPendingUsers.count 135
+							li.col-md-2.col-sm-4.col-xs-12
+								a.count-tab(data-toggle='tab', href='#admins')
+									.tileA
+										.tile_stats_count(style='padding-top: 10px;')
+											span.count_top
+												i.fa.fa-child
+												|  Total Admins
+											#countAdmins.count 5
+							li.col-md-2.col-sm-4.col-xs-12
+								a.count-tab(data-toggle='tab', href='#users')
+									.tileA
+										.tile_stats_count(style='padding-top: 10px;')
+											span.count_top
+												i.fa.fa-bar-chart
+												|  Total Users
+											#countUsers.count 10000
+							li.col-md-2.col-sm-4.col-xs-12
+								a.count-tab(data-toggle='tab', href='#producers')
+									.tileA
+										.tile_stats_count(style='padding-top: 10px;')
+											span.count_top
+												i.fa.fa-spinner.fa-pulse
+												|  Total Producers
+											#countProducers.count 100
+							li.col-md-2.col-sm-4.col-xs-12
+								a.count-tab(data-toggle='tab', href='#sponsors')
+									.tileA
+										.tile_stats_count(style='padding-top: 10px;')
+											span.count_top
+												i.fa.fa-thumbs-o-up
+												|  Total Sponsors
+											#countSponsors.count 45
+							li.col-md-2.col-sm-4.col-xs-12
+								a.count-tab(data-toggle='tab', href='#banned')
+									.tileA
+										.tile_stats_count(style='padding-top: 10px;')
+											span.count_top
+												i.fa.fa-close
+												|  Banned Users
+											#countBanned.count.red 1
+					.tab-content
+						#pendingUsers.tab-pane.fade.in.active
+							.row
+								.col-md-12.col-sm-12.col-xs-12
+									.col-md-6
+										h3
+											| Pending Users 
+											small (sub-title)
+									.clearfix
+								.x_content
+									table#tablePendingUsers.table.table-style-1.table-striped.table-bordered.dt-responsive.nowrap.datatable-responsive(cellspacing='0', width='100%')
+										thead
+											tr
+												th.action-col #
+												th.action-col Action
+												th User
+												th Full Name
+												th Position Promotion
+												th Company Name
+												th Email
+												th Phone
+												th Address
+												th Date Joined
+										tbody
+						#admins.tab-pane.fade
+							.row
+								.col-md-7.col-sm-7.col-xs-12
+									.col-md-12.col-sm-12.col-xs-12
+										.col-md-6
+											h3
+												| Admins 
+												small (sub-title)
+										.clearfix
+									.x_content
+										table#tableAdmins.table.table-style-1.table-striped.table-bordered.dt-responsive.nowrap.datatable-responsive(cellspacing='0', width='100%')
+											thead
+												tr
+													th.action-col #
+													th.action-col Action
+													th User
+													th Email
+											tbody												
+								.col-md-5.col-sm-5.col-xs-12(style='padding-left: 20px')
+									form.form-horizontal.form-label-left
+										h3(style='margin-left: 50px') Admin Creator
+										.form-group
+											label.control-label.col-md-3.col-sm-3.col-xs-12
+												| Username 
+												span.required *
+											.col-md-9.col-sm-9.col-xs-12
+												input#txtAdminUsername.form-control.col-md-7.col-xs-12(type='text', required='required')
+										.form-group
+											label.control-label.col-md-3.col-sm-3.col-xs-12
+												| Password 
+												span.required *
+											.col-md-9.col-sm-9.col-xs-12
+												input#txtAdminPassword.form-control.col-md-7.col-xs-12(type='password', required='required')
+										.form-group
+											label.control-label.col-md-3.col-sm-3.col-xs-12
+												| Email 
+												span.required *
+											.col-md-9.col-sm-9.col-xs-12
+												input#txtAdminEmail.form-control.col-md-7.col-xs-12(type='text', required='required')										
+										.row
+											.col-md-5.col-sm-5
+											.col-md-4.col-sm-4.col-xs-12
+												a.btn.btn-info.col-xs-12(onclick='createAdmin()') Create >>
+						#users.tab-pane.fade
+							.row
+								.col-md-12.col-sm-12.col-xs-12
+									.col-md-6
+										h3
+											| Users 
+											small (sub-title)
+									.clearfix
+								.x_content
+									table#tableUsers.table.table-style-1.table-striped.table-bordered.dt-responsive.nowrap.datatable-responsive(cellspacing='0', width='100%')
+										thead
+											tr
+												th.action-col #
+												th.action-col Action
+												th User
+												th Full Name
+												th Email
+												th Phone
+												th Address
+												th Date Joined
+										tbody
+						#producers.tab-pane.fade
+							.row
+								.col-md-12.col-sm-12.col-xs-12
+									.col-md-6
+										h3
+											| Producers 
+											small (sub-title)
+									.clearfix
+								.x_content
+									table#tableProducers.table.table-style-1.table-striped.table-bordered.dt-responsive.nowrap.datatable-responsive(cellspacing='0', width='100%')
+										thead
+											tr
+												th.action-col #
+												th.action-col Action
+												th User
+												th Full Name
+												th Email
+												th Phone
+												th Address
+												th Past Events
+												th Upcoming Events
+												th Date Joined
+										tbody
+						#sponsors.tab-pane.fade
+							.row
+								.col-md-12.col-sm-12.col-xs-12
+									.col-md-6
+										h3
+											| Sponsors 
+											small (sub-title)
+									.clearfix
+								.x_content
+									table#tableSponsors.table.table-style-1.table-striped.table-bordered.dt-responsive.nowrap.datatable-responsive(cellspacing='0', width='100%')
+										thead
+											tr
+												th.action-col #
+												th.action-col Action
+												th User
+												th Full Name
+												th Company Name
+												th Email
+												th Phone
+												th Address
+												th Events Donated
+												th Donations
+												th Date Joined
+										tbody
+						#banned.tab-pane.fade
+							.row
+								.col-md-12.col-sm-12.col-xs-12
+									.col-md-6
+										h3
+											| Banned Users 
+											small (sub-title)
+									.clearfix
+								.x_content
+									table#tableBannedUsers.table.table-style-1.table-striped.table-bordered.dt-responsive.nowrap.datatable-responsive(cellspacing='0', width='100%')
+										thead
+											tr
+												th.action-col #
+												th.action-col Action
+												th User
+												th Role
+												th Full Name												
+												th Email
+												th Phone
+												th Address
+												th Ban Reason
+												th Date Joined
+										tbody
+			// Bootsrap javascript file
+			script(src='/guest_page/js/bootstrap.min.js')
+			// PrettyPhoto javascript file
+			script(src='/guest_page/js/jquery.prettyPhoto.js')
+			// Google map
+			script(src='https://maps.googleapis.com/maps/api/js?key=AIzaSyAxUeMBUbKnW-LKTWTIL656w7nHABuNMTI&libraries=places')
+			// Datatables
+			script(src='/vendors/datatables.net/js/jquery.dataTables.min.js')
+			script(src='/vendors/datatables.net-bs/js/dataTables.bootstrap.min.js')
+			script(src='/vendors/datatables.net-buttons/js/dataTables.buttons.min.js')
+			script(src='/vendors/datatables.net-buttons-bs/js/buttons.bootstrap.min.js')
+			script(src='/vendors/datatables.net-buttons/js/buttons.flash.min.js')
+			script(src='/vendors/datatables.net-buttons/js/buttons.html5.min.js')
+			script(src='/vendors/datatables.net-buttons/js/buttons.print.min.js')
+			script(src='/vendors/datatables.net-fixedheader/js/dataTables.fixedHeader.min.js')
+			script(src='/vendors/datatables.net-keytable/js/dataTables.keyTable.min.js')
+			script(src='/vendors/datatables.net-responsive/js/dataTables.responsive.min.js')
+			script(src='/vendors/datatables.net-responsive-bs/js/responsive.bootstrap.js')
+			script(src='/vendors/datatables.net-scroller/js/dataTables.scroller.min.js')
+			script(src='/vendors/jszip/dist/jszip.min.js')
+			script(src='/vendors/pdfmake/build/pdfmake.min.js')
+			script(src='/vendors/pdfmake/build/vfs_fonts.js')			
+			// Flot
+			script(src='/vendors/Flot/jquery.flot.js')
+			script(src='/vendors/Flot/jquery.flot.pie.js')
+			script(src='/vendors/Flot/jquery.flot.time.js')
+			script(src='/vendors/Flot/jquery.flot.stack.js')
+			script(src='/vendors/Flot/jquery.flot.resize.js')
+			// bootstrap-daterangepicker
+			script(src='	/vendors/moment/min/moment.min.js')
+			script(src='	/vendors/bootstrap-daterangepicker/daterangepicker.js')
+			// jquery.inputmask
+			script(src='	/vendors/jquery.inputmask/dist/min/jquery.inputmask.bundle.min.js')
+			// DateJS
+			script(src='/vendors/DateJS/build/date.js')
+			// TinyMCE
+			script(src='/vendors/tinymce/tinymce.min.js')
+			// Template main javascript
+			script(src='/admin_page/js/user_list.js')
+			script(src='/javascripts/global.js')
+			// Google Analytics: change UA-XXXXX-X to be your site's ID.
+			script.
+				(function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=
+				function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;
+				e=o.createElement(i);r=o.getElementsByTagName(i)[0];
+				e.src='//www.google-analytics.com/analytics.js';
+				r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));
+				ga('create','UA-XXXXX-X');ga('send','pageview');

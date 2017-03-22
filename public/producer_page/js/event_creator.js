@@ -33,6 +33,10 @@ $(document).ready(function() {
   });
 
   $('input[name="eventDate"]').daterangepicker();
+  $('#eventDeadline').datepicker({ maxDate: new Date($('#eventDate').val().split(" - ")[1]) });
+  $('input[name="eventDate"]').change(function() {
+    $('#eventDeadline').datepicker('option', 'maxDate', new Date($('#eventDate').val().split(" - ")[0]));
+  });
    $(":input").inputmask();
 
    tinymce.init({ 
