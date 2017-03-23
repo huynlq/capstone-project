@@ -33,7 +33,23 @@ $(document).ready(function() {
 
     $('#tableSponsor tbody').on('click', 'td a.linkremovesponsor', removeSponsor);
 
+    $('#galleryPane').on('click', '.linkdeletephoto', removePhoto);
+
     //========================== DIALOG HIDING FUNCTIONS ===================
+
+    $('#uploadForm').submit(function() {
+        $("#status").empty().text("File is uploading...");
+        $(this).ajaxSubmit({
+            error: function(xhr) {
+                status('Error: ' + xhr.status);
+            },
+            success: function(response) {
+                console.log(response)
+                $("#status").empty().text(response);
+            }
+        });
+        return false;
+    });    
 
     var dialog = $( "#edit-actual-cost-form" ).dialog({
         autoOpen: false,
@@ -81,6 +97,7 @@ function populateTables() {
         showDonations(data);
         showParticipants(data._id);
         showActivityCosts(data._id);        
+        showGallery(data._id);
         // showActivities(data);
         $('[data-toggle="tooltip"]').tooltip(); 
     }); 
@@ -649,6 +666,46 @@ function removeSponsor(event) {
         // Check for a successful (blank) response
         if (response.msg === '') {
             showSponsors();
+        }
+        else {
+            alert('Error: ' + response.msg);
+        }
+    });  
+}
+
+// Show Gallery
+function showGallery(eventId) {
+    var content = '';
+    var counter = 0;
+    $('#galleryPane').html('');
+    $.getJSON( '/events/photo/' + eventId, function( data ) {
+        $.each(data, function(){
+            counter++;
+            content =   '<div class="col-sm-4 col-xs-12 gallery-photo" style="text-align:center">' +
+                            '<img style="max-width:90%" src="' + this.image + '"></img>' +
+                            '<div style="position: absolute; right: 45px; top: 5px">' +
+                                '<a style="border: solid white 2px" data-toggle="tooltip" title="Remove" class="btn btn-danger linkdeletephoto" rel="' + this._id + '">' +
+                                    '<span class="glyphicon glyphicon-remove"></span>' +
+                                '</a>' +
+                            '</div>' +
+                        '</div>';
+            $('#galleryPane').html($('#galleryPane').html() + content);
+        });
+        $('#countGallery').html(counter);
+        $('[data-toggle="tooltip"]').tooltip(); 
+    });
+}
+
+// Remove photo
+function removePhoto(event) {
+    event.preventDefault();    
+    $.ajax({
+        type: 'DELETE',
+        url: '/events/removephoto/' + $(this).attr('rel')
+    }).done(function( response ) {
+        // Check for a successful (blank) response
+        if (response.msg === '') {
+            showGallery($('#eventId').val());
         }
         else {
             alert('Error: ' + response.msg);

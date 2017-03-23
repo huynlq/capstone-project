@@ -15,6 +15,8 @@ block content
 			link(rel='stylesheet', href='/guest_page/css/bootstrap.min.css')
 			// Font awesome
 			link(rel='stylesheet', href='/guest_page/css/font-awesome.min.css')
+			// Owl carousel
+			link(rel='stylesheet', href='/guest_page/css/owl.carousel.css')
 			// PrettyPhoto
 			link(rel='stylesheet', href='/guest_page/css/prettyPhoto.css')
 			// Datatables
@@ -27,6 +29,33 @@ block content
 			link(rel='stylesheet', href='/guest_page/css/style.css')
 			// Modernizr
 			script(src='/guest_page/js/modernizr-2.6.2.min.js')
+			style.
+				.tooltip{ 
+				  position:relative;
+				  float:right;
+				}
+				.tooltip > .tooltip-inner {background-color: #eebf3f; padding:5px 15px; color:rgb(23,44,66); font-weight:bold; font-size:13px;}
+				.popOver + .tooltip > .tooltip-arrow {  border-left: 5px solid transparent; border-right: 5px solid transparent; border-top: 5px solid #eebf3f;}
+
+				section{
+				  margin:100px auto; 
+				  height:1000px;
+				}
+				.progress{
+				  border-radius:0;
+				  overflow:visible;
+				}
+				.progress-bar{
+				   background:rgb(23,44,60); 
+				  -webkit-transition: width 1.5s ease-in-out;
+				  transition: width 1.5s ease-in-out;
+				}
+				#photoCarousel .item img {
+					height: 300px;
+					display: block;
+					width: 100%;
+				}
+
 		body			
 			.row(style="height:80px")
 			.page-heading.text-center
@@ -78,7 +107,7 @@ block content
 								| Địa điểm
 								span.title-under
 							p #{docs.meetingAddress}
-							#map(style='height:200px; margin: 0; width: 100%')
+							#map(style='height:200px; margin: 0; width: 100%')					
 					br
 					.row.fadeIn.animated(style="margin-top: 70px")
 						.barWrapper							
@@ -93,6 +122,8 @@ block content
 									span#tooltip-4.popOver(data-html="true", data-toggle='tooltip', data-placement='top', title='')
 								#progress-5.progress-bar(role='progressbar', aria-valuenow='0', aria-valuemin='0', aria-valuemax='100')
 									span#tooltip-5.popOver(data-html="true", data-toggle='tooltip', data-placement='top', title='')
+					br
+					#ratingPane.row.fageIn.animated
 					.row.fadeIn.animated
 						.col-md-12
 							h2.title-style-2
@@ -106,23 +137,49 @@ block content
 								span.title-under
 							div(role='tabpanel')
 								#activityPane
+					hr
 					.row
 						#eventSummary.col-md-12.col-xs-12
-							.col-md-3
-							.col-md-3.col-xs-11
-								a.btn.btn-info(style="background-color:#1f76bd; width: 100%")
-									strong THAM GIA
-							.col-md-3.col-xs-11
-								a.btn.btn-info(style="background-color:#1f76bd; width: 100%")
-									strong ĐÓNG GÓP
+							#eventParticipation
+								.col-md-3
+								.col-md-6.col-xs-12
+									a#btnParticipate.btn.btn-info(style="background-color:#1f76bd; width: 100%" onclick='join()')
+										strong THAM GIA NGAY
+					.row
+						#eventProducerButtons.col-md-12.col-xs-12
+			#participate-form(title='Participant Information')
+				p.validateTips All form fields are required.
+				form
+					fieldset
+						.row.form-group
+							label.control-label.col-md-6.col-sm-6.col-xs-12
+								| Full Name 
+								span.required *
+							.col-md-6.col-sm-6.col-xs-12
+								input#txtParticipantFullName.form-control.col-md-7.col-xs-12(type='text', required='required')
+						.row.form-group
+							label.control-label.col-md-6.col-sm-6.col-xs-12
+								| Email 
+								span.required *
+							.col-md-6.col-sm-6.col-xs-12
+								input#txtParticipantEmail.form-control.col-md-7.col-xs-12(type='text', required='required')
+						.row.form-group
+							label.control-label.col-md-6.col-sm-6.col-xs-12
+								| Phone 
+								span.required *
+							.col-md-6.col-sm-6.col-xs-12
+								input#txtParticipantPhone.form-control.col-md-7.col-xs-12(type='text', required='required')
 			// jQuery
 			script(src='//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js')
+			script(src='/vendors/jquery-ui-1.12.1/jquery-ui.js')
 			script.
 				window.jQuery || document.write('<script src="/guest_page/js/jquery-1.11.1.min.js"><\\/script>')
 			// Bootsrap javascript file
 			script(src='/guest_page/js/bootstrap.min.js')
 			// PrettyPhoto javascript file
 			script(src='/guest_page/js/jquery.prettyPhoto.js')
+			// owl carouseljavascript file
+			script(src='/guest_page/js/owl.carousel.min.js')
 			// Google map
 			script(src='https://maps.googleapis.com/maps/api/js?key=AIzaSyAxUeMBUbKnW-LKTWTIL656w7nHABuNMTI&libraries=places')
 			// Datatables

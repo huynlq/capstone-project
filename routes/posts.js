@@ -22,7 +22,7 @@ var uploading = multer({
 
 /* GET users listing. */
 router.get('/', function(req, res, next) {
-  res.render('posts/post_list', { title: 'Posts' });
+  res.render('admin_page/post_list', { title: 'Posts' });
 });
 
 /* GET users listing. */
@@ -281,6 +281,15 @@ router.get('/comment/id/:id', function(req, res, next) {
     collection.findOne({ '_id' : id },{},function(e,docs){
         res.json(docs);
     });
+});
+
+/* GET comment number by postid. */
+router.get('/commentnumber/:id', function(req, res, next) {
+    var db = req.db;
+    var collection = db.get('Comments');    
+    collection.count({ 'postId' : req.params.id },{},function(e,count){
+        res.json(count);
+    }); 
 });
 
 /* GET comment reply by comment id. */

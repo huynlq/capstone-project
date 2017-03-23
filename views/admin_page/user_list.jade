@@ -95,7 +95,6 @@ block content
 									.col-md-6
 										h3
 											| Pending Users 
-											small (sub-title)
 									.clearfix
 								.x_content
 									table#tablePendingUsers.table.table-style-1.table-striped.table-bordered.dt-responsive.nowrap.datatable-responsive(cellspacing='0', width='100%')
@@ -161,7 +160,6 @@ block content
 									.col-md-6
 										h3
 											| Users 
-											small (sub-title)
 									.clearfix
 								.x_content
 									table#tableUsers.table.table-style-1.table-striped.table-bordered.dt-responsive.nowrap.datatable-responsive(cellspacing='0', width='100%')
@@ -182,7 +180,6 @@ block content
 									.col-md-6
 										h3
 											| Producers 
-											small (sub-title)
 									.clearfix
 								.x_content
 									table#tableProducers.table.table-style-1.table-striped.table-bordered.dt-responsive.nowrap.datatable-responsive(cellspacing='0', width='100%')
@@ -205,7 +202,6 @@ block content
 									.col-md-6
 										h3
 											| Sponsors 
-											small (sub-title)
 									.clearfix
 								.x_content
 									table#tableSponsors.table.table-style-1.table-striped.table-bordered.dt-responsive.nowrap.datatable-responsive(cellspacing='0', width='100%')
@@ -229,7 +225,6 @@ block content
 									.col-md-6
 										h3
 											| Banned Users 
-											small (sub-title)
 									.clearfix
 								.x_content
 									table#tableBannedUsers.table.table-style-1.table-striped.table-bordered.dt-responsive.nowrap.datatable-responsive(cellspacing='0', width='100%')
@@ -246,6 +241,50 @@ block content
 												th Ban Reason
 												th Date Joined
 										tbody
+			#ban-reason-form(title='Ban This User')
+				p.validateTips All form fields are required.
+				form
+					fieldset
+						.form-group
+							label.control-label.col-md-6.col-sm-6.col-xs-12(style="text-align:right")
+								| User to ban 
+								span.required *
+							.col-md-6.col-sm-6.col-xs-12
+								input#txtUserBan.form-control.col-md-7.col-xs-12(type='text', readonly='readonly')
+						.form-group
+							label.control-label.col-md-6.col-sm-6.col-xs-12(style="text-align:right")
+								| ID 
+								span.required *
+							.col-md-6.col-sm-6.col-xs-12
+								input#txtUserBanId.form-control.col-md-7.col-xs-12(type='text', readonly='readonly')
+						.form-group
+							label.control-label.col-md-6.col-sm-6.col-xs-12(style="text-align:right")
+								| Reason to ban 
+								span.required *
+							.col-md-6.col-sm-6.col-xs-12
+								input#txtReason.form-control.col-md-7.col-xs-12(type='text', required='required')
+			#disapprove-reason-form(title='Disapprove This User')
+				p.validateTips All form fields are required.
+				form
+					fieldset
+						.form-group
+							label.control-label.col-md-6.col-sm-6.col-xs-12(style="text-align:right")
+								| User to disapprove 
+								span.required *
+							.col-md-6.col-sm-6.col-xs-12
+								input#txtUserDisapprove.form-control.col-md-7.col-xs-12(type='text', readonly='readonly')
+						.form-group
+							label.control-label.col-md-6.col-sm-6.col-xs-12(style="text-align:right")
+								| ID 
+								span.required *
+							.col-md-6.col-sm-6.col-xs-12
+								input#txtUserDisapproveId.form-control.col-md-7.col-xs-12(type='text', readonly='readonly')
+						.form-group
+							label.control-label.col-md-6.col-sm-6.col-xs-12(style="text-align:right")
+								| Reason to disapprove 
+								span.required *
+							.col-md-6.col-sm-6.col-xs-12
+								input#txtDisapproveReason.form-control.col-md-7.col-xs-12(type='text', required='required')
 			// Bootsrap javascript file
 			script(src='/guest_page/js/bootstrap.min.js')
 			// PrettyPhoto javascript file

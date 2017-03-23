@@ -72,6 +72,14 @@ block content
 												i.fa.fa-thumbs-o-up
 												|  Activity Costs
 											#countActivities.count 0
+							li.col-md-2.col-sm-6.col-xs-12
+								a.count-tab(data-toggle='tab', href='#gallery')
+									.tileA
+										.tile_stats_count
+											span.count_top
+												i.fa.fa-thumbs-o-up
+												|  Photo Gallery
+											#countGallery.count 0
 					.tab-content
 						#donations.tab-pane.fade
 							.row
@@ -176,6 +184,27 @@ block content
 												th Actual Cost
 												th Action
 										tbody
+						#gallery.tab-pane.fade
+							.row
+								.col-md-12.col-sm-12.col-xs-12
+									.col-md-6
+										h3
+											| Photo Gallery
+										hr
+									.clearfix
+								.x_content									
+									.row								
+										.col-md-2.col-sm-2.col-xs-12
+										form#uploadForm.col-md-5.col-sm-5.col-xs-12(enctype='multipart/form-data', action='/events/addphoto', method='post')
+											input.btn.btn-info(type='file', name='photoGallery', multiple='', accept=".png,.jpg,.jpeg")
+											br											
+											input.btn.btn-info(type='submit', value='Upload Image', name='submit', style="margin=left: 20px")
+											span(style="margin: 10px") (Maximum: 20 fields)
+											input#eventId(type='hidden', name='eventId', value='#{docs._id}')
+									br
+									br
+									.row
+										#galleryPane
 			#edit-actual-cost-form(title='Edit Actual Cost')
 				p.validateTips All form fields are required.
 				form

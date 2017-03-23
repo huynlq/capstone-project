@@ -37,15 +37,22 @@ function populateEditPane(postId) {
 
   if($('#dateCreated').html() != $('#dateModified').html()) {    
     $.getJSON( '/users/id/' + $("#lastEditedUser").html(), function(data) {
-      var date = new Date($('#dateModified').html());
-      content += '<i style="float:right"><b>Last edited in ' + date.toLocaleString("vn", { date:"long"}) + ' by ' +
-                  '<a href="/users/' + data._id + '">' + data.username + '</a></b></i>';
-      $('#editPostPane').html(content);
-      if($('#txtUserId').val() == readCookie('user')) {
-        $('#editPostPane').html($('#editPostPane').html() + '<br><br><a class="col-sm-12 btn btn-info" href="/posts/updatepost/' + postId + '">Edit Post</a>');
-      }
+      if(data != '') {
+        var date = new Date($('#dateModified').html());
+        content += '<i style="float:right"><b>Last edited in ' + date.toLocaleString("vn", { date:"long"}) + ' by ' +
+                    '<a href="/users/' + data._id + '">' + data.username + '</a></b></i>';
+        $('#editPostPane').html(content);        
+      }     
     });    
   }
+
+  $.getJSON( '/users/id/' + readCookie('user'), function(dataUser) {
+    if(dataUser != '') {
+      if($('#txtUserId').val() == readCookie('user') || dataUser.role == 'Admin') {
+        $('#editPostPane').html($('#editPostPane').html() + '<br><br><a class="col-sm-12 btn btn-info" href="/posts/updatepost/' + postId + '">Edit Post</a>');
+      }
+    }        
+  });
 }
 
 function populateAuthor() {
@@ -135,7 +142,18 @@ function populateComments() {
 
           date = new Date(commentData.dateCreated);
 
-          content = '<div class="row" style="margin: 20px">' +
+          // content = '<div class="media">' +
+          //             '<div class="media-left">' +
+          //               '<img src="' + dataUser.image + '" class="media-object" style="width:45px">' +
+          //             '</div>' +
+          //             '<div class="media-body">' +
+          //               '<h3 class="media-heading"><a href="/users/' + dataUser._id + '">' + dataUser.username + '</a> <small><i>' + date.toLocaleDateString() + ' - ' + date.toLocaleDateString() + '</i></small></h3>' +
+          //               '<p>' + commentData.content + '</p>' +
+          //               optionContent +
+          //             '</div>' +
+          //           '</div>'
+
+          content = '<div class="media" style="margin: 20px">' +
                       '<div class="col-sm-12 col-sm-12" style="background-color: white; padding-left: 0">' +
                         '<div class="col-sm-2 col-xs-2" style="text-align: center; padding: 10px; height: 150px">' +
                           '<img src="' + dataUser.image + '" style="width: 50px; height: 50px; margin: 15px"/>' +

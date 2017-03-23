@@ -17,10 +17,58 @@ $(function(){
 		populateSummary(eventId);
 	});
 
+ 	populateButton(eventId);
 	populateActivities(eventId);
 	populateProducer(eventId);	
-	populateTimeline(eventId)
+	populateTimeline(eventId);
+
+	//========================== DIALOG HIDING FUNCTIONS ===================
+
+	var participateDialog = $( "#participate-form" ).dialog({
+        autoOpen: false,
+        show: {
+            effect: "fade",
+            duration: 200
+          },
+        hide: {
+            effect: "fade",
+            duration: 200
+          },
+        modal: true,
+        resizable: true,
+        width: 500,
+        buttons: {
+            "OK" : {
+            text: "OK",
+            id: "confirmInputInfo",
+                click: function(){
+                    confirmInputInfo();
+                }
+            },
+            "Cancel" : {
+                text: "Cancel",
+                click: function() {
+                    participateDialog.dialog( "close" );
+                }
+            }
+        }                
+    });
 });
+
+function populateButton(eventId) {	
+	var userId = readCookie("user");
+
+	$.getJSON( '/events/participants/' + eventId + '/' + userId, function( data ) {
+		if(data.msg == 'true') {
+			$('#btnParticipate').attr('readonly', 'readonly');
+			$('#btnParticipate').attr('disabled', 'disabled');
+			$('#btnParticipate').attr('onclick', '');
+			$('#btnParticipate').removeClass('btn-info');
+			$('#btnParticipate').addClass('btn-success');
+			$('#btnParticipate').html('BẠN ĐÃ THAM GIA');					
+		}
+	});
+}
 
 function populateTimeline(eventId) {
   $.getJSON( '/events/details/' + eventId, function( data ) {     
@@ -133,12 +181,19 @@ function populateActivities(eventId) {
 }
 
 function populateProducer(eventId) {
-	$.getJSON( '/users/id/' + readCookie('user'), function(data) {
+	$.getJSON( '/users/id/' + $('#txtProducerId').val(), function(data) {
 		$("#linkCompany").attr('href', '/users/' + data._id);
 		$('#txtCompanyImageSrc').attr('src', data.companyImage);
 		$('#txtCompanyName').html('<a href="/users/' + data._id + '">' + data.companyName + '</a>');
 		$('#txtCompanyPhone').html(data.companyPhoneNumber);
 		$('#txtCompanyEmail').html('<a href="mailto:' + data.companyEmail + '">' + data.companyEmail + '</a>');
+
+		if(readCookie('user') == data._id) {
+			$('#eventParticipation').html('');
+			$('#eventProducerButtons').html('<br><hr><div class="col-md-3"></div>' +
+  				'<div class="col-md-3 col-xs-11"><a href="edit/' + eventId + '" style="background-color:#1f76bd; width: 100%" class="btn btn-info"><strong>' + 'CHỈNH SỬA' + '</strong></a></div>' +
+  				'<div class="col-md-3 col-xs-11"><a href="update/' + eventId + '" style="background-color:#1f76bd; width: 100%" class="btn btn-info"><strong>' + 'CẬP NHẬT' + '</strong></a></div>');
+		}
 	});
 }
 
@@ -154,7 +209,8 @@ function populateSummary(eventId) {
 						    	'<p class="page-description">Cám ơn mọi người đã giúp đỡ.</p>' +
 						  	'</div>' +
 						'</div>' +
-						'<h2 class="title-style-2">Thông tin <span class="title-under"></span></h2>' +
+						'<h2 class="title-style-2">Tổng kết <span class="title-under"></span></h2>' +
+						'<div id="photoGallery" class="row col-md-12 col-sm-12 col-xs-12 fadeIn animated"></div>' +
 						'<div class="row">'+
 							'<div class="col-md-6 col-sm-6 col-xs-12">' +
 								'<h3><strong>Đóng góp</strong></h3>' +
@@ -313,5 +369,274 @@ function populateSummary(eventId) {
 	        	});
 	        }
 	    });	
+	    populateGallery(eventId);
+		populateRating(eventId);
+	}	
+}
+
+function populateGallery(eventId) {	
+
+	// Populate Gallery
+	$.ajax({
+        url: '/events/photo/' + eventId,
+        dataType: 'json',
+        async: false,
+        success: function( data ) {
+        	if(data != '') {
+        		$('#photoGallery').html('<h3><strong>Hình ảnh</strong></h3><div id="photoCarousel" class="owl-carousel owl-theme photo-carousel"></div><br>');
+        		var counter = 0;
+	        	var content = "";
+	        	var content2 = "";
+	        	$.each(data, function(){
+	        		content = '<div class="item thumb" style="background-image:url(\'' + this.image + '\'); height:400px"></div>';
+	        		$('#photoCarousel').html($('#photoCarousel').html() + content);
+	        		counter++;
+	        	});
+
+	        	$('#photoCarousel').owlCarousel({
+				    loop:true,
+				    margin:10,
+				    nav:false,
+				    center:true,
+				    pagination:true,
+				    autoplay:true,
+				    responsive:{
+				        0:{
+				            items:1
+				        },
+				        800:{
+				            items:2
+				        }
+				    }
+				})
+        	}           
+        }
+    });	
+}
+
+function populateRating(eventId) {
+	// Populate Rating Panel
+	var userId = $('#txtProducerId').val();
+	var currentEventRatingContent = "";
+	var currentEventRating = 0;
+	$.ajax({
+	    url: '/ratings/general/' + eventId,
+	    dataType: 'json',
+	    async: false,
+	    success: function(dataRating) {
+	    	if(dataRating == '' || dataRating == null || dataRating.ratingPoint == null) {
+	    		currentEventRating = 0;
+	    	} else {
+	    		currentEventRating = parseFloat(dataRating.ratingPoint);
+	    	}
+	    	currentEventRatingContent = "<p>" + "Đánh giá" + ": " + currentEventRating + "/5 " + "bởi" +  " " + dataRating.count + " " + "người" + "</p>";
+	    	currentEventRating = parseFloat(dataRating.ratingPoint);
+	    }
+	});
+
+
+
+	var currentProducerRatingContent = "";
+	var currentProducerRating = 0;
+	$.ajax({
+	    url: '/ratings/general/' + userId,
+	    dataType: 'json',
+	    async: false,
+	    success: function(dataRating) {
+	    	if(dataRating == '' || dataRating == null || dataRating.ratingPoint == null) {
+	    		currentProducerRating = 0;
+	    	} else {
+	    		currentProducerRating = parseFloat(dataRating.ratingPoint);
+	    	}
+	    	currentProducerRatingContent = "<p>" + "Đánh giá" + ": " + currentProducerRating + "/5 " + "bởi" +  " " + dataRating.count + " " + "người" + "</p>";
+	    	
+	    }
+	});
+
+	$.getJSON( '/events/participants/' + eventId + '/' + readCookie('user'), function( data ) {
+		var eventRating = 0;
+		var producerRating = 0;
+		var ratedContent = "";
+		var ratingContent = "";
+		var eventRateContent = '<p><i class="fa fa-street-view" style="font-size:48px;"></i></p><p><h2><strong>' + 'ĐÁNH GIÁ SỰ KIỆN' + '</strong></h2></p>';
+		var producerRateContent = '<p><i class="fa fa-user-secret" style="font-size:48px;"></i></p><p><h2><strong>' + 'ĐÁNH GIÁ BAN TỔ CHỨC' + '</strong></h2></p>';
+
+		if(data.msg == 'true') {				
+			$.getJSON('/events/details/' + eventId, function(eventData) {
+				$.ajax({
+				    url: '/ratings/id/' + eventId + '/' + readCookie('user'),
+				    dataType: 'json',
+				    async: false,
+				    success: function(dataUserRating) {
+				      if(dataUserRating != '' && dataUserRating != null) {
+				        eventRating = dataUserRating.ratingPoint;
+				        ratedContent =  '<p>' + 'Bạn đã đánh giá' + ' ' + eventRating + ' ' + 'sao cho sự kiện này.' + '</p>';
+				        for(var i = 1; i <= 5; i++) {
+				        	if(i <= eventRating) {
+				        		ratedContent += '<img id="eventRating' + i + '" class="eventRating" src="/images/system/rated-star.png" height="50" style="margin:5px" onmouseover="seeRate(\'event\',' + i + ')" onclick="rate(\'' + eventId + '\',' + i  +')" />';
+				        	} else {
+				        		ratedContent += '<img id="eventRating' + i + '" class="eventRating" src="/images/system/unrated-star.png" height="50" style="margin:5px" onmouseover="seeRate(\'event\',' + i + ')"  onclick="rate(\'' + eventId + '\',' + i  +')" />';
+				        	}
+				        }
+				        ratedContent += '<p>' + currentEventRatingContent + '</p>';
+				      } else {
+				      	ratedContent =  '<p>' + 'Hãy đánh giá sự kiện này!' + '</p>';
+				      	for(var i = 1; i <= 5; i++) {
+				        	ratedContent += '<img id="eventRating' + i + '" class="eventRating" src="/images/system/unrated-star.png" height="50" style="margin:5px" onmouseover="seeRate(\'event\',' + i + ')"  onclick="rate(\'' + eventId + '\',' + i  +')" />';
+				        }
+				      }
+				    }
+				});
+
+				ratingContent += 	'<div class="col-md-6 col-sm-6 col-xs-12" style="text-align:center">' +
+										eventRateContent + 
+										ratedContent +
+									'</div>';
+
+
+				var userId = eventData.userId
+				$.ajax({
+				    url: '/ratings/id/' + eventData.userId + '/' + readCookie('user'),
+				    dataType: 'json',
+				    async: false,
+				    success: function(dataUserRating) {
+				      if(dataUserRating != '' && dataUserRating != null) {
+				        producerRating = dataUserRating.ratingPoint;				        
+				        ratedContent =  '<p>' + 'Bạn đã đánh giá' + ' ' + producerRating + ' ' + 'sao cho sự kiện này.' + '</p>';
+				        for(var i = 1; i <= 5; i++) {
+				        	if(i <= producerRating) {
+				        		ratedContent += '<img id="producerRating' + i + '" class="producerRating" src="/images/system/rated-star.png" height="50" style="margin:5px" onmouseover="seeRate(\'producer\',' + i + ')"  onclick="rate(\'' + userId + '\',' + i  +')" />';
+				        	} else {
+				        		ratedContent += '<img id="producerRating' + i + '" class="producerRating" src="/images/system/unrated-star.png" height="50" style="margin:5px" onmouseover="seeRate(\'producer\',' + i + ')"  onclick="rate(\'' + userId + '\',' + i  +')" />';
+				        	}
+				        }
+				        ratedContent += '<p>' + currentProducerRatingContent + '</p>';
+				      } else {
+				      	ratedContent =  '<p>' + 'Hãy đánh giá sự kiện này!' + '</p>';
+				      	for(var i = 1; i <= 5; i++) {
+				        	ratedContent += '<img id="producerRating' + i + '" class="producerRating" src="/images/system/unrated-star.png" height="50" style="margin:5px" onmouseover="seeRate(\'producer\',' + i + ')"  onclick="rate(\'' + userId + '\',' + i  +')" />';
+				        }
+				      }
+				    }
+				});
+				ratingContent += 	'<div class="col-md-6 col-sm-6 col-xs-12" style="text-align:center">' +
+										producerRateContent +
+										ratedContent +
+									'</div>';
+
+				$('#ratingPane').html('<hr><div class="col-md-1 col-sm-1"></div><div class="col-md-10 col-sm-10 col-xs-12">' + ratingContent + '</div>');
+			});
+		} else {
+			ratedContent =  '<p>' + 'Chỉ những thành viên tham gia mới được đánh giá.' + '</p>';
+	        for(var i = 1; i <= 5; i++) {
+	        	if(i <= Math.floor(currentEventRating)) {
+	        		ratedContent += '<img id="eventRating' + i + '" class="eventRating" src="/images/system/rated-star.png" height="50" style="margin:5px" />';
+	        	} else {
+	        		ratedContent += '<img id="eventRating' + i + '" class="eventRating" src="/images/system/unrated-star.png" height="50" style="margin:5px" />';
+	        	}
+	        }
+	        ratedContent += '<p>' + currentEventRatingContent + '</p>';
+
+	        ratingContent += 	'<div class="col-md-6 col-sm-6 col-xs-12" style="text-align:center">' +
+	        							eventRateContent + 
+										ratedContent +
+									'</div>';
+
+			ratedContent =  '<p>' + 'Chỉ những thành viên tham gia mới được đánh giá.' + '</p>';
+	        for(var i = 1; i <= 5; i++) {
+	        	if(i <= Math.floor(currentProducerRating)) {
+	        		ratedContent += '<img id="producerRating' + i + '" class="producerRating" src="/images/system/rated-star.png" height="50" style="margin:5px" />';
+	        	} else {
+	        		ratedContent += '<img id="producerRating' + i + '" class="producerRating" src="/images/system/unrated-star.png" height="50" style="margin:5px" />';
+	        	}
+	        }
+	        ratedContent += '<p>' + currentProducerRatingContent + '</p>';
+
+	        ratingContent += 	'<div class="col-md-6 col-sm-6 col-xs-12" style="text-align:center">' +
+	        							producerRateContent +
+										ratedContent +
+									'</div>';
+
+			$('#ratingPane').html('<hr><div class="col-md-1 col-sm-1"></div><div class="col-md-10 col-sm-10 col-xs-12">' + ratingContent + '</div>');
+		}
+	});
+}
+
+function join() {
+	var userId = readCookie("user");
+	if(userId != "") {
+		$.getJSON( '/users/id/' + userId, function( data ) {
+			if(data.fullName != null && data.fullName != '' && data.phoneNumber != null && data.phoneNumber != '' && data.email != null && data.email != '') {
+				var eventId = window.location.href.split('/')[window.location.href.split('/').length - 1].split('#')[0];
+				var newJoin = {
+					'userId': userId,
+					'eventId': eventId,
+					'status': 'Present',
+					'dateCreated': new Date
+				};
+
+				 $.ajax({
+			        type: 'POST',
+			        data: newJoin,
+			        url: '/events/addparticipant',
+			        dataType: 'JSON'
+			    }).done(function( response ) {
+
+			        // Check for successful (blank) response
+			        if (response.msg === '') {
+			            
+			            // Update the table
+			            populateButton(eventId);
+
+			        }
+			        else {
+
+			            // If something goes wrong, alert the error message that our service returned
+			            alert('Error: ' + response.msg);
+
+			        }
+			    });
+
+			} else {
+				// If user doesn't have enough information, show information dialog
+				if(data.fullName != null && data.fullName != "")
+					$('#txtParticipantFullName').val(data.fullName);
+
+				if(data.email != null && data.email != "")
+					$('#txtParticipantEmail').val(data.email);
+
+				if(data.phoneNumber != null && data.phoneNumber != "")
+					$('#txtParticipantPhone').val(data.phoneNumber);
+				   
+				    
+				$('#participate-form').dialog('open'); 
+			}
+		});	
+	} else {
+		// If user haven't login, redirect to login page
+		window.location.href = "/login";
 	}
+}
+
+function confirmInputInfo() {
+	var userData = {
+		'fullName': $('#txtParticipantFullName').val(),
+		'email': $('#txtParticipantEmail').val(),
+		'phoneNumber': $('#txtParticipantPhone').val(),
+		'dateModified': new Date()
+	};
+
+	$.ajax({
+	      type: 'PUT',
+	      data: userData,
+	      url: '/users/updateuser/' + readCookie('user'),
+	      dataType: 'JSON'
+	}).done(function( response ) {
+		if (response.msg === '') {
+			$('#participate-form').dialog('close'); 
+		    join();
+		} else {
+		    alert(response.msg);
+		}
+	});
 }

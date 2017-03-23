@@ -20,10 +20,22 @@ var uploading = multer({
     limits: {fileSize: 10000000, files:1},
 });
 
+var storage =   multer.diskStorage({
+  destination: function (req, file, callback) {
+    callback(null, 'public\\images\\event\\');
+  },
+  filename: function (req, file, callback) {
+    callback(null, file.fieldname + '-' + Date.now());
+  }
+});
+var photoGalleryUpload = multer({
+    storage : storage
+}).array('photoGallery',20);
+
 
 /* GET event listing. */
 router.get('/', function(req, res, next) {
-  res.render('events/event_list', { title: 'Event Manager' });
+  res.render('admin_page/event_list', { title: 'Event Manager' });
 });
 
 /* GET event listing. */
@@ -177,6 +189,66 @@ router.post('/addevent', uploading.single('displayEventImage'), function(req, re
         });
     }                    
 });
+
+
+/* POST photo gallery. */
+router.post('/addphoto', function(req, res) {
+    photoGalleryUpload(req,res,function(err) {        
+        if(err) {
+            return res.end("Error uploading file.");
+        } else {            
+            console.log(req.body);
+            console.log(req.files);
+            var images;
+            var path = "";
+            var eventId = req.body.eventId;
+            var db = req.db;
+            var collection = db.get('Gallery');
+            for(var i = 0; i < req.files.length; i++) {
+                images = {
+                    'eventId' : eventId,
+                    'image' : "/images/event/" + req.files[i].filename,
+                    'dateCreated' : new Date()
+                };
+                collection.insert(images, function(error, inserted) {
+                    if(error)
+                        return res.end("Error with database.");
+                });
+            }
+            res.writeHead(302, {'Location': '/events/update/' + eventId});
+            res.end();        
+        }        
+    });                
+});
+
+/* GET gallery from eventId. */
+router.get('/photo/:id', function(req, res, next) {
+    var db = req.db;
+    var collection = db.get('Gallery');
+    collection.find({eventId: req.params.id},{sort: {dateCreated: -1}},function(e,docs){
+        res.json(docs);
+    });
+});
+
+/* DELETE Photo gallery by ID. */
+router.delete('/removephoto/:id', function(req, res) {
+    var db = req.db;
+    var collection = db.get('Gallery');
+    collection.findOne({_id: req.params.id},function(e,docs){
+        if(docs) {
+            try {
+                fs.unlink("public" + docs.image);
+            }
+            catch(err) {
+                console.log(err);
+            }
+            collection.remove({ '_id' : req.params.id }, function(err) {
+                res.send((err === null) ? { msg: '' } : { msg:'error: ' + err });
+            });
+        }
+    });    
+});
+
 
 /* POST finish drafted event. */
 router.post('/finishevent/:id', function(req, res) {    

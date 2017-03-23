@@ -23,6 +23,10 @@ $(document).ready(function() {
 
     $('#tableBannedUsers tbody').on('click', 'td a.linkunbanuser', unbanUser);
 
+    $('#tableProducers tbody').on('click', 'td a.linkdemoteuser', demoteUser);
+
+    $('#tableSponsors tbody').on('click', 'td a.linkdemoteuser', demoteUser);   
+
     $('[data-toggle="tooltip"]').tooltip();    
 
     //========================== DIALOG HIDING FUNCTIONS ===================
@@ -280,8 +284,11 @@ function showProducers(data) {
                 '<center>'
                     + '<a data-toggle="tooltip" title="Details" class="btn btn-info btn-xs" href="/users/' + this._id + '">'
                         + '<span class="glyphicon glyphicon-search"></span>'
+                    + '</a>'                    
+                    + '<a data-toggle="tooltip" title="Demote" class="btn btn-warning btn-xs linkdemoteuser" rel="' + this._id + '">'
+                        + '<span class="glyphicon glyphicon-arrow-down"></span>'
                     + '</a>'
-                    + '<a data-toggle="tooltip" title="Remove" class="btn btn-danger btn-xs linkbanuser" rel="' + this._id + '">'
+                    + '<a data-toggle="tooltip" title="Ban" class="btn btn-danger btn-xs linkbanuser" rel="' + this._id + '">'
                         + '<span class="glyphicon glyphicon-remove"></span>'
                     + '</a>'
                 + '</center>',
@@ -318,6 +325,9 @@ function showSponsors(data) {
                 '<center>'
                     + '<a data-toggle="tooltip" title="Details" class="btn btn-info btn-xs" href="/users/' + this._id + '">'
                         + '<span class="glyphicon glyphicon-search"></span>'
+                    + '<a data-toggle="tooltip" title="Demote" class="btn btn-warning btn-xs linkdemoteuser" rel="' + this._id + '">'
+                        + '<span class="glyphicon glyphicon-arrow-down"></span>'
+                    + '</a>'
                     + '<a data-toggle="tooltip" title="Remove" class="btn btn-danger btn-xs linkremoveadmin" rel="' + this._id + '">'
                         + '<span class="glyphicon glyphicon-remove"></span>'
                     + '</a>'
@@ -458,6 +468,31 @@ function unbanUser(event) {
         // Check for a successful (blank) response
         if (response.msg === '') {
             populateTables();
+            var newNotification = {
+                'userId': $(this).attr('rel'),
+                'content': 'Your ban have been lifted.',
+                'markedRead': 'Unread',
+                'dateCreated': new Date()
+            }
+
+            // Use AJAX to post the object to our adduser service        
+            $.ajax({
+                type: 'POST',
+                data: newNotification,
+                url: '/notifications/addnotification',
+                dataType: 'JSON'
+            }).done(function( response ) {
+
+                // Check for successful (blank) response
+                if (response.msg !== '') {
+
+                    // If something goes wrong, alert the error message that our service returned
+                    alert('Error: ' + response.msg);
+
+                } else {
+                    // Do nothing
+                }
+            });
         }
         else {
             alert('Error: ' + response.msg);
@@ -544,38 +579,85 @@ function confirmDisapproveUser() {
         // Check for a successful (blank) response
         if (response.msg === '') {
             populateTables();            
+            var newNotification = {
+                'userId': $(this).attr('rel'),
+                'content': 'Your request to promote to ' + data[4] + ' has been disapproved for: ' + $('#txtDisapproveReason').val(),
+                'markedRead': 'Unread',
+                'dateCreated': new Date()
+            }
+
+            // Use AJAX to post the object to our adduser service        
+            $.ajax({
+                type: 'POST',
+                data: newNotification,
+                url: '/notifications/addnotification',
+                dataType: 'JSON'
+            }).done(function( response ) {
+
+                // Check for successful (blank) response
+                if (response.msg !== '') {
+
+                    // If something goes wrong, alert the error message that our service returned
+                    alert('Error: ' + response.msg);
+
+                } else {
+                    $('#txtUserDisapproveId').val("");
+                    $('#txtUserDisapprove').val("");
+                    $('#txtDisapproveReason').val("");
+                    $('#disapprove-reason-form').dialog('close');
+                }
+            });
         }
         else {
             alert('Error: ' + response.msg);
         }
-    });
+    });    
+}
 
-    var newNotification = {
-        'userId': $(this).attr('rel'),
-        'content': 'Your request to promote to ' + data[4] + ' has been disapproved for: ' + $('#txtDisapproveReason').val(),
-        'markedRead': 'Unread',
-        'dateCreated': new Date()
-    }
+// Demote User Function
+function demoteUser() {
+    var user = {
+        'role': 'User',
+        'dateModified': Date()
+    };
 
-    // Use AJAX to post the object to our adduser service        
+    // If they did, do our delete
     $.ajax({
-        type: 'POST',
-        data: newNotification,
-        url: '/notifications/addnotification',
-        dataType: 'JSON'
+        type: 'PUT',
+        data: user,
+        url: '/users/updateuser/' + $(this).attr('rel')
     }).done(function( response ) {
+        // Check for a successful (blank) response
+        if (response.msg === '') {
+            populateTables();
+            var newNotification = {
+                'userId': $(this).attr('rel'),
+                'content': 'You have been demoted to User.',
+                'markedRead': 'Unread',
+                'dateCreated': new Date()
+            }
 
-        // Check for successful (blank) response
-        if (response.msg !== '') {
+            // Use AJAX to post the object to our adduser service        
+            $.ajax({
+                type: 'POST',
+                data: newNotification,
+                url: '/notifications/addnotification',
+                dataType: 'JSON'
+            }).done(function( response ) {
 
-            // If something goes wrong, alert the error message that our service returned
-            alert('Error: ' + response.msg);
+                // Check for successful (blank) response
+                if (response.msg !== '') {
 
-        } else {
-            $('#txtUserDisapproveId').val("");
-            $('#txtUserDisapprove').val("");
-            $('#txtDisapproveReason').val("");
-            $('#disapprove-reason-form').dialog('close');
+                    // If something goes wrong, alert the error message that our service returned
+                    alert('Error: ' + response.msg);
+
+                } else {
+                    // Do nothing
+                }
+            });
         }
-    });
+        else {
+            alert('Error: ' + response.msg);
+        }
+    });   
 }
