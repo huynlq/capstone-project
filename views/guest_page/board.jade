@@ -1,0 +1,94 @@
+extends layout
+
+block content
+	doctype html
+	html.no-js
+		head
+			meta(charset='utf-8')
+			title Causes | Charity / Non-profit responsive Bootstrap HTML5 template
+			meta(name='description', content='')
+			meta(name='viewport', content='width=device-width, initial-scale=1')
+			// Fonts
+			link(href='http://fonts.googleapis.com/css?family=Open+Sans:400,300,700', rel='stylesheet', type='text/css')
+			link(href='http://fonts.googleapis.com/css?family=Dosis:400,700', rel='stylesheet', type='text/css')
+			// Bootsrap
+			link(rel='stylesheet', href='guest_page/css/bootstrap.min.css')
+			// Font awesome
+			link(rel='stylesheet', href='guest_page/css/font-awesome.min.css')
+			// PrettyPhoto
+			link(rel='stylesheet', href='guest_page/css/prettyPhoto.css')
+			// Template main Css
+			link(rel='stylesheet', href='guest_page/css/style.css')
+			// Datatables
+			link(href='/vendors/datatables.net-bs/css/dataTables.bootstrap.min.css', rel='stylesheet')
+			link(href='/vendors/datatables.net-buttons-bs/css/buttons.bootstrap.min.css', rel='stylesheet')
+			link(href='/vendors/datatables.net-fixedheader-bs/css/fixedHeader.bootstrap.min.css', rel='stylesheet')
+			link(href='/vendors/datatables.net-responsive-bs/css/responsive.bootstrap.min.css', rel='stylesheet')
+			link(href='/vendors/datatables.net-scroller-bs/css/scroller.bootstrap.min.css', rel='stylesheet')
+			// Modernizr
+			script(src='guest_page/js/modernizr-2.6.2.min.js')
+		body
+			// /. main-header
+			.row(style="height:80px")
+			.page-heading.text-center
+				.container.zoomIn.animated
+					h1.page-title
+						span#header COMMUNITY BOARD
+						span.title-under
+					p#header-desc.page-description
+			.main-container
+				.our-causes.fadeIn.animated
+					.container
+						table#listPosts.table.table-style-1.table-striped.table-bordered.dt-responsive.nowrap.datatable-responsive(cellspacing='0', width='100%')
+										thead
+											tr
+												th.action-col #
+												th#th-title Title
+												th#th-author Author
+												th#th-comment Comments
+												th#th-date Date Created
+										tbody
+						.col-md-4.col-sm-4.col-xs-12
+							a.btn.btn-info.btn-sm(href='/posts/creator')
+								span.glyphicon.glyphicon-edit&nbsp;
+								strong#btnCreatePost New Post
+				// /.our-causes
+			// /.main-containe
+			// jQuery
+			script(src='//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js')
+			script.
+				window.jQuery || document.write('<script src="guest_page/js/jquery-1.11.1.min.js"><\\/script>')
+			// Bootsrap javascript file
+			script(src='guest_page/js/bootstrap.min.js')
+			// PrettyPhoto javascript file
+			script(src='guest_page/js/jquery.prettyPhoto.js')
+			// Datatables
+			script(src='../vendors/datatables.net/js/jquery.dataTables.min.js')
+			script(src='../vendors/datatables.net-bs/js/dataTables.bootstrap.min.js')
+			script(src='../vendors/datatables.net-buttons/js/dataTables.buttons.min.js')
+			script(src='../vendors/datatables.net-buttons-bs/js/buttons.bootstrap.min.js')
+			script(src='../vendors/datatables.net-buttons/js/buttons.flash.min.js')
+			script(src='../vendors/datatables.net-buttons/js/buttons.html5.min.js')
+			script(src='../vendors/datatables.net-buttons/js/buttons.print.min.js')
+			script(src='../vendors/datatables.net-fixedheader/js/dataTables.fixedHeader.min.js')
+			script(src='../vendors/datatables.net-keytable/js/dataTables.keyTable.min.js')
+			script(src='../vendors/datatables.net-responsive/js/dataTables.responsive.min.js')
+			script(src='../vendors/datatables.net-responsive-bs/js/responsive.bootstrap.js')
+			script(src='../vendors/datatables.net-scroller/js/dataTables.scroller.min.js')
+			script(src='../vendors/jszip/dist/jszip.min.js')
+			script(src='../vendors/pdfmake/build/pdfmake.min.js')
+			script(src='../vendors/pdfmake/build/vfs_fonts.js')
+			// Google map
+			script(src='http://maps.google.com/maps/api/js?sensor=false&libraries=places', type='text/javascript')
+			// Countdown JS
+			script(src='/vendors/countdown/countdown.js')
+			// Template main javascript
+			script(src='guest_page/js/board.js')
+			// Google Analytics: change UA-XXXXX-X to be your site's ID.
+			script.
+				(function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=
+				function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;
+				e=o.createElement(i);r=o.getElementsByTagName(i)[0];
+				e.src='//www.google-analytics.com/analytics.js';
+				r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));
+				ga('create','UA-XXXXX-X');ga('send','pageview');

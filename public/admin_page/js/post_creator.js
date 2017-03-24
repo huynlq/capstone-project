@@ -1,6 +1,8 @@
 // DOM Ready ===============================================
 
 $(document).ready(function() {
+	populateLanguage();
+
 	tinymce.init({ 
 	    mode : "specific_textareas",
 	    editor_selector : "mceEditor",
@@ -49,16 +51,31 @@ $(document).ready(function() {
 
 // Functions ===============================================
 
+function populateLanguage() {
+	$('#header').html($POSTCREATOR_HEADER);
+	$('#header-post').html($POSTCREATOR_HEADER_POST);
+	$('#form-title').html($POSTCREATOR_FORM_TITLE);
+	$('#form-postTo').html($POSTCREATOR_FORM_POST_TO);
+	$('#form-shortDesc').html($POSTCREATOR_FORM_SHORT_DESC);
+	$('#form-content').html($POSTCREATOR_FORM_CONTENT);
+	$('#form-image').html($POSTCREATOR_FORM_IMAGE);
+	$('#btnSubmit').html($POSTCREATOR_FORM_SUBMIT);
+}
+
 function populateType() {
 	var userId = readCookie('user');
 	$.getJSON( '/users/id/' + userId, function( data ) {
 		if(data.role == "Admin") {
 			$('#txtPostType').val("News");
 			$('#txtPostType').html($('#txtPostType').html() + '<option>News</option><option>Community Board</option>');
+			$('#imagePanel').removeAttr('style');
+			$('#shortDescPanel').removeAttr('style');
 		} else {
 			$('#txtPostType').val("Community Board");
 			$('#txtPostType').html($('#txtPostType').html() + '<option>Community Board</option>');
 			$('#txtPostType').attr('readonly','readonly');
+			$('#imagePanel').html('');
+			$('#shortDescPanel').html('');
 		}
 	});
 }

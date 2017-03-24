@@ -60,15 +60,14 @@ block content
 			.row(style="height:80px")
 			.page-heading.text-center
 				.container.zoomIn.animated
-					h1.page-title(style="text-transform: uppercase;") #{docs.eventName}
+					h1#header.page-title(style="text-transform: uppercase;") #{docs.eventName}
 						span.title-under
-					p.page-description
-						| Hãy tham gia chung tay tiếp sức cho sự kiện này.
+					p#header-desc.page-description
 			.main-container
 				.container
 					.row
 						.col-md-8.col-xs-12.fadeIn.animated
-							img(src='#{docs.eventImage}', alt='', style="max-width:100%")
+							img(src='#{docs.eventImage}', alt='', style="width:100%")
 							.timePane(style="right: 0")
 								.month-time.fleft
 									span#event-date(style="display:none")
@@ -78,7 +77,7 @@ block content
 									span.stime
 										strong#eventTime						
 						.col-md-4.col-xs-12.fadeIn.animate-onscroll
-							h2.title-style-2
+							h2#header-producer.title-style-2
 								| Ban tổ chức
 								span.title-under
 							table.table.table-responsive.table-striped
@@ -104,7 +103,7 @@ block content
 										td
 											span#txtCompanyPhone
 							h2.title-style-2
-								| Địa điểm
+								span#header-location Địa điểm
 								span.title-under
 							p #{docs.meetingAddress}
 							#map(style='height:200px; margin: 0; width: 100%')					
@@ -127,13 +126,13 @@ block content
 					.row.fadeIn.animated
 						.col-md-12
 							h2.title-style-2
-								| Chi tiết
+								span#header-eventDescription Chi tiết
 								span.title-under
 							p#eventDescription					
 					.row
 						.col-md-12.col-xs-12.fadeIn.animate-onscroll
 							h2.title-style-2
-								| Hoạt động 
+								span#header-activities Hoạt động 
 								span.title-under
 							div(role='tabpanel')
 								#activityPane
@@ -144,28 +143,28 @@ block content
 								.col-md-3
 								.col-md-6.col-xs-12
 									a#btnParticipate.btn.btn-info(style="background-color:#1f76bd; width: 100%" onclick='join()')
-										strong THAM GIA NGAY
+										strong#btnJoin THAM GIA NGAY
 					.row
 						#eventProducerButtons.col-md-12.col-xs-12
 			#participate-form(title='Participant Information')
-				p.validateTips All form fields are required.
+				p#form-require.validateTips All form fields are required.
 				form
 					fieldset
 						.row.form-group
 							label.control-label.col-md-6.col-sm-6.col-xs-12
-								| Full Name 
+								span#form-name Full Name 
 								span.required *
 							.col-md-6.col-sm-6.col-xs-12
 								input#txtParticipantFullName.form-control.col-md-7.col-xs-12(type='text', required='required')
 						.row.form-group
 							label.control-label.col-md-6.col-sm-6.col-xs-12
-								| Email 
+								span#form-email Email 
 								span.required *
 							.col-md-6.col-sm-6.col-xs-12
 								input#txtParticipantEmail.form-control.col-md-7.col-xs-12(type='text', required='required')
 						.row.form-group
 							label.control-label.col-md-6.col-sm-6.col-xs-12
-								| Phone 
+								span#form-phone Phone 
 								span.required *
 							.col-md-6.col-sm-6.col-xs-12
 								input#txtParticipantPhone.form-control.col-md-7.col-xs-12(type='text', required='required')

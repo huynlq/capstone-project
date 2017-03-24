@@ -60,12 +60,12 @@ block content
 					h1.page-title(style="text-transform: uppercase;")#event-title
 						span.title-under
 					p.page-description
-						| This is a preview of your event, it's not published yet.
+						span#header-desc This is a preview of your event, it's not published yet.
 			.main-container
 				.container
 					.row
 						.col-md-8.col-xs-12.fadeIn.animated
-							img#eventImage(src='', alt='', style="max-width:100%")
+							img#eventImage(src='', alt='', style="width:100%")
 							.timePane(style="right: 0")
 								.month-time.fleft
 									span.day.fleft#eventDay
@@ -75,7 +75,7 @@ block content
 										strong#eventTime						
 						.col-md-4.col-xs-12.fadeIn.animate-onscroll
 							h2.title-style-2
-								| Producer
+								span#header-producer Producer
 								span.title-under
 							table.table.table-responsive.table-striped
 								tbody
@@ -99,7 +99,7 @@ block content
 										td
 											span#txtCompanyPhone
 							h2.title-style-2
-								| Location
+								span#header-location Location
 								span.title-under
 							p#meetingAddress
 							#map(style='height:200px; margin: 0; width: 100%')
@@ -122,13 +122,13 @@ block content
 					.row.fadeIn.animated
 						.col-md-12
 							h2.title-style-2
-								| Description
+								span#header-description Description
 								span.title-under
 							p#eventDescription				
 					.row
 						.col-md-12.col-xs-12.fadeIn.animate-onscroll
 							h2.title-style-2
-								| Activities 
+								span#header-activity Activities 
 								span.title-under
 							div(role='tabpanel')
 								#activityPane
@@ -136,11 +136,11 @@ block content
 						.col-md-12.col-xs-12
 							.col-md-3
 							.col-md-3.col-xs-11
-								a#btnEditEvent.btn.btn-info(style="background-color:#1f76bd; width: 100%")
-									strong << EDIT
+								a.btn.btn-info(style="background-color:#1f76bd; width: 100%")
+									strong#btnEditEvent << EDIT
 							.col-md-3.col-xs-11
-								a#btnFinishEvent.btn.btn-info(style="background-color:#1f76bd; width: 100%", onclick="goNext()")
-									strong FINISH >>
+								a.btn.btn-info(style="background-color:#1f76bd; width: 100%", onclick="goNext()")
+									strong#btnFinishEvent FINISH >>
 			// jQuery
 			script(src='//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js')
 			script.

@@ -33,17 +33,18 @@ block content
 			.row(style="height:80px")
 			.page-heading.text-center
 				.container.zoomIn.animated
-					h1.page-title(style="text-transform: uppercase;") My User Page
+					h1.page-title(style="text-transform: uppercase;")
+						span#header My User Page
 						span.title-under
 					p.page-description
-						| Let everyone know about yourself.
+						span#header-desc Let everyone know about yourself.
 			.main-container
 				.container
 					.row
 					// Tabs
 					// Smart Wizard					
 					.form-horizontal.form-label-left
-						h3(style='margin-left: 50px') User Information
+						h3#header-userInfo(style='margin-left: 50px') User Information
 						hr
 						form(action="/users/updatemyuserinfo", method="post", enctype="multipart/form-data").row
 							.col-md-1.col-sm-1
@@ -57,27 +58,27 @@ block content
 							.col-md-1.col-sm-1
 							.col-md-7.col-sm-7.col-xs-12
 								.form-group
-									label.control-label.col-md-2.col-sm-2.col-xs-12
+									label#userForm-username.control-label.col-md-2.col-sm-2.col-xs-12
 										| Username
 									.col-md-7.col-sm-7.col-xs-12
 										input#txtUsername.form-control.col-md-7.col-xs-12(type='text', disabled='disabled')
 								.form-group
-									label.control-label.col-md-2.col-sm-2.col-xs-12
+									label#userForm-fullName.control-label.col-md-2.col-sm-2.col-xs-12
 										| Full Name
 									.col-md-7.col-sm-7.col-xs-12
 										input#txtFullName.form-control.col-md-7.col-xs-12(type='text', name='fullName')
 								.form-group
-									label.control-label.col-md-2.col-sm-2.col-xs-12
+									label#userForm-address.control-label.col-md-2.col-sm-2.col-xs-12
 										| Address
 									.col-md-7.col-sm-7.col-xs-12
 										input#txtAddress.form-control.col-md-7.col-xs-12(type='text', name='address')
 								.form-group
-									label.control-label.col-md-2.col-sm-2.col-xs-12
+									label#userForm-email.control-label.col-md-2.col-sm-2.col-xs-12
 										| Email 
 									.col-md-7.col-sm-7.col-xs-12
 										input#txtEmail.form-control.col-md-7.col-xs-12(type='text', name='email')
 								.form-group
-									label.control-label.col-md-2.col-sm-2.col-xs-12
+									label#userForm-phone.control-label.col-md-2.col-sm-2.col-xs-12
 										| Phone 
 									.col-md-7.col-sm-7.col-xs-12
 										input#txtPhone.form-control.col-md-7.col-xs-12(type='text', name='phoneNumber')
@@ -85,10 +86,10 @@ block content
 									.col-md-6.col-sm-6
 									.col-md-1.col-sm-1.col-xs-12
 										button.btn.btn-info(type="submit")
-											strong Save User Info
+											strong#userForm-save Save User Info
 						br
 						#companyInfoDiv
-							h3(style='margin-left: 50px') Company Information
+							h3#header-companyInfo(style='margin-left: 50px') Company Information
 							hr
 							form(action="/users/updatemycompanyinfo", method="post", enctype="multipart/form-data").row
 								.col-md-1.col-sm-1
@@ -102,27 +103,27 @@ block content
 								.col-md-1.col-sm-1
 								.col-md-7.col-sm-7.col-xs-12
 									.form-group
-										label.control-label.col-md-2.col-sm-2.col-xs-12
+										label#companyForm-name.control-label.col-md-2.col-sm-2.col-xs-12
 											| Name
 										.col-md-7.col-sm-7.col-xs-12
 											input#txtCompanyName.form-control.col-md-7.col-xs-12(type='text', name='companyName')
 									.form-group
-										label.control-label.col-md-2.col-sm-2.col-xs-12
+										label#companyForm-address.control-label.col-md-2.col-sm-2.col-xs-12
 											| Address
 										.col-md-7.col-sm-7.col-xs-12
 											input#txtCompanyAddress.form-control.col-md-7.col-xs-12(type='text', name='companyAddress')
 									.form-group
-										label.control-label.col-md-2.col-sm-2.col-xs-12
+										label#companyForm-email.control-label.col-md-2.col-sm-2.col-xs-12
 											| Email 
 										.col-md-7.col-sm-7.col-xs-12
 											input#txtCompanyEmail.form-control.col-md-7.col-xs-12(type='text', name='companyEmail')
 									.form-group
-										label.control-label.col-md-2.col-sm-2.col-xs-12
+										label#companyForm-phone.control-label.col-md-2.col-sm-2.col-xs-12
 											| Phone 
 										.col-md-7.col-sm-7.col-xs-12
 											input#txtCompanyPhone.form-control.col-md-7.col-xs-12(type='text', name='companyPhoneNumber')
 									.form-group
-										label.control-label.col-md-2.col-sm-2.col-xs-12
+										label#companyForm-website.control-label.col-md-2.col-sm-2.col-xs-12
 											| Website 
 										.col-md-7.col-sm-7.col-xs-12
 											input#txtCompanyWebsite.form-control.col-md-7.col-xs-12(type='text', name='companyWebsite')
@@ -130,7 +131,7 @@ block content
 									.col-md-6.col-sm-6
 									.col-md-1.col-sm-1.col-xs-12
 										button.btn.btn-info(type="submit")
-											strong Save Company Info
+											strong#companyForm-save Save Company Info
 							br
 						#eventJoined-panel
 						#eventProduced-panel

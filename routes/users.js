@@ -197,7 +197,8 @@ router.post('/updatecompany', uploading.single('displayCompanyImage'), function(
             var collection = db.get('Users');
             collection.update({ '_id' : user }, { $set: req.body}, function(err) {
                 if(err === null) {
-                    res.render('users/my_user_page', { title: "Charity Project | User Page" });
+                    res.writeHead(302, {'Location': '/'});
+                    res.end();
                 } else {
                     res.send({ msg:'error: ' + err, 'message': 'An error occured. Please try again.' });
                 }

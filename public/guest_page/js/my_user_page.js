@@ -1,6 +1,8 @@
 // DOM Ready ===============================================
 
 $(document).ready(function() {
+  populateLanguage();
+
   $('a[data-toggle="tab"]').on( 'shown.bs.tab', function (e) {
       $.fn.dataTable.tables( {visible: true, api: true} ).columns.adjust();
   } );
@@ -54,6 +56,26 @@ $(document).ready(function() {
 } );
 
 // Functions ===============================================
+
+function populateLanguage() {
+  $('#header').html($MYUSERPAGE_HEADER);
+  $('#header-desc').html($MYUSERPAGE_HEADER_DESC);
+  $('#header-userInfo').html($MYUSERPAGE_HEADER_USERINFO);
+  $('#userForm-username').html($MYUSERPAGE_USERFORM_USERNAME);
+  $('#userForm-fullName').html($MYUSERPAGE_USERFORM_FULLNAME);
+  $('#userForm-address').html($MYUSERPAGE_USERFORM_ADDRESS);
+  $('#userForm-email').html($MYUSERPAGE_USERFORM_EMAIL);
+  $('#userForm-phone').html($MYUSERPAGE_USERFORM_PHONE);
+  $('#userForm-save').html($MYUSERPAGE_USERFORM_SAVE);
+
+  $('#header-companyInfo').html($MYUSERPAGE_HEADER_COMPANYINFO);
+  $('#companyForm-name').html($MYUSERPAGE_COMPFORM_COMPNAME);
+  $('#companyForm-address').html($MYUSERPAGE_COMPFORM_ADDRESS);
+  $('#companyForm-email').html($MYUSERPAGE_COMPFORM_EMAIL);
+  $('#companyForm-phone').html($MYUSERPAGE_COMPFORM_PHONE);
+  $('#companyForm-website').html($MYUSERPAGE_COMPFORM_WEBSITE);
+  $('#companyForm-save').html($MYUSERPAGE_COMPFORM_SAVE);
+}
 
 function populateForms() {
 	var id = readCookie("user");
@@ -135,7 +157,7 @@ function populateEventJoined() {
   var eventId = "";
   $('#eventJoined-panel').html('<div class="section-home our-sponsors fadeIn">' +
                                         '<div class="container">' +
-                                          '<h2 class="title-style-1">Joined Events <span class="title-under"></span></h2>' +
+                                          '<h2 class="title-style-1">' + $MYUSERPAGE_HEADER_JOINEDEVENTS + ' <span class="title-under"></span></h2>' +
                                           '<div id="joined-events" class="owl-carousel list-unstyled"></div>' +
                                         '</div>' +
                                       '</div>');
@@ -196,10 +218,10 @@ function populateEventJoined() {
 
         });
       } else {
-        $('#eventJoined-panel').html($('#eventJoined-panel').html() + '<center>None at the moment.</center>')
+        $('#eventJoined-panel').html($('#eventJoined-panel').html() + '<center>' + $MYUSERPAGE_NO_EVENT + '</center>')
       }
     } else {
-      $('#eventJoined-panel').html($('#eventJoined-panel').html() + '<center>None at the moment.</center>')
+      $('#eventJoined-panel').html($('#eventJoined-panel').html() + '<center>' + $MYUSERPAGE_NO_EVENT + '</center>')
     }   
   });
 }
@@ -213,7 +235,7 @@ function populateEventProduced() {
       var dateCreated = "";      
       $('#eventProduced-panel').html('<div class="section-home our-sponsors fadeIn">' +
                                         '<div class="container">' +
-                                          '<h2 class="title-style-1">Hosted Events <span class="title-under"></span></h2>' +
+                                          '<h2 class="title-style-1">' + $MYUSERPAGE_HEADER_JOINEDEVENTS + ' <span class="title-under"></span></h2>' +
                                           '<div id="hosted-events" class="owl-carousel list-unstyled"></div>' +
                                         '</div>' +
                                       '</div>');
@@ -266,7 +288,7 @@ function populateEventProduced() {
 
         });
       } else {
-        $('#eventProduced-panel').html($('#eventProduced-panel').html() + '<center>None at the moment.</center>');
+        $('#eventProduced-panel').html($('#eventProduced-panel').html() + '<center>' + $MYUSERPAGE_NO_EVENT + '</center>');
       }
     } else {
       $('#eventProduced-panel').html('');

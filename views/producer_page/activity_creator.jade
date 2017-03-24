@@ -37,16 +37,17 @@ block content
 			.row(style="height:80px")
 			.page-heading.text-center
 				.container.zoomIn.animated
-					h1.page-title(style="text-transform: uppercase;") Event Creator
+					h1.page-title(style="text-transform: uppercase;")
+						span#header Event Creator
 						span.title-under
 					p.page-description
-						| Create your very own event with our support!
+						span#header-desc Create your very own event with our support!
 			.main-container
 				.container
 					.row
 						.col-md-12
 							h2.title-style-2
-								| Activity Details
+								span#header-acitvity Activity Details
 								span.title-under
 							form(action="javascript:;", onsubmit="addActivity()").form-horizontal.form-label-left
 								input#txtEventId(type='hidden')
@@ -54,37 +55,37 @@ block content
 								input#txtNumberOfDates(type='hidden', value='0')
 								.form-group
 									label.control-label.col-md-3.col-sm-3.col-xs-12
-										| Date 
-										span.required *
+										span#form-date Date 
+										span.required  *
 									.col-md-6.col-sm-6.col-xs-12
 										select#txtActivityDate.form-control.col-md-7.col-xs-12(type='text', required='required')
 								.form-group
 									label.control-label.col-md-3.col-sm-3.col-xs-12
-										| Time 
-										span.required *
+										span#form-time Time 
+										span.required  *
 									.col-md-6.col-sm-6.col-xs-12
 										input#txtActivityTime.form-control.col-md-7.col-xs-12(type='text', data-inputmask="'mask': '99:99'", required='required')
 								.form-group
 									label.control-label.col-md-3.col-sm-3.col-xs-12
-										| Place 
-										span.required *
+										span#form-place Place 
+										span.required  *
 									.col-md-6.col-sm-6.col-xs-12
 										input#txtActivityPlace.form-control.col-md-7.col-xs-12(type='text', required='required')
 								.form-group
 									label.control-label.col-md-3.col-sm-3.col-xs-12
-										| Activity 
-										span.required *
+										span#form-activity Activity 
+										span.required  *
 									.col-md-6.col-sm-6.col-xs-12
 										input#txtActivity.form-control.col-md-7.col-xs-12(type='text', required='required')
 								.form-group
 									label.control-label.col-md-3.col-sm-3.col-xs-12
-										| Note  
+										span#form-note Note  
 									.col-md-6.col-sm-6.col-xs-12
 										input#txtActivityNote.form-control.col-md-7.col-xs-12(type='text')
 								.form-group
 									.col-md-3.col-sm-3.col-xs-12
 									.col-md-6.col-sm-6.col-xs-12
-										button.btn.btn-info(type="submit", style="float:right") Add
+										button#form-add.btn.btn-info(type="submit", style="float:right") Add
 							ul#activityDates.nav.nav-tabs
 							#activityContents.tab-content
 							br						
@@ -92,7 +93,7 @@ block content
 							.row
 								.col-md-7.col-sm-7
 								.col-md-2.col-sm-2.col-xs-12
-									button.btn.btn-info.col-xs-12(onclick="goNext()") Continue >>	
+									button#formSubmit.btn.btn-info.col-xs-12(onclick="goNext()") Continue >>	
 			// jQuery
 			script(src='//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js')
 			script.

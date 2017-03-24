@@ -20,6 +20,8 @@ $(document).ready(function() {
   $('#eventMonthYear').html(date.toLocaleString("en-us", { month: "long" }) + ', ' + date.getFullYear());
   $('#eventTime').html(date.getHours() + ":" + (date.getMinutes()<10?'0':'') + date.getMinutes());
 
+  populateLanguage();
+  populatePost(postId);
   populateAuthor();
   populateComments();
   populateEditPane(postId);
@@ -32,6 +34,36 @@ $(document).ready(function() {
 
 // Functions ===============================================
 
+function populateLanguage() {
+  $('#headerDescription').html($POSTDETAILS_HEADER_DESC);
+  $('#headerComment').html($POSTDETAILS_HEADER_COMMENT + '<span class="title-under"></span>');
+  $('#headerAuthor').html($POSTDETAILS_HEADER_AUTHOR);
+  $('#formContent').html($POSTDETAILS_FORM_COMMENT + '<span class="required">*</span>');
+  $('#formSubmit').html($POSTDETAILS_FORM_SUBMIT);
+}
+
+// Populate Post
+function populatePost(postId) {
+  $.getJSON( '/posts/details/' + postId, function( data ) {
+    if(data.postType != "News") {
+      var user = "";
+      $.getJSON( '/users/id/' + data.userId, function(dataUser) {        
+        user = dataUser.username;
+        console.log(user);
+        var dateCreated = new Date(data.dateCreated);
+        var content = '<div>' +
+                        '<span><b>' + $POSTDETAILS_AUTHOR  + ': </b><a href="/users/' + data.userId + '">' + user + '</a></span>' +
+                        '<span style="float:right"><b>' + $POSTDETAILS_DATE + ': </b>' + dateCreated.toLocaleTimeString() + ' - ' + dateCreated.toLocaleDateString() + '</span>' +
+                      '</div><hr>' +
+                      '<h2 class="title-style-2">' + data.postName + ' <span class="title-under"></span></h2>';
+        $('#newsPane').html(content);
+      });      
+    }
+
+    $('#newsPane').removeAttr('style');
+  });
+}
+
 function populateEditPane(postId) {
   var content = "";  
 
@@ -39,8 +71,8 @@ function populateEditPane(postId) {
     $.getJSON( '/users/id/' + $("#lastEditedUser").html(), function(data) {
       if(data != '') {
         var date = new Date($('#dateModified').html());
-        content += '<i style="float:right"><b>Last edited in ' + date.toLocaleString("vn", { date:"long"}) + ' by ' +
-                    '<a href="/users/' + data._id + '">' + data.username + '</a></b></i>';
+        content += '<i style="float:right"><b>' + $POSTDETAILS_LAST_EDITED + ' ' + date.toLocaleString("vn", { date:"long"}) + ' ' + $POSTDETAILS_LAST_EDITED_BY +
+                    ' <a href="/users/' + data._id + '">' + data.username + '</a></b></i>';
         $('#editPostPane').html(content);        
       }     
     });    
@@ -49,7 +81,7 @@ function populateEditPane(postId) {
   $.getJSON( '/users/id/' + readCookie('user'), function(dataUser) {
     if(dataUser != '') {
       if($('#txtUserId').val() == readCookie('user') || dataUser.role == 'Admin') {
-        $('#editPostPane').html($('#editPostPane').html() + '<br><br><a class="col-sm-12 btn btn-info" href="/posts/updatepost/' + postId + '">Edit Post</a>');
+        $('#editPostPane').html($('#editPostPane').html() + '<br><hr><a style="float:right" class="btn btn-info" href="/posts/updatepost/' + postId + '"><span class="glyphicon glyphicon-edit">&nbsp;</span><strong>' + $POSTDETAILS_FORM_EDIT + '</strong></a>');
       }
     }        
   });
@@ -102,7 +134,7 @@ function postComment() {
 function populateComments() {
   $('#commentPane').html('');
   if(readCookie('user') == '') {
-    $('#commentForm').html('<div class="row" style="text-align: center"><a href="/login" class="btn btn-info">Please Log In To Comment</a></div>');
+    $('#commentForm').html('<div class="row" style="text-align: center"><a href="/login" class="btn btn-info">' + $POSTDETAILS_FORM_LOGIN + '</a></div>');
   }
 
   var counter = 0;
@@ -129,10 +161,10 @@ function populateComments() {
         success: function(dataUser) {
           if(commentData.userId == readCookie('user')) {
             optionContent = '<div class="row" style="position:absolute;bottom:15px;right:15px">' +
-                              '<a data-toggle="tooltip" title="Edit" class="btn btn-info btn-xs linkeditcomment" rel="' + commentData._id + '" href="#">' +
+                              '<a data-toggle="tooltip" title="' + $POSTDETAILS_COMMENT_EDIT + '" class="btn btn-info btn-xs linkeditcomment" rel="' + commentData._id + '" href="#">' +
                                 '<span class="glyphicon glyphicon-edit"></span>' +
                               '</a>&nbsp;&nbsp;' +
-                              '<a data-toggle="tooltip" title="Delete" class="btn btn-danger btn-xs linkdeletecomment" rel="' + commentData._id + '" href="#">' +
+                              '<a data-toggle="tooltip" title="' + $POSTDETAILS_COMMENT_DELETE + '" class="btn btn-danger btn-xs linkdeletecomment" rel="' + commentData._id + '" href="#">' +
                                 '<span class="glyphicon glyphicon-remove"></span>' +
                               '</a>' +
                             '</div>';
@@ -204,7 +236,7 @@ function editComment(event) {
 function cancelEditComment(event) {
   $('#txtCommentId').val('');
   $('#txtCommentContent').val('');
-  $('#commentButtons').html('<a style="float: right" onclick="postComment()" class="btn btn-info col-xs-12">Submit</a>');
+  $('#commentButtons').html('<a style="float: right" onclick="postComment()" class="btn btn-info col-xs-12">' + $POSTDETAILS_FORM_SUBMIT + '</a>');
 }
 
 // Edit comment

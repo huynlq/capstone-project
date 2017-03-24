@@ -1,6 +1,8 @@
 // DOM Ready ===============================================
 
 $(document).ready(function() {
+    populateLanguage();
+
     $('a[data-toggle="tab"]').on( 'shown.bs.tab', function (e) {
         $.fn.dataTable.tables( {visible: true, api: true} ).columns.adjust();
     } );
@@ -86,6 +88,39 @@ $(document).ready(function() {
 
 // Functions ===============================================
 
+function populateLanguage() {
+    $('#header').html($EVENTUPDATE_HEADER);
+
+    $('.tab-donation').html($EVENTUPDATE_TAB_DONATION);
+    $('.tab-participant').html($EVENTUPDATE_TAB_PARTICIPANT);
+    $('.tab-cost').html($EVENTUPDATE_TAB_COST);
+    $('.tab-gallery').html($EVENTUPDATE_TAB_GALLERY);
+
+    $('.th-action').html();
+
+    $('.th-donator').html($EVENTDETAILS_DONATION_NAME);
+    $('.th-item').html($EVENTDETAILS_DONATION_ITEM);
+    $('.th-quantity').html($EVENTDETAILS_DONATION_QUANTITY);
+    $('#donateForm-add').html($EVENTUPDATE_DONATEFORM_ADD);
+
+    $('.th-day').html($EVENTDETAILS_ACTIVITY_DAY);
+    $('.th-time').html($EVENTDETAILS_ACTIVITY_TIME);
+    $('.th-place').html($EVENTDETAILS_ACTIVITY_LOCATION);
+    $('.th-activity').html($EVENTDETAILS_ACTIVITY_ACT);
+    $('.th-note').html($EVENTDETAILS_ACTIVITY_NOTE);
+    $('.th-cost').html($EVENTDETAILS_ACTIVITY_COST);
+
+    $('.th-action').html($EVENTUPDATE_TH_ACTION);
+    $('.th-user').html($EVENTUPDATE_TH_USER);
+    $('.th-fullName').html($EVENTUPDATE_TH_FULLNAME);
+    $('.th-email').html($EVENTUPDATE_TH_EMAIL);
+    $('.th-phone').html($EVENTUPDATE_TH_PHONE);
+    $('.th-join').html($EVENTUPDATE_TH_JOIN);
+
+    $('#gallery-upload').val($EVENTUPDATE_GALLERY_UPLOAD);
+    $('#gallery-require').html($EVENTUPDATE_GALLERY_REQUIRE);
+}
+
 function populateTables() {
 	// jQuery AJAX call for JSON    
     var eventId = window.location.href.split('/')[window.location.href.split('/').length - 1].split('#')[0];
@@ -120,7 +155,7 @@ function showDonations(data) {
                     table.row.add([
                         counter,
                         '<center>'
-                            + '<a data-toggle="tooltip" title="Remove" class="btn btn-danger btn-xs linkremovedonation" rel="' + this._id + '" href="#">'
+                            + '<a data-toggle="tooltip" title="' + $EVENTUPDATE_TIP_DELETE + '" class="btn btn-danger btn-xs linkremovedonation" rel="' + this._id + '" href="#">'
                                 + '<span class="glyphicon glyphicon-remove"></span>'
                             + '</a>'
                         + '</center>',
@@ -384,11 +419,11 @@ function showParticipants(_id) {
             dateJoined = new Date(data.dateCreated);
             $.getJSON( '/users/id/' + this.userId, function( dataUser ) {
                 if(participantStatus == 'Absent') {
-                    actionPanel = '<a data-toggle="tooltip" title="Mark Present" class="btn btn-info btn-xs linkpresent" rel="' + participantId + '" href="#">'
+                    actionPanel = '<a data-toggle="tooltip" title="' + $EVENTUPDATE_TIP_MARK_PRESENT + '" class="btn btn-info btn-xs linkpresent" rel="' + participantId + '" href="#">'
                                     + '<span class="glyphicon glyphicon-user"></span>'
                                 + '</a>';
                 } else {
-                    actionPanel = '<a data-toggle="tooltip" title="Mark Absent" class="btn btn-danger btn-xs linkabsent" rel="' + participantId + '" href="#">'
+                    actionPanel = '<a data-toggle="tooltip" title="' + $EVENTUPDATE_TIP_MARK_ABSENT + '" class="btn btn-danger btn-xs linkabsent" rel="' + participantId + '" href="#">'
                                     + '<span class="glyphicon glyphicon-remove"></span>'
                                 + '</a>';
                 }
@@ -497,7 +532,7 @@ function showActivityCosts(_id) {
                 this.activity,
                 this.note,
                 actualCost,
-                '<center><a data-toggle="tooltip" title="Edit Actual Cost" class="btn btn-info btn-xs linkeditactualcost" rel="' + this._id + '" href="#">'
+                '<center><a data-toggle="tooltip" title="' + $EVENTUPDATE_TIP_EDIT_COST + '" class="btn btn-info btn-xs linkeditactualcost" rel="' + this._id + '" href="#">'
                     + '<span class="glyphicon glyphicon-edit"></span>'
                 + '</a></center>'
             ]).draw(false);
@@ -517,7 +552,7 @@ function editActualCost(event) {
         $('#txtEditActivityTime').val(data.time);
         $('#txtEditActivityPlace').val(data.place);
         $('#txtEditActivity').val(data.activity);
-        $('#txtEditActivityEstCost').val(data.estBudget);
+        $('#txtEditActivityEstCost').val(data.note);
         if(data.actualCost != null)
             $('#txtEditActivityActualCost').val(data.actualCost);
     });
@@ -684,7 +719,7 @@ function showGallery(eventId) {
             content =   '<div class="col-sm-4 col-xs-12 gallery-photo" style="text-align:center">' +
                             '<img style="max-width:90%" src="' + this.image + '"></img>' +
                             '<div style="position: absolute; right: 45px; top: 5px">' +
-                                '<a style="border: solid white 2px" data-toggle="tooltip" title="Remove" class="btn btn-danger linkdeletephoto" rel="' + this._id + '">' +
+                                '<a style="border: solid white 2px" data-toggle="tooltip" title="' + $EVENTUPDATE_TIP_DELETE + '" class="btn btn-danger linkdeletephoto" rel="' + this._id + '">' +
                                     '<span class="glyphicon glyphicon-remove"></span>' +
                                 '</a>' +
                             '</div>' +

@@ -1,47 +1,109 @@
 // DOM Ready =============================================================
 $(document).ready(function() {
 
+    populateLanguageLayout();
+    var languageContent = "";
+    if(localStorage.getItem('language') == 'vi' || localStorage.getItem('language') == null) {
+      languageContent = "<a onclick='changeLanguage(\"en\")'><img src='https://lipis.github.io/flag-icon-css/flags/4x3/gb.svg' style='height:13px'/></a>";
+    } else {
+      languageContent = "<a onclick='changeLanguage(\"vi\")'><img src='https://lipis.github.io/flag-icon-css/flags/4x3/vn.svg' style='height:13px'/></a>";
+    }
+
     // Check Login
     var loginSession = readCookie("user");
 
     if(loginSession != '') {
       $.getJSON( '/users/id/' + loginSession, function( data ) {
-        $('#navbar').html('<li>Xin chào, ' + data.username + '</li>' +
+        $('#navbar').html('<li>' + $LAYOUT_NAVBAR_WELCOME + data.username + '</li>' +
                           '<li>|</li>' +
-                          '<li><a onclick="signOut()">Đăng xuất</a>' +
+                          '<li>' + languageContent + '</li>' +
+                          '<li>|</li>' +
+                          '<li><a onclick="signOut()">' + $LAYOUT_NAVBAR_SIGNOUT + '</a>' +
                           '</li>');
-        $('#navbar-user').html("Xin chào, " + data.username);
-        $('#navbar-signlink').html("<a onclick='signOut()'>Đăng xuất</a>");
+        $('#navbar-user').html($LAYOUT_NAVBAR_WELCOME + data.username);
+        $('#navbar-signlink').html("<a onclick='signOut()'>" + $LAYOUT_NAVBAR_SIGNOUT + "</a>");
         if(data.role == "Producer") {
-          $('#navbar-below').html($('#navbar-below').html() + '<li><a>QUYỀN BTC</a>' +
+          $('#navbar-below').html($('#navbar-below').html() + '<li><a>' + $LAYOUT_NAVBAR_PRODUCER + '</a>' +
                                                                 '<ul class="submenu">' +
-                                                                  '<li class="submenu-item"><a href="/my">Trang cá nhân</a></li>' +
-                                                                  '<li class="submenu-item"><a href="/events">Quản lý sự kiện</a></li>' +
-                                                                  '<li class="submenu-item"><a href="/events/creator_event">Tạo sự kiện</a></li>' +
+                                                                  '<li class="submenu-item"><a href="/my">' + $LAYOUT_NAVBAR_USER_PAGE + '</a></li>' +
+                                                                  '<li class="submenu-item"><a href="/events">' + $LAYOUT_NAVBAR_EVENT_LIST + '</a></li>' +
+                                                                  '<li class="submenu-item"><a href="/events/creator_event">' + $LAYOUT_NAVBAR_EVENT_CREATE + '</a></li>' +
                                                                 '</ul>' +
                                                               '</li>');
         } else if(data.role == "Admin") {
-          $('#navbar-below').html($('#navbar-below').html() + '<li><a>QUYỀN ADMIN</a>' +
+          $('#navbar-below').html($('#navbar-below').html() + '<li><a>' + $LAYOUT_NAVBAR_ADMIN + '</a>' +
                                                                 '<ul class="submenu">' +
-                                                                  '<li class="submenu-item"><a href="/my">Trang cá nhân</a></li>' +
-                                                                  '<li class="submenu-item"><a href="/users">Quản lý người dùng</a></li>' +
-                                                                  '<li class="submenu-item"><a href="/events">Quản lý sự kiện</a></li>' +
-                                                                  '<li class="submenu-item"><a href="/posts">Quan lý bài viết</a></li>' +
-                                                                  '<li class="submenu-item"><a href="/posts/creator">Tạo bài viết</a></li>' +                                                                  
+                                                                  '<li class="submenu-item"><a href="/my">' + $LAYOUT_NAVBAR_USER_PAGE + '</a></li>' +
+                                                                  '<li class="submenu-item"><a href="/users">' + $LAYOUT_NAVBAR_USER_LIST + '</a></li>' +
+                                                                  '<li class="submenu-item"><a href="/events">' + $LAYOUT_NAVBAR_EVENT_LIST + '</a></li>' +
+                                                                  '<li class="submenu-item"><a href="/posts">' + $LAYOUT_NAVBAR_POST_LIST + '</a></li>' +
+                                                                  '<li class="submenu-item"><a href="/posts/creator">' + $LAYOUT_NAVBAR_POST_CREATE + '</a></li>' +                                                                  
                                                                 '</ul>' +
                                                               '</li>');
         } else {
-          $('#navbar-below').html($('#navbar-below').html() + '<li><a>NGƯỜI DÙNG</a>' +
+          $('#navbar-below').html($('#navbar-below').html() + '<li><a>' + $LAYOUT_NAVBAR_USER + '</a>' +
                                                                 '<ul class="submenu">' +
-                                                                  '<li class="submenu-item"><a href="/my">Trang cá nhân</a></li>' +
+                                                                  '<li class="submenu-item"><a href="/my">' + $LAYOUT_NAVBAR_USER_PAGE + '</a></li>' +
                                                                 '</ul>' +
                                                               '</li>');
         }
       });
     }
+
+    populateFeed('1562432787368293','404393089920980|jCrsml4DJDN41CWNUZCQZYV0_LQ');
+    //$('.fb-share-button').attr('data-href', window.location.href);
+    console.log(window.location.href);
 });
 
 // Functions =============================================================
+
+function changeLanguage(lang) {
+  localStorage.setItem('language', lang);
+  location.reload();
+}
+
+function populateLanguageLayout() {
+  $('#welcome').html($LAYOUT_NAVBAR_WELCOME + $LAYOUT_NAVBAR_GUEST);
+  $('#login').html($LAYOUT_NAVBAR_SIGNIN);
+  $('#navbar-home').html($LAYOUT_NAVBAR_HOME);
+  $('#navbar-about').html($LAYOUT_NAVBAR_ABOUT);
+  $('#navbar-events').html($LAYOUT_NAVBAR_EVENTS);
+  $('#navbar-news').html($LAYOUT_NAVBAR_NEWS);
+  $('#navbar-board').html($LAYOUT_NAVBAR_BOARD);
+  $('#navbar-sponsors').html($LAYOUT_NAVBAR_SPONSORS);
+  $('#about-us').html($LAYOUT_FOOTER_ABOUT);
+  $('#about-us-desc').html($LAYOUT_FOOTER_ABOUT_DESC);
+}
+
+//Populate Facebook feed
+function populateFeed(pageId, accessToken) {
+  $.getJSON( 'https://graph.facebook.com/' + pageId + '/feed?access_token=' + accessToken + '&limit=1', function( data ) {
+    var content = "";
+    var message = "";
+    var messageContent = "";
+    $.each(data.data, function(){
+      messageContent = "";
+      message = this.message.split(' ');
+      if(message.length > 50) {
+        for(var i = 0; i < 50; i++) {
+          if(i == 49) {
+            messageContent += message[i] + '...';
+          } else {
+            messageContent += message[i] + ' ';
+          }          
+        }
+      } else {
+        messageContent = this.message;
+      }
+      content = '<li class="tweet">' +
+                  '<div data-href="https://www.facebook.com/' + this.id + '" data-width="500" data-show-text="true" class="fb-post">' +
+                    '<blockquote cite="https://www.facebook.com/' + this.id + '" class="fb-xfbml-parse-ignore">Posted by <a href="https://www.facebook.com/' + this.id.split('_')[0] + '">Facebook</a> on <a href="https://www.facebook.com/' + this.id + '">Thursday, August 27, 2015</a></blockquote>' +
+                  '</div>' +
+                '</li>';
+      $('#feed').html($('#feed').html() + content);
+    });
+  });
+}
 
 //Read cookie
 function readCookie(name) {

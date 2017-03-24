@@ -2,16 +2,21 @@
 $(function(){
 
 	var eventId = window.location.href.split('/')[window.location.href.split('/').length - 1].split('#')[0];
+	var lang = "vi";
+	if(localStorage.getItem('language') == 'en')
+		lang = 'en-us';
 
 	/*  Populate map
  	================================================*/ 
+
+ 	populateLanguage();
 
  	$.getJSON('/events/details/' + eventId, function(data) {
 		google.maps.event.addDomListener(window, 'load', populateMap(data));
 		var date = new Date(data.eventDate.split(' - ')[0]);
 		$('#event-date').html(data.eventDate);
 		$('#eventDay').html(date.getDate());
-		$('#eventMonthYear').html(date.toLocaleString("vi", { month: "long" }) + ', ' + date.getFullYear());
+		$('#eventMonthYear').html(date.toLocaleString(lang, { month: "long" }) + ', ' + date.getFullYear());
 		$('#eventTime').html(data.meetingTime);
 		$('#eventDescription').html(data.eventDescription.replace(/&lt;/g, '<').replace(/&gt;/g, '>'));
 		populateSummary(eventId);
@@ -55,6 +60,20 @@ $(function(){
     });
 });
 
+function populateLanguage() {
+	$('#header-desc').html($EVENTDETAILS_HEADER_DESC);
+	$('#header-producer').html($EVENTDETAILS_HEADER_PRODUCER);
+	$('#header-location').html($EVENTDETAILS_HEADER_LOCATION);
+	$('#header-eventDescription').html($EVENTDETAILS_HEADER_EVENTDESC);
+	$('#header-activities').html($EVENTDETAILS_HEADER_ACTIVITIES);
+	$('#btnJoin').html($EVENTDETAILS_BUTTON_JOIN);
+	$('#participate-form').attr('title',$EVENTDETAILS_FORM_TITLE);
+	$('#form-require').html($EVENTDETAILS_FORM_REQUIRE);
+	$('#form-name').html($EVENTDETAILS_FORM_NAME);
+	$('#form-email').html($EVENTDETAILS_FORM_EMAIL);
+	$('#form-phone').html($EVENTDETAILS_FORM_PHONE);
+}
+
 function populateButton(eventId) {	
 	var userId = readCookie("user");
 
@@ -65,18 +84,18 @@ function populateButton(eventId) {
 			$('#btnParticipate').attr('onclick', '');
 			$('#btnParticipate').removeClass('btn-info');
 			$('#btnParticipate').addClass('btn-success');
-			$('#btnParticipate').html('BẠN ĐÃ THAM GIA');					
+			$('#btnParticipate').html($EVENTDETAILS_BUTTON_JOINED);					
 		}
 	});
 }
 
 function populateTimeline(eventId) {
   $.getJSON( '/events/details/' + eventId, function( data ) {     
-    var published = {'name':'Ngày tạo','date':new Date(data.dateCreated)};
-    var deadline = {'name':'Hạn chót','date':new Date(data.eventDeadline)};
-    var start = {'name':'Bắt đầu','date':new Date(data.eventDate.split(' - ')[0])};
-    var end = {'name':'Kết thúc','date':new Date(data.eventDate.split(' - ')[1])};
-    var now = {'name':'Hiện tại','date':new Date()};
+    var published = {'name':$EVENTDETAILS_DATECREATED,'date':new Date(data.dateCreated)};
+    var deadline = {'name':$EVENTDETAILS_DEADLINE,'date':new Date(data.eventDeadline)};
+    var start = {'name':$EVENTDETAILS_STARTDATE,'date':new Date(data.eventDate.split(' - ')[0])};
+    var end = {'name':$EVENTDETAILS_ENDDATE,'date':new Date(data.eventDate.split(' - ')[1])};
+    var now = {'name':$EVENTDETAILS_NOW,'date':new Date()};
     var now2 = new Date();
 
     var dates = [published, deadline, start, end, now];
@@ -97,7 +116,7 @@ function populateTimeline(eventId) {
       $('#progress-' + (i + 1)).attr('aria-valuenow', part + '%');
       $('#progress-' + (i + 1)).attr('style', 'width: ' + part + '%;background: ' + background);
       $('#tooltip-' + (i + 1)).attr('title', dates[i].name + '<br>' + dates[i].date.toLocaleDateString()).tooltip('fixTitle').tooltip('show');
-      if(dates[i].name == "Hiện tại") {
+      if(dates[i].name == $EVENTDETAILS_NOW) {
         background = "none";
         var now = i + 1;
       }
@@ -144,17 +163,17 @@ function populateActivities(eventId) {
 		for (var i = 0; i < data.length; i++) {
 			if(!days.includes(data[i].day)) {
 				days.push(data[i].day);
-				$('#activityDays').html($('#activityDays').html() + '<li id="activity-tab-day-' + data[i].day + '"><a data-toggle="tab" href="#activity-day-' + data[i].day + '">Day ' + data[i].day + '</a></li>');
+				$('#activityDays').html($('#activityDays').html() + '<li id="activity-tab-day-' + data[i].day + '"><a data-toggle="tab" href="#activity-day-' + data[i].day + '">' + $EVENTDETAILS_ACTIVITY_DAY + ' ' + data[i].day + '</a></li>');
 			    $('#activityContents').html(
 			      $('#activityContents').html() + 
 			      '<div id="activity-day-' + data[i].day + '" class="tab-pane fade">' +
 			        '<table class="table table-striped">' +
 			          '<thead>' +
 			            '<tr>' +
-			              '<th>Thời gian</th>' +
-			              '<th>Địa điểm</th>' +
-			              '<th>Hoạt động</th>' +
-			              '<th>Ghi chú</th>' +
+			              '<th>' + $EVENTDETAILS_ACTIVITY_TIME + '</th>' +
+			              '<th>' + $EVENTDETAILS_ACTIVITY_LOCATION + '</th>' +
+			              '<th>' + $EVENTDETAILS_ACTIVITY_ACT + '</th>' +
+			              '<th>' + $EVENTDETAILS_ACTIVITY_NOTE + '</th>' +
 			            '</tr>' +
 			          '</thead>' +
 			          '<tbody id="activity-table-content-day' + data[i].day + '">' +
@@ -191,8 +210,8 @@ function populateProducer(eventId) {
 		if(readCookie('user') == data._id) {
 			$('#eventParticipation').html('');
 			$('#eventProducerButtons').html('<br><hr><div class="col-md-3"></div>' +
-  				'<div class="col-md-3 col-xs-11"><a href="edit/' + eventId + '" style="background-color:#1f76bd; width: 100%" class="btn btn-info"><strong>' + 'CHỈNH SỬA' + '</strong></a></div>' +
-  				'<div class="col-md-3 col-xs-11"><a href="update/' + eventId + '" style="background-color:#1f76bd; width: 100%" class="btn btn-info"><strong>' + 'CẬP NHẬT' + '</strong></a></div>');
+  				'<div class="col-md-3 col-xs-11"><a href="edit/' + eventId + '" style="background-color:#1f76bd; width: 100%" class="btn btn-info"><strong>' + $EVENTDETAILS_BUTTON_EDIT + '</strong></a></div>' +
+  				'<div class="col-md-3 col-xs-11"><a href="update/' + eventId + '" style="background-color:#1f76bd; width: 100%" class="btn btn-info"><strong>' + $EVENTDETAILS_BUTTON_UPDATE + '</strong></a></div>');
 		}
 	});
 }
@@ -205,22 +224,22 @@ function populateSummary(eventId) {
 		var content = "";
 			content =   '<hr><div class="page-heading text-center">' +
 							'<div class="container zoomIn animated">' +
-						    	'<h1 style="text-transform: uppercase;" class="page-title">ĐÃ HẾT HẠN DĂNG KÍ.<span class="title-under"></span></h1>' +
-						    	'<p class="page-description">Cám ơn mọi người đã giúp đỡ.</p>' +
+						    	'<h1 style="text-transform: uppercase;" class="page-title">' + $EVENTDETAILS_HEADER_END + '<span class="title-under"></span></h1>' +
+						    	'<p class="page-description">' + $EVENTDETAILS_HEADER_END_DESC + '</p>' +
 						  	'</div>' +
 						'</div>' +
-						'<h2 class="title-style-2">Tổng kết <span class="title-under"></span></h2>' +
+						'<h2 class="title-style-2">' + $EVENTDETAILS_HEADER_SUMMARY + ' <span class="title-under"></span></h2>' +
 						'<div id="photoGallery" class="row col-md-12 col-sm-12 col-xs-12 fadeIn animated"></div>' +
 						'<div class="row">'+
 							'<div class="col-md-6 col-sm-6 col-xs-12">' +
-								'<h3><strong>Đóng góp</strong></h3>' +
+								'<h3><strong>' + $EVENTDETAILS_HEADER_DONATION + '</strong></h3>' +
 								'<table id="tableDonations" cellspacing="0" width="100%" class="table table-style-1 table-striped table-bordered dt-responsive nowrap datatable-responsive">' +
 									'<thead>' +
 										'<tr>' +
 											'<th>#</th>' +
-											'<th>Người góp</th>' +
-											'<th>Đồ quyên góp</th>'+
-											'<th>Số lượng</th>'+
+											'<th>' + $EVENTDETAILS_DONATION_NAME + '</th>' +
+											'<th>' + $EVENTDETAILS_DONATION_ITEM + '</th>'+
+											'<th>' + $EVENTDETAILS_DONATION_QUANTITY + '</th>'+
 										'</tr>'+
 									'</thead>'+
 									'<tbody></tbody>'+
@@ -228,12 +247,12 @@ function populateSummary(eventId) {
 							'</div>' +
 							'<div class="col-md-1 col-sm-1 col-xs-12"></div>' +
 							'<div class="col-md-5 col-sm-5 col-xs-12">' +
-								'<h3><strong>Người tham gia</strong></h3>' +
+								'<h3><strong>' + $EVENTDETAILS_HEADER_PARTICIPANT + '</strong></h3>' +
 								'<table id="tableParticipants" cellspacing="0" width="100%" class="table table-style-1 table-striped table-bordered dt-responsive nowrap datatable-responsive">'+
 									'<thead>'+
 										'<tr>'+
 											'<th>#</th>'+
-											'<th>Tên</th>'+
+											'<th>' + $EVENTDETAILS_PARTICIPANT + '</th>'+
 										'</tr>'+
 									'</thead>'+
 									'<tbody></tbody>'+
@@ -242,15 +261,15 @@ function populateSummary(eventId) {
 						'</div>' +
 						'<br>' +
 						'<div class="col-md-12 col-sm-12 col-xs-12">' +
-							'<h3><strong>Chi phí hoạt động</strong></h3>' +
+							'<h3><strong>' + $EVENTDETAILS_HEADER_COST + '</strong></h3>' +
 							'<table id="tableActivityCosts" cellspacing="0" width="100%" class="table table-style-1 table-striped table-bordered dt-responsive nowrap datatable-responsive">'+
 								'<thead>'+
 									'<tr>'+
 										'<th>#</th>'+
-										'<th>Ngày</th>'+
-										'<th>Địa điểm</th>'+
-										'<th>Hoạt động</th>'+
-										'<th>Chi phí</th>'+
+										'<th>' + $EVENTDETAILS_ACTIVITY_DAY + '</th>' +
+										'<th>' + $EVENTDETAILS_ACTIVITY_LOCATION + '</th>' +
+										'<th>' + $EVENTDETAILS_ACTIVITY_ACT + '</th>' +
+										'<th>' + $EVENTDETAILS_ACTIVITY_COST + '</th>'+
 									'</tr>'+
 								'</thead>'+
 								'<tbody></tbody>'+
@@ -383,7 +402,7 @@ function populateGallery(eventId) {
         async: false,
         success: function( data ) {
         	if(data != '') {
-        		$('#photoGallery').html('<h3><strong>Hình ảnh</strong></h3><div id="photoCarousel" class="owl-carousel owl-theme photo-carousel"></div><br>');
+        		$('#photoGallery').html('<h3><strong>' + $EVENTDETAILS_HEADER_GALLERY + '</strong></h3><div id="photoCarousel" class="owl-carousel owl-theme photo-carousel"></div><br>');
         		var counter = 0;
 	        	var content = "";
 	        	var content2 = "";
@@ -429,27 +448,8 @@ function populateRating(eventId) {
 	    	} else {
 	    		currentEventRating = parseFloat(dataRating.ratingPoint);
 	    	}
-	    	currentEventRatingContent = "<p>" + "Đánh giá" + ": " + currentEventRating + "/5 " + "bởi" +  " " + dataRating.count + " " + "người" + "</p>";
+	    	currentEventRatingContent = "<p>" + $EVENTDETAILS_RATING + ": " + currentEventRating + "/5 " + $EVENTDETAILS_RATING_BY +  " " + dataRating.count + " " + $EVENTDETAILS_RATING_PEOPLE + "</p>";
 	    	currentEventRating = parseFloat(dataRating.ratingPoint);
-	    }
-	});
-
-
-
-	var currentProducerRatingContent = "";
-	var currentProducerRating = 0;
-	$.ajax({
-	    url: '/ratings/general/' + userId,
-	    dataType: 'json',
-	    async: false,
-	    success: function(dataRating) {
-	    	if(dataRating == '' || dataRating == null || dataRating.ratingPoint == null) {
-	    		currentProducerRating = 0;
-	    	} else {
-	    		currentProducerRating = parseFloat(dataRating.ratingPoint);
-	    	}
-	    	currentProducerRatingContent = "<p>" + "Đánh giá" + ": " + currentProducerRating + "/5 " + "bởi" +  " " + dataRating.count + " " + "người" + "</p>";
-	    	
 	    }
 	});
 
@@ -458,8 +458,7 @@ function populateRating(eventId) {
 		var producerRating = 0;
 		var ratedContent = "";
 		var ratingContent = "";
-		var eventRateContent = '<p><i class="fa fa-street-view" style="font-size:48px;"></i></p><p><h2><strong>' + 'ĐÁNH GIÁ SỰ KIỆN' + '</strong></h2></p>';
-		var producerRateContent = '<p><i class="fa fa-user-secret" style="font-size:48px;"></i></p><p><h2><strong>' + 'ĐÁNH GIÁ BAN TỔ CHỨC' + '</strong></h2></p>';
+		var eventRateContent = '<p><i class="fa fa-street-view" style="font-size:48px;"></i></p><p><h2><strong>' + $EVENTDETAILS_HEADER_RATING + '</strong></h2></p>';
 
 		if(data.msg == 'true') {				
 			$.getJSON('/events/details/' + eventId, function(eventData) {
@@ -470,7 +469,7 @@ function populateRating(eventId) {
 				    success: function(dataUserRating) {
 				      if(dataUserRating != '' && dataUserRating != null) {
 				        eventRating = dataUserRating.ratingPoint;
-				        ratedContent =  '<p>' + 'Bạn đã đánh giá' + ' ' + eventRating + ' ' + 'sao cho sự kiện này.' + '</p>';
+				        ratedContent =  '<p>' + $EVENTDETAILS_RATED + ' ' + eventRating + ' ' + $EVENTDETAILS_RATED_FOR_EVENT + '</p>';
 				        for(var i = 1; i <= 5; i++) {
 				        	if(i <= eventRating) {
 				        		ratedContent += '<img id="eventRating' + i + '" class="eventRating" src="/images/system/rated-star.png" height="50" style="margin:5px" onmouseover="seeRate(\'event\',' + i + ')" onclick="rate(\'' + eventId + '\',' + i  +')" />';
@@ -480,7 +479,7 @@ function populateRating(eventId) {
 				        }
 				        ratedContent += '<p>' + currentEventRatingContent + '</p>';
 				      } else {
-				      	ratedContent =  '<p>' + 'Hãy đánh giá sự kiện này!' + '</p>';
+				      	ratedContent =  '<p>' + $EVENTDETAILS_RATE + '</p>';
 				      	for(var i = 1; i <= 5; i++) {
 				        	ratedContent += '<img id="eventRating' + i + '" class="eventRating" src="/images/system/unrated-star.png" height="50" style="margin:5px" onmouseover="seeRate(\'event\',' + i + ')"  onclick="rate(\'' + eventId + '\',' + i  +')" />';
 				        }
@@ -488,46 +487,15 @@ function populateRating(eventId) {
 				    }
 				});
 
-				ratingContent += 	'<div class="col-md-6 col-sm-6 col-xs-12" style="text-align:center">' +
+				ratingContent += 	'<div class="col-md-12 col-sm-12 col-xs-12" style="text-align:center">' +
 										eventRateContent + 
-										ratedContent +
-									'</div>';
-
-
-				var userId = eventData.userId
-				$.ajax({
-				    url: '/ratings/id/' + eventData.userId + '/' + readCookie('user'),
-				    dataType: 'json',
-				    async: false,
-				    success: function(dataUserRating) {
-				      if(dataUserRating != '' && dataUserRating != null) {
-				        producerRating = dataUserRating.ratingPoint;				        
-				        ratedContent =  '<p>' + 'Bạn đã đánh giá' + ' ' + producerRating + ' ' + 'sao cho sự kiện này.' + '</p>';
-				        for(var i = 1; i <= 5; i++) {
-				        	if(i <= producerRating) {
-				        		ratedContent += '<img id="producerRating' + i + '" class="producerRating" src="/images/system/rated-star.png" height="50" style="margin:5px" onmouseover="seeRate(\'producer\',' + i + ')"  onclick="rate(\'' + userId + '\',' + i  +')" />';
-				        	} else {
-				        		ratedContent += '<img id="producerRating' + i + '" class="producerRating" src="/images/system/unrated-star.png" height="50" style="margin:5px" onmouseover="seeRate(\'producer\',' + i + ')"  onclick="rate(\'' + userId + '\',' + i  +')" />';
-				        	}
-				        }
-				        ratedContent += '<p>' + currentProducerRatingContent + '</p>';
-				      } else {
-				      	ratedContent =  '<p>' + 'Hãy đánh giá sự kiện này!' + '</p>';
-				      	for(var i = 1; i <= 5; i++) {
-				        	ratedContent += '<img id="producerRating' + i + '" class="producerRating" src="/images/system/unrated-star.png" height="50" style="margin:5px" onmouseover="seeRate(\'producer\',' + i + ')"  onclick="rate(\'' + userId + '\',' + i  +')" />';
-				        }
-				      }
-				    }
-				});
-				ratingContent += 	'<div class="col-md-6 col-sm-6 col-xs-12" style="text-align:center">' +
-										producerRateContent +
 										ratedContent +
 									'</div>';
 
 				$('#ratingPane').html('<hr><div class="col-md-1 col-sm-1"></div><div class="col-md-10 col-sm-10 col-xs-12">' + ratingContent + '</div>');
 			});
 		} else {
-			ratedContent =  '<p>' + 'Chỉ những thành viên tham gia mới được đánh giá.' + '</p>';
+			ratedContent =  '<p>' + $EVENTDETAILS_RATE_REQUIRE + '</p>';
 	        for(var i = 1; i <= 5; i++) {
 	        	if(i <= Math.floor(currentEventRating)) {
 	        		ratedContent += '<img id="eventRating' + i + '" class="eventRating" src="/images/system/rated-star.png" height="50" style="margin:5px" />';
@@ -537,23 +505,8 @@ function populateRating(eventId) {
 	        }
 	        ratedContent += '<p>' + currentEventRatingContent + '</p>';
 
-	        ratingContent += 	'<div class="col-md-6 col-sm-6 col-xs-12" style="text-align:center">' +
+	        ratingContent += 	'<div class="col-md-12 col-sm-12 col-xs-12" style="text-align:center">' +
 	        							eventRateContent + 
-										ratedContent +
-									'</div>';
-
-			ratedContent =  '<p>' + 'Chỉ những thành viên tham gia mới được đánh giá.' + '</p>';
-	        for(var i = 1; i <= 5; i++) {
-	        	if(i <= Math.floor(currentProducerRating)) {
-	        		ratedContent += '<img id="producerRating' + i + '" class="producerRating" src="/images/system/rated-star.png" height="50" style="margin:5px" />';
-	        	} else {
-	        		ratedContent += '<img id="producerRating' + i + '" class="producerRating" src="/images/system/unrated-star.png" height="50" style="margin:5px" />';
-	        	}
-	        }
-	        ratedContent += '<p>' + currentProducerRatingContent + '</p>';
-
-	        ratingContent += 	'<div class="col-md-6 col-sm-6 col-xs-12" style="text-align:center">' +
-	        							producerRateContent +
 										ratedContent +
 									'</div>';
 

@@ -33,18 +33,19 @@ block content
 			.row(style="height:80px")
 			.page-heading.text-center
 				.container.zoomIn.animated
-					h1.page-title(style="text-transform: uppercase;") User Page
+					h1.page-title(style="text-transform: uppercase;")
+						span#header User Page
 						#userId(style="display: none") #{docs._id}
 						span.title-under
 					p.page-description
-						| Get to know everyone.
+						span#header-desc Get to know everyone.
 			.main-container
 				.container
 					.row			
 						.form-horizontal.form-label-left
 							.col-md-6
 								h2.title-style-1
-									| User Info
+									span#header-userInfo User Info
 									span.title-under
 								table.table.table-responsive.table-striped
 									tbody
@@ -79,7 +80,7 @@ block content
 							.col-md-6
 								#companyInfoDiv
 									h2.title-style-1
-										| Company Info
+										span#header-companyInfo Company Info
 										span.title-under
 									table.table.table-responsive.table-striped
 										tbody

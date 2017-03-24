@@ -1,6 +1,8 @@
 // DOM Ready ===============================================
 
 $(document).ready(function() {
+    populateLanguage();
+
   $('a[data-toggle="tab"]').on( 'shown.bs.tab', function (e) {
       $.fn.dataTable.tables( {visible: true, api: true} ).columns.adjust();
   } );
@@ -16,6 +18,28 @@ $(document).ready(function() {
 } );
 
 // Functions ===============================================
+
+function populateLanguage() {
+    $('#header-event').html($LISTEVENT_HEADER_EVENT);
+    $('#tab-totalEvent').html($LISTEVENT_TAB_TOTALEVENT);
+    $('#tab-upcomingEvent').html($LISTEVENT_TAB_UPCOMINGEVENT);
+    $('#tab-pastEvent').html($LISTEVENT_TAB_PASTEVENT);
+    $('#tab-cancelledEvent').html($LISTEVENT_TAB_CANCELLEDEVENT);
+    $('#tabContent-totalEvent').html($LISTEVENT_TAB_TOTALEVENT);
+    $('#tabContent-upcomingEvent').html($LISTEVENT_TAB_UPCOMINGEVENT);
+    $('#tabContent-pastEvent').html($LISTEVENT_TAB_PASTEVENT);
+    $('#tabContent-cancelledEvent').html($LISTEVENT_TAB_CANCELLEDEVENT);
+
+    $('.th-action').html($LISTEVENT_TH_ACTION);
+    $('.th-event').html($LISTEVENT_TH_EVENT);
+    $('.th-status').html($LISTEVENT_TH_STATUS);
+    $('.th-user').html($LISTEVENT_TH_USER);
+    $('.th-email').html($LISTEVENT_TH_EMAIL);
+    $('.th-phone').html($LISTEVENT_TH_PHONE);
+    $('.th-start').html($LISTEVENT_TH_START);
+    $('.th-location').html($LISTEVENT_TH_LOCATION);
+    $('.th-created').html($LISTEVENT_TH_CREATED);
+}
 
 function populateTables() {
 	// jQuery AJAX call for JSON
@@ -63,10 +87,10 @@ function showUpcomingEvents(data) {
             table.row.add([
                 counter,
                 '<center>'
-                    + '<a data-toggle="tooltip" title="Details" class="btn btn-info btn-xs" href="events/' + this._id + '">'
+                    + '<a data-toggle="tooltip" title="' + $LISTEVENT_TIP_DETAILS + '" class="btn btn-info btn-xs" href="events/' + this._id + '">'
                         + '<span class="glyphicon glyphicon-search"></span>'
                     + '</a>'
-                    + '<a data-toggle="tooltip" title="Cancel" class="btn btn-danger btn-xs linkcancelevent" rel="' + this._id + '" href="#">'
+                    + '<a data-toggle="tooltip" title="' + $LISTEVENT_TIP_CANCEL + '" class="btn btn-danger btn-xs linkcancelevent" rel="' + this._id + '" href="#">'
                         + '<span class="glyphicon glyphicon-remove"></span>'
                     + '</a>'
                 + '</center>',
@@ -113,11 +137,8 @@ function showEvents(data) {
         table.row.add([
             counter,
             '<center>'
-                + '<a data-toggle="tooltip" title="Details" class="btn btn-info btn-xs" href="events/' + this._id + '">'
+                + '<a data-toggle="tooltip" title="' + $LISTEVENT_TIP_DETAILS + '" class="btn btn-info btn-xs" href="events/' + this._id + '">'
                     + '<span class="glyphicon glyphicon-search"></span>'
-                + '</a>'
-		        + '<a data-toggle="tooltip" title="Cancel" class="btn btn-danger btn-xs linkcancelevent" rel="' + this._id + '" href="#">'
-                    + '<span class="glyphicon glyphicon-remove"></span>'
                 + '</a>'
             + '</center>',
             this.eventName,
@@ -171,7 +192,7 @@ function showPastEvents(data) {
             table.row.add([
                 counter,
                 '<center>'
-                    + '<a data-toggle="tooltip" title="Details" class="btn btn-info btn-xs" href="events/' + this._id + '">'
+                    + '<a data-toggle="tooltip" title="' + $LISTEVENT_TIP_DETAILS + '" class="btn btn-info btn-xs" href="events/' + this._id + '">'
                         + '<span class="glyphicon glyphicon-search"></span>'
                     + '</a>'
                 + '</center>',
@@ -224,7 +245,7 @@ function showCancelledEvents(data) {
             table.row.add([
                 counter,
                 '<center>'
-                    + '<a data-toggle="tooltip" title="Details" class="btn btn-info btn-xs" href="events/' + this._id + '">'
+                    + '<a data-toggle="tooltip" title="' + $LISTEVENT_TIP_DETAILS + '" class="btn btn-info btn-xs" href="events/' + this._id + '">'
                         + '<span class="glyphicon glyphicon-search"></span>'
                     + '</a>'
                 + '</center>',
@@ -232,10 +253,9 @@ function showCancelledEvents(data) {
                 user,
                 email,
                 phone,
-                eventStartDate.getDate() + '/' + (eventStartDate.getMonth() + 1) + '/' +  eventStartDate.getFullYear(),,
+                eventStartDate.getDate() + '/' + (eventStartDate.getMonth() + 1) + '/' +  eventStartDate.getFullYear(),
                 this.meetingAddress,
-                dateCreated.getDate() + '/' + (dateCreated.getMonth() + 1) + '/' +  dateCreated.getFullYear(),
-                eventStatus
+                dateCreated.getDate() + '/' + (dateCreated.getMonth() + 1) + '/' +  dateCreated.getFullYear()
             ]).draw( false );
         }
     });

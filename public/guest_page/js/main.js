@@ -4,7 +4,7 @@ $(function(){
 	/*  Populate countdown
  	================================================*/ 
 
- 	populateLang();
+ 	populateLanguage();
  	populateEvents();
  	populateSponsors();
  	populateNews();
@@ -272,9 +272,9 @@ function CountDown(startTime, endTime) {
 	if(date.valueOf() < startTime.valueOf()) {
 		return countdown(null, startTime, "HOURS", 2).toString();
 	} else if(date.valueOf() >= startTime.valueOf() && date.valueOf() < endTime.valueOf()) {
-		return 'In Progress';
+		return $COUNTDOWN_IN_PROGRESS;
 	} else {
-		return 'Ended';
+		return $COUNTDOWN_ENDED;
 	}
 }
 
@@ -328,7 +328,7 @@ function populateNews() {
 								  '</div>' +
 								  '<div style="position:absolute; bottom: 20px; right: 0px">' +
 								  	'<span style="margin-right: 20px">' + dateString + '</span>' +
-								  	'<a href="/posts/' + this._id + '" class="btn btn-primary"><strong>Read More</strong></a>' +
+								  	'<a href="/posts/' + this._id + '" class="btn btn-primary"><strong>' + $HOMEPAGE_NEWS_READ_MORE + '</strong></a>' +
 								  '</div>' +
 								'</li>';
 	        		$('#news-carousel').html($('#news-carousel').html() + content);
@@ -419,9 +419,29 @@ function populateEvents() {
     });
 }	
 
-function populateLang() {
+function populateLanguage() {
+	$('#slider1').html($HOMEPAGE_SLIDER_1);
+	$('#slider1-desc').html($HOMEPAGE_SLIDER_1_DESC);
+	$('#slider1-button').html($HOMEPAGE_SLIDER_1_BUTTON);
+	$('#slider2').html($HOMEPAGE_SLIDER_2);
+	$('#slider2-desc').html($HOMEPAGE_SLIDER_2_DESC);
+	$('#slider2-button').html($HOMEPAGE_SLIDER_2_BUTTON);
+	$('#slider3').html($HOMEPAGE_SLIDER_3);
+	$('#slider3-desc').html($HOMEPAGE_SLIDER_3_DESC);
+	$('#slider3-button').html($HOMEPAGE_SLIDER_3_BUTTON);
+
 	$('#feature1').html($HOMEPAGE_FEATURE_1);
+	$('#feature1-desc').html($HOMEPAGE_FEATURE_1_DESC);
 	$('#feature2').html($HOMEPAGE_FEATURE_2);
+	$('#feature2-desc').html($HOMEPAGE_FEATURE_2_DESC);
 	$('#feature3').html($HOMEPAGE_FEATURE_3);
+	$('#feature3-desc').html($HOMEPAGE_FEATURE_3_DESC);
 	$('#feature4').html($HOMEPAGE_FEATURE_4);
+	$('#feature4-desc').html($HOMEPAGE_FEATURE_4_DESC);
+	$('.feature-button').html($HOMEPAGE_FEATURE_BUTTON);
+
+	$('#header-events').html($HOMEPAGE_HEADER_EVENTS);
+	$('#header-news').html($HOMEPAGE_HEADER_NEWS);
+	$('#header-sponsors').html($HOMEPAGE_HEADER_SPONSORS);
+	$('#header-producers').html($HOMEPAGE_HEADER_PRODUCERS);
 }

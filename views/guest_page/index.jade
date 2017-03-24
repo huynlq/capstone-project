@@ -38,27 +38,27 @@ block content
 						img(src='guest_page/images/slider/home-slider-1.jpg', alt='')
 						.container
 							.carousel-caption
-								h2.carousel-title.bounceInDown.animated.slow Because they need your help
-								h4.carousel-subtitle.bounceInUp.animated.slow Do not let them down
-								a.btn.btn-lg.btn-secondary.hidden-xs.bounceInUp.animated.slow(href='#', data-toggle='modal', data-target='#donateModal') DONATE NOW
+								h2#slider1.carousel-title.bounceInDown.animated.slow Because they need your help
+								h4#slider1-desc.carousel-subtitle.bounceInUp.animated.slow Do not let them down
+								a#slider1-btn.btn.btn-lg.btn-secondary.hidden-xs.bounceInUp.animated.slow(href='#', data-toggle='modal', data-target='#donateModal') DONATE NOW
 							// /.carousel-caption
 					// /.item
 					.item
 						img(src='guest_page/images/slider/home-slider-2.jpg', alt='')
 						.container
 							.carousel-caption
-								h2.carousel-title.bounceInDown.animated.slow Together we can improve their lives
-								h4.carousel-subtitle.bounceInUp.animated.slow  So let's do it !
-								a.btn.btn-lg.btn-secondary.hidden-xs.bounceInUp.animated(href='#', data-toggle='modal', data-target='#donateModal') DONATE NOW
+								h2#slider2.carousel-title.bounceInDown.animated.slow Together we can improve their lives
+								h4#slider2-desc.carousel-subtitle.bounceInUp.animated.slow  So let's do it !
+								a#slider2-btn.btn.btn-lg.btn-secondary.hidden-xs.bounceInUp.animated(href='#', data-toggle='modal', data-target='#donateModal') DONATE NOW
 							// /.carousel-caption
 					// /.item
 					.item
 						img(src='guest_page/images/slider/home-slider-3.jpg', alt='')
 						.container
 							.carousel-caption
-								h2.carousel-title.bounceInDown.animated.slow A penny is a lot of money, if you have not got a penny.
-								h4.carousel-subtitle.bounceInUp.animated.slow You can make the diffrence !
-								a.btn.btn-lg.btn-secondary.hidden-xs.bounceInUp.animated.slow(href='#', data-toggle='modal', data-target='#donateModal') DONATE NOW
+								h2#slider3.carousel-title.bounceInDown.animated.slow A penny is a lot of money, if you have not got a penny.
+								h4#slider3-desc.carousel-subtitle.bounceInUp.animated.slow You can make the diffrence !
+								a#slider3-btn.btn.btn-lg.btn-secondary.hidden-xs.bounceInUp.animated.slow(href='#', data-toggle='modal', data-target='#donateModal') DONATE NOW
 							// /.carousel-caption
 					// /.item
 				a.left.carousel-control(href='#homeCarousel', role='button', data-slide='prev')
@@ -78,10 +78,10 @@ block content
 								h3.col-title
 									strong#feature1
 								.col-details
-									p
+									p#feature1-desc
 										| Chúng tôi hướng đến những người gặp nạn, hoàn cảnh khó khăn cần giúp đỡ.
 								a.btn.btn-primary(href='#')
-									strong Xem thêm
+									strong.feature-button Xem thêm
 						.col-md-3.col-sm-6
 							.about-us-col
 								.col-icon-wrapper
@@ -89,10 +89,10 @@ block content
 								h3.col-title
 									strong#feature2
 								.col-details
-									p
+									p#feature2-desc
 										| Đăng kí làm tình nguyện viên để hỗ trợ công sức cho cộng đồng tốt đẹp hơn.
 								a.btn.btn-primary(href='#')
-									strong Xem thêm
+									strong.feature-button Xem thêm
 						.col-md-3.col-sm-6
 							.about-us-col
 								.col-icon-wrapper
@@ -100,10 +100,10 @@ block content
 								h3.col-title
 									strong#feature3
 								.col-details
-									p
+									p#feature3-desc
 										| Tham gia làm nhà tài trợ và góp phần ủng hộ cho các sự kiện từ thiện.
 								a.btn.btn-primary(href='#')
-									strong Xem thêm
+									strong.feature-button Xem thêm
 						.col-md-3.col-sm-6
 							.about-us-col
 								.col-icon-wrapper
@@ -111,15 +111,15 @@ block content
 								h3.col-title
 									strong#feature4
 								.col-details
-									p
+									p#feature4-desc
 										| Trở thành ban tổ chức để nhận tài trợ từ chúng tôi biến mọi ý tưởng giúp ích đồng bào thành hiện thực.
 								a.btn.btn-primary(href='#')
-									strong Xem thêm
+									strong.feature-button Xem thêm
 			// /.about-us
 			.section-home.our-sponsors.animate-onscroll.fadeIn
 				.container
 					h2.title-style-1
-						| Sự kiện nổi bật
+						span#header-events Sự kiện nổi bật
 						span.title-under
 					#real-event-carousel.owl-carousel.list-unstyled.list-sponsors					
 					.section-home.our-sponsors.animate-onscroll.fadeIn
@@ -127,17 +127,17 @@ block content
 			.section-home.our-sponsors.animate-onscroll.fadeIn
 				.container
 					h2.title-style-1
-						| Bản tin
+						span#header-news Bản tin
 						span.title-under
 					ul#news-carousel.owl-carousel.list-unstyled.list-sponsors
 			// /.our-sponsors
 			.section-home.our-sponsors.animate-onscroll.fadeIn
 				.container
 					h2.title-style-1
-						| Nhà tài trợ
+						span#header-sponsors Nhà tài trợ
 						span.title-under
 					ul#sponsor-carousel.owl-carousel.list-unstyled.list-sponsors
-			// main-footer
+			// /.our-producers
 			// Donate Modal
 			#donateModal.modal.fade(tabindex='-1', role='dialog', aria-labelledby='donateModalLabel', aria-hidden='true')
 				.modal-dialog

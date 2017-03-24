@@ -3,10 +3,15 @@ $(function(){
 
 	/*  Populate countdown
  	================================================*/ 
-
+ 	populateLanguage();
  	populateSponsors();
 
 });
+
+function populateLanguage() {
+	$('#header').html($SPONSORLIST_HEADER);
+	$('#header-desc').html($SPONSORLIST_HEADER_DESC);
+}
 
 function populateSponsors() {
 	$.ajax({

@@ -36,7 +36,7 @@ block content
 					.row
 						.col-md-12
 							h2.title-style-2
-								| Post List
+								span#header-post Post List
 								span.title-under
 					.row.tile_count
 						ul.nav.nav-tabs
@@ -45,16 +45,16 @@ block content
 									.tileA
 										.tile_stats_count(style='padding-top: 10px;')
 											span.count_top
-												i.fa.fa-newspaper-o
-												|  Posts On News
+												i.fa.fa-newspaper-o &nbsp;&nbsp;
+												strong.tab-news Posts On News
 											#countNews.count 0
 							li.col-md-6.col-xs-12
 								a.count-tab(data-toggle='tab', href='#board')
 									.tileA
 										.tile_stats_count(style='padding-top: 10px;')
 											span.count_top
-												i.fa.fa-tv
-												|  Posts On Board
+												i.fa.fa-comments &nbsp;&nbsp;
+												strong.tab-board  Posts On Board
 											#countPosts.count 0
 					.tab-content
 						#news.tab-pane.fade.in.active
@@ -62,26 +62,25 @@ block content
 								.col-md-12.col-sm-12.col-xs-12
 									.col-md-6
 										h3
-											| News 
+											span.tab-news News 
 									.clearfix
 								.x_content
 									table#tableNews.table.table-striped.table-bordered.dt-responsive.nowrap.datatable-responsive(cellspacing='0', width='100%')
 										thead
 											tr
 												th.action-col #
-												th.action-col Action
-												th Title
-												th Author
-												th Rating
-												th Comments
-												th Date Created
+												th.th-action.action-col Action
+												th.th-title Title
+												th.th-author Author
+												th.th-comment Comments
+												th.th-created Date Created
 										tbody
 						#board.tab-pane.fade
 							.row
 								.col-md-12.col-sm-12.col-xs-12
 									.col-md-6
 										h3
-											| Community Board
+											span.tab-board Community Board
 									.clearfix
 								.x_content
 									table#tablePosts.table.table-striped.table-bordered.dt-responsive.nowrap.datatable-responsive(cellspacing='0', width='100%')
@@ -89,16 +88,15 @@ block content
 											tr
 												th.action-col #
 												th.action-col Action
-												th Title
-												th Author
-												th Ratings
-												th Comments
-												th Date Created
+												th.th-title Title
+												th.th-author Author
+												th.th-comment Comments
+												th.th-created Date Created
 										tbody
 					.col-md-4.col-sm-4.col-xs-12
 						a.btn.btn-info.btn-sm(href='/posts/creator')
-							span.glyphicon.glyphicon-edit
-							|  New Post
+							span.glyphicon.glyphicon-edit&nbsp;
+							strong#btnCreatePost New Post
 			// Bootsrap javascript file
 			script(src='/guest_page/js/bootstrap.min.js')
 			// PrettyPhoto javascript file

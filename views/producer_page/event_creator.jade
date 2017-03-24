@@ -33,30 +33,31 @@ block content
 			.row(style="height:80px")
 			.page-heading.text-center
 				.container.zoomIn.animated
-					h1.page-title(style="text-transform: uppercase;") Event Creator
+					h1.page-title(style="text-transform: uppercase;")
+						span#header Event Creator
 						span.title-under
 					p.page-description
-						| Create your very own event with our support!
+						span#header-desc Create your very own event with our support!
 			.main-container
 				.container
 					.row
 						.col-md-12
 							h2.title-style-2
-								| Event Details
+								span#header-event Event Details
 								span.title-under
 							form(action="/events/addevent", method="post", enctype="multipart/form-data").form-horizontal.form-label-left
 								input#txtUserId(type='hidden', name='userId', value='#{docs.userId}')
 								input#txtEventId.form-control.col-md-7.col-xs-12(type='hidden', name="_id", value="#{docs._id}")
 								.form-group
 									label.control-label.col-md-3.col-sm-3.col-xs-12
-										| Event Name 
-										span.required *
+										span#form-name Event Name 
+										span.required  *
 									.col-md-6.col-sm-6.col-xs-12
 										input#txtEventName.form-control.col-md-7.col-xs-12(type='text', required='required', name="eventName", value="#{docs.eventName}")
 								.form-group
 									label.control-label.col-md-3.col-sm-3.col-xs-12
-										| Event Date 
-										span.required *
+										span#form-date Event Date 
+										span.required  *
 									.controls.col-md-3.col-sm-3.col-xs-12
 										.control-group
 											.controls
@@ -66,8 +67,8 @@ block content
 													input#eventDate.form-control(type='text', style='width: 200px', name='eventDate', value='#{docs.eventDate}')
 								.form-group
 									label.control-label.col-md-3.col-sm-3.col-xs-12
-										| Participate Deadline
-										span.required *
+										span#form-deadline Participate Deadline
+										span.required  *
 									.controls.col-md-3.col-sm-3.col-xs-12
 										.control-group
 											.controls
@@ -77,14 +78,14 @@ block content
 													input#eventDeadline.form-control(type='text', style='width: 200px', name='eventDeadline', value='#{docs.eventDeadline}')
 								.form-group
 									label.control-label.col-md-3.col-sm-3.col-xs-3
-										| Meeting Time 
-										span.required *
+										span#form-time Meeting Time 
+										span.required  *
 									.col-md-6.col-sm-6.col-xs-12
 										input#txtMeetingTime.form-control(type='text', data-inputmask="'mask': '99:99'", name='meetingTime', value='#{docs.meetingTime}')
 								.form-group
 									label.control-label.col-md-3.col-sm-3.col-xs-12
-										| Meeting Address 
-										span.required *
+										span#form-address Meeting Address 
+										span.required  *
 									.col-md-6.col-sm-6.col-xs-12
 										input#txtMeetingAddress.form-control.col-md-7.col-xs-12(placeholder='', type='text', autocomplete='on', runat='server', name='meetingAddress', value='#{docs.meetingAddress}')
 										input#txtMeetingAddressLat(type='hidden', name='meetingAddressLat', value='#{docs.meetingAddressLat}')
@@ -92,8 +93,8 @@ block content
 										#map.col-md-12.col-sm-12.col-xs-12(style='height:200px; margin-top: 20px')
 								.form-group
 									label.control-label.col-md-3.col-sm-3.col-xs-12
-										| Event Image 
-										span.required *								
+										span#form-image Event Image 
+										span.required  *								
 									.col-md-6.col-sm-6.col-xs-12								
 										.row
 											input#txtImageSrc(type="hidden", name="eventImage")									
@@ -103,14 +104,14 @@ block content
 											img#txtImage(src='#{docs.eventImage}', alt='Please chooose another image!', style='height: 150px; max-width: 300px; display:none')
 								.form-group
 									label.control-label.col-md-3.col-sm-3.col-xs-12
-										| Event Short Description 
-										span.required *
+										span#form-shortDesc Event Short Description 
+										span.required  *
 									.col-md-6.col-sm-6.col-xs-12
 										textarea#txtShortDescription.resizable_textarea.form-control(style='height: 150px', name='eventShortDescription') #{docs.eventShortDescription}
 								.form-group
 									label.control-label.col-md-3.col-sm-3.col-xs-12
-										| Event Description 
-										span.required *
+										span#form-desc Event Description 
+										span.required  *
 									.col-md-6.col-sm-6.col-xs-12
 										textarea#txtDescription.mceEditor.resizable_textarea.form-control(style='height: 500px', name='eventDescription') #{docs.eventDescription}
 								br						
@@ -118,7 +119,7 @@ block content
 								.row
 									.col-md-7.col-sm-7
 									.col-md-2.col-sm-2.col-xs-12
-										button.btn.btn-info.col-xs-12(type='submit') Continue >>	
+										button#form-submit.btn.btn-info.col-xs-12(type='submit') Continue >>	
 			// Bootsrap javascript file
 			script(src='/guest_page/js/bootstrap.min.js')
 			// PrettyPhoto javascript file

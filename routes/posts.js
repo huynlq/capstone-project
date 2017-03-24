@@ -118,25 +118,25 @@ router.post('/addpost', uploading.single('displayPostImage'), function(req, res)
                         var path = "/images/post/" + req.file.filename + "." + extension;
                         var savePath = "public" + path;                
 
-                        delete req.body._id;
-
                         req.body.postImage = path;
 
                         fs.readFile(req.file.path, function (err, data) {
                             fs.writeFile(savePath, data);
                         });
+                    }
 
-                        req.body.dateCreated = new Date().toString();
-                        collection = db.get('Posts');
-                        collection.insert(req.body, function(err, result){
-                            if(err === null) {
-                                res.writeHead(302, {'Location': '/posts/' + result._id});
-                                res.end();
-                            } else {
-                                alert(err);
-                            }
-                        });
-                    }  
+                    delete req.body._id;
+
+                    req.body.dateCreated = new Date().toString();
+                    collection = db.get('Posts');
+                    collection.insert(req.body, function(err, result){
+                        if(err === null) {
+                            res.writeHead(302, {'Location': '/posts/' + result._id});
+                            res.end();
+                        } else {
+                            alert(err);
+                        }
+                    });  
                 }                
             }            
         });    	
@@ -188,6 +188,18 @@ router.get('/:id', function(req, res, next) {
         }
     });
 });
+
+/* GET post JSON by id. */
+router.get('/details/:id', function(req, res, next) {
+    var db = req.db;
+    var collection = db.get('Posts');
+    if(req.params.id.length != 24)
+        res.render('page_404');
+    collection.findOne({ '_id' : req.params.id },{},function(e,docs){
+        res.json(docs);
+    });
+});
+
 
 /* DELETE to delete post. */
 router.delete('/deletepost/:id', function(req, res) {

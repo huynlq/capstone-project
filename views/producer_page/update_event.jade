@@ -36,49 +36,41 @@ block content
 					.row
 						.col-md-12
 							h2.title-style-2
-								| Update Event
+								span#header Update Event
 								span.title-under
 					.row.tile_count
 						ul.nav.nav-tabs
-							li.active.col-md-2.col-sm-6.col-xs-12
+							li.active.col-md-3.col-sm-6.col-xs-12
 								a#active-tab.count-tab(data-toggle='tab', href='#donations')
 									.tileA
 										.tile_stats_count
 											span.count_top
-												i.fa.fa-bar-chart
-												|  Current Donations
+												i.fa.fa-bar-chart&nbsp;&nbsp;
+												strong.tab-donation Donations
 											#countDonations.count 0
-							li.col-md-2.col-sm-6.col-xs-12
-								a.count-tab(data-toggle='tab', href='#pendingDonations')
-									.tileA
-										.tile_stats_count
-											span.count_top
-												i.fa.fa-bar-chart
-												|  Pending Donations
-											#countPendingDonations.count 0
-							li.col-md-2.col-sm-6.col-xs-12
+							li.col-md-3.col-sm-6.col-xs-12
 								a.count-tab(data-toggle='tab', href='#participants')
 									.tileA
 										.tile_stats_count
 											span.count_top
-												i.fa.fa-spinner.fa-pulse
-												|  Participants		
+												i.fa.fa-spinner.fa-pulse&nbsp;&nbsp;
+												strong.tab-participant Participants		
 											#countParticipants.count 0		
-							li.col-md-2.col-sm-6.col-xs-12
+							li.col-md-3.col-sm-6.col-xs-12
 								a.count-tab(data-toggle='tab', href='#costs')
 									.tileA
 										.tile_stats_count
 											span.count_top
-												i.fa.fa-thumbs-o-up
-												|  Activity Costs
+												i.fa.fa-thumbs-o-up&nbsp;&nbsp;
+												strong.tab-cost Activity Costs
 											#countActivities.count 0
-							li.col-md-2.col-sm-6.col-xs-12
+							li.col-md-3.col-sm-6.col-xs-12
 								a.count-tab(data-toggle='tab', href='#gallery')
 									.tileA
 										.tile_stats_count
 											span.count_top
-												i.fa.fa-thumbs-o-up
-												|  Photo Gallery
+												i.fa.fa-thumbs-o-up&nbsp;&nbsp;
+												strong.tab-gallery Photo Gallery
 											#countGallery.count 0
 					.tab-content
 						#donations.tab-pane.fade
@@ -86,7 +78,7 @@ block content
 								.col-md-12.col-sm-12.col-xs-12
 									.col-md-6
 										h3
-											| Donations
+											span.tab-donation Donations
 									.clearfix
 								.x_content
 									.col-md-8.col-sm-8.col-xs-12
@@ -94,102 +86,81 @@ block content
 											thead
 												tr
 													th #
-													th Action
-													th Donator
-													th Item
-													th Quantity
-													th Time
+													th.th-action Action
+													th.th-donator Donator
+													th.th-item Item
+													th.th-quantity Quantity
+													th.th-time Time
 											tbody
 									.col-md-4.col-sm-4.col-xs-12
 										form.form-horizontal.form-label-left
 											.form-group
 												label.control-label.col-md-3.col-sm-3.col-xs-12
-													| Donator 
-													span.required *
+													span.th-donator Donator 
+													span.required  *
 												.col-md-9.col-sm-9.col-xs-12
 													input#txtDonatorName.form-control.col-md-7.col-xs-12(type='text', required='required')
 											.form-group
 												label.control-label.col-md-3.col-sm-3.col-xs-12
-													| Donation Item
-													span.required *
+													span.th-item Donation Item
+													span.required  *
 												.col-md-9.col-sm-9.col-xs-12
 													select#txtDonationItem.form-control.col-md-7.col-xs-12(required='required', ng-trim='false')
 											.form-group
 												label.control-label.col-md-3.col-sm-3.col-xs-12
-													| Quantity 
-													span.required *
+													span.th-quantity Quantity 
+													span.required  *
 												.col-md-9.col-sm-9.col-xs-12
 													input#txtDonationNumber.form-control.col-md-7.col-xs-12(type='text', required='required')
 											.row
 												.col-md-5.col-sm-5
 												.col-md-4.col-sm-4.col-xs-12
-													a.btn.btn-info.col-xs-12(onclick='addDonation()') Add >>
-						#pendingDonations.tab-pane.fade
-							.row
-								.col-md-12.col-sm-12.col-xs-12
-									.col-md-6
-										h3
-											| Pending Donations
-									.clearfix
-								.x_content
-									.col-md-12.col-sm-12.col-xs-12
-										table#tablePendingDonation.table.table-style-1.table-striped.table-bordered.dt-responsive.nowrap.datatable-responsive(cellspacing='0', width='100%')
-											thead
-												tr
-													th #
-													th Action
-													th Donator
-													th Email
-													th Phone Number
-													th Item
-													th Quantity
-													th Time
-											tbody
+													a#donateForm-add.btn.btn-info.col-xs-12(onclick='addDonation()') Add >>
 						#participants.tab-pane.fade
 							.row
 								.col-md-12.col-sm-12.col-xs-12
 									.col-md-6
 										h3
-											| Participants
+											span.tab-participant Participants
 									.clearfix
 								.x_content
 									table#tableParticipants.table.table-style-1.table-striped.table-bordered.dt-responsive.nowrap.datatable-responsive(cellspacing='0', width='100%')
 										thead
 											tr
 												th #
-												th Action
-												th User
-												th Full Name
-												th Email
-												th Phone
-												th Date Joined
+												th.th-action Action
+												th.th-user User
+												th.th-fullName Full Name
+												th.th-email Email
+												th.th-phone Phone
+												th.th-join Date Joined
 										tbody
 						#costs.tab-pane.fade
 							.row
 								.col-md-12.col-sm-12.col-xs-12
 									.col-md-6
 										h3
-											| Activity Costs
+											span.tab-cost Activity Costs
 									.clearfix
 								.x_content
 									table#tableActivityCosts.table.table-style-1.table-striped.table-bordered.dt-responsive.nowrap.datatable-responsive(cellspacing='0', width='100%')
 										thead
 											tr
 												th #
-												th Day
-												th Time
-												th Place
-												th Activity
-												th Estimated Cost
-												th Actual Cost
-												th Action
+												th.th-day Day
+												th.th-time Time
+												th.th-place Place
+												th.th-activity Activity
+												th.th-note Note
+												th.th-cost Actual Cost
+												th.th-action Action
 										tbody
 						#gallery.tab-pane.fade
 							.row
 								.col-md-12.col-sm-12.col-xs-12
 									.col-md-6
 										h3
-											| Photo Gallery
+											span.tab-gallery Photo Gallery
 										hr
 									.clearfix
 								.x_content									
@@ -198,8 +169,8 @@ block content
 										form#uploadForm.col-md-5.col-sm-5.col-xs-12(enctype='multipart/form-data', action='/events/addphoto', method='post')
 											input.btn.btn-info(type='file', name='photoGallery', multiple='', accept=".png,.jpg,.jpeg")
 											br											
-											input.btn.btn-info(type='submit', value='Upload Image', name='submit', style="margin=left: 20px")
-											span(style="margin: 10px") (Maximum: 20 fields)
+											input#gallery-upload.btn.btn-info(type='submit', value='Upload Image', name='submit', style="margin=left: 20px")
+											span#gallery-require(style="margin: 10px") (Maximum: 20 fields)
 											input#eventId(type='hidden', name='eventId', value='#{docs._id}')
 									br
 									br
@@ -211,39 +182,34 @@ block content
 					fieldset
 						.form-group
 							label.control-label.col-md-2.col-sm-2.col-xs-12(style="text-align:right")
-								| Day 
-								span.required *
+								span.th-day Day 								
 							.col-md-10.col-sm-10.col-xs-12
 								input#txtEditActivityDay.form-control.col-md-7.col-xs-12(type='text', readonly='readonly')
 								span#txtEditActivityId(style='display:none')
 						.form-group
 							label.control-label.col-md-2.col-sm-2.col-xs-12(style="text-align:right")
-								| Time 
-								span.required *
+								span.th-time Time 								
 							.col-md-10.col-sm-10.col-xs-12
 								input#txtEditActivityTime.form-control.col-md-7.col-xs-12(type='text', readonly='readonly')
 						.form-group
 							label.control-label.col-md-2.col-sm-2.col-xs-12(style="text-align:right")
-								| Place 
-								span.required *
+								span.th-place Place 								
 							.col-md-10.col-sm-10.col-xs-12
 								input#txtEditActivityPlace.form-control.col-md-7.col-xs-12(type='text', readonly='readonly')
 						.form-group
 							label.control-label.col-md-2.col-sm-2.col-xs-12(style="text-align:right")
-								| Activity 
-								span.required *
+								span.th-activity Activity 								
 							.col-md-10.col-sm-10.col-xs-12
 								input#txtEditActivity.form-control.col-md-7.col-xs-12(type='text', readonly='readonly')			
 						.form-group
 							label.control-label.col-md-2.col-sm-2.col-xs-12(style="text-align:right")
-								| Estimated Cost
-								span.required *
+								span.th-note Note								
 							.col-md-10.col-sm-10.col-xs-12
 								input#txtEditActivityEstCost.form-control.col-md-7.col-xs-12(type='text', readonly='readonly')
 						.form-group
 							label.control-label.col-md-2.col-sm-2.col-xs-12(style="text-align:right")
-								| Actual Cost
-								span.required *
+								span.th-cost Actual Cost
+								span.required  *
 							.col-md-10.col-sm-10.col-xs-12
 								input#txtEditActivityActualCost.form-control.col-md-7.col-xs-12(type='text', required='required')
 			// Bootsrap javascript file

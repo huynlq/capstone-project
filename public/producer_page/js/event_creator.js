@@ -1,6 +1,7 @@
 // DOM Ready =============================================================
 
 $(document).ready(function() {
+  populateLanguage();
   $('#txtUserId').val(readCookie('user'));
 
   if($('#txtImage').attr('src') != '') {
@@ -55,6 +56,23 @@ $(document).ready(function() {
 });           
 
 // Functions =============================================================
+
+function populateLanguage() {
+  $('#header').html($EVENTCREATOR_HEADER);
+  $('#header-desc').html($EVENTCREATOR_HEADER_DESC);
+  $('#header-event').html($EVENTCREATOR_HEADER_EVENT);
+  $('#header-activity').html($EVENTCREATOR_HEADER_ACTIVITY);
+
+  $('#form-name').html($EVENTCREATOR_EVENTFORM_NAME);
+  $('#form-date').html($EVENTCREATOR_EVENTFORM_DATE);
+  $('#form-deadline').html($EVENTCREATOR_EVENTFORM_DEADLINE);
+  $('#form-time').html($EVENTCREATOR_EVENTFORM_TIME);
+  $('#form-address').html($EVENTCREATOR_EVENTFORM_ADDRESS);
+  $('#form-image').html($EVENTCREATOR_EVENTFORM_IMAGE);
+  $('#form-shortDesc').html($EVENTCREATOR_EVENTFORM_SHORTDESC);
+  $('#form-desc').html($EVENTCREATOR_EVENTFORM_DESC);
+  $('#form-submit').html($EVENTCREATOR_CONTINUE);
+}
 
 // Validate and return image extension
 function validateImageExtension(url) {

@@ -27,52 +27,16 @@ block content
 			.page-heading.text-center
 				.container.zoomIn.animated
 					h1.page-title
-						| OUR SPONSORS 
+						span#header OUR SPONSORS 
 						span.title-under
 					p.page-description
-						| Thank you all for helping us make our ideas into reality.
+						span#header-desc Thank you all for helping us make our ideas into reality.
 			.main-container
 				.our-causes.fadeIn.animated
 					.container
 						#listSponsors
 				// /.our-causes
 			// /.main-containe
-			// Donate Modal
-			#donateModal.modal.fade(tabindex='-1', role='dialog', aria-labelledby='donateModalLabel', aria-hidden='true')
-				.modal-dialog
-					.modal-content
-						.modal-header
-							button.close(type='button', data-dismiss='modal', aria-label='Close')
-								span(aria-hidden='true') ×
-							h4#donateModalLabel.modal-title DONATE NOW
-						.modal-body
-							form.form-donation
-								h3.title-style-1.text-center
-									| Thank you for your donation 
-									span.title-under
-								.row
-									.form-group.col-md-12
-										input#amount.form-control(type='text', placeholder='AMOUNT(€)')
-								.row
-									.form-group.col-md-6
-										input.form-control(type='text', name='firstName', placeholder='First name*')
-									.form-group.col-md-6
-										input.form-control(type='text', name='lastName', placeholder='Last name*')
-								.row
-									.form-group.col-md-6
-										input.form-control(type='text', name='email', placeholder='Email*')
-									.form-group.col-md-6
-										input.form-control(type='text', name='phone', placeholder='Phone')
-								.row
-									.form-group.col-md-12
-										input.form-control(type='text', name='address', placeholder='Address')
-								.row
-									.form-group.col-md-12
-										textarea.form-control(cols='30', rows='4', name='note', placeholder='Additional note')
-								.row
-									.form-group.col-md-12
-										button.btn.btn-primary.pull-right(type='submit', name='donateNow') DONATE NOW
-			// /.modal
 			// jQuery
 			script(src='//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js')
 			script.

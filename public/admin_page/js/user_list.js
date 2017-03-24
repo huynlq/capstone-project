@@ -1,6 +1,8 @@
 // DOM Ready ===============================================
 
 $(document).ready(function() {
+    populateLanguage();
+
     $.fn.dataTable.ext.errMode = 'none';
 
 	$('a[data-toggle="tab"]').on( 'shown.bs.tab', function (e) {
@@ -96,6 +98,40 @@ $(document).ready(function() {
 
 // Functions ===============================================
 
+function populateLanguage(){
+    $('#header-user').html($LISTUSER_HEADER_USER);
+    $('.tab-pending').html($LISTUSER_TAB_PENDING);
+    $('.tab-admins').html($LISTUSER_TAB_ADMINS);
+    $('.tab-users').html($LISTUSER_TAB_USERS);
+    $('.tab-producers').html($LISTUSER_TAB_PRODUCERS);
+    $('.tab-sponsors').html($LISTUSER_TAB_SPONSORS);
+    $('.tab-banned').html($LISTUSER_TAB_BANNED);
+
+    $('.th-action').html($LISTUSER_TH_ACTION);
+    $('.th-username').html($LISTUSER_TH_USER);
+    $('.th-fullName').html($LISTUSER_TH_FULLNAME);
+    $('.th-companyName').html($LISTUSER_TH_COMPANYNAME);
+    $('.th-promote').html($LISTUSER_TH_PROMOTE);
+    $('.th-email').html($LISTUSER_TH_EMAIL);
+    $('.th-phone').html($LISTUSER_TH_PHONE);
+    $('.th-address').html($LISTUSER_TH_ADDRESS);
+    $('.th-created').html($LISTUSER_TH_CREATED);
+    $('.th-event').html($LISTUSER_TH_EVENT);
+    $('.th-reason').html($LISTUSER_TH_REASON);
+
+    $('#adminForm-header').html($LISTUSER_ADMINFORM_HEADER);
+    $('#adminForm-username').html($LISTUSER_ADMINFORM_USERNAME);
+    $('#adminForm-password').html($LISTUSER_ADMINFORM_PASSWORD);
+    $('#adminForm-email').html($LISTUSER_ADMINFORM_EMAIL);
+    $('#adminForm-create').html($LISTUSER_ADMINFORM_CREATE);
+
+    $('#ban-reason-form').attr('title', $LISTUSER_BANFORM_TITLE);
+    $('#banForm_username').html($LISTUSER_BANFORM_USER);
+    $('#banForm_id').html($LISTUSER_BANFORM_ID);
+    $('#banForm_reason').html($LISTUSER_BANFORM_REASON);
+    $('#banForm_require').html($LISTUSER_BANFORM_REQUIRE);
+}
+
 // Create new admin
 function createAdmin(){
     var newUser = {
@@ -174,13 +210,13 @@ function showPendingUsers(data) {
             table.row.add([
                 counter,
                 '<center>'
-                    + '<a data-toggle="tooltip" title="Details" class="btn btn-info btn-xs" href="users/' + this._id + '">'
+                    + '<a data-toggle="tooltip" title="' + $LISTUSER_TIP_DETAILS + '" class="btn btn-info btn-xs" href="users/' + this._id + '">'
                         + '<span class="glyphicon glyphicon-search"></span>'
                     + '</a>'
-                    + '<a data-toggle="tooltip" title="Approve" class="btn btn-success btn-xs linkapproveuser" rel="' + this._id + '" href="#">'
+                    + '<a data-toggle="tooltip" title="' + $LISTUSER_TIP_APPROVE + '" class="btn btn-success btn-xs linkapproveuser" rel="' + this._id + '" href="#">'
                         + '<span class="glyphicon glyphicon-ok"></span>'
                     + '</a>'
-                    + '<a data-toggle="tooltip" title="Disapprove" class="btn btn-danger btn-xs linkdisapproveuser" rel="' + this._id + '" href="#">'
+                    + '<a data-toggle="tooltip" title="' + $LISTUSER_TIP_DISAPPROVE + '" class="btn btn-danger btn-xs linkdisapproveuser" rel="' + this._id + '" href="#">'
                         + '<span class="glyphicon glyphicon-remove"></span>'
                     + '</a>'
                 + '</center>',
@@ -217,10 +253,10 @@ function showUsers(data) {
             table.row.add([
                 counter,
                 '<center>'
-                    + '<a data-toggle="tooltip" title="Details" class="btn btn-info btn-xs" href="users/' + this._id + '">'
+                    + '<a data-toggle="tooltip" title="' + $LISTUSER_TIP_DETAILS + '" class="btn btn-info btn-xs" href="users/' + this._id + '">'
                         + '<span class="glyphicon glyphicon-search"></span>'
                     + '</a>'
-                    + '<a data-toggle="tooltip" title="Ban" class="btn btn-danger btn-xs linkbanuser" rel="' + this._id + '" href="#">'
+                    + '<a data-toggle="tooltip" title="' + $LISTUSER_TIP_BAN + '" class="btn btn-danger btn-xs linkbanuser" rel="' + this._id + '" href="#">'
                         + '<span class="glyphicon glyphicon-remove"></span>'
                     + '</a>'
                 + '</center>',
@@ -253,7 +289,7 @@ function showAdmin(data) {
 	    	table.row.add([
 	    		counter,
 	    		'<center>'
-                    + '<a data-toggle="tooltip" title="Remove" class="btn btn-danger btn-xs linkremoveadmin" rel="' + this._id + '">'
+                    + '<a data-toggle="tooltip" title="' + $LISTUSER_TIP_DELETE + '" class="btn btn-danger btn-xs linkremoveadmin" rel="' + this._id + '">'
                     	+ '<span class="glyphicon glyphicon-remove"></span>'
                     + '</a>'
 	        	+ '</center>',
@@ -273,32 +309,41 @@ function showProducers(data) {
     var dateCreated = "";
     var tableContent = "";
     var table = $('#tableProducers').DataTable();
+    var eventNumber = 0;
     table.clear().draw();
     // For each item in our JSON, add a table row and cells to the content string
     $.each(data, function(){
         if(this.role == "Producer" && this.markBanned != '1') {
+
+            $.ajax({
+                url: '/events/numberofevent/' + this._id,
+                dataType: 'json',
+                async: false,
+                success: function( eventData ) {
+                    eventNumber = eventData;
+                }
+            });
             counter++;
             dateCreated = new Date(this.dateCreated);
             table.row.add([
                 counter,
                 '<center>'
-                    + '<a data-toggle="tooltip" title="Details" class="btn btn-info btn-xs" href="/users/' + this._id + '">'
+                    + '<a data-toggle="tooltip" title="' + $LISTUSER_TIP_DETAILS + '" class="btn btn-info btn-xs" href="/users/' + this._id + '">'
                         + '<span class="glyphicon glyphicon-search"></span>'
                     + '</a>'                    
-                    + '<a data-toggle="tooltip" title="Demote" class="btn btn-warning btn-xs linkdemoteuser" rel="' + this._id + '">'
+                    + '<a data-toggle="tooltip" title="' + $LISTUSER_TIP_DEMOTE + '" class="btn btn-warning btn-xs linkdemoteuser" rel="' + this._id + '">'
                         + '<span class="glyphicon glyphicon-arrow-down"></span>'
                     + '</a>'
-                    + '<a data-toggle="tooltip" title="Ban" class="btn btn-danger btn-xs linkbanuser" rel="' + this._id + '">'
+                    + '<a data-toggle="tooltip" title="' + $LISTUSER_TIP_BAN + '" class="btn btn-danger btn-xs linkbanuser" rel="' + this._id + '">'
                         + '<span class="glyphicon glyphicon-remove"></span>'
                     + '</a>'
                 + '</center>',
                 this.username,
-                this.fullName,
+                this.companyName,
                 this.email,
                 this.phoneNumber,
                 this.address,
-                "",
-                "",
+                eventNumber,
                 dateCreated.getDate() + '/' + (dateCreated.getMonth() + 1) + '/' +  dateCreated.getFullYear()
             ]).draw( false );
         }       
@@ -323,12 +368,12 @@ function showSponsors(data) {
             table.row.add([
                 counter,
                 '<center>'
-                    + '<a data-toggle="tooltip" title="Details" class="btn btn-info btn-xs" href="/users/' + this._id + '">'
+                    + '<a data-toggle="tooltip" title="' + $LISTUSER_TIP_DETAILS + '" class="btn btn-info btn-xs" href="/users/' + this._id + '">'
                         + '<span class="glyphicon glyphicon-search"></span>'
-                    + '<a data-toggle="tooltip" title="Demote" class="btn btn-warning btn-xs linkdemoteuser" rel="' + this._id + '">'
+                    + '<a data-toggle="tooltip" title="' + $LISTUSER_TIP_DEMOTE + '" class="btn btn-warning btn-xs linkdemoteuser" rel="' + this._id + '">'
                         + '<span class="glyphicon glyphicon-arrow-down"></span>'
                     + '</a>'
-                    + '<a data-toggle="tooltip" title="Remove" class="btn btn-danger btn-xs linkremoveadmin" rel="' + this._id + '">'
+                    + '<a data-toggle="tooltip" title="' + $LISTUSER_TIP_BAN +'" class="btn btn-danger btn-xs linkbanuser" rel="' + this._id + '">'
                         + '<span class="glyphicon glyphicon-remove"></span>'
                     + '</a>'
                 + '</center>',
@@ -337,8 +382,6 @@ function showSponsors(data) {
                 this.email,
                 this.phoneNumber,
                 this.address,
-                "",
-                "",
                 dateCreated.getDate() + '/' + (dateCreated.getMonth() + 1) + '/' +  dateCreated.getFullYear()
             ]).draw( false );
         }       
@@ -363,10 +406,10 @@ function showBannedUser(data) {
             table.row.add([
                 counter,
                 '<center>'
-                    + '<a data-toggle="tooltip" title="Details" class="btn btn-info btn-xs" href="users/' + this._id + '">'
+                    + '<a data-toggle="tooltip" title="' + $LISTUSER_TIP_DETAILS + '" class="btn btn-info btn-xs" href="users/' + this._id + '">'
                         + '<span class="glyphicon glyphicon-search"></span>'
                     + '</a>'
-                    + '<a data-toggle="tooltip" title="Unban" class="btn btn-success btn-xs linkunbanuser" rel="' + this._id + '">'
+                    + '<a data-toggle="tooltip" title="' + $LISTUSER_TIP_UNBAN + '" class="btn btn-success btn-xs linkunbanuser" rel="' + this._id + '">'
                         + '<span class="glyphicon glyphicon-ok"></span>'
                     + '</a>'
                 + '</center>',
@@ -554,13 +597,25 @@ function approveUser(event) {
 function disapproveUser(event) {
     event.preventDefault();
 
-    var data = $('#tablePendingUsers').DataTable().row( $(this).parents('tr') ).data();
+    var user = {
+        'role': 'User',
+        'dateModified': Date()
+    };
 
-    $('#txtUserDisapprove').val(data[2]);
-
-    $('#txtUserDisapproveId').val($(this).attr('rel'));
-    
-    $('#disapprove-reason-form').dialog('open');    
+    // If they did, do our delete
+    $.ajax({
+        type: 'PUT',
+        data: user,
+        url: '/users/updateuser/' + $(this).attr('rel')
+    }).done(function( response ) {
+        // Check for a successful (blank) response
+        if (response.msg === '') {
+            populateTables();            
+        }
+        else {
+            alert('Error: ' + response.msg);
+        }
+    });     
 }
 
 // Confirm disapprove user

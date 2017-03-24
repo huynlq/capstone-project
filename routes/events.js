@@ -73,6 +73,15 @@ router.get('/creator_preview', function(req, res, next) {
   res.render('producer_page/event_preview', { title: 'Event Preview' });
 });
 
+/* GET number of event by userid. */
+router.get('/numberofevent/:id', function(req, res, next) {
+    var db = req.db;
+    var collection = db.get('Events');    
+    collection.count({ 'userId' : req.params.id },{},function(e,count){
+        res.json(count);
+    }); 
+});
+
 /* GET event edit page. */
 router.get('/edit/:id', function(req, res, next) {
     var db = req.db;

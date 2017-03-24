@@ -2,6 +2,7 @@
 
 $(document).ready(function() {
   
+  populateLanguage();
   populateEvent();
   populateProducer();
   populateTimeline();
@@ -12,14 +13,25 @@ $(document).ready(function() {
 
 // Functions =============================================================
 
+function populateLanguage() {
+  $('#header-desc').html($EVENTPREVIEW_HEADER_DESC);
+  $('#header-producer').html($EVENTDETAILS_HEADER_PRODUCER);
+  $('#header-location').html($EVENTDETAILS_HEADER_LOCATION);
+  $('#header-description').html($EVENTDETAILS_HEADER_EVENTDESC);
+  $('#header-activity').html($EVENTDETAILS_HEADER_ACTIVITIES);
+
+  $('#btnEditEvent').html($EVENTPREVIEW_BACK);
+  $('#btnFinishEvent').html($EVENTPREVIEW_CONTINUE);
+}
+
 function populateTimeline() {
   var eventId = readCookie('eventId');
-  $.getJSON( '/events/details/' + eventId, function( data ) {     
-    var published = {'name':'Published','date':new Date(data.dateCreated)};
-    var deadline = {'name':'Deadline','date':new Date(data.eventDeadline)};
-    var start = {'name':'Start','date':new Date(data.eventDate.split(' - ')[0])};
-    var end = {'name':'End','date':new Date(data.eventDate.split(' - ')[1])};
-    var now = {'name':'Now','date':new Date()};
+  $.getJSON( '/events/details/' + eventId, function( data ) {    
+    var published = {'name':$EVENTDETAILS_DATECREATED,'date':new Date(data.dateCreated)};
+    var deadline = {'name':$EVENTDETAILS_DEADLINE,'date':new Date(data.eventDeadline)};
+    var start = {'name':$EVENTDETAILS_STARTDATE,'date':new Date(data.eventDate.split(' - ')[0])};
+    var end = {'name':$EVENTDETAILS_ENDDATE,'date':new Date(data.eventDate.split(' - ')[1])};
+    var now = {'name':$EVENTDETAILS_NOW,'date':new Date()};
     var now2 = new Date();
 
     var dates = [published, deadline, start, end, now];
@@ -60,11 +72,14 @@ function populateEvent() {
   $.getJSON( '/events/details/' + eventId, function( data ) {    
     console.log(data);
     $('#event-title').html(data.eventName);
+    var lang = "vi";
+    if(localStorage.getItem('language') == 'en')
+      lang = 'en-us';
     
     google.maps.event.addDomListener(window, 'load', populateMap(data));
     var date = new Date(data.eventDate.split(' - ')[0]);
     $('#eventDay').html(date.getDate());
-    $('#eventMonthYear').html(date.toLocaleString("en-us", { month: "long" }) + ', ' + date.getFullYear());
+    $('#eventMonthYear').html(date.toLocaleString(lang, { month: "long" }) + ', ' + date.getFullYear());
     $('#eventTime').html(data.meetingTime);
 
 
@@ -123,17 +138,17 @@ function populateActivities() {
   for (var i = 0; i < activityObj.length; i++) {
     if(!days.includes(activityObj[i].day)) {
       days.push(activityObj[i].day);
-      $('#activityDays').html($('#activityDays').html() + '<li id="activity-tab-day-' + activityObj[i].day + '"><a data-toggle="tab" href="#activity-day-' + activityObj[i].day + '">Day ' + activityObj[i].day + '</a></li>');
+      $('#activityDays').html($('#activityDays').html() + '<li id="activity-tab-day-' + activityObj[i].day + '"><a data-toggle="tab" href="#activity-day-' + activityObj[i].day + '">' + $EVENTDETAILS_ACTIVITY_DAY + ' ' + activityObj[i].day + '</a></li>');
       $('#activityContents').html(
         $('#activityContents').html() + 
         '<div id="activity-day-' + activityObj[i].day + '" class="tab-pane fade">' +
           '<table class="table table-striped">' +
             '<thead>' +
               '<tr>' +
-                '<th>Time</th>' +
-                '<th>Place</th>' +
-                '<th>Activity</th>' +
-                '<th>Note</th>' +
+                '<th>' + $EVENTDETAILS_ACTIVITY_TIME + '</th>' +
+                '<th>' + $EVENTDETAILS_ACTIVITY_LOCATION + '</th>' +
+                '<th>' + $EVENTDETAILS_ACTIVITY_ACT + '</th>' +
+                '<th>' + $EVENTDETAILS_ACTIVITY_NOTE + '</th>' +
               '</tr>' +
             '</thead>' +
             '<tbody id="activity-table-content-day' + activityObj[i].day + '">' +

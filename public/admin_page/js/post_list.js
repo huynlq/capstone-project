@@ -1,6 +1,8 @@
 // DOM Ready ===============================================
 
 $(document).ready(function() {
+    populateLanguage();
+
   $('a[data-toggle="tab"]').on( 'shown.bs.tab', function (e) {
       $.fn.dataTable.tables( {visible: true, api: true} ).columns.adjust();
   } );
@@ -15,6 +17,20 @@ $(document).ready(function() {
 } );
 
 // Functions ===============================================
+
+function populateLanguage() {
+    $('#header-post').html($LISTPOST_HEADER_POST);
+    $('.tab-news').html($LISTPOST_TAB_NEWS);
+    $('.tab-board').html($LISTPOST_TAB_BOARD);
+
+    $('.th-action').html($LISTPOST_TH_ACTION);
+    $('.th-title').html($LISTPOST_TH_TITLE);
+    $('.th-author').html($LISTPOST_TH_AUTHOR);
+    $('.th-comment').html($LISTPOST_TH_COMMENT);
+    $('.th-created').html($LISTPOST_TH_CREATED);
+
+    $('#btnCreatePost').html($LISTPOST_BTN_CREATE);
+}
 
 function populateTables() {
 	// jQuery AJAX call for JSON
@@ -57,13 +73,13 @@ function showNews(data) {
         });
 
         content = '<center>'
-                        + '<a data-toggle="tooltip" style="margin: 0 5px" title="Details" class="btn btn-info btn-xs" href="/posts/' + this._id + '">'
+                        + '<a data-toggle="tooltip" style="margin: 0 5px" title="' + $LISTPOST_TIP_DETAILS + '" class="btn btn-info btn-xs" href="/posts/' + this._id + '">'
                             + '<span class="glyphicon glyphicon-search"></span>'
                         + '</a>'
-                        + '<a data-toggle="tooltip" style="margin: 0 5px" title="Edit" class="btn btn-success btn-xs" href="/posts/updatepost/' + this._id + '">'
+                        + '<a data-toggle="tooltip" style="margin: 0 5px" title="' + $LISTPOST_TIP_EDIT + '" class="btn btn-success btn-xs" href="/posts/updatepost/' + this._id + '">'
                             + '<span class="glyphicon glyphicon-edit"></span>'
                         + '</a>'
-                        + '<a data-toggle="tooltip" style="margin: 0 5px" title="Delete" class="btn btn-danger btn-xs linkdeletepost" rel="' + this._id + '" href="#">'
+                        + '<a data-toggle="tooltip" style="margin: 0 5px" title="' + $LISTPOST_TIP_DELETE + '" class="btn btn-danger btn-xs linkdeletepost" rel="' + this._id + '" href="#">'
                             + '<span class="glyphicon glyphicon-remove"></span>'
                         + '</a>'
                     + '</center>';
@@ -76,8 +92,7 @@ function showNews(data) {
                 counterNews,
                 content,
                 this.postName,                
-                user,
-                this.rating,
+                user,                
                 comment,
                 dateCreated.toLocaleTimeString() + ' - ' + dateCreated.toLocaleDateString()
             ]).draw( false );
@@ -88,8 +103,7 @@ function showNews(data) {
                 counterBoard,
                 content,
                 this.postName,                
-                this.user,
-                this.rating,
+                this.user,                
                 comment,
                 dateCreated.toLocaleTimeString() + ' - ' + dateCreated.toLocaleDateString()
             ]).draw( false );
@@ -130,19 +144,19 @@ function showPosts(data) {
             counter++;
             if(role == "Admin" || username == this.user) {
                 content = '<center>'
-                            + '<a data-toggle="tooltip" title="Details" class="btn btn-info btn-xs" href="/posts/' + this._id + '">'
+                            + '<a data-toggle="tooltip" title="' + $LISTPOST_TIP_DETAILS +'" class="btn btn-info btn-xs" href="/posts/' + this._id + '">'
                                 + '<span class="glyphicon glyphicon-search"></span>'
                             + '</a>'
-                            + '<a data-toggle="tooltip" title="Edit" class="btn btn-success btn-xs" href="/posts/updatepost/' + this._id + '">'
+                            + '<a data-toggle="tooltip" title="' + $LISTPOST_TIP_EDIT + '" class="btn btn-success btn-xs" href="/posts/updatepost/' + this._id + '">'
                                 + '<span class="glyphicon glyphicon-edit"></span>'
                             + '</a>'
-                            + '<a data-toggle="tooltip" title="Delete" class="btn btn-danger btn-xs linkdeletepost" rel="' + this._id + '" href="#">'
+                            + '<a data-toggle="tooltip" title="' + $LISTPOST_TIP_DELETE + '" class="btn btn-danger btn-xs linkdeletepost" rel="' + this._id + '" href="#">'
                                 + '<span class="glyphicon glyphicon-remove"></span>'
                             + '</a>'
                         + '</center>';
             } else {
                 content = '<center>'
-                            + '<a data-toggle="tooltip" title="Details" class="btn btn-info btn-xs" href="/posts/' + this._id + '">'
+                            + '<a data-toggle="tooltip" title="' + $LISTPOST_TIP_DETAILS +'" class="btn btn-info btn-xs" href="/posts/' + this._id + '">'
                                 + '<span class="glyphicon glyphicon-search"></span>'
                             + '</a>'
                         + '</center>';
@@ -153,8 +167,7 @@ function showPosts(data) {
                 counter,
                 content,
                 this.postName,                
-                this.user,
-                this.rating,
+                this.user,                
                 this.comment,
                 dateCreated.getDate() + '/' + (dateCreated.getMonth() + 1) + '/' +  dateCreated.getFullYear()
             ]).draw( false );

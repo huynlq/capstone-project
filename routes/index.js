@@ -33,6 +33,16 @@ router.get('/news_list', function(req, res, next) {
   res.render('guest_page/list_posts');
 });
 
+/* GET news list page. */
+router.get('/community_board', function(req, res, next) {
+  res.render('guest_page/board');
+});
+
+/* GET sponsor list page. */
+router.get('/promote', function(req, res, next) {
+  res.render('guest_page/promote');
+});
+
 /* GET sponsor list page. */
 router.get('/about', function(req, res, next) {
   res.render('guest_page/about_us');

@@ -36,7 +36,7 @@ block content
 					.row
 						.col-md-12
 							h2.title-style-2
-								| User List
+								#header-user User List
 								span.title-under
 					.row.tile_count
 						ul.nav.nav-tabs
@@ -45,40 +45,40 @@ block content
 									.tileA
 										.tile_stats_count(style='padding-top: 10px;')
 											span.count_top
-												i.fa.fa-thumbs-o-down
-												|  Pending Users
+												i.fa.fa-thumbs-o-down&nbsp;&nbsp;
+												strong.tab-pending Pending Users
 											#countPendingUsers.count 135
 							li.col-md-2.col-sm-4.col-xs-12
 								a.count-tab(data-toggle='tab', href='#admins')
 									.tileA
 										.tile_stats_count(style='padding-top: 10px;')
 											span.count_top
-												i.fa.fa-child
-												|  Total Admins
+												i.fa.fa-child&nbsp;&nbsp;
+												strong.tab-admins Total Admins
 											#countAdmins.count 5
 							li.col-md-2.col-sm-4.col-xs-12
 								a.count-tab(data-toggle='tab', href='#users')
 									.tileA
 										.tile_stats_count(style='padding-top: 10px;')
 											span.count_top
-												i.fa.fa-bar-chart
-												|  Total Users
+												i.fa.fa-bar-chart&nbsp;&nbsp;
+												strong.tab-users Total Users
 											#countUsers.count 10000
 							li.col-md-2.col-sm-4.col-xs-12
 								a.count-tab(data-toggle='tab', href='#producers')
 									.tileA
 										.tile_stats_count(style='padding-top: 10px;')
 											span.count_top
-												i.fa.fa-spinner.fa-pulse
-												|  Total Producers
+												i.fa.fa-spinner.fa-pulse&nbsp;&nbsp;
+												strong.tab-producers Total Producers
 											#countProducers.count 100
 							li.col-md-2.col-sm-4.col-xs-12
 								a.count-tab(data-toggle='tab', href='#sponsors')
 									.tileA
 										.tile_stats_count(style='padding-top: 10px;')
 											span.count_top
-												i.fa.fa-thumbs-o-up
-												|  Total Sponsors
+												i.fa.fa-thumbs-o-up&nbsp;&nbsp;
+												strong.tab-sponsors Total Sponsors
 											#countSponsors.count 45
 							li.col-md-2.col-sm-4.col-xs-12
 								a.count-tab(data-toggle='tab', href='#banned')
@@ -86,7 +86,7 @@ block content
 										.tile_stats_count(style='padding-top: 10px;')
 											span.count_top
 												i.fa.fa-close
-												|  Banned Users
+												strong.tab-banned Banned Users
 											#countBanned.count.red 1
 					.tab-content
 						#pendingUsers.tab-pane.fade.in.active
@@ -94,22 +94,22 @@ block content
 								.col-md-12.col-sm-12.col-xs-12
 									.col-md-6
 										h3
-											| Pending Users 
+											span.tab-pending Pending Users 
 									.clearfix
 								.x_content
 									table#tablePendingUsers.table.table-style-1.table-striped.table-bordered.dt-responsive.nowrap.datatable-responsive(cellspacing='0', width='100%')
 										thead
 											tr
 												th.action-col #
-												th.action-col Action
-												th User
-												th Full Name
-												th Position Promotion
-												th Company Name
-												th Email
-												th Phone
-												th Address
-												th Date Joined
+												th.th-action.action-col Action
+												th.th-username User
+												th.th-fullName Full Name
+												th.th-promote Position Promotion
+												th.th-companyName Company Name
+												th.th-email Email
+												th.th-phone Phone
+												th.th-address Address
+												th.th-created Date Joined
 										tbody
 						#admins.tab-pane.fade
 							.row
@@ -117,174 +117,148 @@ block content
 									.col-md-12.col-sm-12.col-xs-12
 										.col-md-6
 											h3
-												| Admins 
-												small (sub-title)
+												span.tab-admins Admins
 										.clearfix
 									.x_content
 										table#tableAdmins.table.table-style-1.table-striped.table-bordered.dt-responsive.nowrap.datatable-responsive(cellspacing='0', width='100%')
 											thead
 												tr
 													th.action-col #
-													th.action-col Action
-													th User
-													th Email
+													th.th-action.action-col Action
+													th.th-username User
+													th.th-email Email
 											tbody												
 								.col-md-5.col-sm-5.col-xs-12(style='padding-left: 20px')
 									form.form-horizontal.form-label-left
-										h3(style='margin-left: 50px') Admin Creator
+										h3#adminForm-header(style='margin-left: 50px') Admin Creator
 										.form-group
 											label.control-label.col-md-3.col-sm-3.col-xs-12
-												| Username 
+												span#adminForm-username Username 
 												span.required *
 											.col-md-9.col-sm-9.col-xs-12
 												input#txtAdminUsername.form-control.col-md-7.col-xs-12(type='text', required='required')
 										.form-group
 											label.control-label.col-md-3.col-sm-3.col-xs-12
-												| Password 
+												span#adminForm-password Password 
 												span.required *
 											.col-md-9.col-sm-9.col-xs-12
 												input#txtAdminPassword.form-control.col-md-7.col-xs-12(type='password', required='required')
 										.form-group
 											label.control-label.col-md-3.col-sm-3.col-xs-12
-												| Email 
+												span#adminForm-email Email 
 												span.required *
 											.col-md-9.col-sm-9.col-xs-12
 												input#txtAdminEmail.form-control.col-md-7.col-xs-12(type='text', required='required')										
 										.row
 											.col-md-5.col-sm-5
 											.col-md-4.col-sm-4.col-xs-12
-												a.btn.btn-info.col-xs-12(onclick='createAdmin()') Create >>
+												a#adminForm-create.btn.btn-info.col-xs-12(onclick='createAdmin()') Create >>
 						#users.tab-pane.fade
 							.row
 								.col-md-12.col-sm-12.col-xs-12
 									.col-md-6
 										h3
-											| Users 
+											span.tab-users Users 
 									.clearfix
 								.x_content
 									table#tableUsers.table.table-style-1.table-striped.table-bordered.dt-responsive.nowrap.datatable-responsive(cellspacing='0', width='100%')
 										thead
 											tr
 												th.action-col #
-												th.action-col Action
-												th User
-												th Full Name
-												th Email
-												th Phone
-												th Address
-												th Date Joined
+												th.th-action.action-col Action
+												th.th-username User
+												th.th-fullName Full Name
+												th.th-email Email
+												th.th-phone Phone
+												th.th-address Address
+												th.th-created Date Joined
 										tbody
 						#producers.tab-pane.fade
 							.row
 								.col-md-12.col-sm-12.col-xs-12
 									.col-md-6
 										h3
-											| Producers 
+											span.tab-producers Producers 
 									.clearfix
 								.x_content
 									table#tableProducers.table.table-style-1.table-striped.table-bordered.dt-responsive.nowrap.datatable-responsive(cellspacing='0', width='100%')
 										thead
 											tr
 												th.action-col #
-												th.action-col Action
-												th User
-												th Full Name
-												th Email
-												th Phone
-												th Address
-												th Past Events
-												th Upcoming Events
-												th Date Joined
+												th.th-action.action-col Action
+												th.th-username User
+												th.th-companyName Company Name
+												th.th-email Email
+												th.th-phone Phone
+												th.th-address Address
+												th.th-event Events
+												th.th-created Date Joined
 										tbody
 						#sponsors.tab-pane.fade
 							.row
 								.col-md-12.col-sm-12.col-xs-12
 									.col-md-6
 										h3
-											| Sponsors 
+											span.tab-sponsors Sponsors 
 									.clearfix
 								.x_content
 									table#tableSponsors.table.table-style-1.table-striped.table-bordered.dt-responsive.nowrap.datatable-responsive(cellspacing='0', width='100%')
 										thead
 											tr
 												th.action-col #
-												th.action-col Action
-												th User
-												th Full Name
-												th Company Name
-												th Email
-												th Phone
-												th Address
-												th Events Donated
-												th Donations
-												th Date Joined
+												th.th-action.action-col Action
+												th.th-username User
+												th.th-fullName Full Name
+												th.th-companyName Company Name
+												th.th-email Email
+												th.th-phone Phone
+												th.th-address Address
+												th.th-created Date Joined
 										tbody
 						#banned.tab-pane.fade
 							.row
 								.col-md-12.col-sm-12.col-xs-12
 									.col-md-6
 										h3
-											| Banned Users 
+											span.tab-banned Banned Users 
 									.clearfix
 								.x_content
 									table#tableBannedUsers.table.table-style-1.table-striped.table-bordered.dt-responsive.nowrap.datatable-responsive(cellspacing='0', width='100%')
 										thead
 											tr
 												th.action-col #
-												th.action-col Action
-												th User
-												th Role
-												th Full Name												
-												th Email
-												th Phone
-												th Address
-												th Ban Reason
-												th Date Joined
+												th.th-action.action-col Action
+												th.th-username User
+												th.th-position Role
+												th.th-fullName Full Name												
+												th.th-email Email
+												th.th-phone Phone
+												th.th-address Address
+												th.th-reason Ban Reason
+												th.th-created Date Joined
 										tbody
 			#ban-reason-form(title='Ban This User')
-				p.validateTips All form fields are required.
+				p#banForm_require.validateTips All form fields are required.
 				form
 					fieldset
 						.form-group
 							label.control-label.col-md-6.col-sm-6.col-xs-12(style="text-align:right")
-								| User to ban 
+								span#banForm_username User to ban 
 								span.required *
 							.col-md-6.col-sm-6.col-xs-12
 								input#txtUserBan.form-control.col-md-7.col-xs-12(type='text', readonly='readonly')
 						.form-group
 							label.control-label.col-md-6.col-sm-6.col-xs-12(style="text-align:right")
-								| ID 
+								span#banForm_id ID 
 								span.required *
 							.col-md-6.col-sm-6.col-xs-12
 								input#txtUserBanId.form-control.col-md-7.col-xs-12(type='text', readonly='readonly')
 						.form-group
 							label.control-label.col-md-6.col-sm-6.col-xs-12(style="text-align:right")
-								| Reason to ban 
+								span#banForm_reason Reason to ban 
 								span.required *
 							.col-md-6.col-sm-6.col-xs-12
 								input#txtReason.form-control.col-md-7.col-xs-12(type='text', required='required')
-			#disapprove-reason-form(title='Disapprove This User')
-				p.validateTips All form fields are required.
-				form
-					fieldset
-						.form-group
-							label.control-label.col-md-6.col-sm-6.col-xs-12(style="text-align:right")
-								| User to disapprove 
-								span.required *
-							.col-md-6.col-sm-6.col-xs-12
-								input#txtUserDisapprove.form-control.col-md-7.col-xs-12(type='text', readonly='readonly')
-						.form-group
-							label.control-label.col-md-6.col-sm-6.col-xs-12(style="text-align:right")
-								| ID 
-								span.required *
-							.col-md-6.col-sm-6.col-xs-12
-								input#txtUserDisapproveId.form-control.col-md-7.col-xs-12(type='text', readonly='readonly')
-						.form-group
-							label.control-label.col-md-6.col-sm-6.col-xs-12(style="text-align:right")
-								| Reason to disapprove 
-								span.required *
-							.col-md-6.col-sm-6.col-xs-12
-								input#txtDisapproveReason.form-control.col-md-7.col-xs-12(type='text', required='required')
 			// Bootsrap javascript file
 			script(src='/guest_page/js/bootstrap.min.js')
 			// PrettyPhoto javascript file

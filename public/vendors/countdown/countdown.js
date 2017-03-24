@@ -1310,8 +1310,13 @@ function(module) {
 	 * @public
 	 */
 	var resetFormat = countdown.resetFormat = function() {
-		LABELS_SINGLUAR = ' millisecond| second| minute| hour| day| week| month| year| decade| century| millennium'.split('|');
-		LABELS_PLURAL = ' millisecond| seconds| minutes| hours| days| weeks| months| years| decade| century| millennium'.split('|');
+		if(localStorage.getItem('language') != 'en') {
+			LABELS_SINGLUAR = ' millisecond| giây| phút| giờ| ngày| tuần| tháng| năm| decade| century| millennium'.split('|');
+			LABELS_PLURAL = ' millisecond| giây| phút| giờ| ngày| tuần| tháng| năm| decade| century| millennium'.split('|');
+		} else {
+			LABELS_SINGLUAR = ' millisecond| second| minute| hour| day| week| month| year| decade| century| millennium'.split('|');
+			LABELS_PLURAL = ' millisecond| seconds| minutes| hours| days| weeks| months| years| decade| century| millennium'.split('|');
+		}		
 		LABEL_LAST = ' ';
 		LABEL_DELIM = ', ';
 		LABEL_NOW = '';

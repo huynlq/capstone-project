@@ -10,7 +10,16 @@ html
 		script(src='/guest_page/js/lang.js')
 		script(src='/guest_page/js/layout.js')		
 		// Countdown JS
-		script(src='/vendors/countdown/countdown.js')
+		script(src='/vendors/countdown/countdown.js')			
+		script.
+			(function(d, s, id) {
+				var js, fjs = d.getElementsByTagName(s)[0];
+				if (d.getElementById(id)) return;
+				js = d.createElement(s); js.id = id;
+				js.src = "//connect.facebook.net/vi_VN/sdk.js#xfbml=1&version=v2.8&appId=404393089920980";
+				fjs.parentNode.insertBefore(js, fjs);
+			}(document, 'script', 'facebook-jssdk'));
+
 	body
 		header.main-header
 				nav.navbar.navbar-static-top.navbar-inverse(data-spy="affix")
@@ -28,12 +37,15 @@ html
 									// /.header-contact
 								.col-sm-6.col-xs-12.text-right
 									ul#navbar.list-unstyled.list-inline.navbar-collapse.collapse
-										li
+										li#welcome
 											| Xin chào, quý khách
 										li
 											| |
+										li#languageBar
 										li
-											a(href="/login") Đăng nhập
+											| |
+										li
+											a#login(href="/login") Đăng nhập
 									// /.header-social
 					.navbar-main
 						.container
@@ -44,21 +56,21 @@ html
 									span.icon-bar
 									span.icon-bar
 								a.navbar-brand(href='/')
-									img(src='/guest_page/images/vep-logo.png', alt='', style='height: 38px')
+									img(src='/guest_page/images/ccma-logo.png', alt='', style='height: 38px; marign-bot: 5px')
 							.navbar-collapse.collapse.pull-right
 								ul#navbar-below.nav.navbar-nav
 									li
-										a(href='/') TRANG CHỦ
+										a#navbar-home(href='/')
 									li
-										a(href='/about') GIỚI THIỆU
+										a#navbar-about(href='/about')
 									li
-										a(href='/events_list') SỰ KIỆN
+										a#navbar-events(href='/events_list')
 									li
-										a(href='/news_list') BẢN TIN
+										a#navbar-news(href='/news_list')
 									li
-										a(href='/sponsors_list') TÀI TRỢ
+										a#navbar-board(href='/community_board')
 									li
-										a(href='gallery.html') GALLERY
+										a#navbar-sponsors(href='/sponsors_list')
 							// /#navbar
 						// /.container
 					// /.navbar-main
@@ -72,53 +84,24 @@ html
 						.col-md-4
 							.footer-col
 								h4.footer-title
-									| Giới thiệu
+									span#about-us Giới thiệu
 									span.title-under
-								.footer-content
+								#about-us-desc.footer-content
 									p
 										strong VEP 
 										| là cổng thông tin sự kiện từ thiện với mục đích phi lợi nhuận nhằm kết nối tài trợ và tình nguyện viên, tạo cầu nối tin tưởng lẫn nhau để giúp đỡ các nhà tổ chức tổ chức sự kiện hiệu quả hơn.
 									p
 										| Đội ngũ nhân lực bao gồm năm sinh viên đại học cùng nhau góp sức vì một cộng đồng giàu tình thương và nhân ái.
 						.col-md-4
-							.footer-col
-								h4.footer-title
-									| Đội ngũ
-									span.title-under
-								.footer-content
-									ul.tweets.list-unstyled
-										li.tweet
-											i.fa.fa-user&nbsp;&nbsp;
-											| Nguyễn Lê Quốc Huy
-											br
-											i.fa.fa-envelope&nbsp;&nbsp;
-											a(href="mailto:huynlqse61661@fpt.edu.vn") huynlqse61661@fpt.edu.vn
-										li.tweet
-											i.fa.fa-user&nbsp;&nbsp;
-											| Phạm Đức Nguyên
-											br
-											i.fa.fa-phone&nbsp;&nbsp;
-											a(href="mailto:nguyenpdse61435@fpt.edu.vn") nguyenpdse61435@fpt.edu.vn
 						.col-md-4
 							.footer-col
 								h4.footer-title
-									| Liên hệ
+									| FACEBOOK
 									span.title-under
 								.footer-content
-									.footer-form
-										.footer-form
-											form.ajax-form(action='php/mail.php')
-												.form-group
-													input.form-control(type='text', name='name', placeholder='Tên', required='')
-												.form-group
-													input.form-control(type='email', name='email', placeholder='Địa chỉ', required='')
-												.form-group
-													textarea.form-control(name='message', placeholder='Lời nhắn', required='')
-												.form-group.alerts
-													.alert.alert-success(role='alert')
-													.alert.alert-danger(role='alert')
-												.form-group
-													button.btn.btn-submit.pull-right(type='submit') Gửi
+									.fb-page(data-href='https://www.facebook.com/Dota2QuotesVN', data-tabs="timeline", data-width='380', data-hide-cover='false', data-show-facepile='false', data-show-posts='false')
+										blockquote.fb-xfbml-parse-ignore(cite='https://www.facebook.com/Dota2QuotesVN/')
+											a(href='https://www.facebook.com/Dota2QuotesVN/') Dota 2 Quotes
 						.clearfix
 			.footer-bottom
 				.container.text-right

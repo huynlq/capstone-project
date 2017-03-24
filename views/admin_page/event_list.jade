@@ -36,7 +36,7 @@ block content
 					.row
 						.col-md-12
 							h2.title-style-2
-								| Event List
+								span#header-event Event List
 								span.title-under
 					.row.tile_count
 						ul.nav.nav-tabs
@@ -45,32 +45,32 @@ block content
 									.tileA
 										.tile_stats_count
 											span.count_top
-												i.fa.fa-bar-chart
-												|  Total Events
+												i.fa.fa-bar-chart&nbsp;&nbsp;
+												span#tab-totalEvent  Total Events
 											#countEvents.count 7
 							li.col-md-3.col-sm-6.col-xs-12
 								a.count-tab(data-toggle='tab', href='#upcomingEvents')
 									.tileA
 										.tile_stats_count
 											span.count_top
-												i.fa.fa-spinner.fa-pulse
-												|  Upcoming Events
+												i.fa.fa-spinner.fa-pulse&nbsp;&nbsp;
+												span#tab-upcomingEvent  Upcoming Events
 											#countUpcomingEvents.count 4				
 							li.col-md-3.col-sm-6.col-xs-12
 								a.count-tab(data-toggle='tab', href='#pastEvents')
 									.tileA
 										.tile_stats_count
 											span.count_top
-												i.fa.fa-thumbs-o-up
-												|  Past Events
+												i.fa.fa-thumbs-o-up&nbsp;&nbsp;
+												span#tab-pastEvent  Past Events
 											#countPastEvents.count.green 1
 							li.col-md-3.col-sm-6.col-xs-12
 								a.count-tab(data-toggle='tab', href='#cancelledEvents')
 									.tileA
 										.tile_stats_count
 											span.count_top
-												i.fa.fa-thumbs-o-down
-												|  Cancelled Events
+												i.fa.fa-thumbs-o-down&nbsp;&nbsp;
+												span#tab-cancelledEvent  Cancelled Events
 											#countCancelledEvents.count.red 1
 					.tab-content
 						#upcomingEvents.tab-pane.fade
@@ -78,85 +78,85 @@ block content
 								.col-md-12.col-sm-12.col-xs-12
 									.col-md-6
 										h3
-											| Upcoming events 
+											span#tabContent-upcomingEvent Upcoming events 
 									.clearfix
 								.x_content
 									table#tableUpcomingEvents.table.table-striped.table-bordered.dt-responsive.nowrap.datatable-responsive(cellspacing='0', width='100%')
 										thead
 											tr
 												th #
-												th Action
-												th Event
-												th User
-												th Email
-												th Phone
-												th Start Date
-												th Location
-												th Create Date
+												th.th-action Action
+												th.th-event Event
+												th.th-user User
+												th.th-email Email
+												th.th-phone Phone
+												th.th-start Start Date
+												th.th-location Location
+												th.th-created Create Date
 										tbody
 						#events.tab-pane.fade
 							.row
 								.col-md-12.col-sm-12.col-xs-12
 									.col-md-6
 										h3
-											| All events 
+											span#tabContent-totalEvent All events 
 									.clearfix
 								.x_content
 									table#tableEvents.table.table-striped.table-bordered.dt-responsive.nowrap.datatable-responsive(cellspacing='0', width='100%')
 										thead
 											tr
 												th #
-												th Action
-												th Event
-												th Status
-												th User
-												th Email
-												th Phone
-												th Start Date
-												th Location
-												th Create Date
+												th.th-action Action
+												th.th-event Event
+												th.th-status Status
+												th.th-user User
+												th.th-email Email
+												th.th-phone Phone
+												th.th-start Start Date
+												th.th-location Location
+												th.th-created Create Date
 										tbody
 						#pastEvents.tab-pane.fade
 							.row
 								.col-md-12.col-sm-12.col-xs-12
 									.col-md-6
 										h3
-											| Past events 
+											span#tabContent-pastEvent Past events 
 									.clearfix
 								.x_content
 									table#tablePastEvents.table.table-striped.table-bordered.dt-responsive.nowrap.datatable-responsive(cellspacing='0', width='100%')
 										thead
 											tr
 												th #
-												th Action
-												th Event
-												th User
-												th Email
-												th Phone
-												th Start Date
-												th Location
-												th Create Date
+												th.th-action Action
+												th.th-event Event
+												th.th-user User
+												th.th-email Email
+												th.th-phone Phone
+												th.th-start Start Date
+												th.th-location Location
+												th.th-created Create Date
 										tbody				
 						#cancelledEvents.tab-pane.fade
 							.row
 								.col-md-12.col-sm-12.col-xs-12
 									.col-md-6
 										h3
-											| Cancelled events 
+											span#tabContent-cancelledEvent Cancelled events 
 									.clearfix
 								.x_content
 									table#tableCancelledEvents.table.table-striped.table-bordered.dt-responsive.nowrap.datatable-responsive(cellspacing='0', width='100%')
 										thead
 											tr
 												th #
-												th Action
-												th Event
-												th User
-												th Email
-												th Phone
-												th Start Date
-												th Location
-												th Create Date
+												th.th-action Action
+												th.th-event Event
+												th.th-user User
+												th.th-email Email
+												th.th-phone Phone
+												th.th-start Start Date
+												th.th-location Location
+												th.th-created Create Date
 										tbody
 			// Bootsrap javascript file
 			script(src='/guest_page/js/bootstrap.min.js')

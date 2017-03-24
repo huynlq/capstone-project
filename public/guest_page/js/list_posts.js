@@ -3,10 +3,15 @@ $(function(){
 
 	/*  Populate countdown
  	================================================*/ 
-
+ 	populateLanguage();
  	populatePosts();
 
 });
+
+function populateLanguage() {
+	$('#header').html($POSTLIST_HEADER);
+	$('#header-desc').html($POSTLIST_HEADER_DESC);
+}
 
 function populatePosts() {
 	var counter = 0;
@@ -49,7 +54,7 @@ function populatePosts() {
 							  '</div>' +
 							  '<div style="position:absolute; bottom: 20px; right: 0px">' +
 							  	'<span style="margin-right: 20px">' + dateString + '</span>' +
-							  	'<a href="/posts/' + this._id + '" class="btn btn-primary"><strong>Read More</strong></a>' +
+							  	'<a href="/posts/' + this._id + '" class="btn btn-primary"><strong>' + $POSTLIST_READ_MORE + '</strong></a>' +
 							  '</div>' +
 							'</div>';
         		$('#listPosts').html($('#listPosts').html() + content);

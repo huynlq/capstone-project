@@ -33,14 +33,15 @@ block content
 			.row(style="height:80px")
 			.page-heading.text-center
 				.container.zoomIn.animated
-					h1.page-title(style="text-transform: uppercase;") Post Creator
+					h1.page-title(style="text-transform: uppercase;")
+						span#header Post Creator
 						span.title-under
 			.main-container
 				.container
 					.row
 						.col-md-12
 							h2.title-style-2
-								| Event Details
+								span#header-post Post Details
 								span.title-under
 							form(action="/posts/addpost", method="post", enctype="multipart/form-data").form-horizontal.form-label-left
 								input#txtUserId(type='hidden', name='userId', value='#{docs.userId}')
@@ -48,32 +49,32 @@ block content
 								input#txtPostId.form-control.col-md-7.col-xs-12(type='hidden', name="_id", value="#{docs._id}")
 								.form-group
 									label.control-label.col-md-3.col-sm-3.col-xs-12
-										| Title 
+										span#form-title Title 
 										span.required *
 									.col-md-6.col-sm-6.col-xs-12
 										input#txtPostName.form-control.col-md-7.col-xs-12(type='text', required='required', name="postName", value="#{docs.postName}")
 								.form-group
 									label.control-label.col-md-3.col-sm-3.col-xs-12
-										| Post To
+										span#form-postTo Post To
 										span.required *
 									.col-md-6.col-sm-6.col-xs-12
 										div#postType(style="display: none") #{docs.postType}
 										select#txtPostType.form-control(name="postType")
-								.form-group
+								.form-group#shortDescPanel(style="display:none")
 									label.control-label.col-md-3.col-sm-3.col-xs-12
-										| Short Description
+										span#form-shortDesc Short Description
 										span.required *
 									.col-md-6.col-sm-6.col-xs-12
 										textarea#txtDescription(name="postDescription", style="height: 200px; width: 100%") #{docs.postDescription}
 								.form-group
 									label.control-label.col-md-3.col-sm-3.col-xs-12
-										| Content 
+										span#form-content Content 
 										span.required *
 									.col-md-6.col-sm-6.col-xs-12
 										textarea#txtDescription.mceEditor(name="postContent", style="height: 500px") #{docs.postContent}
-								.form-group
+								.form-group#imagePanel(style="display:none")
 									label.control-label.col-md-3.col-sm-3.col-xs-12
-										| Image 
+										span#form-image Image 
 										span.required *								
 									.col-md-6.col-sm-6.col-xs-12								
 										.row
@@ -87,7 +88,8 @@ block content
 								.row
 									.col-md-7.col-sm-7
 									.col-md-2.col-sm-2.col-xs-12
-										button.btn.btn-info.col-xs-12(type='submit') Continue >>	
+										button.btn.btn-info.col-xs-12(type='submit')
+											strong#btnSubmit Continue >>	
 			// Bootsrap javascript file
 			script(src='/guest_page/js/bootstrap.min.js')
 			// PrettyPhoto javascript file

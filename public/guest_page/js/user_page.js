@@ -1,6 +1,7 @@
 // DOM Ready ===============================================
 
 $(document).ready(function() {
+  populateLanguage();
   $('a[data-toggle="tab"]').on( 'shown.bs.tab', function (e) {
       $.fn.dataTable.tables( {visible: true, api: true} ).columns.adjust();
   } );
@@ -14,6 +15,13 @@ $(document).ready(function() {
 
 // Functions ===============================================
 
+function populateLanguage() {
+  $('#header').html($USERPAGE_HEADER);
+  $('#header-desc').html($USERPAGE_HEADER_DESC);
+  $('#header-userInfo').html($USERPAGE_HEADER_USERINFO);
+  $('#header-companyInfo').html($USERPAGE_HEADER_COMPANYINFO);
+}
+
 // Populate Participated Events
 function populateEventJoined() {
   var id = $('#userId').html();
@@ -22,7 +30,7 @@ function populateEventJoined() {
   var eventId = "";
   $('#eventJoined-panel').html('<div class="section-home our-sponsors fadeIn">' +
                                         '<div class="container">' +
-                                          '<h2 class="title-style-1">Joined Events <span class="title-under"></span></h2>' +
+                                          '<h2 class="title-style-1">' + $USERPAGE_HEADER_JOINEDEVENTS + ' <span class="title-under"></span></h2>' +
                                           '<div id="joined-events" class="owl-carousel list-unstyled"></div>' +
                                         '</div>' +
                                       '</div>');
@@ -103,10 +111,10 @@ function populateEventJoined() {
 
         });
       } else {
-        $('#eventJoined-panel').html($('#eventJoined-panel').html() + '<center>None at the moment.</center>')
+        $('#eventJoined-panel').html($('#eventJoined-panel').html() + '<center>' + $USERPAGE_NO_EVENT + '</center>')
       }
     } else {
-      $('#eventJoined-panel').html($('#eventJoined-panel').html() + '<center>None at the moment.</center>')
+      $('#eventJoined-panel').html($('#eventJoined-panel').html() + '<center>' + $USERPAGE_NO_EVENT + '</center>')
     }   
   });
 }
@@ -120,7 +128,7 @@ function populateEventProduced() {
       var dateCreated = "";      
       $('#eventProduced-panel').html('<div class="section-home our-sponsors fadeIn">' +
                                         '<div class="container">' +
-                                          '<h2 class="title-style-1">Hosted Events <span class="title-under"></span></h2>' +
+                                          '<h2 class="title-style-1">' + $USERPAGE_HEADER_HOSTEDEVENTS + ' <span class="title-under"></span></h2>' +
                                           '<div id="hosted-events" class="owl-carousel list-unstyled"></div>' +
                                         '</div>' +
                                       '</div>');
@@ -189,9 +197,9 @@ function populateEventProduced() {
 
         });
       } else {
-        $('#eventProduced-panel').html($('#eventProduced-panel').html() + '<center>None at the moment.</center>');
+        $('#eventProduced-panel').html($('#eventProduced-panel').html() + '<center>' + $USERPAGE_NO_EVENT + '</center>');
       }
-    } else if(data.role != "Sponsor") {
+    } else if(userData.role != "Sponsor") {
       $('#eventProduced-panel').html('');
       $('#companyInfoDiv').html('');
     }

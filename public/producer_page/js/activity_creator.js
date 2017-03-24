@@ -1,6 +1,7 @@
 // DOM Ready =============================================================
 
 $(document).ready(function() {
+  populateLanguage();
   if($('#txtEventIdEdit').val() == '' || $('#txtEventIdEdit').val() == 'undefine' || $('#txtEventIdEdit').val() == null || $('#txtEventIdEdit').val() == undefined) {
     $('#txtEventId').val(readCookie('eventId'));  
   } else {
@@ -35,6 +36,20 @@ $(document).ready(function() {
 
 // Functions =============================================================
 
+function populateLanguage() {
+  $('#header').html($EVENTCREATOR_HEADER);
+  $('#header-desc').html($EVENTCREATOR_HEADER_DESC);
+  $('#header-activity').html($EVENTCREATOR_HEADER_ACTIVITY);
+
+  $('#form-date').html($EVENTCREATOR_ACTFORM_DATE);
+  $('#form-time').html($EVENTCREATOR_ACTFORM_TIME);
+  $('#form-place').html($EVENTCREATOR_ACTFORM_PLACE);
+  $('#form-activity').html($EVENTCREATOR_ACTFORM_ACTIVITY);
+  $('#form-note').html($EVENTCREATOR_ACTFORM_NOTE);
+  $('#form-add').html($EVENTCREATOR_ACTFORM_ADD);
+  $('#formSubmit').html($EVENTCREATOR_CONTINUE);
+}
+
 function initiateSchedule() {
   $.getJSON( '/events/details/' + $('#txtEventId').val(), function( data ) {
     var retrievedObject = data;
@@ -55,18 +70,18 @@ function initiateSchedule() {
       dateString = currentDate.getDate() + '/' + currentDate.getMonth() + '/' + currentDate.getFullYear();
       content += '<option>' + i + ' (' + dateString + ')</option>';
 
-      content1 = '<li id="tab-day-' + i + '"><a data-toggle="tab" href="#day' + i + '">Day ' + i + '</a></li>';
-      content2 = '<div id="day' + i + '" class="tab-pane fade"><h3 class="title-style-2">Day ' + i + ' (' + dateString + ')<span class="title-under"></span></h3><p>'
+      content1 = '<li id="tab-day-' + i + '"><a data-toggle="tab" href="#day' + i + '">' + $EVENTCREATOR_ACTTAB_DAY + ' ' + i + '</a></li>';
+      content2 = '<div id="day' + i + '" class="tab-pane fade"><h3 class="title-style-2">' + $EVENTCREATOR_ACTTAB_DAY + ' ' + i + ' (' + dateString + ')<span class="title-under"></span></h3><p>'
                   + '<div class="row clearfix">'
                     + '<div class="col-md-12 column">'
                       + '<table id="table-day-' + i + '" class="table table-style-1 table-bordered table-hover dt-responsive">'
                         + '<thead>'
                           + '<tr >'
-                            + '<th class="text-center">Time</th>'
-                            + '<th class="text-center">Place</th>'
-                            + '<th class="text-center">Activity</th>'
-                            + '<th class="text-center">Note</th>'
-                            + '<th class="text-center">Action</th>'
+                            + '<th class="text-center">' + $EVENTCREATOR_ACTFORM_TIME + '</th>'
+                            + '<th class="text-center">' + $EVENTCREATOR_ACTFORM_PLACE + '</th>'
+                            + '<th class="text-center">' + $EVENTCREATOR_ACTFORM_ACTIVITY + '</th>'
+                            + '<th class="text-center">' + $EVENTCREATOR_ACTFORM_NOTE + '</th>'
+                            + '<th class="text-center">' + $EVENTCREATOR_ACTTABLE_ACTION + '</th>'
                           + '</tr>'
                         + '</thead>'
                         + '<tbody id="body-day' + i + '">'  
@@ -94,7 +109,7 @@ function initiateSchedule() {
     $.getJSON( '/events/activities/' + $('#txtEventId').val(), function( activityData ) {
       if(activityData == '') {
         activityData = JSON.parse(localStorage.getItem('activityItem'));
-        if(activityData == '') {
+        if(activityData == '' || activityData == null) {
           //ABSOLUTELY NOTHING
         } else {
           for (var i = 0; i < activityData.length; i++) {
