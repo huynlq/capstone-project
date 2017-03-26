@@ -4,9 +4,9 @@ $(document).ready(function() {
     populateLanguageLayout();
     var languageContent = "";
     if(localStorage.getItem('language') == 'vi' || localStorage.getItem('language') == null) {
-      languageContent = "<a onclick='changeLanguage(\"en\")'><img src='https://lipis.github.io/flag-icon-css/flags/4x3/gb.svg' style='height:13px'/></a>";
+      languageContent = "<a style='cursor: pointer' onclick='changeLanguage(\"en\")'><img src='https://lipis.github.io/flag-icon-css/flags/4x3/gb.svg' style='height:13px'/></a>";
     } else {
-      languageContent = "<a onclick='changeLanguage(\"vi\")'><img src='https://lipis.github.io/flag-icon-css/flags/4x3/vn.svg' style='height:13px'/></a>";
+      languageContent = "<a style='cursor: pointer' onclick='changeLanguage(\"vi\")'><img src='https://lipis.github.io/flag-icon-css/flags/4x3/vn.svg' style='height:13px'/></a>";
     }
 
     // Check Login
@@ -18,7 +18,7 @@ $(document).ready(function() {
                           '<li>|</li>' +
                           '<li>' + languageContent + '</li>' +
                           '<li>|</li>' +
-                          '<li><a onclick="signOut()">' + $LAYOUT_NAVBAR_SIGNOUT + '</a>' +
+                          '<li><a style="cursor: pointer" onclick="signOut()">' + $LAYOUT_NAVBAR_SIGNOUT + '</a>' +
                           '</li>');
         $('#navbar-user').html($LAYOUT_NAVBAR_WELCOME + data.username);
         $('#navbar-signlink').html("<a onclick='signOut()'>" + $LAYOUT_NAVBAR_SIGNOUT + "</a>");

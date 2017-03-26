@@ -24,10 +24,10 @@ block content
 			.page-heading.text-center
 				.container.zoomIn.animated
 					h1.page-title
-						| ABOUT US 
+						span#header ABOUT US 
 						span.title-under
 					p.page-description
-						| Lorem ipsum dolor sit amet, consectetur adipisicing elit Necessitatibus.
+						span#header-desc
 			.main-container
 				.container
 					.row.fadeIn.animated
@@ -35,140 +35,130 @@ block content
 							img.img-responsive(src='/guest_page/images/about-us.jpg', alt='')
 						.col-md-6
 							h2.title-style-2
-								| ABOUT VEP
+								span#header-about ABOUT CCMA
 								span.title-under
-							p
-								strong VEP 
-								| is a non-profit, events creating portal that helps connecting sponsors and volunteers to establish a mutual trust between them, so that producers can host events easier and more effectively.
-							p
-								| We are a team consists of five university students who desire to join hands in creating and building a better world for communities and societies.
-					// /.row
-					.section-home.about-us
-						.row
-							ul.nav.nav-tabs(style="border:none")
-								li.col-md-3.col-sm-6.col-xs-6
-									a(href="#mission" aria-controls="mission" data-toggle="tab")
-										.about-us-col(style="height:200px")
-											.col-icon-wrapper
-												img(src='/guest_page/images/icons/our-mission-icon.png', alt='')
-											h3.col-title our mission
-								li.col-md-3.col-sm-6.col-xs-6
-									a(href="#help" aria-controls="help" data-toggle="tab")
-										.about-us-col(style="height:200px")
-											.col-icon-wrapper
-												img(src='/guest_page/images/icons/make-donation-icon.png', alt='')
-											h3.col-title Help Us
-								li.col-md-3.col-sm-6.col-xs-6
-									a(href="#join" aria-controls="join" data-toggle="tab")
-										.about-us-col(style="height:200px")
-											.col-icon-wrapper
-												img(src='/guest_page/images/icons/help-icon.png', alt='')
-											h3.col-title Join Us
-								li.col-md-3.col-sm-6.col-xs-6
-									a(href="#create" aria-controls="create" data-toggle="tab")
-										.about-us-col(style="height:200px")
-											.col-icon-wrapper
-												img(src='/guest_page/images/icons/programs-icon.png', alt='')
-											h3.col-title Create Your Event
-							.tab-content(style="margin: 50px;")
-								#mission.tab-pane.active.animate-onscroll.fadeIn(role='tabpanel')
-									| Lorem ipsum dolor sit amet, consectetur adipisicing elit. In consequatur mollitia, libero quisquam impedit obcaecati, dignissimos, eum similique minima ab amet eos sequi distinctio qui modi? Possimus quos, fugit quia.
-								#help.tab-pane.animate-onscroll.fadeIn(role='tabpanel')
-									| Lorem ipsum dolor sit amet, consectetur adipisicing elit. Molestiae aut culpa a commodi. Quidem asperiores aliquid sequi incidunt quas soluta eum ab fugiat deleniti in at iste, illum ipsam nisi.
-								#join.tab-pane.animate-onscroll.fadeIn(role='tabpanel')
-									| Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ex aliquam corrupti quibusdam nostrum, aspernatur iure illo, alias vitae, reiciendis culpa explicabo minus iusto ipsum cum tempore incidunt iste praesentium nihil.
-								#create.tab-pane.animate-onscroll.fadeIn(role='tabpanel')
-									| Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ea ducimus ullam distinctio fugiat voluptates! Vero quis adipisci asperiores aliquam ullam doloremque dolor, reprehenderit, accusamus nisi ut eveniet quas reiciendis dolore.
-
-						// /.row
-				// /.about-us
-				.our-team.animate-onscroll.fadeIn
-					.container
-						h2.title-style-1
-							| Our Team 
-							span.title-under
-						.row
-							.col-md-4.col-sm-6.col-xs-6
-								.team-member
-									.thumnail
-										img.cause-img(src='/guest_page/images/team/member-1.jpg', alt='')
-									h4.member-name
-										a(href='#') Robert C. Numbers
-									.member-position
-										| CO-FOUNDER
-									.btn-holder(style="position:inherit")
-										a.btn(href='#')
-											i.fa.fa-envelope
-										a.btn(href='#')
-											i.fa.fa-phone
-										a.btn(href='#')
-											i.fa.fa-facebook
-								// /.team-member
-							.col-md-4.col-sm-6.col-xs-6
-								.team-member
-									.thumnail
-										img.cause-img(src='/guest_page/images/team/member-3.jpg', alt='')
-									h4.member-name
-										a(href='#') Marjorie R. Echevarria
-									.member-position
-										| CO-FOUNDER
-									.btn-holder(style="position:inherit")
-										a.btn(href='#')
-											i.fa.fa-envelope
-										a.btn(href='#')
-											i.fa.fa-phone
-										a.btn(href='#')
-											i.fa.fa-facebook
-								// /.team-member
-							.col-md-4.col-sm-6.col-xs-6
-								.team-member
-									.thumnail
-										img.cause-img(src='/guest_page/images/team/member-4.jpg', alt='')
-									h4.member-name
-										a(href='#') Allison J. Falls
-									.member-position
-										| CO-FOUNDER
-									.btn-holder(style="position:inherit")
-										a.btn(href='#')
-											i.fa.fa-envelope
-										a.btn(href='#')
-											i.fa.fa-phone
-										a.btn(href='#')
-											i.fa.fa-facebook
-								// /.team-member							
-							.col-md-4.col-sm-6.col-xs-6
-								.team-member
-									.thumnail
-										img.cause-img(src='/guest_page/images/team/member-2.jpg', alt='')
-									h4.member-name
-										a(href='#') Bryan B. Stevens
-									.member-position
-										| CO-FOUNDER
-									.btn-holder(style="position:inherit")
-										a.btn(href='#')
-											i.fa.fa-envelope
-										a.btn(href='#')
-											i.fa.fa-phone
-										a.btn(href='#')
-											i.fa.fa-facebook
-								// /.team-member
-							.col-md-4.col-sm-6.col-xs-6
-								.team-member
-									.thumnail
-										img.cause-img(src='/guest_page/images/team/member-2.jpg', alt='')
-									h4.member-name
-										a(href='#') Bryan B. Stevens
-									.member-position
-										| CO-FOUNDER
-									.btn-holder(style="position:inherit")
-										a.btn(href='#')
-											i.fa.fa-envelope
-										a.btn(href='#')
-											i.fa.fa-phone
-										a.btn(href='#')
-											i.fa.fa-facebook
-								// /.team-member
-						// /.row
+							p#about-desc				
+					// /.about-us
+					br
+					.row.our-team.animate-onscroll.fadeIn
+						.container
+							h2.title-style-1
+								span#header-team Our Team 
+								span.title-under
+							.row
+								.col-md-3.col-sm-6.col-xs-6(style="margin: 20px 0;float: none;margin: 0 auto;")
+									.team-member
+										.thumnail
+											img.cause-img(src='/images/system/default_user.jpg', alt='')
+										h4.member-name
+											a(href='#') Nguyễn Lê Quốc Huy
+										.member-position
+											| FOUNDER
+										.btn-holder(style="position:inherit")
+											a.btn(href='#')
+												i.fa.fa-envelope
+											a.btn(href='#')
+												i.fa.fa-phone
+											a.btn(href='#')
+												i.fa.fa-facebook
+									// /.team-member
+							.row
+								.col-md-3.col-sm-6.col-xs-6(style="margin: 20px 0")
+									.team-member
+										.thumnail
+											img.cause-img(src='/images/system/default_user.jpg', alt='')
+										h4.member-name
+											a(href='#') Phạm Đức Nguyên
+										.member-position
+											| CO-FOUNDER
+										.btn-holder(style="position:inherit")
+											a.btn(href='#')
+												i.fa.fa-envelope
+											a.btn(href='#')
+												i.fa.fa-phone
+											a.btn(href='#')
+												i.fa.fa-facebook
+									// /.team-member
+								.col-md-3.col-sm-6.col-xs-6(style="margin: 20px 0")
+									.team-member
+										.thumnail
+											img.cause-img(src='/images/system/default_user.jpg', alt='')
+										h4.member-name
+											a(href='#') Lê Minh Khuê
+										.member-position
+											| CO-FOUNDER
+										.btn-holder(style="position:inherit")
+											a.btn(href='#')
+												i.fa.fa-envelope
+											a.btn(href='#')
+												i.fa.fa-phone
+											a.btn(href='#')
+												i.fa.fa-facebook
+									// /.team-member							
+								.col-md-3.col-sm-6.col-xs-6(style="margin: 20px 0")
+									.team-member
+										.thumnail
+											img.cause-img(src='/images/system/default_user.jpg', alt='')
+										h4.member-name
+											a(href='#') Trương Trọng Minh Khuyên
+										.member-position
+											| CO-FOUNDER
+										.btn-holder(style="position:inherit")
+											a.btn(href='#')
+												i.fa.fa-envelope
+											a.btn(href='#')
+												i.fa.fa-phone
+											a.btn(href='#')
+												i.fa.fa-facebook
+									// /.team-member
+								.col-md-3.col-sm-6.col-xs-6(style="margin: 20px 0")
+									.team-member
+										.thumnail
+											img.cause-img(src='/images/system/default_user.jpg', alt='')
+										h4.member-name
+											a(href='#') Lê Anh Tuấn
+										.member-position
+											| CO-FOUNDER
+										.btn-holder(style="position:inherit")
+											a.btn(href='#')
+												i.fa.fa-envelope
+											a.btn(href='#')
+												i.fa.fa-phone
+											a.btn(href='#')
+												i.fa.fa-facebook
+									// /.team-member
+					br
+					.row.fadeIn.animated
+						.col-md-7
+							h2.title-style-2
+								span#header-you YOU CAN HELP US!
+								span.title-under
+							p#you-desc
+							hr
+							.row
+								.col-md-4.col-xs-12(style="text-align: center")
+									div(style="background-color: #1f76bd; padding: 20px")
+										strong#volunteer-desc(style="color:white")
+											| Become a volunteer and join us through the heart-warming helping-hand events!
+										hr
+										a.btn.btn-primary(href="/events_list")
+											strong#volunteer-btn Check Events
+								.col-md-4.col-xs-12(style="text-align: center")
+									div(style="background-color: #1f76bd; padding: 20px")
+										strong#sponsor-desc(style="color:white")
+											| Provide better funds for better good by becoming our sponsors!
+										hr
+										a.btn.btn-primary(href="/promote")
+											strong#sponsor-btn Promote!
+								.col-md-4.col-xs-12(style="text-align: center")
+									div(style="background-color: #1f76bd; padding: 20px")
+										strong#producer-desc(style="color:white")
+											| Help us create your very own charity events as our producers!
+										hr
+										a.btn.btn-primary(href="/promote")
+											strong#producer-btn Promote!
+						.col-md-5
+							img.img-responsive(style="filter: grayscale(100%);" src='/guest_page/images/about-us-2.jpg', alt='')										
 			// jQuery
 			script(src='//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js')
 			script.
@@ -177,6 +167,7 @@ block content
 			script(src='/guest_page/js/bootstrap.min.js')
 			// Template main javascript
 			script(src='/guest_page/js/main.js')
+			script(src='/guest_page/js/about.js')
 			// Google Analytics: change UA-XXXXX-X to be your site's ID.
 			script.
 				(function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=

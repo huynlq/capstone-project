@@ -235,7 +235,7 @@ function populateEventProduced() {
       var dateCreated = "";      
       $('#eventProduced-panel').html('<div class="section-home our-sponsors fadeIn">' +
                                         '<div class="container">' +
-                                          '<h2 class="title-style-1">' + $MYUSERPAGE_HEADER_JOINEDEVENTS + ' <span class="title-under"></span></h2>' +
+                                          '<h2 class="title-style-1">' + $MYUSERPAGE_HEADER_HOSTEDEVENTS + ' <span class="title-under"></span></h2>' +
                                           '<div id="hosted-events" class="owl-carousel list-unstyled"></div>' +
                                         '</div>' +
                                       '</div>');

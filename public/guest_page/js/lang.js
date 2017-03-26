@@ -64,6 +64,24 @@ if(localStorage.getItem('language') == 'vi' || localStorage.getItem('language') 
 
 	$HOMEPAGE_NEWS_READ_MORE		= "Xem thêm";
 
+	//============== ABOUT US ==========================================================
+
+	$ABOUT_HEADER					= "GIỚI THIỆU";
+	$ABOUT_HEADER_DESC				= "";
+	$ABOUT_HEADER_ABOUT				= "CHÚNG TÔI LÀ AI?";
+	$ABOUT_HEADER_TEAM				= "ĐỘI NGŨ THÀNH VIÊN";
+	$ABOUT_HEADER_YOU				= "BẠN CÓ THỂ LÀM GÌ?";
+
+	$ABOUT_ABOUT					= '<p><strong>CCMA</strong> là cổng thông tin sự kiện từ thiện với mục đích phi lợi nhuận nhằm kết nối tài trợ và tình nguyện viên, tạo cầu nối tin tưởng lẫn nhau để giúp đỡ các nhà tổ chức tổ chức sự kiện hiệu quả hơn.</p><p>Đội ngũ nhân lực bao gồm năm sinh viên đại học cùng nhau góp sức vì một cộng đồng giàu tình thương và nhân ái.</p>";';
+	$ABOUT_YOU						= '<p>Chúng tôi cần những tấm lòng nhân hậu nhiệt huyết của các bạn.</p><p>Hãy tham gia cùng chúng tôi, để nhiều chương trình từ thiện được thành lập, để nhiều hoàn cảnh khó khăn được giúp đỡ, để xây dựng một cộng đồng giới trẻ ngày càng nhân ái và giàu tình thương.</p>';
+
+	$ABOUT_VOLUNTEER				= "Hãy trở thành tình nguyện viên để tham gia những chiến dịch tình nguyện của chúng tôi!";
+	$ABOUT_VOLUNTEER_BTN			= "Xem sự kiện";
+	$ABOUT_SPONSOR					= "Hoặc làm nhà tài trợ chính thức cho chúng tôi để góp vốn cho những chiến dịch sắp tới!";
+	$ABOUT_SPONSOR_BTN				= "Đăng kí";
+	$ABOUT_PRODUCER					= "Bạn cũng có thể giúp đỡ chúng tôi làm ban tổ chức cho chiến dịch của riêng mình từ vốn của nhà tài trợ!";
+	$ABOUT_PRODUCER_BTN				= "Đăng kí";
+
 	//============== COUNTDOWN  ========================================================
 
 	$COUNTDOWN_IN_PROGRESS			= "Đang diễn ra";
@@ -452,6 +470,24 @@ if(localStorage.getItem('language') == 'vi' || localStorage.getItem('language') 
 	$HOMEPAGE_HEADER_SPONSORS 		= "OUR SPONSORS";
 
 	$HOMEPAGE_NEWS_READ_MORE		= "Read More";
+
+	//============== ABOUT US ==========================================================
+
+	$ABOUT_HEADER					= "ABOUT US";
+	$ABOUT_HEADER_DESC				= "";
+	$ABOUT_HEADER_ABOUT				= "ABOUT CCMA";
+	$ABOUT_HEADER_TEAM				= "OUR TEAM";
+	$ABOUT_HEADER_YOU				= "YOU CAN HELP US!";
+
+	$ABOUT_ABOUT					= '<p><strong>CCMA</strong> is a non-profit, events creating portal that helps connecting sponsors and volunteers to establish a mutual trust between them, so that producers can host events easier and more effectively.</p><p>We are a team consists of five university students who desire to join hands in creating and building a better world for communities and societies.</p>";';
+	$ABOUT_YOU						= '<p>We need young and energetic volunteers like you!</p><p><strong>Join us.</strong> Let us head to rural areas, to places ravaged by disasters and sickness, and open our hands to poor and unfortunate lives. Together, we can do anything. Together with building a community rich of humanity, you can earn yourself new knowledge and experiences when traveling to places doing charity activities with us.</p><p><strong>“We will come where needs arise – We shall arrive where help’s required”</strong> Let us live and contribute, so that our diary of youth are full of emotional adventures.</p>';
+
+	$ABOUT_VOLUNTEER				= "Become a volunteer and join us through the heart-warming helping-hand events!";
+	$ABOUT_VOLUNTEER_BTN			= "Check Events";
+	$ABOUT_SPONSOR					= "Provide better funds for better good by becoming our sponsors!";
+	$ABOUT_SPONSOR_BTN				= "Promote!";
+	$ABOUT_PRODUCER					= "Help us create your very own charity events as our producers!";
+	$ABOUT_PRODUCER_BTN				= "Promote!";
 
 	//============== COUNTDOWN  ========================================================
 
