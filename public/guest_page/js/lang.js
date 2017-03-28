@@ -147,6 +147,8 @@ if(localStorage.getItem('language') == 'vi' || localStorage.getItem('language') 
 	$EVENTDETAILS_FORM_EMAIL		= "Email";
 	$EVENTDETAILS_FORM_PHONE		= "Điện thoại";
 
+	$EVENTDETAILS_ALERT_DUPLICATE	= "Bạn đã tham gia sự kiện khác trùng với ngày diễn ra của sự kiện này."
+
 	//============== EVENT CREATOR =====================================================
 
 	$EVENTCREATOR_HEADER				= "TẠO SỰ KIỆN";
@@ -553,6 +555,8 @@ if(localStorage.getItem('language') == 'vi' || localStorage.getItem('language') 
 	$EVENTDETAILS_FORM_NAME			= "Full Name";
 	$EVENTDETAILS_FORM_EMAIL		= "Email";
 	$EVENTDETAILS_FORM_PHONE		= "Phone";
+
+	$EVENTDETAILS_ALERT_DUPLICATE	= "You have participated in an event with the same date."
 
 	//============== EVENT CREATOR =====================================================
 

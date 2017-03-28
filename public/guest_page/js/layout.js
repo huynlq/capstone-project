@@ -23,7 +23,7 @@ $(document).ready(function() {
         $('#navbar-user').html($LAYOUT_NAVBAR_WELCOME + data.username);
         $('#navbar-signlink').html("<a onclick='signOut()'>" + $LAYOUT_NAVBAR_SIGNOUT + "</a>");
         if(data.role == "Producer") {
-          $('#navbar-below').html($('#navbar-below').html() + '<li><a>' + $LAYOUT_NAVBAR_PRODUCER + '</a>' +
+          $('#navbar-below').html($('#navbar-below').html() + '<li><a>' + $LAYOUT_NAVBAR_PRODUCER + '  <i class="fa fa-chevron-circle-down" style="font-size: 10px" aria-hidden="true"></i></a>' +
                                                                 '<ul class="submenu">' +
                                                                   '<li class="submenu-item"><a href="/my">' + $LAYOUT_NAVBAR_USER_PAGE + '</a></li>' +
                                                                   '<li class="submenu-item"><a href="/events">' + $LAYOUT_NAVBAR_EVENT_LIST + '</a></li>' +
@@ -31,7 +31,7 @@ $(document).ready(function() {
                                                                 '</ul>' +
                                                               '</li>');
         } else if(data.role == "Admin") {
-          $('#navbar-below').html($('#navbar-below').html() + '<li><a>' + $LAYOUT_NAVBAR_ADMIN + '</a>' +
+          $('#navbar-below').html($('#navbar-below').html() + '<li><a>' + $LAYOUT_NAVBAR_ADMIN + '  <i class="fa fa-chevron-circle-down" style="font-size: 10px" aria-hidden="true"></i></a>' +
                                                                 '<ul class="submenu">' +
                                                                   '<li class="submenu-item"><a href="/my">' + $LAYOUT_NAVBAR_USER_PAGE + '</a></li>' +
                                                                   '<li class="submenu-item"><a href="/users">' + $LAYOUT_NAVBAR_USER_LIST + '</a></li>' +
@@ -41,7 +41,7 @@ $(document).ready(function() {
                                                                 '</ul>' +
                                                               '</li>');
         } else {
-          $('#navbar-below').html($('#navbar-below').html() + '<li><a>' + $LAYOUT_NAVBAR_USER + '</a>' +
+          $('#navbar-below').html($('#navbar-below').html() + '<li><a>' + $LAYOUT_NAVBAR_USER + '  <i class="fa fa-chevron-circle-down" style="font-size: 10px" aria-hidden="true"></i></a>' +
                                                                 '<ul class="submenu">' +
                                                                   '<li class="submenu-item"><a href="/my">' + $LAYOUT_NAVBAR_USER_PAGE + '</a></li>' +
                                                                 '</ul>' +

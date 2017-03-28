@@ -103,7 +103,7 @@ function showNews(data) {
                 counterBoard,
                 content,
                 this.postName,                
-                this.user,                
+                user,                
                 comment,
                 dateCreated.toLocaleTimeString() + ' - ' + dateCreated.toLocaleDateString()
             ]).draw( false );

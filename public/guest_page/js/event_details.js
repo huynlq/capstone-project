@@ -516,55 +516,92 @@ function populateRating(eventId) {
 }
 
 function join() {
+	var eventId = window.location.href.split('/')[window.location.href.split('/').length - 1].split('#')[0];
 	var userId = readCookie("user");
 	if(userId != "") {
-		$.getJSON( '/users/id/' + userId, function( data ) {
-			if(data.fullName != null && data.fullName != '' && data.phoneNumber != null && data.phoneNumber != '' && data.email != null && data.email != '') {
-				var eventId = window.location.href.split('/')[window.location.href.split('/').length - 1].split('#')[0];
-				var newJoin = {
-					'userId': userId,
-					'eventId': eventId,
-					'status': 'Present',
-					'dateCreated': new Date
-				};
+		//GET EVENT DATES
+		var dates = $('#event-date').html().split(' - ');
+		var startDate = new Date(dates[0]).getTime();
+		var endDate = new Date(dates[1]).getTime();
+		var flag = false;
 
-				 $.ajax({
-			        type: 'POST',
-			        data: newJoin,
-			        url: '/events/addparticipant',
-			        dataType: 'JSON'
-			    }).done(function( response ) {
+		//CHECK IF USER HAS JOINED ANY DUPLICATED EVENTS
+		$.ajax({
+		    url: '/getparticipatedevents/' + userId,
+		    dataType: 'json',
+		    async: false,
+		    success: function(eventJoinedData) {
+				var eventDates;
+				var eventStartDate;
+				var eventEndDate;
+				$.each(eventJoinedData, function(){
+					$.getJSON( '/events/details/' + this.eventID, function( eventData ) {
+						eventDates = eventDate.eventDate.split(' - ');
+						eventStartDate = new Date(eventDates[0]).getTime();
+						eventEndDate = new Date(eventDates[1]).getTime();
+						if(endDate < eventStartDate || startDate > eventEndDate) {
 
-			        // Check for successful (blank) response
-			        if (response.msg === '') {
-			            
-			            // Update the table
-			            populateButton(eventId);
-
-			        }
-			        else {
-
-			            // If something goes wrong, alert the error message that our service returned
-			            alert('Error: ' + response.msg);
-
-			        }
-			    });
-
-			} else {
-				// If user doesn't have enough information, show information dialog
-				if(data.fullName != null && data.fullName != "")
-					$('#txtParticipantFullName').val(data.fullName);
-
-				if(data.email != null && data.email != "")
-					$('#txtParticipantEmail').val(data.email);
-
-				if(data.phoneNumber != null && data.phoneNumber != "")
-					$('#txtParticipantPhone').val(data.phoneNumber);
-				   
-				    
-				$('#participate-form').dialog('open'); 
+						} else {
+							flag = true;
+						}
+					});
+				});
 			}
-		});	
+		});
+
+		if(flag == false) {
+			//IF USER DOESN'T HAVE ANY DUPLICATED EVENTS
+			$.getJSON( '/users/id/' + userId, function( data ) {
+				if(data.fullName != null && data.fullName != '' && data.phoneNumber != null && data.phoneNumber != '' && data.email != null && data.email != '') {
+					
+					var newJoin = {
+						'userId': userId,
+						'eventId': eventId,
+						'status': 'Present',
+						'dateCreated': new Date
+					};
+
+					 $.ajax({
+				        type: 'POST',
+				        data: newJoin,
+				        url: '/events/addparticipant',
+				        dataType: 'JSON'
+				    }).done(function( response ) {
+
+				        // Check for successful (blank) response
+				        if (response.msg === '') {
+				            
+				            // Update the table
+				            populateButton(eventId);
+
+				        }
+				        else {
+
+				            // If something goes wrong, alert the error message that our service returned
+				            alert('Error: ' + response.msg);
+
+				        }
+				    });
+
+				} else {
+					// If user doesn't have enough information, show information dialog
+					if(data.fullName != null && data.fullName != "")
+						$('#txtParticipantFullName').val(data.fullName);
+
+					if(data.email != null && data.email != "")
+						$('#txtParticipantEmail').val(data.email);
+
+					if(data.phoneNumber != null && data.phoneNumber != "")
+						$('#txtParticipantPhone').val(data.phoneNumber);
+					   
+					    
+					$('#participate-form').dialog('open'); 
+				}
+			});	
+		} else {
+			//IF USER HAVE ANY DUPLICATED EVENTS
+			alert($EVENTDETAILS_ALERT_DUPLICATE);
+		}		
 	} else {
 		// If user haven't login, redirect to login page
 		window.location.href = "/login";

@@ -44,6 +44,8 @@ function populatePosts() {
         	var counter = 0;
         	var content = "";
         	var dateCreated;	
+        	var comment = 0;
+        	var user = "";
 
         	$.each(data, function(){
         		counter++;

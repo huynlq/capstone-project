@@ -79,3 +79,13 @@ function populateType() {
 		}
 	});
 }
+
+function changeType() {
+	if($('#txtPostType').val() != "News") {
+		$('#shortDescPanel').attr('style','display:none');
+		$('#imagePanel').attr('style','display:none');
+	} else {
+		$('#imagePanel').removeAttr('style');
+		$('#shortDescPanel').removeAttr('style');
+	}
+}
