@@ -36,6 +36,37 @@ $(document).ready(function() {
 
 // Functions =============================================================
 
+function initialize() {
+    var defaultLat = 16.07565;
+    var defaultLng = 108.16980899999999;
+    if($('#txtMeetingAddressLat').val() != '') {
+      defaultLat = $('#txtActivityLat').val();
+      defaultLng = $('#txtActivityLng').val();
+    }
+    console.log('lat: ' + defaultLat);
+    var mapOptions = {
+        zoom: 17,
+        center: new google.maps.LatLng(defaultLat, defaultLng),
+        disableDefaultUI: true,
+        mapTypeId: google.maps.MapTypeId.ROADMAP,              
+    };            
+    var map = new google.maps.Map(document.getElementById('map'), mapOptions);            
+    var input = document.getElementById('txtActivityPlace');
+    var autocomplete = new google.maps.places.Autocomplete(input);
+    google.maps.event.addListener(autocomplete, 'place_changed', function () {
+        var place = autocomplete.getPlace();
+        var lat = place.geometry.location.lat();
+        var lng = place.geometry.location.lng();
+        document.getElementById('txtActivityLat').value = lat;
+        document.getElementById('txtActivityLng').value = lng;
+        var marker = new google.maps.Marker({position: new google.maps.LatLng(lat, lng)});
+        marker.setMap(map);
+        var panPoint = new google.maps.LatLng(lat, lng);
+        map.panTo(panPoint);
+    });
+}
+google.maps.event.addDomListener(window, 'load', initialize);
+
 function populateLanguage() {
   $('#header').html($EVENTCREATOR_HEADER);
   $('#header-desc').html($EVENTCREATOR_HEADER_DESC);
@@ -141,10 +172,12 @@ function addActivity() {
     var place = $('#txtActivityPlace').val();
     var activity = $('#txtActivity').val();
     var note = $('#txtActivityNote').val();
+    var lat = $('#txtActivityLat').val();
+    var lng = $('#txtActivityLng').val();
 
     $('#table-day-' + day).DataTable().row.add( [
             time,
-            place,
+            place + '<div style="display:none"><p class="lat">' + lat + '</p><p class="lng">' + lng + '</p></div>',
             activity,
             note,
             '<center><a class="btn btn-danger" onclick="deleteActivity(' + day + ', this)"><i class="fa fa-remove"></i></a></center>'
@@ -162,10 +195,12 @@ function addingActivity(obj) {
     var place = obj.place;
     var activity = obj.activity;
     var note = obj.note;
+    var lat = obj.latitude;
+    var lng = obj.longitude;
 
     $('#table-day-' + day).DataTable().row.add( [
             time,
-            place,
+            place + '<div style="display:none"><p class="lat">' + lat + '</p><p class="lng">' + lng + '</p></div>',
             activity,
             note,
             '<center><a class="btn btn-danger" onclick="deleteActivity(' + day + ', this)"><i class="fa fa-remove"></i></a></center>'
@@ -192,14 +227,23 @@ function goNext() {
     var schedule = [];
     var activity = new Object();
     var diffDays = document.getElementById("txtNumberOfDates").value;
+    var place = "";
+    var lat = "";
+    var lng = "";
     for (var i = 1; i <= diffDays; i++) {
       var oTable = $('#table-day-' + i).dataTable();
       oTable.fnGetData();
       for (var j = 0; j < oTable.fnGetData().length; j++) {
+        activity + '<div style="display:none"><p class="lat">' + lat + '</p><p class="lng">' + lng + '</p></div>';
+        place = oTable.fnGetData()[j][1].split('<div style="display:none"><p class="lat">')[0];
+        lat = oTable.fnGetData()[j][1].split('<div style="display:none"><p class="lat">')[1].split('</p><p class="lng">')[0];
+        lng = oTable.fnGetData()[j][1].split('</p><p class="lng">')[1].split('</p></div>')[0];
         activity = {
           day:        i,
           time:       oTable.fnGetData()[j][0],
-          place:      oTable.fnGetData()[j][1],
+          place:      place,
+          latitude:   lat,
+          longitude:  lng,
           activity:   oTable.fnGetData()[j][2],
           note:       oTable.fnGetData()[j][3]
         }

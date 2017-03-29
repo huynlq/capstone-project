@@ -91,6 +91,14 @@ if(localStorage.getItem('language') == 'vi' || localStorage.getItem('language') 
 
 	$EVENTLIST_HEADER				= "TỔNG HỢP SỰ KIỆN";
 	$EVENTLIST_HEADER_DESC			= "Tham gia chung tay góp sức ngay!";
+	$EVENTLIST_GEO_NOT_SUPPORTED	= "Trình duyệt của bạn không hỗ trợ tìm kiếm sự kiện gần bạn.";
+	$EVENTLIST_SEARCH				= "Tìm sự kiện";
+	$EVENTLIST_SEARCH_NAME			= "Tên";
+	$EVENTLIST_SEARCH_ADDRESS		= "Địa chỉ";
+	$EVENTLIST_SEARCH_DESCRIPTION	= "Chi tiết";
+	$EVENTLIST_SORT_BY				= "Sắp xếp theo:";
+	$EVENTLIST_SORT_BY_DATE			= "Ngày tạo";
+	$EVENTLIST_SORT_BY_PLACE		= "Gần tôi";
 
 	//============== EVENT DETAILS ======================================================
 
@@ -500,6 +508,14 @@ if(localStorage.getItem('language') == 'vi' || localStorage.getItem('language') 
 
 	$EVENTLIST_HEADER				= "EVENT LIST";
 	$EVENTLIST_HEADER_DESC			= "";
+	$EVENTLIST_GEO_NOT_SUPPORTED	= "Your browser is not supported to find events near your location.";
+	$EVENTLIST_SEARCH				= "Search Event";
+	$EVENTLIST_SEARCH_NAME			= "Name";
+	$EVENTLIST_SEARCH_ADDRESS		= "Address";
+	$EVENTLIST_SEARCH_DESCRIPTION	= "Description";
+	$EVENTLIST_SORT_BY				= "Sort By:";
+	$EVENTLIST_SORT_BY_DATE			= "Date created";
+	$EVENTLIST_SORT_BY_PLACE		= "Nearby";
 
 	//============== EVENT DETAILS ======================================================
 

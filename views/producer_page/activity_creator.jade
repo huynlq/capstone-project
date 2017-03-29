@@ -70,7 +70,10 @@ block content
 										span#form-place Place 
 										span.required  *
 									.col-md-6.col-sm-6.col-xs-12
-										input#txtActivityPlace.form-control.col-md-7.col-xs-12(type='text', required='required')
+										input#txtActivityPlace.form-control.col-md-7.col-xs-12(placeholder='', required='required', type='text', autocomplete='on', runat='server')
+										input#txtActivityLat(type='hidden')
+										input#txtActivityLng(type='hidden')
+										#map.col-md-12.col-sm-12.col-xs-12(style='height:200px; margin-top: 20px')
 								.form-group
 									label.control-label.col-md-3.col-sm-3.col-xs-12
 										span#form-activity Activity 

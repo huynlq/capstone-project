@@ -32,9 +32,30 @@ block content
 					p.page-description
 						span#header-desc Give us a hand and join our voluntary events below.
 			.main-container
-				.our-causes.fadeIn.animated
+				.our-causes
 					.container
-						#listEvents
+						input#txtSearch(type="text", placeholder="Search Event", onkeyup="search()", class="form-control")
+						.checkbox
+							label.checkbox-inline
+								input#txtSearchName(type="checkbox" checked="checked", name="searchName", onchange="search()")
+								span#searchBy-name Name
+							label.checkbox-inline
+								input#txtSearchDesc(type="checkbox" checked="checked", name="searchDesc", onchange="search()")
+								span#searchBy-description Description
+							label.checkbox-inline
+								input#txtSearchAddress(type="checkbox" checked="checked", name="searchAddress", onchange="search()")
+								span#searchBy-address Address
+							.pull-right
+								label.radio-inline#sortBy
+									| Sort by: 
+								label.radio-inline
+									input(type='radio', name='optradio', onchange="populateEvents()", checked="checked")
+									span#sortBy-date Date Created
+								label.radio-inline
+									input(type='radio', name='optradio', onchange="nearby()")
+									span#sortBy-location Near Me
+						#listEvents.fadeIn.animated
+				#dvMap(style='height:200px; margin: 0; width: 100%')
 				// /.our-causes
 			// /.main-containe
 			// Donate Modal
@@ -82,7 +103,8 @@ block content
 			// PrettyPhoto javascript file
 			script(src='guest_page/js/jquery.prettyPhoto.js')
 			// Google map
-			script(src='http://maps.google.com/maps/api/js?sensor=false&libraries=places', type='text/javascript')
+			script(src='https://maps.googleapis.com/maps/api/js?key=AIzaSyAxUeMBUbKnW-LKTWTIL656w7nHABuNMTI&libraries=places')
+			// script(src='http://maps.google.com/maps/api/js?sensor=false&libraries=places', type='text/javascript')
 			// Countdown JS
 			script(src='/vendors/countdown/countdown.js')
 			// Template main javascript

@@ -205,7 +205,9 @@ function goNext() {
                   time: activityObj[i].time,
                   place: activityObj[i].place,
                   activity: activityObj[i].activity,
-                  note: activityObj[i].note
+                  note: activityObj[i].note,
+                  latitude: activityObj[i].latitude,
+                  longitude: activityObj[i].longitude,
                 };
 
                 $.ajax({

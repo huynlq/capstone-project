@@ -160,6 +160,7 @@ function populateActivities(eventId) {
 		    '<div id="activityContents" class="tab-content">' +      
 		    '</div>');
 		var days = [];
+		var mapDatas = [];
 		for (var i = 0; i < data.length; i++) {
 			if(!days.includes(data[i].day)) {
 				days.push(data[i].day);
@@ -167,6 +168,7 @@ function populateActivities(eventId) {
 			    $('#activityContents').html(
 			      $('#activityContents').html() + 
 			      '<div id="activity-day-' + data[i].day + '" class="tab-pane fade">' +
+			      	'<div id="map-day-' + data[i].day + '" style="height:200px; margin-top: 20px"></div><br>' +
 			        '<table class="table table-striped">' +
 			          '<thead>' +
 			            '<tr>' +
@@ -182,8 +184,17 @@ function populateActivities(eventId) {
 			      '</div>');
 			}
 
+			var mapData = {
+				day: data[i].day,
+				lat: data[i].latitude,
+				lng: data[i].longitude,
+				time: data[i].time
+			}
+
+			mapDatas.push(mapData);
+
 			if(data[i].note == undefined)
-				data[i].note = "";
+				data[i].note = "";				
 
 			$('#activity-table-content-day' + data[i].day).html(
 		      $('#activity-table-content-day' + data[i].day).html() +
@@ -194,6 +205,55 @@ function populateActivities(eventId) {
 		        '<td>' + data[i].note + '</td>' +
 		      '</tr>');
 		}
+
+		for(var i = 0; i < days.length; i++) {
+			var latlng = [];
+			var marker;
+			var position;
+			var sumLat = 0;
+			var sumLng = 0;
+			var sum = 0;
+			for(var j = 0; j < mapDatas.length; j++) {				
+				if(mapDatas[j].day == days[i]) {
+					position = new google.maps.LatLng(mapDatas[j].lat,mapDatas[j].lng);
+					latlng.push(position);
+					sum++;
+					sumLat+=parseFloat(mapDatas[j].lat);
+					sumLng+=parseFloat(mapDatas[j].lng);
+				}				
+			}
+			var LAT = parseFloat(sumLat/sum);
+			var LNG = parseFloat(sumLng/sum);
+			var mapCanvas = document.getElementById("map-day-" + days[i]);
+			var mapOptions = {
+				center: new google.maps.LatLng(LAT, LNG),
+				zoom: 13
+			};
+			var map = new google.maps.Map(mapCanvas,mapOptions);
+			var flightPath = new google.maps.Polyline({
+				path: latlng,
+				strokeColor: "#0000FF",
+				strokeOpacity: 0.8,
+				strokeWeight: 2
+			});
+			flightPath.setMap(map);			
+		}
+
+		// var stavanger = new google.maps.LatLng(58.983991,5.734863);
+		// var amsterdam = new google.maps.LatLng(52.395715,4.888916);
+		// var london = new google.maps.LatLng(51.508742,-0.120850);
+
+		// var mapCanvas = document.getElementById("map-day-1");
+		// var mapOptions = {center: amsterdam, zoom: 4};
+		// var map = new google.maps.Map(mapCanvas,mapOptions);
+
+		// var flightPath = new google.maps.Polyline({
+		// path: [stavanger, amsterdam, london],
+		// strokeColor: "#0000FF",
+		// strokeOpacity: 0.8,
+		// strokeWeight: 2
+		// });
+		// flightPath.setMap(map);
 
 		$('#activityDays li a').first().click();
 	});	

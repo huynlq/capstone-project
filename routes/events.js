@@ -290,10 +290,61 @@ router.post('/addactivity', function(req, res) {
 router.get('/all', function(req, res, next) {
     var db = req.db;
     var collection = db.get('Events');
-    collection.find({},{sort: {eventDate: -1}},function(e,docs){
+    collection.find({'status': 'Published'},{sort: {eventDate: -1}},function(e,docs){
         res.json(docs);
     });
 });
+
+/* GET all nearby. */
+router.get('/nearby/:lat/:lng', function(req, res, next) {
+    var db = req.db;
+    var myLat = parseFloat(req.params.lat);
+    var myLng = parseFloat(req.params.lng);
+    console.log("START");
+    var collection = db.get('Events');
+    collection.find({'status': 'Published'},function(e,docs){
+        console.log("HEY");
+        var availableEvents = [];
+        var pastEvents = [];
+        var distance = 0;
+        var now = new Date().getTime();
+        for(var i = 0; i < docs.length; i++) {
+            lat = parseFloat(docs[i].meetingAddressLat);
+            lng = parseFloat(docs[i].meetingAddressLng);
+            console.log("LAT: " + lat);
+            console.log("LAT: " + myLat);
+            distance = Math.sqrt(Math.pow(myLat - lat, 2) + Math.pow(myLng - lng, 2));
+            console.log("DISTANCE: " + distance);
+            docs[i].distance = distance;
+            date = new Date(docs[i].eventDeadline).getTime();
+            console.log("TIME: " + date);
+            if(now < date)
+                availableEvents.push(docs[i]);
+            else
+                pastEvents.push(docs[i]);
+        }
+
+        console.log("SORT");
+        availableEvents.sort(function(a, b) {
+            return parseFloat(a.distance) - parseFloat(b.distance);
+        });
+        pastEvents.sort(function(a, b) {
+            return parseFloat(a.distance) - parseFloat(b.distance);
+        });
+        console.log("SORTED");
+        var result = [];        
+        for(var i = 0; i < availableEvents.length; i++) {
+            result.push(availableEvents[i]);
+            console.log("PUSH");
+        }
+        for(var i = 0; i < pastEvents.length; i++) {
+            result.push(pastEvents[i]);
+            console.log("PUSH");
+        }
+        res.json(result);
+    });
+});
+
 
 /* GET all activities from eventId. */
 router.get('/activities/:id', function(req, res, next) {
