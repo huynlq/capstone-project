@@ -12,7 +12,7 @@ $(document).ready(function() {
 
   var content = $('#content').html();
 
-  $('#postContent').html(content.replace(/&lt;/g, '<').replace(/&gt;/g, '>'));
+  $('#postContent').html(decodeURIComponent(content.replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&amp;/g, "&").replace(/&quot;/g, '"')));
 
   
   var date = new Date($('#postDate').html());
@@ -81,7 +81,8 @@ function populateEditPane(postId) {
   $.getJSON( '/users/id/' + readCookie('user'), function(dataUser) {
     if(dataUser != '') {
       if($('#txtUserId').val() == readCookie('user') || dataUser.role == 'Admin') {
-        $('#editPostPane').html($('#editPostPane').html() + '<br><hr><a style="float:right" class="btn btn-info" href="/posts/updatepost/' + postId + '"><span class="glyphicon glyphicon-edit">&nbsp;</span><strong>' + $POSTDETAILS_FORM_EDIT + '</strong></a>');
+        $('#editPostPane').html($('#editPostPane').html() + '<br><hr><div class="pull-right"><a class="btn btn-info" href="/posts/updatepost/' + postId + '"><span class="glyphicon glyphicon-edit">&nbsp;</span><strong>' + $POSTDETAILS_FORM_EDIT + '</strong></a>' +
+            '<a class="btn btn-danger" onclick="deletePost(\'' + postId + '\')"><span class="glyphicon glyphicon-remove">&nbsp;</span><strong>' + $POSTDETAILS_FORM_DELETE + '</strong></a></div>');
       }
     }        
   });
@@ -99,7 +100,7 @@ function populateAuthor() {
 
 // Post Comment
 function postComment() {
-  if($('#txtCommentContent').val() != '') {
+  if($('#txtCommentContent').val().trim() != '') {
     var postId = window.location.href.split('/')[window.location.href.split('/').length - 1].split('#')[0];
     var userId = readCookie('user');
     var comment = {
@@ -258,10 +259,11 @@ function confirmEditComment(event) {
       if (response.msg !== '') {
 
           // If something goes wrong, alert the error message that our service returned
-          alert('Error: ' + response.msg);
+          showAlert('danger', $LAYOUT_ERROR + response.msg);
 
       } else {
 
+        showAlert('success', $POSTDETAILS_COMMENT_EDIT_ALERT);
         cancelEditComment();
         populateComments();
 
@@ -271,17 +273,41 @@ function confirmEditComment(event) {
 
 // Delete comment
 function deleteComment(event) {
-  $.ajax({
+  var r = confirm($POSTDETAILS_COMMENT_DELETE_CONFIRM);
+  if (r == true) {
+    $.ajax({
       type: 'DELETE',
       url: '/posts/deletecomment/' + $(this).attr('rel')
-  }).done(function( response ) {
+    }).done(function( response ) {
 
-      // Check for a successful (blank) response
-      if (response.msg === '') {
-        // Update the table
-        populateComments();
-      } else {
-          alert('Error: ' + response.msg);
-      }
-  });
+        // Check for a successful (blank) response
+        if (response.msg === '') {
+          // Update the table
+          showAlert('success', $POSTDETAILS_COMMENT_DELETE_ALERT);
+          populateComments();
+        } else {
+            showAlert('danger', $LAYOUT_ERROR + response.msg);
+        }
+    });
+  }
+}
+
+// Delete post
+function deletePost(postId) {
+  var r = confirm($POSTDETAILS_FORM_DELETE_CONFIRM);
+  if (r == true) {
+    $.ajax({
+      type: 'DELETE',
+      url: '/posts/deletepost/' + postId
+    }).done(function( response ) {
+
+        // Check for a successful (blank) response
+        if (response.msg === '') {
+          // Update the table
+          window.location = "/community_board";
+        } else {
+            showAlert('danger', $LAYOUT_ERROR + response.msg);
+        }
+    });
+  }
 }

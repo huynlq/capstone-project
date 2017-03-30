@@ -29,6 +29,12 @@ a:hover, a:focus, a:active {
 .btn-info {
   background-color: #1f76bd;
 }
+#alert_placeholder
+{
+  position: fixed;
+  top: 100px;
+  right: 10px;
+}
 
 /* =============================================================================
   Layout

@@ -130,8 +130,7 @@ router.get('/update/:id', function(req, res, next) {
 });
 
 /* POST new event. */
-router.post('/addevent', uploading.single('displayEventImage'), function(req, res) {
-    req.body.status = "Draft";
+router.post('/addevent', uploading.single('displayEventImage'), function(req, res) {    
     req.body.dateCreated = new Date().toString();
     req.body.dateModified = new Date().toString();
     var user = req.cookies.user;
@@ -142,59 +141,60 @@ router.post('/addevent', uploading.single('displayEventImage'), function(req, re
 
         collection.findOne({'_id': new ObjectId(user)},{},function(e,docs){
             var username = docs.username;        
-                if(req.body._id == "") {
-                    if(req.file != null) {
-                        var extension = req.file.mimetype.split("/")[1];
-                        var path = "/images/event/" + req.file.filename + "." + extension;
-                        var savePath = "public" + path;                
+            if(req.body._id == "") {
+                req.body.status = "Draft";
+                if(req.file != null) {
+                    var extension = req.file.mimetype.split("/")[1];
+                    var path = "/images/event/" + req.file.filename + "." + extension;
+                    var savePath = "public" + path;                
 
-                        delete req.body._id;
+                    delete req.body._id;
 
-                        req.body.eventImage = path;
+                    req.body.eventImage = path;
 
-                        fs.readFile(req.file.path, function (err, data) {
-                            fs.writeFile(savePath, data);
-                        });
-
-                        collection = db.get('Events');
-                    
-                        collection.insert(req.body, function(err, result){
-                            if(err === null) {                        
-                                res.cookie('eventId',result._id.toString(), { maxAge: 900000, httpOnly: false });
-                                res.writeHead(302, {
-                                  'Location': '/events/creator_activity',
-                                  'eventId': result._id
-                                });
-                                res.end();
-                            } else {
-                                res.send({msg: err});
-                            }
-                        });
-                    }                    
-                } else {
-                    if(req.file != null) {
-                        var extension = req.file.mimetype.split("/")[1];
-                        var path = "/images/event/" + req.file.filename + "." + extension;
-                        var savePath = "public" + path;                
-
-                        req.body.eventImage = path;
-
-                        fs.readFile(req.file.path, function (err, data) {
-                            fs.writeFile(savePath, data);
-                        });
-                    } else {
-                        delete req.body.eventImage;
-                    }
+                    fs.readFile(req.file.path, function (err, data) {
+                        fs.writeFile(savePath, data);
+                    });
 
                     collection = db.get('Events');
-                    
-                    collection.update({'_id': req.body._id}, { $set: req.body}, function(err, result){
-                        if(err === null) {                             
-                            res.writeHead(302, {'Location': '/events/edit_activities/' + req.body._id});
+                
+                    collection.insert(req.body, function(err, result){
+                        if(err === null) {                        
+                            res.cookie('eventId',result._id.toString(), { maxAge: 900000, httpOnly: false });
+                            res.writeHead(302, {
+                              'Location': '/events/creator_activity',
+                              'eventId': result._id
+                            });
                             res.end();
+                        } else {
+                            res.send({msg: err});
                         }
                     });
-                }                
+                }                    
+            } else {
+                if(req.file != null) {
+                    var extension = req.file.mimetype.split("/")[1];
+                    var path = "/images/event/" + req.file.filename + "." + extension;
+                    var savePath = "public" + path;                
+
+                    req.body.eventImage = path;
+
+                    fs.readFile(req.file.path, function (err, data) {
+                        fs.writeFile(savePath, data);
+                    });
+                } else {
+                    delete req.body.eventImage;
+                }
+
+                collection = db.get('Events');
+                
+                collection.update({'_id': req.body._id}, { $set: req.body}, function(err, result){
+                    if(err === null) {                             
+                        res.writeHead(302, {'Location': '/events/edit_activities/' + req.body._id});
+                        res.end();
+                    }
+                });
+            }                
         });
     }                    
 });
@@ -639,6 +639,18 @@ router.post('/addparticipant', function(req, res) {
         res.send(
             (err === null) ? { msg: '' } : { msg: err }
         );
+    });
+});
+
+/* DELETE participant. */
+router.delete('/removeparticipant/:eventId/:userId', function(req, res) {
+    var db = req.db;
+    var collection = db.get('EventJoined');
+    collection.remove({ 
+        'eventId' : req.params.eventId,
+        'userId' : req.params.userId
+    }, function(err) {
+        res.send((err === null) ? { msg: '' } : { msg: err });
     });
 });
 

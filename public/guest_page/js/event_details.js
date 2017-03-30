@@ -77,16 +77,27 @@ function populateLanguage() {
 function populateButton(eventId) {	
 	var userId = readCookie("user");
 
-	$.getJSON( '/events/participants/' + eventId + '/' + userId, function( data ) {
-		if(data.msg == 'true') {
-			$('#btnParticipate').attr('readonly', 'readonly');
-			$('#btnParticipate').attr('disabled', 'disabled');
-			$('#btnParticipate').attr('onclick', '');
-			$('#btnParticipate').removeClass('btn-info');
-			$('#btnParticipate').addClass('btn-success');
-			$('#btnParticipate').html($EVENTDETAILS_BUTTON_JOINED);					
-		}
-	});
+	if(userId != "") {
+		$.getJSON( '/events/participants/' + eventId + '/' + userId, function( data ) {
+			if(data.msg == 'true') {			
+				$('#btnParticipate').attr('onclick', 'unjoin()');
+				$('#btnParticipate').removeClass('btn-info');
+				$('#btnParticipate').addClass('btn-danger');
+				$('#btnParticipate').attr('style','width: 100%');
+				$('#btnParticipate').html('<strong>' + $EVENTDETAILS_BUTTON_UNJOIN + '</strong>');					
+			} else {
+				$('#btnParticipate').attr('onclick', 'join()');
+				$('#btnParticipate').removeClass('btn-danger');
+				$('#btnParticipate').addClass('btn-info');
+				$('#btnParticipate').attr('style','width: 100%');
+				$('#btnParticipate').html('<strong>' + $EVENTDETAILS_BUTTON_JOIN + '</strong>');	
+			}
+		});
+	}	else {
+		$('#btnParticipate').attr('onclick', '');
+		$('#btnParticipate').attr('href', '/login');
+		$('#btnParticipate').html('<strong>' + $EVENTDETAILS_BUTTON_JOIN_REQUIRE + '</strong>');	
+	}
 }
 
 function populateTimeline(eventId) {
@@ -161,14 +172,16 @@ function populateActivities(eventId) {
 		    '</div>');
 		var days = [];
 		var mapDatas = [];
+		var mapFlag = true;
 		for (var i = 0; i < data.length; i++) {
 			if(!days.includes(data[i].day)) {
 				days.push(data[i].day);
-				$('#activityDays').html($('#activityDays').html() + '<li id="activity-tab-day-' + data[i].day + '"><a data-toggle="tab" href="#activity-day-' + data[i].day + '">' + $EVENTDETAILS_ACTIVITY_DAY + ' ' + data[i].day + '</a></li>');
+				//$('#mapPane').html($('#mapPane').html() + '<div id="map-' + data[i].day + '"><div id="map-day-' + data[i].day + '" class="mapPane" style="height:200px; margin-top: 20px"></div></div><br>');
+				$('#activityDays').html($('#activityDays').html() + '<li id="activity-tab-day-' + data[i].day + '" class="tabClick"><a data-toggle="tab" href="#activity-day-' + data[i].day + '">' + $EVENTDETAILS_ACTIVITY_DAY + ' ' + data[i].day + '</a></li>');
 			    $('#activityContents').html(
-			      $('#activityContents').html() + 
+			      $('#activityContents').html() + 			      			      
 			      '<div id="activity-day-' + data[i].day + '" class="tab-pane fade">' +
-			      	'<div id="map-day-' + data[i].day + '" style="height:200px; margin-top: 20px"></div><br>' +
+			      	'<div id="map-day-' + data[i].day + '" class="mapPane" style="height:200px; margin-top: 20px"></div><br>' +
 			        '<table class="table table-striped">' +
 			          '<thead>' +
 			            '<tr>' +
@@ -180,18 +193,9 @@ function populateActivities(eventId) {
 			          '</thead>' +
 			          '<tbody id="activity-table-content-day' + data[i].day + '">' +
 			          '</tbody>' +
-			        '</table>' +
+			        '</table>' +			        
 			      '</div>');
-			}
-
-			var mapData = {
-				day: data[i].day,
-				lat: data[i].latitude,
-				lng: data[i].longitude,
-				time: data[i].time
-			}
-
-			mapDatas.push(mapData);
+			}			
 
 			if(data[i].note == undefined)
 				data[i].note = "";				
@@ -204,60 +208,125 @@ function populateActivities(eventId) {
 		        '<td>' + data[i].activity + '</td>' +
 		        '<td>' + data[i].note + '</td>' +
 		      '</tr>');
+			console.log(data[i].latitude);
+			if(data[i].latitude != undefined&& data[i].latitude != "") {
+				var mapData = {
+					day: data[i].day,
+					place: data[i].place,
+					lat: data[i].latitude,
+					lng: data[i].longitude,
+					time: data[i].time
+				}
+
+				mapDatas.push(mapData);
+			} else {
+				mapFlag = false;
+			}			
 		}
 
+		if(mapFlag == true) {
+			var counter = 0;
+			for(var i = 0; i < days.length; i++) {
+				var latlng = [];
+				var marker;
+				var position;
+				var sumLat = 0;
+				var sumLng = 0;
+				var sum = 0;
+				for(var j = 0; j < mapDatas.length; j++) {				
+					if(mapDatas[j].day == days[i]) {
+						position = new google.maps.LatLng(mapDatas[j].lat,mapDatas[j].lng);
+						latlng.push(position);
+						sum++;
+						sumLat+=parseFloat(mapDatas[j].lat);
+						sumLng+=parseFloat(mapDatas[j].lng);
+					}				
+				}
+				var LAT = parseFloat(sumLat/sum);
+				var LNG = parseFloat(sumLng/sum);
+				console.log(LAT + ' ' + LNG);
+				var mapCanvas = document.getElementById("map-day-" + days[i]);			
+				var mapOptions = {
+					center: new google.maps.LatLng(LAT, LNG),
+					zoom: 13,				
+				};
+				var map = new google.maps.Map(mapCanvas,mapOptions);
+				console.log(mapCanvas);
+				console.log(mapOptions);
+				// var flightPath = new google.maps.Polyline({
+				// 	path: latlng,
+				// 	strokeColor: "#0000FF",
+				// 	strokeOpacity: 0.8,
+				// 	strokeWeight: 2
+				// });
+				// flightPath.setMap(map);		
+				var directionsService = new google.maps.DirectionsService;
+				var directionsDisplay = new google.maps.DirectionsRenderer({
+			    	map: map
+			    });	
+			    var markers = [];
+				for(var j = 0; j < mapDatas.length; j++) {								
+					if(mapDatas[j].day == days[i]) {
+						// var marker = new google.maps.Marker({
+				  //         position: new google.maps.LatLng(mapDatas[j].lat,mapDatas[j].lng),
+				  //         map: map
+				  //       });
+				        markers.push(new google.maps.LatLng(mapDatas[j].lat,mapDatas[j].lng));
+				  //       var infowindow = new google.maps.InfoWindow({
+						//     content:mapDatas[j].time
+						// });
+						// infowindow.open(map,marker)
+					}				
+				}
+				calculateAndDisplayRoute(directionsService, directionsDisplay, markers, markers[0], markers[markers.length-1]);				
+				
+				//$('#activity-tab-day-' + days[i]).attr('onclick', 'refreshMap(' + days[i] + ',' + LAT + ',' + LNG + ')');
+				counter++;
+				$('#activity-tab-day-' + days[i]).on('click', function(){
+					setTimeout(function(){ 
+						google.maps.event.trigger(map, 'resize');				  		
+				  		map.setZoom(7);
+				  		map.setCenter(new google.maps.LatLng(LAT, LNG));
+					}, 300);				  
+				});
+				
+			}	
+		} else {
+			$('.mapPane').attr('style','display:none');
+		}
+		
 		for(var i = 0; i < days.length; i++) {
-			var latlng = [];
-			var marker;
-			var position;
-			var sumLat = 0;
-			var sumLng = 0;
-			var sum = 0;
-			for(var j = 0; j < mapDatas.length; j++) {				
-				if(mapDatas[j].day == days[i]) {
-					position = new google.maps.LatLng(mapDatas[j].lat,mapDatas[j].lng);
-					latlng.push(position);
-					sum++;
-					sumLat+=parseFloat(mapDatas[j].lat);
-					sumLng+=parseFloat(mapDatas[j].lng);
-				}				
-			}
-			var LAT = parseFloat(sumLat/sum);
-			var LNG = parseFloat(sumLng/sum);
-			var mapCanvas = document.getElementById("map-day-" + days[i]);
-			var mapOptions = {
-				center: new google.maps.LatLng(LAT, LNG),
-				zoom: 13
-			};
-			var map = new google.maps.Map(mapCanvas,mapOptions);
-			var flightPath = new google.maps.Polyline({
-				path: latlng,
-				strokeColor: "#0000FF",
-				strokeOpacity: 0.8,
-				strokeWeight: 2
-			});
-			flightPath.setMap(map);			
+			$('#mapmap-day-' + days[i]).html($("#map-day-" + days[i]));
 		}
-
-		// var stavanger = new google.maps.LatLng(58.983991,5.734863);
-		// var amsterdam = new google.maps.LatLng(52.395715,4.888916);
-		// var london = new google.maps.LatLng(51.508742,-0.120850);
-
-		// var mapCanvas = document.getElementById("map-day-1");
-		// var mapOptions = {center: amsterdam, zoom: 4};
-		// var map = new google.maps.Map(mapCanvas,mapOptions);
-
-		// var flightPath = new google.maps.Polyline({
-		// path: [stavanger, amsterdam, london],
-		// strokeColor: "#0000FF",
-		// strokeOpacity: 0.8,
-		// strokeWeight: 2
-		// });
-		// flightPath.setMap(map);
-
 		$('#activityDays li a').first().click();
 	});	
 }
+
+function calculateAndDisplayRoute(directionsService, directionsDisplay, waypoints, start, end) {
+    var waypts = [];
+    var checkboxArray = waypoints;
+    for (var i = 0; i < checkboxArray.length; i++) {
+        waypts.push({
+          location: checkboxArray[i],
+          stopover: true
+        });
+    }
+   
+
+    directionsService.route({
+      origin: start,
+      destination: end,
+      waypoints: waypts,
+      optimizeWaypoints: false,
+      travelMode: 'DRIVING'
+    }, function(response, status) {
+      if (status === 'OK') {
+        directionsDisplay.setDirections(response);
+      } else {
+      	showAlert('danger', 'Directions request failed due to ' + status);
+      }
+    });
+  }
 
 function populateProducer(eventId) {
 	$.getJSON( '/users/id/' + $('#txtProducerId').val(), function(data) {
@@ -587,7 +656,7 @@ function join() {
 
 		//CHECK IF USER HAS JOINED ANY DUPLICATED EVENTS
 		$.ajax({
-		    url: '/getparticipatedevents/' + userId,
+		    url: '/events/getparticipatedevents/' + userId,
 		    dataType: 'json',
 		    async: false,
 		    success: function(eventJoinedData) {
@@ -595,77 +664,109 @@ function join() {
 				var eventStartDate;
 				var eventEndDate;
 				$.each(eventJoinedData, function(){
-					$.getJSON( '/events/details/' + this.eventID, function( eventData ) {
-						eventDates = eventDate.eventDate.split(' - ');
-						eventStartDate = new Date(eventDates[0]).getTime();
-						eventEndDate = new Date(eventDates[1]).getTime();
-						if(endDate < eventStartDate || startDate > eventEndDate) {
-
-						} else {
-							flag = true;
-						}
+					$.ajax({
+					    url: '/events/details/' + this.eventId,
+					    dataType: 'json',
+					    async: false,
+					    success: function(eventData) {
+					    	eventDates = eventData.eventDate.split(' - ');
+							eventStartDate = new Date(eventDates[0]).getTime();
+							eventEndDate = new Date(eventDates[1]).getTime();							
+							if(endDate < eventStartDate || startDate > eventEndDate) {
+								
+							} else {
+								flag = true;
+							}
+					    }
 					});
 				});
-			}
-		});
+				
+				if(flag == false) {
+					//IF USER DOESN'T HAVE ANY DUPLICATED EVENTS
+					$.getJSON( '/users/id/' + userId, function( data ) {
+						if(data.fullName != null && data.fullName != '' && data.phoneNumber != null && data.phoneNumber != '' && data.email != null && data.email != '') {
+							
+							var newJoin = {
+								'userId': userId,
+								'eventId': eventId,
+								'status': 'Present',
+								'dateCreated': new Date
+							};
 
-		if(flag == false) {
-			//IF USER DOESN'T HAVE ANY DUPLICATED EVENTS
-			$.getJSON( '/users/id/' + userId, function( data ) {
-				if(data.fullName != null && data.fullName != '' && data.phoneNumber != null && data.phoneNumber != '' && data.email != null && data.email != '') {
-					
-					var newJoin = {
-						'userId': userId,
-						'eventId': eventId,
-						'status': 'Present',
-						'dateCreated': new Date
-					};
+							$.ajax({
+						        type: 'POST',
+						        data: newJoin,
+						        url: '/events/addparticipant',
+						        dataType: 'JSON'
+						    }).done(function( response ) {
 
-					 $.ajax({
-				        type: 'POST',
-				        data: newJoin,
-				        url: '/events/addparticipant',
-				        dataType: 'JSON'
-				    }).done(function( response ) {
+						        // Check for successful (blank) response
+						        if (response.msg === '') {
+						            
+						            // Update the table
+						            populateButton(eventId);
+						            showAlert('success', $EVENTDETAILS_ALERT_JOIN_SUCCESS);
+						        }
+						        else {
 
-				        // Check for successful (blank) response
-				        if (response.msg === '') {
-				            
-				            // Update the table
-				            populateButton(eventId);
+						            // If something goes wrong, alert the error message that our service returned
+						            showAlert('danger', $LAYOUT_ERROR + response.msg);
 
-				        }
-				        else {
+						        }
+						    });
 
-				            // If something goes wrong, alert the error message that our service returned
-				            alert('Error: ' + response.msg);
+						} else {
+							// If user doesn't have enough information, show information dialog
+							if(data.fullName != null && data.fullName != "")
+								$('#txtParticipantFullName').val(data.fullName);
 
-				        }
-				    });
+							if(data.email != null && data.email != "")
+								$('#txtParticipantEmail').val(data.email);
 
+							if(data.phoneNumber != null && data.phoneNumber != "")
+								$('#txtParticipantPhone').val(data.phoneNumber);
+							   
+							    
+							$('#participate-form').dialog('open'); 
+						}
+					});	
 				} else {
-					// If user doesn't have enough information, show information dialog
-					if(data.fullName != null && data.fullName != "")
-						$('#txtParticipantFullName').val(data.fullName);
-
-					if(data.email != null && data.email != "")
-						$('#txtParticipantEmail').val(data.email);
-
-					if(data.phoneNumber != null && data.phoneNumber != "")
-						$('#txtParticipantPhone').val(data.phoneNumber);
-					   
-					    
-					$('#participate-form').dialog('open'); 
-				}
-			});	
-		} else {
-			//IF USER HAVE ANY DUPLICATED EVENTS
-			alert($EVENTDETAILS_ALERT_DUPLICATE);
-		}		
+					//IF USER HAVE ANY DUPLICATED EVENTS
+					showAlert('danger', $EVENTDETAILS_ALERT_DUPLICATE);
+				}		
+			}
+		});		
 	} else {
 		// If user haven't login, redirect to login page
 		window.location.href = "/login";
 	}
+}
+
+
+
+function unjoin(){
+	var eventId = window.location.href.split('/')[window.location.href.split('/').length - 1].split('#')[0];
+	var userId = readCookie("user");
+	$.ajax({
+        type: 'DELETE',
+        url: '/events/removeparticipant/' + eventId + '/' + userId,
+        dataType: 'JSON'
+    }).done(function( response ) {
+
+        // Check for successful (blank) response
+        if (response.msg === '') {
+            
+            // Update the table
+            populateButton(eventId);
+            showAlert('success', $EVENTDETAILS_ALERT_UNJOIN_SUCCESS);
+        }
+        else {
+
+            // If something goes wrong, alert the error message that our service returned
+            showAlert('danger', $LAYOUT_ERROR + response.msg);
+
+        }
+    });
 }
 
 function confirmInputInfo() {
@@ -683,10 +784,10 @@ function confirmInputInfo() {
 	      dataType: 'JSON'
 	}).done(function( response ) {
 		if (response.msg === '') {
-			$('#participate-form').dialog('close'); 
+			$('#participate-form').dialog('close'); 			
 		    join();
 		} else {
-		    alert(response.msg);
+		    showAlert('danger', $LAYOUT_ERROR + response.msg);
 		}
 	});
 }

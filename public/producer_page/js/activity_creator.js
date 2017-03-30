@@ -219,6 +219,17 @@ function deleteActivity(day, that) {
             .draw();
 }
 
+function turnOffMap() {
+  $('#map').html("");
+  $('#map').attr("style","display:none");
+  $('#btnTurnOffMap').html("");
+  $('#btnTurnOffMap').attr("style","display:none");
+  var input = document.getElementById('txtActivityPlace');
+  var autocomplete = new google.maps.places.Autocomplete(input);
+  google.maps.event.clearInstanceListeners(input);
+  google.maps.event.clearInstanceListeners(autocomplete);
+}
+
 function goNext() {
   var eventId = readCookie("eventId");
   if(eventId != '') {

@@ -14,6 +14,9 @@ $(document).ready(function() {
 
     if(loginSession != '') {
       $.getJSON( '/users/id/' + loginSession, function( data ) {
+        if(data.markBanned == 1) {
+          showAlert('danger', $LAYOUT_BAN_MESSAGE + data.bannedReason);
+        }
         $('#navbar').html('<li>' + $LAYOUT_NAVBAR_WELCOME + data.username + '</li>' +
                           '<li>|</li>' +
                           '<li>' + languageContent + '</li>' +
@@ -187,4 +190,9 @@ function signOut() {
     deleteCookie('role');
     deleteCookie('username');
     window.location = "/login";
+}
+
+//Show alert | type = {"info", "success", "danger", "warning"}
+function showAlert(type, message) {
+  $('#alert_placeholder').html('<div class="alert alert-' + type + ' fade in alert-dismissable"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><span id="alert_message"><strong>' + message + '</strong></span></div>');
 }

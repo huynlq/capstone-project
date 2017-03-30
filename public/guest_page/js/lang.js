@@ -35,6 +35,9 @@ if(localStorage.getItem('language') == 'vi' || localStorage.getItem('language') 
 	$LAYOUT_NAVBAR_PRODUCER			= "QUYỀN BTC";
 	$LAYOUT_NAVBAR_EVENT_CREATE		= "Tạo sự kiện";
 
+	$LAYOUT_ERROR					= "Lỗi: ";
+	$LAYOUT_BAN_MESSAGE				= "Tài khoản của bạn đã bị cấm với lý do: ";
+
 	//============== HOMEPAGE ===========================================================
 
 	$HOMEPAGE_SLIDER_1				= "BECAUSE THEY NEED YOUR HELP";
@@ -97,7 +100,7 @@ if(localStorage.getItem('language') == 'vi' || localStorage.getItem('language') 
 	$EVENTLIST_SEARCH_ADDRESS		= "Địa chỉ";
 	$EVENTLIST_SEARCH_DESCRIPTION	= "Chi tiết";
 	$EVENTLIST_SORT_BY				= "Sắp xếp theo:";
-	$EVENTLIST_SORT_BY_DATE			= "Ngày tạo";
+	$EVENTLIST_SORT_BY_DATE			= "Thời gian";
 	$EVENTLIST_SORT_BY_PLACE		= "Gần tôi";
 
 	//============== EVENT DETAILS ======================================================
@@ -126,9 +129,10 @@ if(localStorage.getItem('language') == 'vi' || localStorage.getItem('language') 
 	$EVENTDETAILS_HEADER_END_DESC	= "Cám ơn các bạn đã giúp đỡ.";
 
 	$EVENTDETAILS_BUTTON_JOIN		= "THAM GIA NGAY";
-	$EVENTDETAILS_BUTTON_JOINED		= "BẠN ĐÃ THAM GIA";
+	$EVENTDETAILS_BUTTON_UNJOIN		= "HỦY THAM GIA";
 	$EVENTDETAILS_BUTTON_EDIT		= "CHỈNH SỬA";
 	$EVENTDETAILS_BUTTON_UPDATE		= "QUẢN LÝ";
+	$EVENTDETAILS_BUTTON_JOIN_REQUIRE = "HÃY ĐĂNG KÍ ĐỂ THAM GIA";
 
 	$EVENTDETAILS_DATECREATED		= "Ngày tạo";
 	$EVENTDETAILS_DEADLINE			= "Hạn chót";
@@ -156,6 +160,8 @@ if(localStorage.getItem('language') == 'vi' || localStorage.getItem('language') 
 	$EVENTDETAILS_FORM_PHONE		= "Điện thoại";
 
 	$EVENTDETAILS_ALERT_DUPLICATE	= "Bạn đã tham gia sự kiện khác trùng với ngày diễn ra của sự kiện này."
+	$EVENTDETAILS_ALERT_JOIN_SUCCESS = "Tham gia sự kiện thành công."
+	$EVENTDETAILS_ALERT_UNJOIN_SUCCESS = "Hủy tham gia sự kiện thành công.";
 
 	//============== EVENT CREATOR =====================================================
 
@@ -248,6 +254,8 @@ if(localStorage.getItem('language') == 'vi' || localStorage.getItem('language') 
 	$POSTDETAILS_FORM_COMMENT		= "Nội dung";
 	$POSTDETAILS_FORM_SUBMIT		= "Đăng";
 	$POSTDETAILS_FORM_EDIT			= "Chỉnh sửa";
+	$POSTDETAILS_FORM_DELETE		= "Xóa bài viết";
+	$POSTDETAILS_FORM_DELETE_CONFIRM= "Bạn có muốn xóa bài viết này?";
 	$POSTDETAILS_FORM_LOGIN			= "Vui lòng đăng nhập để bình luận.";
 
 	$POSTDETAILS_LAST_EDITED 		= "Chỉnh sửa lúc";
@@ -257,6 +265,11 @@ if(localStorage.getItem('language') == 'vi' || localStorage.getItem('language') 
 
 	$POSTDETAILS_COMMENT_EDIT	 	= "Sửa";
 	$POSTDETAILS_COMMENT_DELETE	 	= "Xóa";
+
+	$POSTDETAILS_COMMENT_EDIT_ALERT	  = "Sửa bình luận thành công!";
+	$POSTDETAILS_COMMENT_DELETE_ALERT = "Xóa bình luận thành công!";
+
+	$POSTDETAILS_COMMENT_DELETE_CONFIRM = "Bạn có muốn xóa bình luận này?";
 
 	//============== POST CREATOR ======================================================
 
@@ -452,6 +465,9 @@ if(localStorage.getItem('language') == 'vi' || localStorage.getItem('language') 
 	$LAYOUT_NAVBAR_PRODUCER			= "PRODUCER";
 	$LAYOUT_NAVBAR_EVENT_CREATE		= "Create Event";
 
+	$LAYOUT_ERROR					= "Error: ";
+	$LAYOUT_BAN_MESSAGE				= "Your account has been banned for: ";
+
 	//============== HOMEPAGE ===========================================================
 
 	$HOMEPAGE_SLIDER_1				= "BECAUSE THEY NEED YOUR HELP";
@@ -514,7 +530,7 @@ if(localStorage.getItem('language') == 'vi' || localStorage.getItem('language') 
 	$EVENTLIST_SEARCH_ADDRESS		= "Address";
 	$EVENTLIST_SEARCH_DESCRIPTION	= "Description";
 	$EVENTLIST_SORT_BY				= "Sort By:";
-	$EVENTLIST_SORT_BY_DATE			= "Date created";
+	$EVENTLIST_SORT_BY_DATE			= "Time";
 	$EVENTLIST_SORT_BY_PLACE		= "Nearby";
 
 	//============== EVENT DETAILS ======================================================
@@ -543,9 +559,10 @@ if(localStorage.getItem('language') == 'vi' || localStorage.getItem('language') 
 	$EVENTDETAILS_HEADER_END_DESC	= "Thanks for your help.";
 
 	$EVENTDETAILS_BUTTON_JOIN		= "JOIN!";
-	$EVENTDETAILS_BUTTON_JOINED		= "YOU HAVE JOINED THIS EVENT";
+	$EVENTDETAILS_BUTTON_UNJOIN		= "CANCEL PARTICIPATE";
 	$EVENTDETAILS_BUTTON_EDIT		= "EDIT EVENT";
 	$EVENTDETAILS_BUTTON_UPDATE		= "UPDATE EVENT";
+	$EVENTDETAILS_BUTTON_JOIN_REQUIRE = "PLEASE SIGN IN TO PARTICIPATE";
 
 	$EVENTDETAILS_DATECREATED		= "Created";
 	$EVENTDETAILS_DEADLINE			= "Deadline";
@@ -572,7 +589,9 @@ if(localStorage.getItem('language') == 'vi' || localStorage.getItem('language') 
 	$EVENTDETAILS_FORM_EMAIL		= "Email";
 	$EVENTDETAILS_FORM_PHONE		= "Phone";
 
-	$EVENTDETAILS_ALERT_DUPLICATE	= "You have participated in an event with the same date."
+	$EVENTDETAILS_ALERT_DUPLICATE	= "You have participated in an event with the same date.";
+	$EVENTDETAILS_ALERT_JOIN_SUCCESS = "Successfully join event.";
+	$EVENTDETAILS_ALERT_UNJOIN_SUCCESS = "Successfully cancel participate this event.";
 
 	//============== EVENT CREATOR =====================================================
 
@@ -665,6 +684,8 @@ if(localStorage.getItem('language') == 'vi' || localStorage.getItem('language') 
 	$POSTDETAILS_FORM_COMMENT		= "Content";
 	$POSTDETAILS_FORM_SUBMIT		= "Submit";
 	$POSTDETAILS_FORM_EDIT			= "Edit";
+	$POSTDETAILS_FORM_DELETE		= "Delete";
+	$POSTDETAILS_FORM_DELETE_CONFIRM= "Are you sure you want to delete this post?";
 	$POSTDETAILS_FORM_LOGIN			= "Please sign in to comment.";
 
 	$POSTDETAILS_LAST_EDITED 		= "Last edited at";
@@ -674,6 +695,11 @@ if(localStorage.getItem('language') == 'vi' || localStorage.getItem('language') 
 
 	$POSTDETAILS_COMMENT_EDIT	 	= "Edit";
 	$POSTDETAILS_COMMENT_DELETE	 	= "Delete";
+
+	$POSTDETAILS_COMMENT_EDIT_ALERT	  = "Successfully edit comment!";
+	$POSTDETAILS_COMMENT_DELETE_ALERT = "Successfully delete comment!";
+
+	$POSTDETAILS_COMMENT_DELETE_CONFIRM = "Are you sure you want to delete this comment?";
 
 	//============== POST CREATOR ======================================================
 

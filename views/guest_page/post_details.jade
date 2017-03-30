@@ -81,7 +81,7 @@ block content
 					.row.fadeIn.animated
 						.col-md-12
 							#content(style="display:none") #{docs.postContent}
-							div#postContent											
+							div#postContent										
 						.col-md-5.col-xs-12(style="float: right")
 							#editPostPane
 					.row
@@ -99,12 +99,12 @@ block content
 												| Content 
 												span.required *
 											.col-md-6.col-sm-6.col-xs-12
-												textarea#txtCommentContent(name="postContent", maxlength="500", style="padding:10px; width:100%; height: 75px", tabindex="-1")
+												textarea#txtCommentContent(name="postContent", maxlength="500", style="padding:10px; width:100%; height: 75px", tabindex="-1", required="required")
 												input#txtCommentId(type="hidden")
 										.row
 											.col-md-7.col-sm-7
 											#commentButtons.col-md-2.col-sm-2.col-xs-12												
-												a#formSubmit.btn.btn-info.col-xs-12(style="float: right", onclick="postComment()") Submit
+												a#formSubmit.btn.btn-info.col-xs-12(style="float: right", onclick="postComment()") Submit					
 			// jQuery
 			script(src='//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js')
 			script.

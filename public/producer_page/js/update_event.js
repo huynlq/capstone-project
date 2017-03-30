@@ -9,9 +9,7 @@ $(document).ready(function() {
 
     $('[data-toggle="tooltip"]').tooltip(); 
 
-    populateTables();
-
-    document.getElementById("active-tab").click();
+    populateTables();    
 
     $('#tableDonation tbody').on('click', 'td a.linkremovedonation', deleteDonation);
 
@@ -135,6 +133,7 @@ function populateTables() {
         showGallery(data._id);
         // showActivities(data);
         $('[data-toggle="tooltip"]').tooltip(); 
+        $('#tab-pane li a').first().click();
     }); 
 }
 
@@ -284,7 +283,7 @@ function addDonation() {
             // Update the table
             populateTables();
         } else {
-            alert('Error: ' + response.msg);
+            showAlert('danger', $LAYOUT_ERROR + response.msg);
         }
     });
 }
@@ -305,7 +304,7 @@ function deleteDonation(event) {
             // Update the table
             populateTables();
         } else {
-            alert('Error: ' + response.msg);
+            showAlert('danger', $LAYOUT_ERROR + response.msg);
         }
     });    
 }
@@ -416,7 +415,7 @@ function showParticipants(_id) {
             var participantId = this._id;
             var participantStatus = this.status;
             counter++;
-            dateJoined = new Date(data.dateCreated);
+            dateCreated = new Date(this.dateCreated);
             $.getJSON( '/users/id/' + this.userId, function( dataUser ) {
                 if(participantStatus == 'Absent') {
                     actionPanel = '<a data-toggle="tooltip" title="' + $EVENTUPDATE_TIP_MARK_PRESENT + '" class="btn btn-info btn-xs linkpresent" rel="' + participantId + '" href="#">'
@@ -435,7 +434,7 @@ function showParticipants(_id) {
                     dataUser.fullName,
                     dataUser.email,
                     dataUser.phoneNumber,
-                    dateCreated.getDate() + '/' + (dateCreated.getMonth() + 1) + '/' +  dateCreated.getFullYear()
+                    dateCreated.toLocaleDateString()
                 ]).draw(false);
                 $('[data-toggle="tooltip"]').tooltip(); 
             });
@@ -471,7 +470,7 @@ function markAbsent(event) {
             populateTables();
         }
         else {
-            alert('Error: ' + response.msg);
+            showAlert('danger', $LAYOUT_ERROR + response.msg);
         }
     });
 }
@@ -503,7 +502,7 @@ function markPresent(event) {
             populateTables();
         }
         else {
-            alert('Error: ' + response.msg);
+            showAlert('danger', $LAYOUT_ERROR + response.msg);
         }
     });
 }
@@ -586,7 +585,7 @@ function confirmEditActualCost() {
             $('#edit-actual-cost-form').dialog('close');
         }
         else {
-            alert('Error: ' + response.msg);
+            showAlert('danger', $LAYOUT_ERROR + response.msg);
         }
     });  
 }
@@ -634,7 +633,7 @@ function approveSponsor(event) {
                         if (response.msg !== '') {
 
                             // If something goes wrong, alert the error message that our service returned
-                            alert('Error: ' + response.msg);
+                            showAlert('danger', $LAYOUT_ERROR + response.msg);
 
                         }
                     });
@@ -662,7 +661,7 @@ function featureSponsor(event) {
             showSponsors();
         }
         else {
-            alert('Error: ' + response.msg);
+            showAlert('danger', $LAYOUT_ERROR + response.msg);
         }
     });  
 }
@@ -685,7 +684,7 @@ function unfeatureSponsor(event) {
             showSponsors();
         }
         else {
-            alert('Error: ' + response.msg);
+            showAlert('danger', $LAYOUT_ERROR + response.msg);
         }
     });  
 }
@@ -703,7 +702,7 @@ function removeSponsor(event) {
             showSponsors();
         }
         else {
-            alert('Error: ' + response.msg);
+            showAlert('danger', $LAYOUT_ERROR + response.msg);
         }
     });  
 }
@@ -743,7 +742,7 @@ function removePhoto(event) {
             showGallery($('#eventId').val());
         }
         else {
-            alert('Error: ' + response.msg);
+            showAlert('danger', $LAYOUT_ERROR + response.msg);
         }
     });  
 }
