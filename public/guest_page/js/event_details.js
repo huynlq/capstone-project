@@ -58,6 +58,36 @@ $(function(){
             }
         }                
     });
+
+    var donationDialog = $( "#donate-form" ).dialog({
+        autoOpen: false,
+        show: {
+            effect: "fade",
+            duration: 200
+          },
+        hide: {
+            effect: "fade",
+            duration: 200
+          },
+        modal: true,   
+        width: $(window).width() * 80 / 100,
+        resizable: false,
+        buttons: {
+            "OK" : {
+            text: "OK",
+            id: "confirmDonate",
+                click: function(){
+                    confirmDonate();
+                }
+            },
+            "Cancel" : {
+                text: "Cancel",
+                click: function() {
+                    donationDialog.dialog( "close" );
+                }
+            }
+        }                
+    });
 });
 
 function populateLanguage() {
@@ -83,13 +113,13 @@ function populateButton(eventId) {
 				$('#btnParticipate').attr('onclick', 'unjoin()');
 				$('#btnParticipate').removeClass('btn-info');
 				$('#btnParticipate').addClass('btn-danger');
-				$('#btnParticipate').attr('style','width: 100%');
+				$('#btnParticipate').attr('style','width: 50%');
 				$('#btnParticipate').html('<strong>' + $EVENTDETAILS_BUTTON_UNJOIN + '</strong>');					
 			} else {
 				$('#btnParticipate').attr('onclick', 'join()');
 				$('#btnParticipate').removeClass('btn-danger');
 				$('#btnParticipate').addClass('btn-info');
-				$('#btnParticipate').attr('style','width: 100%');
+				$('#btnParticipate').attr('style','width: 50%');
 				$('#btnParticipate').html('<strong>' + $EVENTDETAILS_BUTTON_JOIN + '</strong>');	
 			}
 		});
@@ -99,6 +129,151 @@ function populateButton(eventId) {
 		$('#btnParticipate').html('<strong>' + $EVENTDETAILS_BUTTON_JOIN_REQUIRE + '</strong>');	
 	}
 }
+
+function donate() {
+	var userId = readCookie("user");
+	var eventId = window.location.href.split('/')[window.location.href.split('/').length - 1].split('#')[0];
+	$('#donationFormItems').html("");
+	var content = "";
+	$.getJSON( '/users/id/' + userId, function( data ) {
+		var role = data.role;
+		if(role != "Sponsor") {
+			$('#txtDonatorId').val(userId);
+			if(data.fullName != null && data.fullName != "")
+				$('#txtDonator').val(data.fullName);
+			else
+				$('#txtDonator').val(data.username);
+
+			if(data.email != null)
+				$('#txtDonatorEmail').val(data.email);
+
+			if(data.phoneNumber != null)
+				$('#txtDonatorPhone').val(data.phoneNumber);			
+		} else {			
+			$('#txtDonatorId').val(userId);
+			$('#txtDonator').val(data.companyName);
+			$('#txtDonatorEmail').val(data.companyEmail);
+			$('#txtDonatorPhone').val(data.companyPhoneNumber);
+			$('#txtDonator').attr('readonly', 'readonly');
+			$('#txtDonatorEmail').attr('readonly', 'readonly');
+			$('#txtDonatorPhone').attr('readonly', 'readonly');
+		}
+		$.getJSON( '/events/donationrequire/' + eventId, function( dataDonation ) {
+			var counter = 1;
+			var placeholder = "";
+			$.each(dataDonation, function(){
+				if(role = "Sponsor") {
+					placeholder = "Sponsor Minimum: " + parseInt(this.minimum).toLocaleString() + " (" + this.unit + ")";
+				} else {
+					placeholder = "(" + this.unit + ")";
+				}
+				content += '<div class="row form-group">' +
+							  '<label id="txtDonation' + counter + '" class="control-label col-md-2 col-sm-2 col-xs-12">' + this.item + '</label>' +
+							  '<div class="col-md-9 col-sm-9 col-xs-12">' +
+							    '<input id="txtDonation' + counter + 'Number" type="number" placeholder="' + placeholder + '" required="required" class="form-control col-md-7 col-xs-12"/>' +
+							  '</div>' +
+							'</div>';
+				counter++;
+			});
+			$('#numOfDonations').html(counter);
+			$('#donationFormItems').html(content);
+		});
+    });
+    
+    $('#donate-form').dialog('open'); 
+}
+
+function confirmDonate() {
+	var eventId = window.location.href.split('/')[window.location.href.split('/').length - 1].split('#')[0];
+	var donation;
+
+	// POST donation request
+	for(var i = 1; i <= parseInt($('#numOfDonations').html()); i++) {
+		if($('#txtDonation' + i + 'Number').val() != "" && $('#txtDonation' + i + 'Number').val() > 0) {
+			donation = {
+				'eventId': window.location.href.split('/')[window.location.href.split('/').length - 1].split('#')[0],
+				'userId': $('#txtDonatorId').val(),
+				'donatorName': $('#txtDonator').val(),
+				'donatorEmail': $('#txtDonatorEmail').val(),
+				'donatorPhoneNumber': $('#txtDonatorPhone').val(),
+				'donationItem': $('#txtDonation' + i).html(),
+				'donationNumber': $('#txtDonation' + i + 'Number').val(),
+				'status': 'Pending',
+				'dateCreated': new Date
+			};
+
+			$.ajax({
+		        type: 'POST',
+		        data: donation,
+		        url: '/events/addDonation',
+		        dataType: 'JSON'
+		    }).done(function( response ) {
+
+		        // Check for successful (blank) response
+		        if(response.msg == '') {
+		            // Clear the form inputs
+		        } else {
+		            alert('Error: ' + response.msg);
+		        }
+		    });
+		}		
+	}	
+
+	// POST sponsor request
+    $.getJSON( '/users/id/' + $('#txtDonatorId').val(), function( data ) {
+    	if(data.role == "Sponsor") {
+    		$.getJSON( '/events/donations/' + eventId, function( dataDonationEvent ) {
+
+    			// Check if user is in sponsor list
+    			var flagSponsor = false;
+    			for(var i = 0; i < dataDonationEvent.length; i++) {
+    				if(dataDonationEvent[i].userId == readCookie('user'))
+    					flagSponsor = true;
+    			}
+
+    			// If not, add to pending sponsors
+    			if(flagSponsor == false) {
+    				$.getJSON( '/events/donationrequire/' + eventId, function( dataDonation ) {
+						var counter = 1;
+						var flag = false;
+						for(var i = 1; i <= dataDonation.length; i++) {
+							console.log(dataDonation[i-1].item + ": " + parseInt($('#txtDonation' + i + 'Number').val()) + " >= " + parseInt(dataDonation[i-1].minimum));
+							if(parseInt($('#txtDonation' + i + 'Number').val()) >= parseInt(dataDonation[i-1].minimum))
+								flag = true;
+						}
+
+						if(flag == true) {
+							var sponsor = {
+				    			'eventId': window.location.href.split('/')[window.location.href.split('/').length - 1].split('#')[0],
+								'userId': $('#txtDonatorId').val(),
+								'status': 'Pending',
+								'dateCreated': new Date()
+				    		};
+
+				    		console.log(sponsor);
+
+				    		$.ajax({
+						        type: 'POST',
+						        data: sponsor,
+						        url: '/events/addsponsor',
+						        dataType: 'JSON'
+						    }).done(function( response ) {
+						    	console.log("DONE");
+						        // Check for successful (blank) response
+						        if(response.msg != '') {
+						            alert('Error: ' + response.msg);
+						        }
+						    });
+						}
+					}); 
+    			}
+    		});    		   	
+    	}
+    });
+
+    $('#donate-form').dialog('close'); 
+}
+
 
 function populateTimeline(eventId) {
   $.getJSON( '/events/details/' + eventId, function( data ) {     
@@ -351,7 +526,13 @@ function populateSummary(eventId) {
 	eventEndDate.setDate(eventEndDate.getDate() + 1);
 	if(eventEndDate.getTime() < now.getTime()){
 		var content = "";
-			content =   '<hr><div class="page-heading text-center">' +
+			content =   '<div class="row">' +
+							'<div class="col-md-3"></div>' +
+							'<div class="col-md-6 col-xs-12">' +
+								'<a id="btnDonation" style="width: 100%" onclick="donate()" class="btn btn-info"><strong id="btnDonate">ĐÓNG GÓP</strong></a>' +
+							'</div>' +
+						'</div>' +
+						'<hr><div class="page-heading text-center">' +
 							'<div class="container zoomIn animated">' +
 						    	'<h1 style="text-transform: uppercase;" class="page-title">' + $EVENTDETAILS_HEADER_END + '<span class="title-under"></span></h1>' +
 						    	'<p class="page-description">' + $EVENTDETAILS_HEADER_END_DESC + '</p>' +
@@ -403,7 +584,8 @@ function populateSummary(eventId) {
 								'</thead>'+
 								'<tbody></tbody>'+
 							'</table>'+
-						'</div><hr>';
+						'</div>' +						
+						'<hr>';
 		console.log(content);
 		$('#eventSummary').html(content);
 
@@ -427,13 +609,15 @@ function populateSummary(eventId) {
 	        	var counter = 0;
 	        	var participant;
 	        	$.each(data, function(){
-	        		$.getJSON( '/users/id/' + this.userId, function( userData ) {
-	        			counter++;
-		        		tableParticipants.row.add([
-		        			counter,
-		        			'<a href="/users/' + userData._id + '">' + userData.username + '</a>'
-		        		]).draw('false');
-	        		});        		
+	        		if(this.status != "Absent") {
+	        			$.getJSON( '/users/id/' + this.userId, function( userData ) {
+		        			counter++;
+			        		tableParticipants.row.add([
+			        			counter,
+			        			'<a href="/users/' + userData._id + '">' + userData.username + '</a>'
+			        		]).draw('false');
+		        		});        		
+	        		}	        		
 	        	});
 	        }
 	    });
@@ -640,6 +824,46 @@ function populateRating(eventId) {
 									'</div>';
 
 			$('#ratingPane').html('<hr><div class="col-md-1 col-sm-1"></div><div class="col-md-10 col-sm-10 col-xs-12">' + ratingContent + '</div>');
+		}
+	});
+}
+
+function seeRate(name, rate) {
+	for(var i = 1; i <= 5; i++) {
+		if(i <= rate) {
+			$('#' + name + 'Rating' + i).attr('src','/images/system/rated-star.png');
+		} else {
+			$('#' + name + 'Rating' + i).attr('src','/images/system/unrated-star.png');
+		}
+	}
+}
+
+function rate(id, rate) {
+	var userId = readCookie('user');
+	var rating = {
+		'userId': userId,
+		'subjectId': id,
+		'ratingPoint': rate
+	};
+
+	$.ajax({
+		type: 'POST',
+		data: rating,
+		url: '/ratings/updaterating',
+		dataType: 'JSON'
+	}).done(function( response ) {
+
+		// Check for successful (blank) response
+		if (response.msg !== '') {
+
+			// If something goes wrong, alert the error message that our service returned
+			alert('Error: ' + response.msg);
+
+		} else {
+
+			var eventId = window.location.href.split('/')[window.location.href.split('/').length - 1].split('#')[0];
+			populateRating(eventId);
+
 		}
 	});
 }

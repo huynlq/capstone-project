@@ -143,8 +143,10 @@ block content
 							#eventParticipation
 								.col-md-3
 								.col-md-6.col-xs-12
-									a#btnParticipate.btn.btn-info(style="background-color:#1f76bd; width: 100%" onclick='join()')
+									a#btnParticipate.btn.btn-info(style="width: 50%" onclick='join()')
 										strong#btnJoin THAM GIA NGAY
+									a#btnDonation.btn.btn-info(style="width: 50%" onclick='donate()')
+										strong#btnDonate ĐÓNG GÓP
 					.row
 						#eventProducerButtons.col-md-12.col-xs-12
 			#participate-form(title='Participant Information')
@@ -169,6 +171,33 @@ block content
 								span.required *
 							.col-md-6.col-sm-6.col-xs-12
 								input#txtParticipantPhone.form-control.col-md-7.col-xs-12(type='text', required='required')
+			#donate-form(title='Donate For Event')
+				p.validateTips All form fields are required.
+				form
+					fieldset
+						.col-md-6.col-sm-6.col-xs-12
+							.row.form-group
+								label.control-label.col-md-2.col-sm-2.col-xs-12
+									| Name 
+									span.required *
+								.col-md-9.col-sm-9.col-xs-12
+									input#txtDonator.form-control.col-md-7.col-xs-12(type='text', required='required')
+									span#txtEditActivityId(style='display:none')
+									input#txtDonatorId(type='hidden')
+							.row.form-group
+								label.control-label.col-md-2.col-sm-2.col-xs-12
+									| Email 
+									span.required *
+								.col-md-9.col-sm-9.col-xs-12
+									input#txtDonatorEmail.form-control.col-md-7.col-xs-12(type='text', required='required')
+							.row.form-group
+								label.control-label.col-md-2.col-sm-2.col-xs-12
+									| Phone 
+									span.required *
+								.col-md-9.col-sm-9.col-xs-12
+									input#txtDonatorPhone.form-control.col-md-7.col-xs-12(type='text', required='required')
+						.col-md-6.col-sm-6.col-xs-12#donationFormItems
+						#numOfDonations(style="display:none")
 			// jQuery
 			script(src='//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js')
 			script(src='/vendors/jquery-ui-1.12.1/jquery-ui.js')

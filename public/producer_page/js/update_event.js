@@ -123,14 +123,18 @@ function populateTables() {
 	// jQuery AJAX call for JSON    
     var eventId = window.location.href.split('/')[window.location.href.split('/').length - 1].split('#')[0];
     $.getJSON( '/events/details/' + eventId, function( data ) {        
+
+        $('#eventName').html('<a href="/events/' + data._id + '">' + data.eventName + '</a>');
         showPendingDonations(data);
 
 
         // For each item in our JSON, add a table row and cells to the content string
         showDonations(data);
+        showPendingDonations(data);
         showParticipants(data._id);
         showActivityCosts(data._id);        
         showGallery(data._id);
+        showSponsors(data._id);
         // showActivities(data);
         $('[data-toggle="tooltip"]').tooltip(); 
         $('#tab-pane li a').first().click();
@@ -171,6 +175,99 @@ function showDonations(data) {
     }); 
 }
 
+// Populate Pending Donation Item
+function showPendingDonations(data) {
+    //Get Donation data from the database
+    $.getJSON( '/events/donations/' + data._id, function( dataDonation ) {
+        //Populate the table
+        var table = $('#tablePendingDonation').DataTable();
+        table.clear().draw();
+        var counter = 0;        
+        if(dataDonation != null) {
+            $.each(dataDonation, function(){
+                if(this.status == "Pending") {
+                    counter++;
+                    dateCreated = new Date(this.dateCreated);        
+                    table.row.add([
+                        counter,
+                        '<center>'
+                            + '<a data-toggle="tooltip" title="Approve" class="btn btn-success btn-xs linkapprovedonation" rel="' + this._id + '" href="#">'
+                                + '<span class="glyphicon glyphicon-ok"></span>'
+                            + '</a>'
+                            + '<a data-toggle="tooltip" title="Disapprove" class="btn btn-danger btn-xs linkremovedonation" rel="' + this._id + '" href="#">'
+                                + '<span class="glyphicon glyphicon-remove"></span>'
+                            + '</a>'
+                        + '</center>',
+                        this.donatorName,
+                        this.donatorEmail,
+                        this.donatorPhoneNumber,
+                        this.donationItem,
+                        this.donationNumber,                    
+                        dateCreated.getDate() + '/' + (dateCreated.getMonth() + 1) + '/' +  dateCreated.getFullYear()
+                    ]).draw( false );
+                }                
+            });
+            $('#countPendingDonations').html(counter);
+        }
+        $('[data-toggle="tooltip"]').tooltip(); 
+    }); 
+}
+
+// Approve Pending Donation
+function approveDonation(event) {
+    event.preventDefault();
+
+    var donationId = $(this).attr('rel');
+
+    var donation = {
+        'status': 'Approved'
+    };
+    
+    $.ajax({
+        type: 'PUT',
+        data: donation,
+        url: '/events/updatedonation/' + $(this).attr('rel')
+    }).done(function( response ) {
+        // Check for a successful (blank) response
+        if (response.msg === '') {
+            populateTables();
+
+            $.getJSON( '/events/donations/id/' + donationId, function( data ) {
+                var eventId = data.eventId;
+                $.getJSON( '/events/details/' + eventId, function( dataEvent ) {
+                    eventName = dataEvent.eventName;
+                    var newNotification = {
+                        'userId': data.userId,
+                        'content': 'Your donation for ' + eventName + ' has been approved.',
+                        'markedRead': 'Unread',
+                        'dateCreated': new Date()
+                    }
+
+                    // Use AJAX to post the object to our adduser service        
+                    $.ajax({
+                        type: 'POST',
+                        data: newNotification,
+                        url: '/notifications/addnotification',
+                        dataType: 'JSON'
+                    }).done(function( response ) {
+
+                        // Check for successful (blank) response
+                        if (response.msg !== '') {
+
+                        // If something goes wrong, alert the error message that our service returned
+                        alert('Error: ' + response.msg);
+
+                        }
+                    });
+                });    
+            });
+        }
+        else {
+            alert('Error: ' + response.msg);
+        }
+    });
+}
+
 // Populate Sponsors Tables
 function showSponsors(_id) {
     $('#tableSponsor_wrapper .row').first().css('margin-left', '30px');
@@ -182,7 +279,7 @@ function showSponsors(_id) {
     var sponsorData;
 
     //Get Donation data from the database
-    $.getJSON( '/events/sponsor/' + $('#eventId').html(), function( dataSponsor ) {
+    $.getJSON( '/events/sponsor/' + _id, function( dataSponsor ) {
         var tableSponsor = $('#tableSponsor').DataTable();
         var tablePendingSponsor = $('#tablePendingSponsor').DataTable();
         tableSponsor.clear().draw();
@@ -258,8 +355,9 @@ function showSponsors(_id) {
 
 // Add new donation
 function addDonation() {
+    var eventId = window.location.href.split('/')[window.location.href.split('/').length - 1].split('#')[0];
     var newDonation = {
-        'eventId': $('#eventId').html(),
+        'eventId': eventId,
         'donatorName': $('#txtDonatorName').val(),
         'donationItem': $('#txtDonationItem').val(),
         'donationNumber': $('#txtDonationNumber').val(),

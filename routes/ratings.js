@@ -33,18 +33,31 @@ router.get('/id/:id', function(req, res, next) {
 router.get('/general/:id', function(req, res, next) {
     var db = req.db;
     var collection = db.get('Ratings');    
+    console.log("START");
     collection.find({ 'subjectId' : req.params.id },{},function(e,docs){
+        console.log("1");
         var rating = 0;        
-        for(var i = 0; i < docs.length; i++) {
-            rating += parseInt(docs[i].ratingPoint);
-        }
-        collection.count({ 'subjectId' : req.params.id },{},function(e,count){
+        console.log(docs);
+        if(docs.length > 0) {
+            for(var i = 0; i < docs.length; i++) {
+                rating += parseInt(docs[i].ratingPoint);
+                console.log(docs[i].ratingPoint);
+            }
+            collection.count({ 'subjectId' : req.params.id },{},function(e,count){
+                console.log(count);
+                rating = {
+                    'ratingPoint': parseFloat(rating / parseInt(count)),
+                    'count': count
+                };
+                res.json(rating);
+            });
+        } else {
             rating = {
-                'ratingPoint': parseFloat(rating / parseInt(count)),
-                'count': count
+                'ratingPoint': 0,
+                'count': 0
             };
             res.json(rating);
-        });        
+        }                
     });
 });
 

@@ -295,6 +295,32 @@ router.get('/all', function(req, res, next) {
     });
 });
 
+/* GET all events. */
+router.get('/alllist', function(req, res, next) {
+    var userId = req.cookies.user; 
+    console.log(userId);
+    if(userId != '') {
+        var db = req.db;
+        var collection = db.get('Users');
+        collection.findOne({'_id': userId},function(e,docs){
+            collection = db.get('Events');
+            console.log(docs);
+            console.log(docs.role);
+            if(docs.role == "Producer") {
+                collection.find({'userId': userId},function(e,docs2){
+                    res.json(docs2);
+                });    
+            } else if(docs.role == "Admin") {
+                collection.find({},function(e,docs2){
+                    res.json(docs2);
+                });    
+            } else {
+                res.render('page_404');
+            }            
+        });
+    }    
+});
+
 /* GET all nearby. */
 router.get('/nearby/:lat/:lng', function(req, res, next) {
     var db = req.db;

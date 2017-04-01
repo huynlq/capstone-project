@@ -40,15 +40,15 @@ if(localStorage.getItem('language') == 'vi' || localStorage.getItem('language') 
 
 	//============== HOMEPAGE ===========================================================
 
-	$HOMEPAGE_SLIDER_1				= "BECAUSE THEY NEED YOUR HELP";
-	$HOMEPAGE_SLIDER_1_DESC			= "DO NOT LET THEM DOWN";
-	$HOMEPAGE_SLIDER_1_BUTTON		= "DONATE NOW";
-	$HOMEPAGE_SLIDER_2				= "TOGETHER WE CAN IMPROVE THEIR LIVES";
-	$HOMEPAGE_SLIDER_2_DESC			= "SO LET'S DO IT !";
-	$HOMEPAGE_SLIDER_2_BUTTON		= "DONATE NOW";
-	$HOMEPAGE_SLIDER_3				= "A PENNY IS A LOT OF MONEY, IF YOU HAVE NOT GOT A PENNY.";
-	$HOMEPAGE_SLIDER_3_DESC			= "YOU CAN MAKE THE DIFFRENCE !";
-	$HOMEPAGE_SLIDER_3_BUTTON		= "DONATE NOW";
+	$HOMEPAGE_SLIDER_1				= "THAM GIA NGAY!";
+	$HOMEPAGE_SLIDER_1_DESC			= "CÙNG CHÚNG TÔI THỰC HIỆN CHIẾN DỊCH TÌNH NGUYỆN VÌ CỘNG ĐỒNG";
+	$HOMEPAGE_SLIDER_1_BUTTON		= "THAM GIA SỰ KIỆN";
+	$HOMEPAGE_SLIDER_2				= "CÙNG ĐÓNG GÓP!";
+	$HOMEPAGE_SLIDER_2_DESC			= "HỖ TRỢ CHÚNG TÔI KẾT NỐI YÊU THƯƠNG VÀ SAN SẺ LẪN NHAU";
+	$HOMEPAGE_SLIDER_2_BUTTON		= "TRỞ THÀNH NHÀ TÀI TRỢ";
+	$HOMEPAGE_SLIDER_3				= "THEO CHÂN CHÚNG TÔI!";
+	$HOMEPAGE_SLIDER_3_DESC			= "TRỞ THÀNH NHÀ TỔ CHỨC SỰ KIỆN VÀ CÙNG CHUNG TAY GIÚP ĐỠ";
+	$HOMEPAGE_SLIDER_3_BUTTON		= "ĐĂNG KÍ BAN TỔ CHỨC";
 
 	$HOMEPAGE_FEATURE_1 			= "NHIỆM VỤ";
 	$HOMEPAGE_FEATURE_1_DESC		= "Chúng tôi hướng đến những người gặp nạn, hoàn cảnh khó khăn cần giúp đỡ.";
@@ -362,6 +362,8 @@ if(localStorage.getItem('language') == 'vi' || localStorage.getItem('language') 
 	$LISTEVENT_TH_LOCATION			= "Địa điểm";
 	$LISTEVENT_TH_CREATED			= "Ngày tạo";
 	$LISTEVENT_TIP_DETAILS			= "Xem";
+	$LISTEVENT_TIP_EDIT				= "Chỉnh sửa";
+	$LISTEVENT_TIP_UPDATE			= "Quản lý";
 	$LISTEVENT_TIP_CANCEL			= "Hủy";
 
 	//============== LIST POST (ADMIN) ===============================================
@@ -470,24 +472,24 @@ if(localStorage.getItem('language') == 'vi' || localStorage.getItem('language') 
 
 	//============== HOMEPAGE ===========================================================
 
-	$HOMEPAGE_SLIDER_1				= "BECAUSE THEY NEED YOUR HELP";
-	$HOMEPAGE_SLIDER_1_DESC			= "DO NOT LET THEM DOWN";
-	$HOMEPAGE_SLIDER_1_BUTTON		= "DONATE NOW";
-	$HOMEPAGE_SLIDER_2				= "TOGETHER WE CAN IMPROVE THEIR LIVES";
-	$HOMEPAGE_SLIDER_2_DESC			= "SO LET'S DO IT !";
-	$HOMEPAGE_SLIDER_2_BUTTON		= "DONATE NOW";
-	$HOMEPAGE_SLIDER_3				= "A PENNY IS A LOT OF MONEY, IF YOU HAVE NOT GOT A PENNY.";
-	$HOMEPAGE_SLIDER_3_DESC			= "YOU CAN MAKE THE DIFFRENCE !";
-	$HOMEPAGE_SLIDER_3_BUTTON		= "DONATE NOW";
+	$HOMEPAGE_SLIDER_1				= "JOIN US!";
+	$HOMEPAGE_SLIDER_1_DESC			= "PARTICIPATE IN EVENTS FOR THE BETTER GOOD";
+	$HOMEPAGE_SLIDER_1_BUTTON		= "JOIN EVENTS";
+	$HOMEPAGE_SLIDER_2				= "DONATE US!";
+	$HOMEPAGE_SLIDER_2_DESC			= "CONNECT US TOGETHER AND HELP OUR ACTION COME TRUE";
+	$HOMEPAGE_SLIDER_2_BUTTON		= "BECOME A SPONSOR";
+	$HOMEPAGE_SLIDER_3				= "BE ONE OF US!";
+	$HOMEPAGE_SLIDER_3_DESC			= "BECOME A PRODUCER AND HELP THE ONE IN NEED";
+	$HOMEPAGE_SLIDER_3_BUTTON		= "PRODUCER REGISTATION";
 
 	$HOMEPAGE_FEATURE_1 			= "OUR MISSION";
-	$HOMEPAGE_FEATURE_1_DESC		= "Chúng tôi hướng đến những người gặp nạn, hoàn cảnh khó khăn cần giúp đỡ.";
+	$HOMEPAGE_FEATURE_1_DESC		= "We aim to help anyone, any unfortunate in need.";
 	$HOMEPAGE_FEATURE_2 			= "JOIN US";
-	$HOMEPAGE_FEATURE_2_DESC		= "Đăng kí làm tình nguyện viên để hỗ trợ công sức cho cộng đồng tốt đẹp hơn.";
+	$HOMEPAGE_FEATURE_2_DESC		= "Participate as a volunteer to help create a better community.";
 	$HOMEPAGE_FEATURE_3 			= "HELP US";
-	$HOMEPAGE_FEATURE_3_DESC		= "Tham gia làm nhà tài trợ và góp phần ủng hộ cho các sự kiện từ thiện.";
+	$HOMEPAGE_FEATURE_3_DESC		= "Become a sponsor and provide funds for our actions.";
 	$HOMEPAGE_FEATURE_4 			= "BECOME US";
-	$HOMEPAGE_FEATURE_4_DESC		= "Trở thành ban tổ chức để nhận tài trợ từ chúng tôi biến mọi ý tưởng giúp ích đồng bào thành hiện thực.";
+	$HOMEPAGE_FEATURE_4_DESC		= "Join us as a producer and make your ideas to help people become reality.";
 	$HOMEPAGE_FEATURE_BUTTON		= "Read more";
 
 	$HOMEPAGE_HEADER_EVENTS 		= "FEATURED EVENTS";
@@ -792,6 +794,8 @@ if(localStorage.getItem('language') == 'vi' || localStorage.getItem('language') 
 	$LISTEVENT_TH_LOCATION			= "Place";
 	$LISTEVENT_TH_CREATED			= "Date Created";
 	$LISTEVENT_TIP_DETAILS			= "Details";
+	$LISTEVENT_TIP_EDIT				= "Edit";
+	$LISTEVENT_TIP_UPDATE			= "Update";
 	$LISTEVENT_TIP_CANCEL			= "Cancel";
 
 	//============== LIST POST (ADMIN) ===============================================

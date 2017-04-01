@@ -43,7 +43,7 @@ function populateLanguage() {
 
 function populateTables() {
 	// jQuery AJAX call for JSON
-    $.getJSON( '/events/all', function( data ) {
+    $.getJSON( '/events/alllist', function( data ) {
         // For each item in our JSON, add a table row and cells to the content string
         showEvents(data);
         showUpcomingEvents(data);
@@ -87,14 +87,17 @@ function showUpcomingEvents(data) {
             table.row.add([
                 counter,
                 '<center>'
-                    + '<a data-toggle="tooltip" title="' + $LISTEVENT_TIP_DETAILS + '" class="btn btn-info btn-xs" href="events/' + this._id + '">'
-                        + '<span class="glyphicon glyphicon-search"></span>'
-                    + '</a>'
-                    + '<a data-toggle="tooltip" title="' + $LISTEVENT_TIP_CANCEL + '" class="btn btn-danger btn-xs linkcancelevent" rel="' + this._id + '" href="#">'
+                    + '<a data-toggle="tooltip" title="' + $LISTEVENT_TIP_CANCEL + '" style="margin:5px" class="btn btn-danger btn-xs linkcancelevent" rel="' + this._id + '" href="#">'
                         + '<span class="glyphicon glyphicon-remove"></span>'
                     + '</a>'
+                    + '<a data-toggle="tooltip" title="' + $LISTEVENT_TIP_EDIT + '" style="margin:5px" class="btn btn-info btn-xs" href="/events/edit/' + this._id + '">'
+                        + '<span class="glyphicon glyphicon-edit"></span>'
+                    + '</a>'
+                    + '<a data-toggle="tooltip" title="' + $LISTEVENT_TIP_UPDATE + '" style="margin:5px" class="btn btn-success btn-xs" href="/events/update/' + this._id + '">'
+                        + '<span class="glyphicon glyphicon-stats"></span>'
+                    + '</a>'
                 + '</center>',
-                this.eventName,                
+                '<a href="/events/' + this._id + '">' + this.eventName + '</a>',
                 user,
                 email,
                 phone,
@@ -136,12 +139,15 @@ function showEvents(data) {
         });    
         table.row.add([
             counter,
-            '<center>'
-                + '<a data-toggle="tooltip" title="' + $LISTEVENT_TIP_DETAILS + '" class="btn btn-info btn-xs" href="events/' + this._id + '">'
-                    + '<span class="glyphicon glyphicon-search"></span>'
+            '<center>'                
+                + '<a data-toggle="tooltip" title="' + $LISTEVENT_TIP_EDIT + '" style="margin:5px" class="btn btn-info btn-xs" href="/events/edit/' + this._id + '">'
+                    + '<span class="glyphicon glyphicon-edit"></span>'
+                + '</a>'
+                + '<a data-toggle="tooltip" title="' + $LISTEVENT_TIP_UPDATE + '" style="margin:5px" class="btn btn-success btn-xs" href="/events/update/' + this._id + '">'
+                    + '<span class="glyphicon glyphicon-stats"></span>'
                 + '</a>'
             + '</center>',
-            this.eventName,
+            '<a href="/events/' + this._id + '">' + this.eventName + '</a>',
             this.status,            
             user,
             email,
@@ -190,13 +196,16 @@ function showPastEvents(data) {
                 }
             }); 
             table.row.add([
-                counter,
-                '<center>'
-                    + '<a data-toggle="tooltip" title="' + $LISTEVENT_TIP_DETAILS + '" class="btn btn-info btn-xs" href="events/' + this._id + '">'
-                        + '<span class="glyphicon glyphicon-search"></span>'
+                counter,                
+                '<center>'                
+                    + '<a data-toggle="tooltip" title="' + $LISTEVENT_TIP_EDIT + '" style="margin:5px" class="btn btn-info btn-xs" href="/events/edit/' + this._id + '">'
+                        + '<span class="glyphicon glyphicon-edit"></span>'
+                    + '</a>'
+                    + '<a data-toggle="tooltip" title="' + $LISTEVENT_TIP_UPDATE + '" style="margin:5px" class="btn btn-success btn-xs" href="/events/update/' + this._id + '">'
+                        + '<span class="glyphicon glyphicon-stats"></span>'
                     + '</a>'
                 + '</center>',
-                this.eventName,                
+                '<a href="/events/' + this._id + '">' + this.eventName + '</a>',                
                 user,
                 email,
                 phone,
@@ -244,12 +253,15 @@ function showCancelledEvents(data) {
             }); 
             table.row.add([
                 counter,
-                '<center>'
-                    + '<a data-toggle="tooltip" title="' + $LISTEVENT_TIP_DETAILS + '" class="btn btn-info btn-xs" href="events/' + this._id + '">'
-                        + '<span class="glyphicon glyphicon-search"></span>'
+                '<center>'                
+                    + '<a data-toggle="tooltip" title="' + $LISTEVENT_TIP_EDIT + '" style="margin:5px" class="btn btn-info btn-xs" href="/events/edit/' + this._id + '">'
+                        + '<span class="glyphicon glyphicon-edit"></span>'
+                    + '</a>'
+                    + '<a data-toggle="tooltip" title="' + $LISTEVENT_TIP_UPDATE + '" style="margin:5px" class="btn btn-success btn-xs" href="/events/update/' + this._id + '">'
+                        + '<span class="glyphicon glyphicon-stats"></span>'
                     + '</a>'
                 + '</center>',
-                this.eventName,                
+                '<a href="/events/' + this._id + '">' + this.eventName + '</a>',                
                 user,
                 email,
                 phone,
@@ -277,7 +289,7 @@ function cancelEvent() {
         data: event,
         url: '/events/updateevent/' + $(this).attr('rel')
     }).done(function( response ) {
-        // Check for a successful (blank) response
+        // stats for a successful (blank) response
         if (response.msg === '') {
             populateTables();
         }

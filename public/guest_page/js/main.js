@@ -422,13 +422,13 @@ function populateEvents() {
 function populateLanguage() {
 	$('#slider1').html($HOMEPAGE_SLIDER_1);
 	$('#slider1-desc').html($HOMEPAGE_SLIDER_1_DESC);
-	$('#slider1-button').html($HOMEPAGE_SLIDER_1_BUTTON);
+	$('#slider1-btn').html($HOMEPAGE_SLIDER_1_BUTTON);
 	$('#slider2').html($HOMEPAGE_SLIDER_2);
 	$('#slider2-desc').html($HOMEPAGE_SLIDER_2_DESC);
-	$('#slider2-button').html($HOMEPAGE_SLIDER_2_BUTTON);
+	$('#slider2-btn').html($HOMEPAGE_SLIDER_2_BUTTON);
 	$('#slider3').html($HOMEPAGE_SLIDER_3);
 	$('#slider3-desc').html($HOMEPAGE_SLIDER_3_DESC);
-	$('#slider3-button').html($HOMEPAGE_SLIDER_3_BUTTON);
+	$('#slider3-btn').html($HOMEPAGE_SLIDER_3_BUTTON);
 
 	$('#feature1').html($HOMEPAGE_FEATURE_1);
 	$('#feature1-desc').html($HOMEPAGE_FEATURE_1_DESC);
@@ -444,4 +444,10 @@ function populateLanguage() {
 	$('#header-news').html($HOMEPAGE_HEADER_NEWS);
 	$('#header-sponsors').html($HOMEPAGE_HEADER_SPONSORS);
 	$('#header-producers').html($HOMEPAGE_HEADER_PRODUCERS);
+
+	if(readCookie('user') == '') {
+		$('#slider1-btn').attr('href','/login');
+		$('#slider2-btn').attr('href','/login');
+		$('#slider3-btn').attr('href','/login');
+	}
 }

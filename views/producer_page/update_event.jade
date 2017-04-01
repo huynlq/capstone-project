@@ -35,12 +35,16 @@ block content
 				.container
 					.row
 						.col-md-12
+							.pull-right
+								a.btn.btn-info(href="#") Edit Event
 							h2.title-style-2
 								span#header Update Event
+								&nbsp;&nbsp;
+								small#eventName
 								span.title-under
 					.row.tile_count
 						ul#tab-pane.nav.nav-tabs
-							li.col-md-3.col-sm-6.col-xs-12
+							li.col-md-2.col-sm-6.col-xs-12
 								a.count-tab(data-toggle='tab', href='#donations')
 									.tileA
 										.tile_stats_count
@@ -48,7 +52,15 @@ block content
 												i.fa.fa-bar-chart&nbsp;&nbsp;
 												strong.tab-donation Donations
 											#countDonations.count 0
-							li.col-md-3.col-sm-6.col-xs-12
+							li.col-md-2.col-sm-6.col-xs-12
+								a.count-tab(data-toggle='tab', href='#pendingDonations')
+									.tileA
+										.tile_stats_count
+											span.count_top
+												i.fa.fa-bar-chart&nbsp;&nbsp;
+												strong.tab-pending-donation Pending Donations
+											#countPendingDonations.count 0
+							li.col-md-2.col-sm-6.col-xs-12
 								a.count-tab(data-toggle='tab', href='#participants')
 									.tileA
 										.tile_stats_count
@@ -56,7 +68,15 @@ block content
 												i.fa.fa-spinner.fa-pulse&nbsp;&nbsp;
 												strong.tab-participant Participants		
 											#countParticipants.count 0		
-							li.col-md-3.col-sm-6.col-xs-12
+							li.col-md-2.col-sm-6.col-xs-12
+								a.count-tab(data-toggle='tab', href='#sponsors')
+									.tileA
+										.tile_stats_count
+											span.count_top
+												i.fa.fa-spinner.fa-pulse&nbsp;&nbsp;
+												strong.tab-sponsor Sponsors
+											#countSponsors.count 0	
+							li.col-md-2.col-sm-6.col-xs-12
 								a.count-tab(data-toggle='tab', href='#costs')
 									.tileA
 										.tile_stats_count
@@ -64,7 +84,7 @@ block content
 												i.fa.fa-thumbs-o-up&nbsp;&nbsp;
 												strong.tab-cost Activity Costs
 											#countActivities.count 0
-							li.col-md-3.col-sm-6.col-xs-12
+							li.col-md-2.col-sm-6.col-xs-12
 								a.count-tab(data-toggle='tab', href='#gallery')
 									.tileA
 										.tile_stats_count
@@ -116,6 +136,28 @@ block content
 												.col-md-5.col-sm-5
 												.col-md-4.col-sm-4.col-xs-12
 													a#donateForm-add.btn.btn-info.col-xs-12(onclick='addDonation()') Add >>
+						#pendingDonations.tab-pane.fade
+							.row
+								.col-md-12.col-sm-12.col-xs-12
+									.col-md-6
+										h3
+											| Pending Donations
+											small (sub-title)
+									.clearfix
+								.x_content
+									.col-md-12.col-sm-12.col-xs-12
+										table#tablePendingDonation.table.table-style-1.table-striped.table-bordered.dt-responsive.nowrap.datatable-responsive(cellspacing='0', width='100%')
+											thead
+												tr
+													th #
+													th.th-action Action
+													th.th-user Donator
+													th.th-email Email
+													th.th-phone Phone Number
+													th.th-item Item
+													th.th-quantity Quantity
+													th.th-time Time
+											tbody
 						#participants.tab-pane.fade
 							.row
 								.col-md-12.col-sm-12.col-xs-12
@@ -135,6 +177,37 @@ block content
 												th.th-phone Phone
 												th.th-join Date Joined
 										tbody
+						#sponsors.tab-pane.fade
+							.row
+								.col-md-12.col-sm-12.col-xs-12
+									.col-md-6
+										h3
+											| Sponsors
+											small (sub-title)
+									.clearfix
+								.x_content								
+									.col-md-6.col-sm-6.col-xs-12
+										h3 Current Sponsors
+										table#tableSponsor.table.table-style-1.table-striped.table-bordered.dt-responsive.nowrap.datatable-responsive(cellspacing='0', width='100%')
+											thead
+												tr
+													th #
+													th.th-action Action
+													th.th-user Sponsor
+													th.th-email Email
+													th.th-phone Phone
+											tbody								
+									.col-md-6.col-sm-6.col-xs-12
+										h3 Pending Sponsors
+										table#tablePendingSponsor.table.table-style-1.table-striped.table-bordered.dt-responsive.nowrap.datatable-responsive(cellspacing='0', width='100%')
+											thead
+												tr
+													th #
+													th.th-action Action
+													th.th-user Sponsor
+													th.th-email Email
+													th.th-phone Phone
+											tbody
 						#costs.tab-pane.fade
 							.row
 								.col-md-12.col-sm-12.col-xs-12
