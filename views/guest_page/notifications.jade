@@ -15,6 +15,8 @@ block content
 			link(rel='stylesheet', href='/guest_page/css/bootstrap.min.css')
 			// Font awesome
 			link(rel='stylesheet', href='/guest_page/css/font-awesome.min.css')
+			// Owl carousel
+			link(rel='stylesheet', href='/guest_page/css/owl.carousel.css')
 			// PrettyPhoto
 			link(rel='stylesheet', href='/guest_page/css/prettyPhoto.css')
 			// Datatables
@@ -23,108 +25,35 @@ block content
 			link(href='/vendors/datatables.net-fixedheader-bs/css/fixedHeader.bootstrap.min.css', rel='stylesheet')
 			link(href='/vendors/datatables.net-responsive-bs/css/responsive.bootstrap.min.css', rel='stylesheet')
 			link(href='/vendors/datatables.net-scroller-bs/css/scroller.bootstrap.min.css', rel='stylesheet')
-			// Owl carousel
-			link(rel='stylesheet', href='/guest_page/css/owl.carousel.css')
 			// Template main Css
 			link(rel='stylesheet', href='/guest_page/css/style.css')
 			// Modernizr
 			script(src='/guest_page/js/modernizr-2.6.2.min.js')
-		body			
+		body
 			.row(style="height:80px")
 			.page-heading.text-center
 				.container.zoomIn.animated
-					h1.page-title(style="text-transform: uppercase;")
-						span#header User Page
-						#userId(style="display: none") #{docs._id}
+					h1#header.page-title(style="text-transform: uppercase;") NOTIFICATIONS
 						span.title-under
-					p.page-description
-						span#header-desc Get to know everyone.
+					p#header-desc.page-description
 			.main-container
 				.container
-					.row			
-						.form-horizontal.form-label-left
-							.col-md-6
-								h2.title-style-1
-									span#header-userInfo User Info
-									span.title-under
-								table.table.table-responsive.table-striped
-									tbody
-										tr
-											td(style="text-align: center; vertical-align: middle; width:30%", rowspan="6")		
-												img(src='#{docs.image}', alt='Set your profile image!', style='height: 150px; max-width: 300px')
-										tr
-											td(style="text-align: right; width: 50px")
-												i.fa.fa-tag
-											td
-												span.col-md-7.col-xs-12 #{docs.username}
-										tr
-											td(style="text-align: right; width: 50px")
-												i.fa.fa-user
-											td
-												span.col-md-7.col-xs-12 #{docs.fullName}
-										tr
-											td(style="text-align: right; width: 50px")
-												i.fa.fa-building
-											td
-												span.col-md-7.col-xs-12 #{docs.address}
-										tr
-											td(style="text-align: right; width: 50px")
-												i.fa.fa-envelope
-											td
-												span.col-md-7.col-xs-12 #{docs.email}
-										tr
-											td(style="text-align: right; width: 50px")
-												i.fa.fa-phone
-											td
-												span.col-md-7.col-xs-12 #{docs.phoneNumber}
-							.col-md-6
-								#companyInfoDiv
-									h2.title-style-1
-										span#header-companyInfo Company Info
-										span.title-under
-									table.table.table-responsive.table-striped
-										tbody
-											tr
-												td(style="text-align: center; vertical-align: middle; width:30%", rowspan="6")		
-													img(src='#{docs.companyImage}', alt='Set your profile image!', style='height: 150px; max-width: 300px')
-											tr
-												td(style="text-align: right; width: 50px")
-													i.fa.fa-users
-												td
-													span.col-md-7.col-xs-12 #{docs.companyName}
-											tr
-												td(style="text-align: right; width: 50px")
-													i.fa.fa-building
-												td
-													span.col-md-7.col-xs-12 #{docs.companyAddress}
-											tr
-												td(style="text-align: right; width: 50px")
-													i.fa.fa-envelope
-												td
-													span.col-md-7.col-xs-12 #{docs.companyEmail}
-											tr
-												td(style="text-align: right; width: 50px")
-													i.fa.fa-phone
-												td
-													span.col-md-7.col-xs-12 #{docs.companyPhoneNumber}
-											tr
-												td(style="text-align: right; width: 50px")
-													i.fa.fa-globe
-												td
-													span.col-md-7.col-xs-12 #{docs.companyWebsite}
-					.row#eventJoined-panel							
-					.row#eventProduced-panel							
-					.row#eventSponsored-panel
+					.col-md-3
+					.col-md-6.col-xs-12
+						#notificationPane.row
 			// jQuery
 			script(src='//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js')
+			script(src='/vendors/jquery-ui-1.12.1/jquery-ui.js')
 			script.
 				window.jQuery || document.write('<script src="/guest_page/js/jquery-1.11.1.min.js"><\\/script>')
 			// Bootsrap javascript file
 			script(src='/guest_page/js/bootstrap.min.js')
 			// PrettyPhoto javascript file
 			script(src='/guest_page/js/jquery.prettyPhoto.js')
+			// owl carouseljavascript file
+			script(src='/guest_page/js/owl.carousel.min.js')
 			// Google map
-			script(src='https://maps.googleapis.com/maps/api/js?key=AIzaSyAxUeMBUbKnW-LKTWTIL656w7nHABuNMTI&libraries=places')
+			script(src='https://maps.googleapis.com/maps/api/js?key=AIzaSyCgKgnC06Ye-nKdA6nIZR5qH7sZWkxdprw&libraries=places')
 			// Datatables
 			script(src='../vendors/datatables.net/js/jquery.dataTables.min.js')
 			script(src='../vendors/datatables.net-bs/js/dataTables.bootstrap.min.js')
@@ -143,11 +72,9 @@ block content
 			script(src='../vendors/pdfmake/build/vfs_fonts.js')
 			// Countdown JS
 			script(src='/vendors/countdown/countdown.js')
-			// owl carouseljavascript file
-			script(src='/guest_page/js/owl.carousel.min.js')
 			// Template main javascript
 			script(src='/guest_page/js/main.js')
-			script(src='/guest_page/js/user_page.js')
+			script(src='/guest_page/js/notifications.js')
 			// Google Analytics: change UA-XXXXX-X to be your site's ID.
 			script.
 				(function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=

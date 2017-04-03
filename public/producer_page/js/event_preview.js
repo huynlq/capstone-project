@@ -7,7 +7,7 @@ $(document).ready(function() {
   populateProducer();
   populateTimeline();
   $('[data-toggle="tooltip"]').tooltip(); 
-  $('#btnEditEvent').attr('href','/events/edit/' + readCookie('eventId'));
+  $('#linkEditEvent').attr('href','/events/edit/' + readCookie('eventId'));
 
 });
 

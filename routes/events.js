@@ -77,9 +77,9 @@ router.get('/creator_preview', function(req, res, next) {
 router.get('/numberofevent/:id', function(req, res, next) {
     var db = req.db;
     var collection = db.get('Events');    
-    collection.count({ 'userId' : req.params.id },{},function(e,count){
-        res.json(count);
-    }); 
+    collection.find({ 'userId': req.params.id }, {}, function(e,docs){
+        res.json(docs.length);
+    });
 });
 
 /* GET event edit page. */
@@ -706,6 +706,15 @@ router.get('/getparticipatedevents/:id', function(req, res, next) {
     var db = req.db;
     var collection = db.get('EventJoined');
     collection.find({'userId': req.params.id},{},function(e,docs){        
+        res.json(docs);
+    });
+});
+
+/* GET participant based on userId. */
+router.get('/getparticipantbyid/:id', function(req, res, next) {
+    var db = req.db;
+    var collection = db.get('EventJoined');
+    collection.find({'_id': req.params.id},{},function(e,docs){        
         res.json(docs);
     });
 });

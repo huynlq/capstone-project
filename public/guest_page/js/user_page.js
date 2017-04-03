@@ -10,7 +10,7 @@ $(document).ready(function() {
 
   populateEventJoined();
   populateEventProduced();
-  //populateEventSponsored();
+  populateEventSponsored();
 } );
 
 // Functions ===============================================
@@ -290,25 +290,40 @@ function populateEventProduced() {
 
 // Populate event sponsored
 function populateEventSponsored() {
-  var id = readCookie('user');
+  var id = window.location.href.split('/')[window.location.href.split('/').length - 1].split('#')[0];
+  console.log("1");
   $.getJSON('/users/id/' + id, function( userData ) {
+    console.log("2");
+    console.log(userData);
     if(userData.role == "Sponsor") {
       var counter = 0;
-      var dateCreated = "";
+      var dateCreated = "";    
+      $('#eventSponsored-panel').html('<div class="section-home our-sponsors fadeIn">' +
+                                      '<div class="container">' +
+                                        '<h2 class="title-style-1">' + $USERPAGE_HEADER_SPONSOREDEVENTS + ' <span class="title-under"></span></h2>' +
+                                        '<table id="eventSponsoredTable" class="table table-style-1 table-striped table-bordered dt-responsive nowrap datatable-responsive fadeIn"><thead>' +
+                                          '<tr>' +
+                                            '<th>#</th>' +
+                                            '<th>' + $LISTEVENT_TH_EVENT + '</th>' +
+                                            '<th>' + $LISTEVENT_TH_START + '</th>' +
+                                            '<th>' + $LISTEVENT_TH_LOCATION + '</th>' +
+                                          '</tr>' +
+                                        '</thead><tbody></tbody></table>' +
+                                      '</div>' +
+                                    '</div>');
       $.getJSON('/events/sponsoredevents/' + id, function( data ) {
-        var table = $('#eventSponsoredTable').DataTable();    
-        $.each(data, function(){      
+        var table = $('#eventSponsoredTable').DataTable({"columnDefs": [{ "width": "20px", "targets": 0 }]});    
+        $.each(data, function(){          
+          console.log(data);
           dateCreated = new Date(this.dateCreated);
           counter++;        
           table.row.add([
               counter,
-              this.eventName,
-              this.eventType,
+              '<a href="/events/' + this._id + '">' + this.eventName + '</a>',
               this.eventDate,
-              '<a data-toggle="tooltip" title="View" class="btn btn-info btn-xs" href="../events/' + this._id + '">'
-                + '<span class="glyphicon glyphicon-search"></span>'
-              + '</a>'
+              this.meetingAddress,
           ]).draw( false );
+          $('[data-toggle="tooltip"]').tooltip();            
         });
       });
     } else {

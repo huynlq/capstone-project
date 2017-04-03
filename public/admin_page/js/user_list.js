@@ -165,7 +165,7 @@ function createAdmin(){
         else {
 
             // If something goes wrong, alert the error message that our service returned
-            alert('Error: ' + response.msg);
+            showAlert('danger', $LAYOUT_ERROR + response.msg);
 
         }
     });
@@ -442,7 +442,7 @@ function deleteUser(event) {
         if (response.msg === '') {
         }
         else {
-            alert('Error: ' + response.msg);
+            showAlert('danger', $LAYOUT_ERROR + response.msg);
         }
 
         // Update the table
@@ -479,15 +479,38 @@ function confirmBanUser() {
         url: '/users/updateuser/' + $('#txtUserBanId').val()
     }).done(function( response ) {
         // Check for a successful (blank) response
-        if (response.msg === '') {
-            populateTables();
-            $('#txtUserBanId').val("");
-            $('#txtUserBan').val("");
-            $('#txtReason').val("");
-            $('#ban-reason-form').dialog('close');
+        if (response.msg === '') {            
+
+            var newNotification = {
+                'userId': $('#txtUserBanId').val(),
+                'content': 'Tài khoản của bạn đã bị cấm vì lý do: ' + $('#txtReason').val(),
+                'markedRead': 'Unread',
+                'dateCreated': new Date()
+            }
+
+            // Use AJAX to post the object to our adduser service        
+            $.ajax({
+                type: 'POST',
+                data: newNotification,
+                url: '/notifications/addnotification',
+                dataType: 'JSON'
+            }).done(function( response ) {
+
+                // Check for successful (blank) response
+                if (response.msg == '') {
+                    populateTables();
+                    $('#txtUserBanId').val("");
+                    $('#txtUserBan').val("");
+                    $('#txtReason').val("");
+                    $('#ban-reason-form').dialog('close');                    
+                } else {
+                    // If something goes wrong, alert the error message that our service returned
+                    showAlert('danger', $LAYOUT_ERROR + response.msg);
+                }
+            });
         }
         else {
-            alert('Error: ' + response.msg);
+            showAlert('danger', $LAYOUT_ERROR + response.msg);
         }
     });
 }
@@ -495,7 +518,7 @@ function confirmBanUser() {
 // Unban User
 function unbanUser(event) {
     event.preventDefault();
-
+    var userId = $(this).attr('rel');
     var user = {
         'markBanned': '0',
         'bannedReason': '',
@@ -505,14 +528,14 @@ function unbanUser(event) {
     $.ajax({
         type: 'PUT',
         data: user,
-        url: '/users/updateuser/' + $(this).attr('rel')
+        url: '/users/updateuser/' + userId
     }).done(function( response ) {
         // Check for a successful (blank) response
         if (response.msg === '') {
             populateTables();
             var newNotification = {
-                'userId': $(this).attr('rel'),
-                'content': 'Your ban have been lifted.',
+                'userId': userId,
+                'content': 'Bạn đã được bỏ cấm.',
                 'markedRead': 'Unread',
                 'dateCreated': new Date()
             }
@@ -529,7 +552,7 @@ function unbanUser(event) {
                 if (response.msg !== '') {
 
                     // If something goes wrong, alert the error message that our service returned
-                    alert('Error: ' + response.msg);
+                    showAlert('danger', $LAYOUT_ERROR + response.msg);
 
                 } else {
                     // Do nothing
@@ -537,7 +560,7 @@ function unbanUser(event) {
             });
         }
         else {
-            alert('Error: ' + response.msg);
+            showAlert('danger', $LAYOUT_ERROR + response.msg);
         }
     });
 }
@@ -560,34 +583,33 @@ function approveUser(event) {
     }).done(function( response ) {
         // Check for a successful (blank) response
         if (response.msg === '') {
-            populateTables();
+            populateTables();            
+            var newNotification = {
+                'userId': $(this).attr('rel'),
+                'content': 'Yêu cầu được làm "' + data[4] + '" của bạn đã được xét duyệt.',
+                'markedRead': 'Unread',
+                'dateCreated': new Date()
+            }
+
+            // Use AJAX to post the object to our adduser service        
+            $.ajax({
+                type: 'POST',
+                data: newNotification,
+                url: '/notifications/addnotification',
+                dataType: 'JSON'
+            }).done(function( response ) {
+
+                // Check for successful (blank) response
+                if (response.msg !== '') {
+
+                    // If something goes wrong, alert the error message that our service returned
+                    showAlert('danger', $LAYOUT_ERROR + response.msg);
+
+                }
+            });
         }
         else {
-            alert('Error: ' + response.msg);
-        }
-    });
-
-    var newNotification = {
-        'userId': $(this).attr('rel'),
-        'content': 'Your request to promote to ' + data[4] + ' has been approved.',
-        'markedRead': 'Unread',
-        'dateCreated': new Date()
-    }
-
-    // Use AJAX to post the object to our adduser service        
-    $.ajax({
-        type: 'POST',
-        data: newNotification,
-        url: '/notifications/addnotification',
-        dataType: 'JSON'
-    }).done(function( response ) {
-
-        // Check for successful (blank) response
-        if (response.msg !== '') {
-
-            // If something goes wrong, alert the error message that our service returned
-            alert('Error: ' + response.msg);
-
+            showAlert('danger', $LAYOUT_ERROR + response.msg);
         }
     });
 }
@@ -609,10 +631,10 @@ function disapproveUser(event) {
     }).done(function( response ) {
         // Check for a successful (blank) response
         if (response.msg === '') {
-            populateTables();            
+            populateTables();
         }
         else {
-            alert('Error: ' + response.msg);
+            showAlert('danger', $LAYOUT_ERROR + response.msg);
         }
     });     
 }
@@ -635,7 +657,7 @@ function confirmDisapproveUser() {
             populateTables();            
             var newNotification = {
                 'userId': $(this).attr('rel'),
-                'content': 'Your request to promote to ' + data[4] + ' has been disapproved for: ' + $('#txtDisapproveReason').val(),
+                'content': 'Yêu cầu được làm "' + data[4] + '" của bạn đã bị bác bỏ vì: ' + $('#txtDisapproveReason').val(),
                 'markedRead': 'Unread',
                 'dateCreated': new Date()
             }
@@ -652,7 +674,7 @@ function confirmDisapproveUser() {
                 if (response.msg !== '') {
 
                     // If something goes wrong, alert the error message that our service returned
-                    alert('Error: ' + response.msg);
+                    showAlert('danger', $LAYOUT_ERROR + response.msg);
 
                 } else {
                     $('#txtUserDisapproveId').val("");
@@ -663,7 +685,7 @@ function confirmDisapproveUser() {
             });
         }
         else {
-            alert('Error: ' + response.msg);
+            showAlert('danger', $LAYOUT_ERROR + response.msg);
         }
     });    
 }
@@ -686,7 +708,7 @@ function demoteUser() {
             populateTables();
             var newNotification = {
                 'userId': $(this).attr('rel'),
-                'content': 'You have been demoted to User.',
+                'content': 'Bạn đã bị cách chức thành Người dùng.',
                 'markedRead': 'Unread',
                 'dateCreated': new Date()
             }
@@ -703,7 +725,7 @@ function demoteUser() {
                 if (response.msg !== '') {
 
                     // If something goes wrong, alert the error message that our service returned
-                    alert('Error: ' + response.msg);
+                    showAlert('danger', $LAYOUT_ERROR + response.msg);
 
                 } else {
                     // Do nothing
@@ -711,7 +733,7 @@ function demoteUser() {
             });
         }
         else {
-            alert('Error: ' + response.msg);
+            showAlert('danger', $LAYOUT_ERROR + response.msg);
         }
     });   
 }

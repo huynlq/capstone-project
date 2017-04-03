@@ -18,14 +18,13 @@ $(function(){
 		$('#eventDay').html(date.getDate());
 		$('#eventMonthYear').html(date.toLocaleString(lang, { month: "long" }) + ', ' + date.getFullYear());
 		$('#eventTime').html(data.meetingTime);
-		$('#eventDescription').html(data.eventDescription.replace(/&lt;/g, '<').replace(/&gt;/g, '>'));
+		$('#eventDescription').html(data.eventDescription.replace(/&lt;/g, '<').replace(/&gt;/g, '>'));		
+		populateButton(data);
+		populateActivities(eventId);
+		populateProducer(eventId);	
+		populateTimeline(eventId);
 		populateSummary(eventId);
-	});
-
- 	populateButton(eventId);
-	populateActivities(eventId);
-	populateProducer(eventId);	
-	populateTimeline(eventId);
+	}); 	
 
 	//========================== DIALOG HIDING FUNCTIONS ===================
 
@@ -104,30 +103,40 @@ function populateLanguage() {
 	$('#form-phone').html($EVENTDETAILS_FORM_PHONE);
 }
 
-function populateButton(eventId) {	
-	var userId = readCookie("user");
+function populateButton(data) {	
+	var now = new Date();
+	var eventEndDate = new Date($('#event-date').html().split(" - ")[1]);
+	var deadline = new Date(data.eventDeadline);
+	eventEndDate.setDate(eventEndDate.getDate() + 1);
+	if(eventEndDate.getTime() < now.getTime()){
+		$('#eventParticipation').hide();
+	} else if(deadline < now.getTime()){
+		$('#btnParticipateParticipation').hide();
+	} else {
+		var userId = readCookie("user");
 
-	if(userId != "") {
-		$.getJSON( '/events/participants/' + eventId + '/' + userId, function( data ) {
-			if(data.msg == 'true') {			
-				$('#btnParticipate').attr('onclick', 'unjoin()');
-				$('#btnParticipate').removeClass('btn-info');
-				$('#btnParticipate').addClass('btn-danger');
-				$('#btnParticipate').attr('style','width: 50%');
-				$('#btnParticipate').html('<strong>' + $EVENTDETAILS_BUTTON_UNJOIN + '</strong>');					
-			} else {
-				$('#btnParticipate').attr('onclick', 'join()');
-				$('#btnParticipate').removeClass('btn-danger');
-				$('#btnParticipate').addClass('btn-info');
-				$('#btnParticipate').attr('style','width: 50%');
-				$('#btnParticipate').html('<strong>' + $EVENTDETAILS_BUTTON_JOIN + '</strong>');	
-			}
-		});
-	}	else {
-		$('#btnParticipate').attr('onclick', '');
-		$('#btnParticipate').attr('href', '/login');
-		$('#btnParticipate').html('<strong>' + $EVENTDETAILS_BUTTON_JOIN_REQUIRE + '</strong>');	
-	}
+		if(userId != "") {
+			$.getJSON( '/events/participants/' + data._id + '/' + userId, function( dataParticipate ) {
+				if(dataParticipate.msg == 'true') {			
+					$('#btnParticipate').attr('onclick', 'unjoin()');
+					$('#btnParticipate').removeClass('btn-info');
+					$('#btnParticipate').addClass('btn-danger');
+					$('#btnParticipate').attr('style','width: 50%');
+					$('#btnParticipate').html('<strong>' + $EVENTDETAILS_BUTTON_UNJOIN + '</strong>');					
+				} else {
+					$('#btnParticipate').attr('onclick', 'join()');
+					$('#btnParticipate').removeClass('btn-danger');
+					$('#btnParticipate').addClass('btn-info');
+					$('#btnParticipate').attr('style','width: 50%');
+					$('#btnParticipate').html('<strong>' + $EVENTDETAILS_BUTTON_JOIN + '</strong>');	
+				}
+			});
+		}	else {
+			$('#btnParticipate').attr('onclick', '');
+			$('#btnParticipate').attr('href', '/login');
+			$('#btnParticipate').html('<strong>' + $EVENTDETAILS_BUTTON_JOIN_REQUIRE + '</strong>');	
+		}
+	}	
 }
 
 function populateDonations() {
@@ -159,7 +168,7 @@ function addItem() {
 
 function removeItem(that) {
 	$(that).closest('.row').remove();
-1}
+}
 
 function donate() {
 	var userId = readCookie("user");
@@ -339,10 +348,86 @@ function confirmDonate() {
 						        // Check for successful (blank) response
 						        if(response.msg != '') {
 						            alert('Error: ' + response.msg);
+						        } else {
+						        	var newNotification = {
+				                        'userId': $('#txtProducerId').val(),
+				                        'content': $('#txtDonator').val() + ' muốn làm nhà tài trợ và đóng góp cho sự kiện "' + $('#eventName').html() + '" của bạn.',
+				                        'link': '/events/' + eventId,
+				                        'markedRead': 'Unread',
+				                        'dateCreated': new Date()
+				                    }
+
+				                    // Use AJAX to post the object to our adduser service        
+				                    $.ajax({
+				                        type: 'POST',
+				                        data: newNotification,
+				                        url: '/notifications/addnotification',
+				                        dataType: 'JSON'
+				                    }).done(function( response ) {
+
+				                        // Check for successful (blank) response
+				                        if (response.msg !== '') {
+
+				                            // If something goes wrong, alert the error message that our service returned
+				                            showAlert('danger', $LAYOUT_ERROR + response.msg);
+
+				                        }
+				                    });
 						        }
 						    });
+		    			} else {
+		    				var newNotification = {
+		                        'userId': $('#txtProducerId').val(),
+		                        'content': $('#txtDonator').val() + ' muốn đóng góp cho sự kiện "' + $('#eventName').html() + '" của bạn.',
+		                        'link': '/events/' + eventId,
+		                        'markedRead': 'Unread',
+		                        'dateCreated': new Date()
+		                    }
+
+		                    // Use AJAX to post the object to our adduser service        
+		                    $.ajax({
+		                        type: 'POST',
+		                        data: newNotification,
+		                        url: '/notifications/addnotification',
+		                        dataType: 'JSON'
+		                    }).done(function( response ) {
+
+		                        // Check for successful (blank) response
+		                        if (response.msg !== '') {
+
+		                            // If something goes wrong, alert the error message that our service returned
+		                            showAlert('danger', $LAYOUT_ERROR + response.msg);
+
+		                        }
+		                    });
 		    			}
 		    		});    		   	
+		    	} else {
+                    
+                    var newNotification = {
+                        'userId': $('#txtProducerId').val(),
+                        'content': $('#txtDonator').val() + ' muốn đóng góp cho sự kiện "' + $('#eventName').html() + '" của bạn.',
+                        'link': '/events/' + eventId,
+                        'markedRead': 'Unread',
+                        'dateCreated': new Date()
+                    }
+
+                    // Use AJAX to post the object to our adduser service        
+                    $.ajax({
+                        type: 'POST',
+                        data: newNotification,
+                        url: '/notifications/addnotification',
+                        dataType: 'JSON'
+                    }).done(function( response ) {
+
+                        // Check for successful (blank) response
+                        if (response.msg !== '') {
+
+                            // If something goes wrong, alert the error message that our service returned
+                            showAlert('danger', $LAYOUT_ERROR + response.msg);
+
+                        }
+                    });
 		    	}
 	    	});   
 		}
@@ -726,22 +811,9 @@ function populateProducer(eventId) {
 }
 
 function populateSummary(eventId) {
-	var now = new Date();
-	var eventEndDate = new Date($('#event-date').html().split(" - ")[1]);
-	eventEndDate.setDate(eventEndDate.getDate() + 1);
-	if(eventEndDate.getTime() < now.getTime()){
 		var content = "";
-			content =   '<div class="row">' +
-							'<div class="col-md-3"></div>' +
-							'<div class="col-md-6 col-xs-12">' +
-								'<a id="btnDonation" style="width: 100%" onclick="donate()" class="btn btn-info"><strong id="btnDonate">ĐÓNG GÓP</strong></a>' +
-							'</div>' +
-						'</div>' +
-						'<hr><div class="page-heading text-center">' +
-							'<div class="container zoomIn animated">' +
-						    	'<h1 style="text-transform: uppercase;" class="page-title">' + $EVENTDETAILS_HEADER_END + '<span class="title-under"></span></h1>' +
-						    	'<p class="page-description">' + $EVENTDETAILS_HEADER_END_DESC + '</p>' +
-						  	'</div>' +
+			content =   '<hr>' +
+						'<div id="event-status-header">' +							
 						'</div>' +
 						'<h2 class="title-style-2">' + $EVENTDETAILS_HEADER_SUMMARY + ' <span class="title-under"></span></h2>' +
 						'<div id="photoGallery" class="row col-md-12 col-sm-12 col-xs-12 fadeIn animated"></div>' +
@@ -814,6 +886,21 @@ function populateSummary(eventId) {
 						'<hr>';
 		console.log(content);
 		$('#eventSummary').html(content);
+
+		var now = new Date();
+		var eventEndDate = new Date($('#event-date').html().split(" - ")[1]);
+		eventEndDate.setDate(eventEndDate.getDate() + 1);
+		if(eventEndDate.getTime() < now.getTime()){
+			$('#event-status-header').html('<div class="page-heading text-center">' +
+												'<div class="container zoomIn animated">' +
+											    	'<h1 style="text-transform: uppercase;" class="page-title">' + $EVENTDETAILS_HEADER_END + '<span class="title-under"></span></h1>' +
+											    	'<p class="page-description">' + $EVENTDETAILS_HEADER_END_DESC + '</p>' +
+											  	'</div>' +
+											'</div>');
+			populateRating(eventId);
+		}
+	// 	$('#btnParticipate').hide();
+		// $('#btnDonation').attr('style','width:100%');
 
 		var tableParticipants = $('#tableParticipants').DataTable({"columnDefs": [{ "width": "10px", "targets": 0 }]});
 		tableParticipants.clear().draw();
@@ -916,9 +1003,8 @@ function populateSummary(eventId) {
 	        	});
 	        }
 	    });	
-	    populateGallery(eventId);
-		populateRating(eventId);
-	}	
+	    populateGallery(eventId);		
+	//}	
 }
 
 function populateGallery(eventId) {	
@@ -1145,6 +1231,31 @@ function join() {
 						            // Update the table
 						            populateButton(eventId);
 						            showAlert('success', $EVENTDETAILS_ALERT_JOIN_SUCCESS);
+
+						            var newNotification = {
+				                        'userId': $('#txtProducerId').val(),
+				                        'content': data.fullName + ' đã đăng kí tham gia sự kiện "' + $('#eventName').html() + '" của bạn.',
+				                        'link': '/events/' + eventId,
+				                        'markedRead': 'Unread',
+				                        'dateCreated': new Date()
+				                    }
+
+				                    // Use AJAX to post the object to our adduser service        
+				                    $.ajax({
+				                        type: 'POST',
+				                        data: newNotification,
+				                        url: '/notifications/addnotification',
+				                        dataType: 'JSON'
+				                    }).done(function( response ) {
+
+				                        // Check for successful (blank) response
+				                        if (response.msg !== '') {
+
+				                            // If something goes wrong, alert the error message that our service returned
+				                            showAlert('danger', $LAYOUT_ERROR + response.msg);
+
+				                        }
+				                    });
 						        }
 						        else {
 
@@ -1198,6 +1309,33 @@ function unjoin(){
             // Update the table
             populateButton(eventId);
             showAlert('success', $EVENTDETAILS_ALERT_UNJOIN_SUCCESS);
+
+            $.getJSON('/users/id/' + userId, function(data) {
+            	var newNotification = {
+	                'userId': $('#txtProducerId').val(),
+	                'content': data.fullName + ' đã hủy đăng kí tham gia sự kiện "' + $('#eventName').html() + '" của bạn.',
+	                'link': '/events/' + eventId,
+	                'markedRead': 'Unread',
+	                'dateCreated': new Date()
+	            }
+
+	            // Use AJAX to post the object to our adduser service        
+	            $.ajax({
+	                type: 'POST',
+	                data: newNotification,
+	                url: '/notifications/addnotification',
+	                dataType: 'JSON'
+	            }).done(function( response ) {
+
+	                // Check for successful (blank) response
+	                if (response.msg !== '') {
+
+	                    // If something goes wrong, alert the error message that our service returned
+	                    showAlert('danger', $LAYOUT_ERROR + response.msg);
+
+	                }
+	            });
+            });            
         }
         else {
 

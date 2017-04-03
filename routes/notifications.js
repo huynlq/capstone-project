@@ -1,12 +1,29 @@
 var express = require('express');
 var router = express.Router();
 
+/* GET event listing. */
+router.get('/', function(req, res, next) {
+  res.render('guest_page/notifications', { title: 'Notifications' });
+});
+
 /* GET notification by userId. */
 router.get('/:id', function(req, res, next) {
     var db = req.db;
     var collection = db.get('Notifications');
     collection.find({'userId': req.params.id},{sort: {dateCreated: -1}},function(e,docs){
         res.json(docs);
+    });
+});
+
+/* GET number of unread notification by userId. */
+router.get('/number/:id', function(req, res, next) {
+    var db = req.db;
+    var collection = db.get('Notifications');
+    collection.find({
+        'userId': req.params.id,
+        'markedRead': 'Unread'
+    },{sort: {dateCreated: -1}},function(e,docs){
+        res.json(docs.length);
     });
 });
 

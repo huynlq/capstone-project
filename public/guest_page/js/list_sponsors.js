@@ -21,10 +21,10 @@ function populateSponsors() {
         success: function( data ) {
 	    	$.each(data, function(){
 		    	var content = "<div class='col-md-3 col-sm-3 col-sm-6 col-xs-6'>" +
-						        '<div class="reasons-col fadeIn">' +
+						        '<div class="reasons-col fadeIn" style="height:300px; margin-bottom: 20px">' +
 						        	'<a href="/users/' + this._id + '">' +
 						          		'<img src="' + this.companyImage + '" alt=""/>' +						          								  		
-								  		'<div class="on-hover" style="height:100%">' +
+								  		'<div class="on-hover" style="height:300px">' +
 										  	'<center><h3><strong>' + this.companyName + '</strong></h3></center>' +
 										    '<center><p>' + this.companyEmail + '</p></center>' +
 										    '<p><i class="fa fa-phone" />&nbsp;&nbsp;&nbsp;' + this.companyPhoneNumber + '</p>' +

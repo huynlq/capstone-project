@@ -17,40 +17,57 @@ $(document).ready(function() {
         if(data.markBanned == 1) {
           showAlert('danger', $LAYOUT_BAN_MESSAGE + data.bannedReason);
         }
-        $('#navbar').html('<li>' + $LAYOUT_NAVBAR_WELCOME + data.username + '</li>' +
+        $.getJSON( '/notifications/number/' + loginSession, function( countNoti ) {
+          var noti = "";
+          if(countNoti > 0) {
+            noti = '<li><a href="/notifications"><i class="fa fa-envelope-o"></i> <span class="badge" style="background-color: red">' + countNoti + '</span></a></li>';
+          } else {
+            noti = '<li><a href="/notifications"><i class="fa fa-envelope-o"></i></a></li>';
+          }
+          $('#navbar').html('<li>' + $LAYOUT_NAVBAR_WELCOME + data.username + '</li>' +
+                            '<li>|</li>' +
+                            noti +
+                            '<li>|</li>' +
+                            '<li>' + languageContent + '</li>' +
+                            '<li>|</li>' +
+                            '<li><a style="cursor: pointer" onclick="signOut()">' + $LAYOUT_NAVBAR_SIGNOUT + '</a>' +
+                            '</li>');
+          $('#navbar-user').html($LAYOUT_NAVBAR_WELCOME + data.username);
+          $('#navbar-signlink').html("<a onclick='signOut()'>" + $LAYOUT_NAVBAR_SIGNOUT + "</a>");
+          if(data.role == "Producer") {
+            $('#navbar-below').html($('#navbar-below').html() + '<li><a>' + $LAYOUT_NAVBAR_PRODUCER + '  <i class="fa fa-chevron-circle-down" style="font-size: 10px" aria-hidden="true"></i></a>' +
+                                                                  '<ul class="submenu">' +
+                                                                    '<li class="submenu-item"><a href="/my">' + $LAYOUT_NAVBAR_USER_PAGE + '</a></li>' +
+                                                                    '<li class="submenu-item"><a href="/events">' + $LAYOUT_NAVBAR_EVENT_LIST + '</a></li>' +
+                                                                    '<li class="submenu-item"><a href="/events/creator_event">' + $LAYOUT_NAVBAR_EVENT_CREATE + '</a></li>' +
+                                                                  '</ul>' +
+                                                                '</li>');
+          } else if(data.role == "Admin") {
+            $('#navbar-below').html($('#navbar-below').html() + '<li><a>' + $LAYOUT_NAVBAR_ADMIN + '  <i class="fa fa-chevron-circle-down" style="font-size: 10px" aria-hidden="true"></i></a>' +
+                                                                  '<ul class="submenu">' +
+                                                                    '<li class="submenu-item"><a href="/my">' + $LAYOUT_NAVBAR_USER_PAGE + '</a></li>' +
+                                                                    '<li class="submenu-item"><a href="/users">' + $LAYOUT_NAVBAR_USER_LIST + '</a></li>' +
+                                                                    '<li class="submenu-item"><a href="/events">' + $LAYOUT_NAVBAR_EVENT_LIST + '</a></li>' +
+                                                                    '<li class="submenu-item"><a href="/posts">' + $LAYOUT_NAVBAR_POST_LIST + '</a></li>' +
+                                                                    '<li class="submenu-item"><a href="/posts/creator">' + $LAYOUT_NAVBAR_POST_CREATE + '</a></li>' +                                                                  
+                                                                  '</ul>' +
+                                                                '</li>');
+          } else {
+            $('#navbar-below').html($('#navbar-below').html() + '<li><a>' + $LAYOUT_NAVBAR_USER + '  <i class="fa fa-chevron-circle-down" style="font-size: 10px" aria-hidden="true"></i></a>' +
+                                                                  '<ul class="submenu">' +
+                                                                    '<li class="submenu-item"><a href="/my">' + $LAYOUT_NAVBAR_USER_PAGE + '</a></li>' +
+                                                                  '</ul>' +
+                                                                '</li>');
+          }
+        });        
+      });
+    } else {
+      $('#navbar').html('<li>' + $LAYOUT_NAVBAR_WELCOME + $LAYOUT_NAVBAR_GUEST + '</li>' +
                           '<li>|</li>' +
                           '<li>' + languageContent + '</li>' +
                           '<li>|</li>' +
-                          '<li><a style="cursor: pointer" onclick="signOut()">' + $LAYOUT_NAVBAR_SIGNOUT + '</a>' +
+                          '<li><a href="/login" style="cursor: pointer">' + $LAYOUT_NAVBAR_SIGNIN + '</a>' +
                           '</li>');
-        $('#navbar-user').html($LAYOUT_NAVBAR_WELCOME + data.username);
-        $('#navbar-signlink').html("<a onclick='signOut()'>" + $LAYOUT_NAVBAR_SIGNOUT + "</a>");
-        if(data.role == "Producer") {
-          $('#navbar-below').html($('#navbar-below').html() + '<li><a>' + $LAYOUT_NAVBAR_PRODUCER + '  <i class="fa fa-chevron-circle-down" style="font-size: 10px" aria-hidden="true"></i></a>' +
-                                                                '<ul class="submenu">' +
-                                                                  '<li class="submenu-item"><a href="/my">' + $LAYOUT_NAVBAR_USER_PAGE + '</a></li>' +
-                                                                  '<li class="submenu-item"><a href="/events">' + $LAYOUT_NAVBAR_EVENT_LIST + '</a></li>' +
-                                                                  '<li class="submenu-item"><a href="/events/creator_event">' + $LAYOUT_NAVBAR_EVENT_CREATE + '</a></li>' +
-                                                                '</ul>' +
-                                                              '</li>');
-        } else if(data.role == "Admin") {
-          $('#navbar-below').html($('#navbar-below').html() + '<li><a>' + $LAYOUT_NAVBAR_ADMIN + '  <i class="fa fa-chevron-circle-down" style="font-size: 10px" aria-hidden="true"></i></a>' +
-                                                                '<ul class="submenu">' +
-                                                                  '<li class="submenu-item"><a href="/my">' + $LAYOUT_NAVBAR_USER_PAGE + '</a></li>' +
-                                                                  '<li class="submenu-item"><a href="/users">' + $LAYOUT_NAVBAR_USER_LIST + '</a></li>' +
-                                                                  '<li class="submenu-item"><a href="/events">' + $LAYOUT_NAVBAR_EVENT_LIST + '</a></li>' +
-                                                                  '<li class="submenu-item"><a href="/posts">' + $LAYOUT_NAVBAR_POST_LIST + '</a></li>' +
-                                                                  '<li class="submenu-item"><a href="/posts/creator">' + $LAYOUT_NAVBAR_POST_CREATE + '</a></li>' +                                                                  
-                                                                '</ul>' +
-                                                              '</li>');
-        } else {
-          $('#navbar-below').html($('#navbar-below').html() + '<li><a>' + $LAYOUT_NAVBAR_USER + '  <i class="fa fa-chevron-circle-down" style="font-size: 10px" aria-hidden="true"></i></a>' +
-                                                                '<ul class="submenu">' +
-                                                                  '<li class="submenu-item"><a href="/my">' + $LAYOUT_NAVBAR_USER_PAGE + '</a></li>' +
-                                                                '</ul>' +
-                                                              '</li>');
-        }
-      });
     }
 
     populateFeed('1562432787368293','404393089920980|jCrsml4DJDN41CWNUZCQZYV0_LQ');

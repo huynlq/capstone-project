@@ -11,6 +11,7 @@ $(document).ready(function() {
 
     populateTables();    
     populateUnit();
+    $('#tab-pane li a').first().click();
 
     $('#tableDonation tbody').on('click', 'td a.linkremovedonation', deleteDonation);
 
@@ -141,8 +142,7 @@ function populateTables() {
         showGallery(data._id);
         showSponsors(data._id);
         // showActivities(data);
-        $('[data-toggle="tooltip"]').tooltip(); 
-        $('#tab-pane li a').first().click();
+        $('[data-toggle="tooltip"]').tooltip();         
     }); 
 }
 
@@ -203,18 +203,28 @@ function approveDonation(event) {
         // Check for a successful (blank) response
         if (response.msg === '') {
             var eventId = window.location.href.split('/')[window.location.href.split('/').length - 1].split('#')[0];
-            $.getJSON( '/events/details/' + eventId, function( data ) {        
-                showDonations(data);
-                showPendingDonations(data);
-            });
-
             $.getJSON( '/events/donations/id/' + donationId, function( data ) {
-                var eventId = data.eventId;
-                $.getJSON( '/events/details/' + eventId, function( dataEvent ) {
+                $.getJSON( '/events/details/' + eventId, function( dataEvent ) {        
+                    showDonations(dataEvent);
+                    showPendingDonations(dataEvent);
+
+                    var producerId = dataEvent.userId;
+                    var image = "";
+
+                    $.ajax({
+                        type: 'GET',
+                        url: '/users/id/' + producerId,
+                        async: false
+                    }).done(function( response ) {
+                        image = response.companyImage;
+                    })
+                    
                     eventName = dataEvent.eventName;
+
                     var newNotification = {
                         'userId': data.userId,
-                        'content': 'Your donation for ' + eventName + ' has been approved.',
+                        'content': 'Đóng góp của bạn cho sự kiện ' + eventName + 'đã được xác nhận',
+                        'link': '/events/' + eventId,
                         'markedRead': 'Unread',
                         'dateCreated': new Date()
                     }
@@ -231,12 +241,14 @@ function approveDonation(event) {
                         if (response.msg !== '') {
 
                             // If something goes wrong, alert the error message that our service returned
-                            alert('Error: ' + response.msg);
+                            showAlert('error', $LAYOUT_ERROR + response.msg);
 
                         }
                     });
-                });    
+                });   
             });
+
+               
         }
         else {
             alert('Error: ' + response.msg);
@@ -377,23 +389,72 @@ function addDonation() {
 
 // Delete donation
 function deleteDonation(event) {
-
-    event.preventDefault();
-
-    //If they did, do our delete
+    var donationId = $(this).attr('rel');
     $.ajax({
-        type: 'DELETE',
-        url: '/events/deletedonation/' + $(this).attr('rel')
-    }).done(function( response ) {
+        type: 'GET',
+        url: '/events/donations/id/' + donationId,
+        async: false
+    }).done(function( docs ) {
 
-        // Check for a successful (blank) response
-        if(response.msg == '') {
-            // Update the table
-            populateTables();
-        } else {
-            showAlert('danger', $LAYOUT_ERROR + response.msg);
-        }
-    });    
+        var userId = docs.userId;
+
+        //If they did, do our delete
+        $.ajax({
+            type: 'DELETE',
+            url: '/events/deletedonation/' + donationId
+        }).done(function( response ) {
+
+            // Check for a successful (blank) response
+            if(response.msg == '') {
+                // Update the table
+                populateTables();
+                var eventId = window.location.href.split('/')[window.location.href.split('/').length - 1].split('#')[0];
+                $.getJSON( '/events/details/' + eventId, function( dataEvent ) {        
+                    var producerId = dataEvent.userId;
+                    var image = "";
+
+                    $.ajax({
+                        type: 'GET',
+                        url: '/users/id/' + producerId,
+                        async: false
+                    }).done(function( response ) {
+                        image = response.companyImage;
+                    })
+                    
+                    eventName = dataEvent.eventName;
+
+                    var newNotification = {
+                        'userId': userId,
+                        'content': 'Đóng góp của bạn cho sự kiện "' + eventName + '" đã bị bác bỏ.',
+                        'link': '/events/' + eventId,
+                        'markedRead': 'Unread',
+                        'dateCreated': new Date()
+                    }
+
+                    // Use AJAX to post the object to our adduser service        
+                    $.ajax({
+                        type: 'POST',
+                        data: newNotification,
+                        url: '/notifications/addnotification',
+                        dataType: 'JSON'
+                    }).done(function( response ) {
+
+                        // Check for successful (blank) response
+                        if (response.msg !== '') {
+
+                            // If something goes wrong, alert the error message that our service returned
+                            showAlert('error', $LAYOUT_ERROR + response.msg);
+
+                        }
+                    });
+                });
+            } else {
+                showAlert('danger', $LAYOUT_ERROR + response.msg);
+            }
+        });       
+    }); 
+
+    event.preventDefault();    
 }
 
 // Populate Pending Donation Item
@@ -439,61 +500,6 @@ function showPendingDonations(data) {
     }); 
 }
 
-// Approve Pending Donation
-function approveDonation(event) {
-    event.preventDefault();
-
-    var donationId = $(this).attr('rel');
-
-    var donation = {
-        'status': 'Approved'
-    };
-    
-    $.ajax({
-        type: 'PUT',
-        data: donation,
-        url: '/events/updatedonation/' + $(this).attr('rel')
-    }).done(function( response ) {
-        // Check for a successful (blank) response
-        if (response.msg === '') {
-            populateTables();
-
-            $.getJSON( '/events/donations/id/' + donationId, function( data ) {
-                var eventId = data.eventId;
-                $.getJSON( '/events/details/' + eventId, function( dataEvent ) {
-                    eventName = dataEvent.eventName;
-                    var newNotification = {
-                        'userId': data.userId,
-                        'content': 'Your donation for ' + eventName + ' has been approved.',
-                        'markedRead': 'Unread',
-                        'dateCreated': new Date()
-                    }
-
-                    // Use AJAX to post the object to our adduser service        
-                    $.ajax({
-                        type: 'POST',
-                        data: newNotification,
-                        url: '/notifications/addnotification',
-                        dataType: 'JSON'
-                    }).done(function( response ) {
-
-                        // Check for successful (blank) response
-                        if (response.msg !== '') {
-
-                        // If something goes wrong, alert the error message that our service returned
-                        alert('Error: ' + response.msg);
-
-                        }
-                    });
-                });    
-            });
-        }
-        else {
-            alert('Error: ' + response.msg);
-        }
-    });
-}
-
 // Populate Participant Table
 function showParticipants(_id) {    
     var table = $('#tableParticipants').DataTable();
@@ -505,10 +511,10 @@ function showParticipants(_id) {
     $.getJSON( '/events/participants/' + _id, function( data ) {
         $.each(data, function(){
             var participantId = this._id;
-            var participantStatus = this.status;
-            counter++;
+            var participantStatus = this.status;            
             dateCreated = new Date(this.dateCreated);
             $.getJSON( '/users/id/' + this.userId, function( dataUser ) {
+                counter++;
                 if(participantStatus == 'Absent') {
                     actionPanel = '<a data-toggle="tooltip" title="' + $EVENTUPDATE_TIP_MARK_PRESENT + '" class="btn btn-info btn-xs linkpresent" rel="' + participantId + '" href="#">'
                                     + '<span class="glyphicon glyphicon-user"></span>'
@@ -519,8 +525,7 @@ function showParticipants(_id) {
                                 + '</a>';
                 }
                 table.row.add([
-                    counter +
-                    '<p class="participantId" style="display:none">' + participantId + '</p>',
+                    counter + '<p class="participantId" style="display:none">' + participantId + '</p>',
                     '<center>' + actionPanel + '</center>',
                     dataUser.username,
                     dataUser.fullName,
@@ -529,9 +534,9 @@ function showParticipants(_id) {
                     dateCreated.toLocaleDateString()
                 ]).draw(false);
                 $('[data-toggle="tooltip"]').tooltip(); 
+                $('#countParticipants').html(counter);
             });
         });        
-        $('#countParticipants').html(counter);
     });    
 }
 
@@ -546,8 +551,6 @@ function markAbsent(event) {
     dataId = dataId.substring(dataId.indexOf(">") + 1, dataId.lastIndexOf("<"));
     var username = data[2];
 
-    console.log(dataId);
-
     var participant = {
         'status': 'Absent'
     };
@@ -560,6 +563,54 @@ function markAbsent(event) {
         // Check for a successful (blank) response
         if (response.msg === '') {
             populateTables();
+            var eventId = window.location.href.split('/')[window.location.href.split('/').length - 1].split('#')[0];
+            
+            $.getJSON( '/events/details/' + eventId, function( dataEvent ) {        
+                var producerId = dataEvent.userId;
+                var image = "";
+
+                $.ajax({
+                    type: 'GET',
+                    url: '/users/id/' + producerId,
+                    async: false
+                }).done(function( response ) {
+                    image = response.companyImage;
+                })
+                
+                eventName = dataEvent.eventName;
+
+                console.log(dataId);
+                $.getJSON( '/events/getparticipantbyid/' + dataId, function( dataParticipant ) {      
+                    console.log(dataParticipant);
+                    var newNotification = {
+                        'userId': dataParticipant[0].userId,
+                        'content': 'Bạn đã bị đánh vắng cho sự kiện "' + eventName + '"',
+                        'link': '/events/' + eventId,
+                        'markedRead': 'Unread',
+                        'dateCreated': new Date()
+                    }
+
+                    console.log(newNotification);
+
+                    // Use AJAX to post the object to our adduser service        
+                    $.ajax({
+                        type: 'POST',
+                        data: newNotification,
+                        url: '/notifications/addnotification',
+                        dataType: 'JSON'
+                    }).done(function( response ) {
+
+                        // Check for successful (blank) response
+                        if (response.msg !== '') {
+
+                            // If something goes wrong, alert the error message that our service returned
+                            showAlert('error', $LAYOUT_ERROR + response.msg);
+
+                        }
+                    });
+                });                  
+            });   
+            
         }
         else {
             showAlert('danger', $LAYOUT_ERROR + response.msg);
@@ -687,7 +738,7 @@ function approveSponsor(event) {
     event.preventDefault();
     var sponsorId = $(this).attr('rel');
 
-    $.getJSON( '/events/sponsor/id/' + sponsorId, function( data ) {
+    $.getJSON( '/events/sponsor/id/' + sponsorId, function( data ) {        
         var userId = data.userId;
         var eventId = data.eventId;
         var eventName = "";
@@ -697,18 +748,29 @@ function approveSponsor(event) {
                 'status': 'Approved'
             }
 
+            var producerId = dataEvent.userId;
+            var image = "";
+
+            $.ajax({
+                type: 'GET',
+                url: '/users/id/' + producerId
+            }).done(function( response ) {
+                image = response.companyImage;
+            })
+
             $.ajax({
                 type: 'PUT',
                 data: status,
                 url: '/events/updatesponsor/' + sponsorId
             }).done(function( response ) {
                 // Check for a successful (blank) response
-                
-                    showSponsors();
+                    var eventId = window.location.href.split('/')[window.location.href.split('/').length - 1].split('#')[0];
+                    showSponsors(eventId);
                     
                     var newNotification = {
                         'userId': userId,
-                        'content': 'Your request to sponsor for ' + eventName + ' has been approved.',
+                        'content': 'Bạn đã được xác nhận làm Nhà tài trợ cho sự kiện "' + eventName + '"',
+                        'link': '/events/' + eventId,
                         'markedRead': 'Unread',
                         'dateCreated': new Date()
                     }

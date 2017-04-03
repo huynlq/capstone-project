@@ -38,6 +38,11 @@ if(localStorage.getItem('language') == 'vi' || localStorage.getItem('language') 
 	$LAYOUT_ERROR					= "Lỗi: ";
 	$LAYOUT_BAN_MESSAGE				= "Tài khoản của bạn đã bị cấm với lý do: ";
 
+	$LAYOUT_TIME_DAY				= "Ngày";
+	$LAYOUT_TIME_HOUR				= "Giờ";
+	$LAYOUT_TIME_MINUTE				= "Phút";
+	$LAYOUT_TIME_SECOND				= "Giây";
+
 	//============== HOMEPAGE ===========================================================
 
 	$HOMEPAGE_SLIDER_1				= "THAM GIA NGAY!";
@@ -309,6 +314,7 @@ if(localStorage.getItem('language') == 'vi' || localStorage.getItem('language') 
 	$USERPAGE_HEADER_COMPANYINFO	= "THÔNG TIN TỔ CHỨC";
 	$USERPAGE_HEADER_JOINEDEVENTS	= "SỰ KIỆN THAM GIA";
 	$USERPAGE_HEADER_HOSTEDEVENTS	= "SỰ KIỆN TỔ CHỨC";
+	$USERPAGE_HEADER_SPONSOREDEVENTS= "SỰ KIỆN TÀI TRỢ";
 
 	$USERPAGE_NO_EVENT				= "Hiện chưa có sự kiện nào.";
 
@@ -320,6 +326,7 @@ if(localStorage.getItem('language') == 'vi' || localStorage.getItem('language') 
 	$MYUSERPAGE_HEADER_COMPANYINFO	= "THÔNG TIN TỔ CHỨC";
 	$MYUSERPAGE_HEADER_JOINEDEVENTS	= "SỰ KIỆN THAM GIA";
 	$MYUSERPAGE_HEADER_HOSTEDEVENTS	= "SỰ KIỆN TỔ CHỨC";
+	$MYUSERPAGE_HEADER_SPONSOREDEVENTS= "SỰ KIỆN TÀI TRỢ";
 
 	$MYUSERPAGE_USERFORM_USERNAME	= "Tài khoản";
 	$MYUSERPAGE_USERFORM_FULLNAME	= "Tên đầy đủ";
@@ -482,6 +489,11 @@ if(localStorage.getItem('language') == 'vi' || localStorage.getItem('language') 
 
 	$LAYOUT_ERROR					= "Error: ";
 	$LAYOUT_BAN_MESSAGE				= "Your account has been banned for: ";
+
+	$LAYOUT_TIME_DAY				= "Days";
+	$LAYOUT_TIME_HOUR				= "Hours";
+	$LAYOUT_TIME_MINUTE				= "Minutes";
+	$LAYOUT_TIME_SECOND				= "Seconds";
 
 	//============== HOMEPAGE ===========================================================
 
@@ -754,6 +766,7 @@ if(localStorage.getItem('language') == 'vi' || localStorage.getItem('language') 
 	$USERPAGE_HEADER_COMPANYINFO	= "COMPANY INFO";
 	$USERPAGE_HEADER_JOINEDEVENTS	= "JOINED EVENTS";
 	$USERPAGE_HEADER_HOSTEDEVENTS	= "HOSTED EVENTS";
+	$USERPAGE_HEADER_SPONSOREDEVENTS= "SPONSORED EVENTS";
 
 	$USERPAGE_NO_EVENT				= "None at the moment.";
 
@@ -765,6 +778,7 @@ if(localStorage.getItem('language') == 'vi' || localStorage.getItem('language') 
 	$MYUSERPAGE_HEADER_COMPANYINFO	= "COMPANY INFO";
 	$MYUSERPAGE_HEADER_JOINEDEVENTS	= "JOINED EVENTS";
 	$MYUSERPAGE_HEADER_HOSTEDEVENTS	= "HOSTED EVENTS";
+	$MYUSERPAGE_HEADER_SPONSOREDEVENTS= "SPONSORED EVENTS";
 
 	$MYUSERPAGE_USERFORM_USERNAME	= "Username";
 	$MYUSERPAGE_USERFORM_FULLNAME	= "Full Name";

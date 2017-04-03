@@ -63,6 +63,7 @@ block content
 					h1#header.page-title(style="text-transform: uppercase;") #{docs.eventName}
 						span.title-under
 					p#header-desc.page-description
+					#eventName(style="display:none") #{docs.eventName}
 			.main-container
 				.container
 					.row
@@ -139,7 +140,7 @@ block content
 								#activityPane
 					hr
 					.row
-						#eventSummary.col-md-12.col-xs-12
+						.col-md-12.col-xs-12
 							#eventParticipation
 								.col-md-3
 								.col-md-6.col-xs-12
@@ -147,6 +148,8 @@ block content
 										strong#btnJoin THAM GIA NGAY
 									a#btnDonation.btn.btn-info(style="width: 50%" onclick='donate()')
 										strong#btnDonate ĐÓNG GÓP
+					.row
+						#eventSummary
 					.row
 						#eventProducerButtons.col-md-12.col-xs-12
 			#participate-form(title='Participant Information')
