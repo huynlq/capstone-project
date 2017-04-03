@@ -277,11 +277,15 @@ function showSponsors(_id) {
         var actionPanel = "";
         var status = "";
         if(dataSponsor != null) {
-            $.each(dataSponsor, function(){
-                sponsorData = this;
-                if(this.status == "Pending") {
+            for(var i = 0; i < dataSponsor.length; i++) {
+                sponsorData = dataSponsor[i];
+                if(dataSponsor[i].status == "Pending") {
                     pendingCounter++;
-                    $.getJSON( '/users/id/' + this.userId, function( dataUser ) {
+                    $.ajax({
+                        type: 'GET',
+                        url: '/users/id/' + dataSponsor[i].userId,
+                        async: false
+                    }).done(function( dataUser ) {
                         tablePendingSponsor.row.add([
                             pendingCounter,
                             '<center>'
@@ -301,7 +305,11 @@ function showSponsors(_id) {
                     });
                 } else {
                     counter++;
-                    $.getJSON( '/users/id/' + this.userId, function( dataUser ) {
+                    $.ajax({
+                        type: 'GET',
+                        url: '/users/id/' + dataSponsor[i].userId,
+                        async: false
+                    }).done(function( dataUser ) {
                         tableSponsor.row.add([
                             counter,
                             '<center>'
@@ -316,7 +324,7 @@ function showSponsors(_id) {
                         $('[data-toggle="tooltip"]').tooltip(); 
                     });
                 }
-            });
+            }
         }
 
         $('#countSponsors').html(counter + ' - ' + pendingCounter);
@@ -738,11 +746,13 @@ function approveSponsor(event) {
     event.preventDefault();
     var sponsorId = $(this).attr('rel');
 
-    $.getJSON( '/events/sponsor/id/' + sponsorId, function( data ) {        
+    $.getJSON( '/events/sponsor/id/' + sponsorId, function( data ) {   
+        console.log(data);
         var userId = data.userId;
         var eventId = data.eventId;
         var eventName = "";
         $.getJSON( '/events/details/' + eventId, function( dataEvent ) {
+            console.log(dataEvent);
             eventName = dataEvent.eventName;
             var status = {
                 'status': 'Approved'
@@ -757,6 +767,8 @@ function approveSponsor(event) {
             }).done(function( response ) {
                 image = response.companyImage;
             })
+
+            console.log(status);
 
             $.ajax({
                 type: 'PUT',

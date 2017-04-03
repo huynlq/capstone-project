@@ -352,7 +352,7 @@ function confirmDonate() {
 						        	var newNotification = {
 				                        'userId': $('#txtProducerId').val(),
 				                        'content': $('#txtDonator').val() + ' muốn làm nhà tài trợ và đóng góp cho sự kiện "' + $('#eventName').html() + '" của bạn.',
-				                        'link': '/events/' + eventId,
+				                        'link': '/events/update/' + eventId,
 				                        'markedRead': 'Unread',
 				                        'dateCreated': new Date()
 				                    }
@@ -379,7 +379,7 @@ function confirmDonate() {
 		    				var newNotification = {
 		                        'userId': $('#txtProducerId').val(),
 		                        'content': $('#txtDonator').val() + ' muốn đóng góp cho sự kiện "' + $('#eventName').html() + '" của bạn.',
-		                        'link': '/events/' + eventId,
+		                        'link': '/events/update/' + eventId,
 		                        'markedRead': 'Unread',
 		                        'dateCreated': new Date()
 		                    }
@@ -407,7 +407,7 @@ function confirmDonate() {
                     var newNotification = {
                         'userId': $('#txtProducerId').val(),
                         'content': $('#txtDonator').val() + ' muốn đóng góp cho sự kiện "' + $('#eventName').html() + '" của bạn.',
-                        'link': '/events/' + eventId,
+                        'link': '/events/update/' + eventId,
                         'markedRead': 'Unread',
                         'dateCreated': new Date()
                     }
@@ -1235,7 +1235,7 @@ function join() {
 						            var newNotification = {
 				                        'userId': $('#txtProducerId').val(),
 				                        'content': data.fullName + ' đã đăng kí tham gia sự kiện "' + $('#eventName').html() + '" của bạn.',
-				                        'link': '/events/' + eventId,
+				                        'link': '/events/update/' + eventId,
 				                        'markedRead': 'Unread',
 				                        'dateCreated': new Date()
 				                    }
