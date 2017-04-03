@@ -147,6 +147,12 @@ if(localStorage.getItem('language') == 'vi' || localStorage.getItem('language') 
 	$EVENTDETAILS_ACTIVITY_NOTE		= "Ghi chú";
 	$EVENTDETAILS_ACTIVITY_COST		= "Chi phí";
 
+	$EVENTDETAILS_APPROVED_DONATION = "Đã xác nhận";
+	$EVENTDETAILS_PENDING_DONATION  = "Chờ xác nhận";
+
+	$EVENTDETAILS_DONATION_CASH		= "Tiền mặt";
+	$EVENTDETAILS_DONATION_OTHER	= "Nhu yếu phẩm";
+	$EVENTDETAILS_DONATION_ADD		= "Thêm";
 	$EVENTDETAILS_DONATION_NAME		= "Người góp";
 	$EVENTDETAILS_DONATION_ITEM		= "Đồ góp";
 	$EVENTDETAILS_DONATION_QUANTITY	= "Số lượng";
@@ -162,6 +168,7 @@ if(localStorage.getItem('language') == 'vi' || localStorage.getItem('language') 
 	$EVENTDETAILS_ALERT_DUPLICATE	= "Bạn đã tham gia sự kiện khác trùng với ngày diễn ra của sự kiện này."
 	$EVENTDETAILS_ALERT_JOIN_SUCCESS = "Tham gia sự kiện thành công."
 	$EVENTDETAILS_ALERT_UNJOIN_SUCCESS = "Hủy tham gia sự kiện thành công.";
+	$EVENTDETAILS_ALERT_DONATE_SUCCESS = "Cám ơn bạn đã đóng góp, ban tổ chức sẽ xem xét và liên lạc với bạn.";
 
 	//============== EVENT CREATOR =====================================================
 
@@ -214,6 +221,12 @@ if(localStorage.getItem('language') == 'vi' || localStorage.getItem('language') 
 	$EVENTUPDATE_TH_EMAIL				= "Email";
 	$EVENTUPDATE_TH_PHONE				= "Điện thoại";
 	$EVENTUPDATE_TH_JOIN				= "Ngày tham gia";
+	$EVENTUPDATE_TH_DONATION			= "Đóng góp";
+
+	$EVENTUPDATE_DONATEFORM_UNIT		= "Đơn vị";
+	$EVENTUPDATE_DONATEFORM_TYPE		= "Thể loại";
+	$EVENTUPDATE_DONATEFORM_TYPE_CASH	= "Tiền mặt";
+	$EVENTUPDATE_DONATEFORM_TYPE_ITEM	= "Nhu yếu phẩm";
 
 	$EVENTUPDATE_DONATEFORM_ADD			= "Thêm >>";
 
@@ -579,6 +592,12 @@ if(localStorage.getItem('language') == 'vi' || localStorage.getItem('language') 
 	$EVENTDETAILS_ACTIVITY_NOTE		= "Note";
 	$EVENTDETAILS_ACTIVITY_COST		= "Cost";
 
+	$EVENTDETAILS_APPROVED_DONATION = "Approved";
+	$EVENTDETAILS_PENDING_DONATION  = "Pending";
+
+	$EVENTDETAILS_DONATION_CASH		= "Cash";
+	$EVENTDETAILS_DONATION_OTHER	= "Items";
+	$EVENTDETAILS_DONATION_ADD		= "Add";
 	$EVENTDETAILS_DONATION_NAME		= "Donator";
 	$EVENTDETAILS_DONATION_ITEM		= "Item";
 	$EVENTDETAILS_DONATION_QUANTITY	= "Quantity";
@@ -594,6 +613,7 @@ if(localStorage.getItem('language') == 'vi' || localStorage.getItem('language') 
 	$EVENTDETAILS_ALERT_DUPLICATE	= "You have participated in an event with the same date.";
 	$EVENTDETAILS_ALERT_JOIN_SUCCESS = "Successfully join event.";
 	$EVENTDETAILS_ALERT_UNJOIN_SUCCESS = "Successfully cancel participate this event.";
+	$EVENTDETAILS_ALERT_DONATE_SUCCESS = "Thank you! Your donations will be reviewed by the producer.";
 
 	//============== EVENT CREATOR =====================================================
 
@@ -646,6 +666,12 @@ if(localStorage.getItem('language') == 'vi' || localStorage.getItem('language') 
 	$EVENTUPDATE_TH_EMAIL				= "Email";
 	$EVENTUPDATE_TH_PHONE				= "Phone";
 	$EVENTUPDATE_TH_JOIN				= "Join Date";
+	$EVENTUPDATE_TH_DONATION			= "Donation";
+
+	$EVENTUPDATE_DONATEFORM_UNIT		= "Unit";
+	$EVENTUPDATE_DONATEFORM_TYPE		= "Type";
+	$EVENTUPDATE_DONATEFORM_TYPE_CASH	= "Cash";
+	$EVENTUPDATE_DONATEFORM_TYPE_ITEM	= "Item";
 
 	$EVENTUPDATE_DONATEFORM_ADD			= "Add >>";
 

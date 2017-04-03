@@ -368,8 +368,6 @@ function showSponsors(data) {
             table.row.add([
                 counter,
                 '<center>'
-                    + '<a data-toggle="tooltip" title="' + $LISTUSER_TIP_DETAILS + '" class="btn btn-info btn-xs" href="/users/' + this._id + '">'
-                        + '<span class="glyphicon glyphicon-search"></span>'
                     + '<a data-toggle="tooltip" title="' + $LISTUSER_TIP_DEMOTE + '" class="btn btn-warning btn-xs linkdemoteuser" rel="' + this._id + '">'
                         + '<span class="glyphicon glyphicon-arrow-down"></span>'
                     + '</a>'
@@ -377,11 +375,12 @@ function showSponsors(data) {
                         + '<span class="glyphicon glyphicon-remove"></span>'
                     + '</a>'
                 + '</center>',
-                this.username,
+                '<a href="/users/' + this._id + '">' + this.username + '</a>',
                 this.fullName,
-                this.email,
-                this.phoneNumber,
-                this.address,
+                this.companyName,
+                this.companyEmail,
+                this.companyPhoneNumber,
+                this.companyAddress,
                 dateCreated.getDate() + '/' + (dateCreated.getMonth() + 1) + '/' +  dateCreated.getFullYear()
             ]).draw( false );
         }       

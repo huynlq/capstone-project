@@ -10,12 +10,12 @@ $(document).ready(function() {
   
 
   initiateSchedule();
+  validateMap();
   $(":input").inputmask();
 
   var diffDays = document.getElementById("txtNumberOfDates").value;
   var table;
   for (var i = 1; i <= diffDays; i++) {
-      console.log(i);
       table = $('#table-day-' + i).DataTable({
         "responsive": true,
         "aaSorting": [[0,'asc']],
@@ -24,7 +24,6 @@ $(document).ready(function() {
        ]
       });
 
-      console.log("SUCCESS");
       $('#table-day-' + i + ' .edit-button').click(function () {
           var data = $('#table-day-' + i).DataTable().row( $(this).parents('tr') ).data();
           console.log("data");
@@ -65,7 +64,22 @@ function initialize() {
         map.panTo(panPoint);
     });
 }
-google.maps.event.addDomListener(window, 'load', initialize);
+
+function validateMap() {
+  $.getJSON( '/events/activities/' + $('#txtEventId').val(), function( activityData ) {
+    var mapFlag = true;
+    for(var i = 0; i < activityData.length; i++) {
+      if(activityData[i].latitude == undefined || activityData[i].latitude == 'undefined' || activityData[i].latitude == "") {
+        mapFlag = false;
+      }   
+    }
+    if(mapFlag == true) {
+      google.maps.event.addDomListener(window, 'load', initialize);
+    } else {
+      turnOffMap();
+    }
+  });
+}
 
 function populateLanguage() {
   $('#header').html($EVENTCREATOR_HEADER);

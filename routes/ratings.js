@@ -43,14 +43,11 @@ router.get('/general/:id', function(req, res, next) {
                 rating += parseInt(docs[i].ratingPoint);
                 console.log(docs[i].ratingPoint);
             }
-            collection.count({ 'subjectId' : req.params.id },{},function(e,count){
-                console.log(count);
-                rating = {
-                    'ratingPoint': parseFloat(rating / parseInt(count)),
-                    'count': count
-                };
-                res.json(rating);
-            });
+            rating = {
+                'ratingPoint': parseFloat(rating / parseInt(docs.length)),
+                'count': docs.length
+            };
+            res.json(rating);
         } else {
             rating = {
                 'ratingPoint': 0,
