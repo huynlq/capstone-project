@@ -372,6 +372,10 @@ if(localStorage.getItem('language') == 'vi' || localStorage.getItem('language') 
 	$LISTEVENT_TAB_PASTEVENT		= "Sự kiện đã kết thúc";
 	$LISTEVENT_TAB_CANCELLEDEVENT	= "Sự kiện bị hủy";
 
+	$LISTEVENT_STATUS_PUBLISHED		= "Công khai";
+	$LISTEVENT_STATUS_DRAFT			= "Đang hoàn thiện";
+	$LISTEVENT_STATUS_CANCELLED		= "Đã hủy";
+
 	$LISTEVENT_TH_ACTION			= "Hành động";
 	$LISTEVENT_TH_EVENT				= "Sự kiện";
 	$LISTEVENT_TH_STATUS			= "Tình trạng";
@@ -385,6 +389,8 @@ if(localStorage.getItem('language') == 'vi' || localStorage.getItem('language') 
 	$LISTEVENT_TIP_EDIT				= "Chỉnh sửa";
 	$LISTEVENT_TIP_UPDATE			= "Quản lý";
 	$LISTEVENT_TIP_CANCEL			= "Hủy";
+	$LISTEVENT_TIP_DELETE			= "Xóa";
+	$LISTEVENT_TIP_UNBAN			= "Mở lại";
 
 	//============== LIST POST (ADMIN) ===============================================
 
@@ -450,6 +456,14 @@ if(localStorage.getItem('language') == 'vi' || localStorage.getItem('language') 
 	$LISTUSER_BANFORM_USER			= "Tên người dùng";
 	$LISTUSER_BANFORM_ID			= "ID";
 	$LISTUSER_BANFORM_REASON		= "Lý do cấm";
+
+	$LISTUSER_DISAPPROVEFORM_TITLE	= "Hủy xét duyệt người dùng";
+	$LISTUSER_DISAPPROVEFORM_USER	= "Tên người dùng";
+	$LISTUSER_DISAPPROVEFORM_REASON	= "Lý do hủy";
+
+	$LISTUSER_DEMOTEFORM_TITLE		= "Cách chức người dùng";
+	$LISTUSER_DEMOTEFORM_USER		= "Tên người dùng";
+	$LISTUSER_DEMOTEFORM_REASON		= "Lý do cách chức";
 } else {
 	//============== LAYOUT =============================================================
 
@@ -824,6 +838,10 @@ if(localStorage.getItem('language') == 'vi' || localStorage.getItem('language') 
 	$LISTEVENT_TAB_PASTEVENT		= "Past Events";
 	$LISTEVENT_TAB_CANCELLEDEVENT	= "Cancelled Events";
 
+	$LISTEVENT_STATUS_PUBLISHED		= "Published";
+	$LISTEVENT_STATUS_DRAFT			= "Draft";
+	$LISTEVENT_STATUS_CANCELLED		= "Cancelled";
+
 	$LISTEVENT_TH_ACTION			= "Action";
 	$LISTEVENT_TH_EVENT				= "Event";
 	$LISTEVENT_TH_STATUS			= "Status";
@@ -837,6 +855,8 @@ if(localStorage.getItem('language') == 'vi' || localStorage.getItem('language') 
 	$LISTEVENT_TIP_EDIT				= "Edit";
 	$LISTEVENT_TIP_UPDATE			= "Update";
 	$LISTEVENT_TIP_CANCEL			= "Cancel";
+	$LISTEVENT_TIP_DELETE			= "Delete";
+	$LISTEVENT_TIP_UNBAN			= "Reopen";
 
 	//============== LIST POST (ADMIN) ===============================================
 
@@ -902,5 +922,13 @@ if(localStorage.getItem('language') == 'vi' || localStorage.getItem('language') 
 	$LISTUSER_BANFORM_USER			= "Username";
 	$LISTUSER_BANFORM_ID			= "ID";
 	$LISTUSER_BANFORM_REASON		= "Reason";
+
+	$LISTUSER_DISAPPROVEFORM_TITLE	= "Disapprove this user";
+	$LISTUSER_DISAPPROVEFORM_USER	= "Username";
+	$LISTUSER_DISAPPROVEFORM_REASON	= "Reason";
+
+	$LISTUSER_DEMOTEFORM_TITLE		= "Disapprove this user";
+	$LISTUSER_DEMOTEFORM_USER		= "Username";
+	$LISTUSER_DEMOTEFORM_REASON		= "Reason";
 }
 

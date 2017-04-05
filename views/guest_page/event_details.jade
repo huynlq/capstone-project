@@ -129,7 +129,8 @@ block content
 							h2.title-style-2
 								span#header-eventDescription Chi tiết
 								span.title-under
-							p#eventDescription					
+							p#eventDescription
+					hr
 					.row
 						.col-md-12.col-xs-12.fadeIn.animate-onscroll
 							h2.title-style-2
@@ -138,6 +139,14 @@ block content
 							div(role='tabpanel')
 								#mapPane
 								#activityPane
+					hr
+					.row
+						.col-md-12.col-xs-12.fadeIn.animate-onscroll
+							h2.title-style-2
+								span#header-donation Đóng góp 
+								span.title-under
+						#donationPane.col-md-8.col-xs-12.fadeIn.animate-onscroll
+						#requiredDonationPane.col-md-4.col-xs-12.fadeIn.animate-onscroll
 					hr
 					.row
 						.col-md-12.col-xs-12
@@ -152,7 +161,7 @@ block content
 						#eventSummary
 					.row
 						#eventProducerButtons.col-md-12.col-xs-12
-			#participate-form(title='Participant Information')
+			#participate-form(title='Participant Information', style="display: none")
 				p#form-require.validateTips All form fields are required.
 				form
 					fieldset
@@ -174,70 +183,32 @@ block content
 								span.required *
 							.col-md-6.col-sm-6.col-xs-12
 								input#txtParticipantPhone.form-control.col-md-7.col-xs-12(type='text', required='required')
-			#donate-form(title='Donate For Event')
+			#donate-form(title='Donate For Event', style="display: none")
 				p.validateTips All form fields are required.
 				form
 					fieldset
 						.col-md-6.col-sm-6.col-xs-12
 							.row.form-group
-								label.control-label.col-md-2.col-sm-2.col-xs-12
+								label.control-label.col-md-3.col-sm-3.col-xs-12
 									| Name 
 									span.required *
-								.col-md-9.col-sm-9.col-xs-12
+								.col-md-8.col-sm-8.col-xs-12
 									input#txtDonator.form-control.col-md-7.col-xs-12(type='text', required='required')
 									span#txtEditActivityId(style='display:none')
 									input#txtDonatorId(type='hidden')
 							.row.form-group
-								label.control-label.col-md-2.col-sm-2.col-xs-12
+								label.control-label.col-md-3.col-sm-3.col-xs-12
 									| Email 
 									span.required *
-								.col-md-9.col-sm-9.col-xs-12
+								.col-md-8.col-sm-8.col-xs-12
 									input#txtDonatorEmail.form-control.col-md-7.col-xs-12(type='text', required='required')
 							.row.form-group
-								label.control-label.col-md-2.col-sm-2.col-xs-12
+								label.control-label.col-md-3.col-sm-3.col-xs-12
 									| Phone 
 									span.required *
-								.col-md-9.col-sm-9.col-xs-12
+								.col-md-8.col-sm-8.col-xs-12
 									input#txtDonatorPhone.form-control.col-md-7.col-xs-12(type='text', required='required')
-						.col-md-6.col-sm-6.col-xs-12#donationFormItems
-							.checkbox
-								label
-									input#cashCheck(type='checkbox', value='', onChange='populateDonations()')
-									| Tiền
-							#cashDonation(style='display:none')
-								.form-inline
-									.form-group
-										input#txtCash.form-control(type='number', placeholder='Số tiền')
-									.form-group
-										select#txtCashUnit.form-control
-											option VND
-											option USD
-							.checkbox
-								label
-									input#itemCheck(type='checkbox', value='', onChange='populateDonations()')
-									| Nhu yếu phẩm
-							#itemDonation(style='display:none')
-								#itemDonationPane
-									.row.hidden-xs
-										.col-md-5
-											label Đồ đóng góp
-										.col-md-3
-											label Số lượng
-										.col-md-3
-											label Đơn vị
-									.row
-										.col-md-5.col-xs-12
-											input.txtItem.form-control(type='text', placeholder='Đồ đóng góp')
-										.col-md-3.col-xs-6
-											input.txtItemNumber.form-control(type='number', placeholder='Số lượng')
-										.col-md-3.col-xs-4
-											input.txtItemUnit.form-control(type='text', placeholder='Đơn vị')
-										.col-md-1.col-xs-2
-											a(style="color: red; cursor: pointer", onclick="removeItem(this)")
-												i.fa.fa-times(aria-hidden="true")
-								br
-								.row
-									a.btn.btn-info.pull-right(style="color:white", onclick="addItem()") Thêm đồ
+						.col-md-6.col-sm-6.col-xs-12#donationFormItems							
 						#numOfDonations(style="display:none")
 			// jQuery
 			script(src='//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js')

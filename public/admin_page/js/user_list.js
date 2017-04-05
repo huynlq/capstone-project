@@ -94,6 +94,37 @@ $(document).ready(function() {
             }
         }                
     }); 
+
+    var dialog3 = $( "#demote-reason-form" ).dialog({
+        autoOpen: false,
+        show: {
+            effect: "fade",
+            duration: 200
+          },
+          hide: {
+            effect: "fade",
+            duration: 200
+          },
+        modal: true,
+        width: 400,
+        height: 250,
+        resizable: false,
+        buttons: {
+            "OK" : {
+            text: "OK",
+            id: "confirmDemoteUser",
+                click: function(){
+                    confirmDemoteUser();
+                }
+            },
+            "Cancel" : {
+                text: "Cancel",
+                click: function() {
+                    dialog3.dialog( "close" );
+                }
+            }
+        }                
+    }); 
 });
 
 // Functions ===============================================
@@ -130,6 +161,16 @@ function populateLanguage(){
     $('#banForm_id').html($LISTUSER_BANFORM_ID);
     $('#banForm_reason').html($LISTUSER_BANFORM_REASON);
     $('#banForm_require').html($LISTUSER_BANFORM_REQUIRE);
+
+    $('#disapprove-reason-form').attr('title', $LISTUSER_DISAPPROVEFORM_TITLE);
+    $('#disapproveForm_username').html($LISTUSER_DISAPPROVEFORM_USER);
+    $('#disapproveForm_reason').html($LISTUSER_DISAPPROVEFORM_REASON);
+    $('#disapproveForm_require').html($LISTUSER_BANFORM_REQUIRE);
+
+    $('#demote-reason-form').attr('title', $LISTUSER_DEMOTEFORM_TITLE);
+    $('#demoteForm_username').html($LISTUSER_DEMOTEFORM_USER);
+    $('#demoteForm_reason').html($LISTUSER_DEMOTEFORM_REASON);
+    $('#demoteForm_require').html($LISTUSER_BANFORM_REQUIRE);
 }
 
 // Create new admin
@@ -210,9 +251,6 @@ function showPendingUsers(data) {
             table.row.add([
                 counter,
                 '<center>'
-                    + '<a data-toggle="tooltip" title="' + $LISTUSER_TIP_DETAILS + '" class="btn btn-info btn-xs" href="users/' + this._id + '">'
-                        + '<span class="glyphicon glyphicon-search"></span>'
-                    + '</a>'
                     + '<a data-toggle="tooltip" title="' + $LISTUSER_TIP_APPROVE + '" class="btn btn-success btn-xs linkapproveuser" rel="' + this._id + '" href="#">'
                         + '<span class="glyphicon glyphicon-ok"></span>'
                     + '</a>'
@@ -220,7 +258,7 @@ function showPendingUsers(data) {
                         + '<span class="glyphicon glyphicon-remove"></span>'
                     + '</a>'
                 + '</center>',
-                this.username,                
+                '<a href="/users/' + this._id + '">' + this.username + '</a>',
                 this.fullName,
                 this.role.split("Pending")[0],
                 this.companyName,
@@ -567,6 +605,7 @@ function unbanUser(event) {
 
 // Approve User
 function approveUser(event) {
+    var userId = $(this).attr('rel');
     event.preventDefault();
 
     var data = $('#tablePendingUsers').DataTable().row( $(this).parents('tr') ).data();
@@ -579,13 +618,13 @@ function approveUser(event) {
     $.ajax({
         type: 'PUT',
         data: user,
-        url: '/users/updateuser/' + $(this).attr('rel')
+        url: '/users/updateuser/' + userId
     }).done(function( response ) {
         // Check for a successful (blank) response
         if (response.msg === '') {
             populateTables();            
             var newNotification = {
-                'userId': $(this).attr('rel'),
+                'userId': userId,
                 'content': 'Yêu cầu được làm "' + data[4] + '" của bạn đã được xét duyệt.',
                 'markedRead': 'Unread',
                 'dateCreated': new Date()
@@ -618,25 +657,13 @@ function approveUser(event) {
 function disapproveUser(event) {
     event.preventDefault();
 
-    var user = {
-        'role': 'User',
-        'dateModified': Date()
-    };
+    var data = $('#tablePendingUsers').DataTable().row( $(this).parents('tr') ).data();
 
-    // If they did, do our delete
-    $.ajax({
-        type: 'PUT',
-        data: user,
-        url: '/users/updateuser/' + $(this).attr('rel')
-    }).done(function( response ) {
-        // Check for a successful (blank) response
-        if (response.msg === '') {
-            populateTables();
-        }
-        else {
-            showAlert('danger', $LAYOUT_ERROR + response.msg);
-        }
-    });     
+    $('#txtUserDisapproveId').val($(this).attr('rel'));
+    $('#txtUserDisapprove').val(data[2]);
+    $('#txtUserDisapproveRole').val(data[4]);
+    
+    $('#disapprove-reason-form').dialog('open');    
 }
 
 // Confirm disapprove user
@@ -650,14 +677,14 @@ function confirmDisapproveUser() {
     $.ajax({
         type: 'PUT',
         data: user,
-        url: '/users/updateuser/' + $('#txtUserBanId').val()
+        url: '/users/updateuser/' + $('#txtUserDisapproveId').val()
     }).done(function( response ) {
         // Check for a successful (blank) response
         if (response.msg === '') {
             populateTables();            
             var newNotification = {
-                'userId': $(this).attr('rel'),
-                'content': 'Yêu cầu được làm "' + data[4] + '" của bạn đã bị bác bỏ vì: ' + $('#txtDisapproveReason').val(),
+                'userId': $('#txtUserDisapproveId').val(),
+                'content': 'Yêu cầu được làm "' + $('#txtUserDisapproveRole').val() + '" của bạn đã bị bác bỏ vì: ' + $('#txtDisapproveReason').val(),
                 'markedRead': 'Unread',
                 'dateCreated': new Date()
             }
@@ -690,8 +717,21 @@ function confirmDisapproveUser() {
     });    
 }
 
-// Demote User Function
+// Show Demote User Dialog
 function demoteUser() {
+    event.preventDefault();
+
+    $.getJSON( '/users/id/' + $(this).attr('rel'), function( data ) {
+        $('#txtUserDemoteId').val(data._id);
+        $('#txtUserDemote').val(data.username);
+        $('#txtUserDemoteRole').val(data.role);
+        
+        $('#demote-reason-form').dialog('open');
+    });    
+}
+
+// Demote User Function
+function confirmDemoteUser() {
     var user = {
         'role': 'User',
         'dateModified': Date()
@@ -701,14 +741,14 @@ function demoteUser() {
     $.ajax({
         type: 'PUT',
         data: user,
-        url: '/users/updateuser/' + $(this).attr('rel')
+        url: '/users/updateuser/' + $('#txtUserDemoteId').val()
     }).done(function( response ) {
         // Check for a successful (blank) response
         if (response.msg === '') {
             populateTables();
             var newNotification = {
-                'userId': $(this).attr('rel'),
-                'content': 'Bạn đã bị cách chức thành Người dùng.',
+                'userId': $('#txtUserDemoteId').val(),
+                'content': 'Bạn đã bị cách chức "' + $('#txtUserDemoteRole').val() + '" vì lý do: ' + $('#txtDemoteReason').val(),
                 'markedRead': 'Unread',
                 'dateCreated': new Date()
             }
@@ -728,7 +768,10 @@ function demoteUser() {
                     showAlert('danger', $LAYOUT_ERROR + response.msg);
 
                 } else {
-                    // Do nothing
+                    $('#txtUserDemoteId').val("");
+                    $('#txtUserDemote').val("");
+                    $('#txtDemoteReason').val("");
+                    $('#demote-reason-form').dialog('close');
                 }
             });
         }

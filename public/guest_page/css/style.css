@@ -669,7 +669,6 @@ form .alert {
 ================================= */
 .panel-default {
   border-color: #1f76bd;
-  border-radius: 0;
 }
 .panel-default > .panel-heading {
   background: #1f76bd;

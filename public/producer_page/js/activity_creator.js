@@ -8,7 +8,7 @@ $(document).ready(function() {
     $('#txtEventId').val($('#txtEventIdEdit').val());
   }
   
-
+  initiateDonations();
   initiateSchedule();
   validateMap();
   $(":input").inputmask();
@@ -93,6 +93,24 @@ function populateLanguage() {
   $('#form-note').html($EVENTCREATOR_ACTFORM_NOTE);
   $('#form-add').html($EVENTCREATOR_ACTFORM_ADD);
   $('#formSubmit').html($EVENTCREATOR_CONTINUE);
+}
+
+function initiateDonations() {
+  $('#donationTable').DataTable();
+  if($('#txtEventIdEdit').val() == '' || $('#txtEventIdEdit').val() == undefined || $('#txtEventIdEdit').val() == 'undefined' || $('#txtEventIdEdit').val() == null || $('#txtEventIdEdit') == 'null') {
+    
+  } else {    
+    $.getJSON( '/events/donationrequire/' + $('#txtEventId').val(), function( data ) {
+      $.each(data, function(){
+        $('#donationTable').DataTable().row.add( [
+                this.item,
+                this.unit,
+                this.quantity,
+                ' '
+            ] ).draw( false );
+      });
+    });
+  }
 }
 
 function initiateSchedule() {
@@ -203,6 +221,23 @@ function addActivity() {
     $('#txtActivityNote').val('');
 }
 
+function addDonation() {
+  var item = $('#txtDonationItem').val();
+  var unit = $('#txtDonationUnit').val();
+  var quantity = $('#txtDonationQuantity').val();
+
+    $('#donationTable').DataTable().row.add( [
+            item,
+            unit,
+            quantity,
+            '<center><a class="btn btn-danger" onclick="deleteDonation(this)"><i class="fa fa-remove"></i></a></center>'
+        ] ).draw( false );
+
+    $('#txtDonationItem').val("");
+    $('#txtDonationUnit').val("");
+    $('#txtDonationQuantity').val("");
+}
+
 function addingActivity(obj) {
     var day = obj.day;
     var time = obj.time;
@@ -233,6 +268,13 @@ function deleteActivity(day, that) {
             .draw();
 }
 
+function deleteDonation(that) {
+  $('#donationTable').DataTable()
+            .row( $(that).parents('tr') )
+            .remove()
+            .draw();
+}
+
 function turnOffMap() {
   $('#map').html("");
   $('#map').attr("style","display:none");
@@ -245,8 +287,40 @@ function turnOffMap() {
 }
 
 function goNext() {
-  var eventId = readCookie("eventId");
+  var eventId = $('#txtEventId').val();
   if(eventId != '') {
+
+    if($('#txtEventIdEdit').val() == '' || $('#txtEventIdEdit').val() == undefined || $('#txtEventIdEdit').val() == 'undefined' || $('#txtEventIdEdit').val() == null || $('#txtEventIdEdit') == 'null') {
+      // Save Donation Data
+
+      var donationData = [];
+      var donation = new Object();
+      var donationTable = $('#donationTable').dataTable();
+      for (var i = 0; i < donationTable.fnGetData().length; i++) {
+        donation = {
+          eventId:      eventId,
+          item:         donationTable.fnGetData()[i][0],
+          unit:         donationTable.fnGetData()[i][1],
+          quantity:     donationTable.fnGetData()[i][2],
+          dateCreated:  new Date()
+        };
+
+        $.ajax({
+          type: 'POST',
+          data: donation,
+          url: '/events/adddonationrequire',
+          async: false,
+          dataType: 'JSON'
+        }).done(function( response ) {
+            if (response.msg === '') {
+              
+            } else {
+              showAlert('error', $LAYOUT_ERROR + response.msg);
+            }
+        });
+      }
+    }
+
     // Save Activities Data
 
     var schedule = [];

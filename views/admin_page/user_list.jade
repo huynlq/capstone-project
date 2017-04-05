@@ -237,7 +237,43 @@ block content
 												th.th-reason Ban Reason
 												th.th-created Date Joined
 										tbody
-			#ban-reason-form(title='Ban This User')
+			#demote-reason-form(title='Demote This User', style="display:none")
+				p#demoteForm_require.validateTips All form fields are required.
+				form
+					fieldset
+						.form-group
+							label.control-label.col-md-6.col-sm-6.col-xs-12(style="text-align:right")
+								span#demoteForm_username User to Demote 
+								span.required *
+							.col-md-6.col-sm-6.col-xs-12
+								input#txtUserDemote.form-control.col-md-7.col-xs-12(type='text', readonly='readonly')
+								input#txtUserDemoteId.form-control.col-md-7.col-xs-12(type='hidden', readonly='readonly')
+								input#txtUserDemoteRole.form-control.col-md-7.col-xs-12(type='hidden', readonly='readonly')
+						.form-group
+							label.control-label.col-md-6.col-sm-6.col-xs-12(style="text-align:right")
+								span#demoteForm_reason Reason to Demote 
+								span.required *
+							.col-md-6.col-sm-6.col-xs-12
+								input#txtDemoteReason.form-control.col-md-7.col-xs-12(type='text', required='required')											
+			#disapprove-reason-form(title='Disapprove This User', style="display:none")
+				p#disapproveForm_require.validateTips All form fields are required.
+				form
+					fieldset
+						.form-group
+							label.control-label.col-md-6.col-sm-6.col-xs-12(style="text-align:right")
+								span#disapproveForm_username User to Disapprove 
+								span.required *
+							.col-md-6.col-sm-6.col-xs-12
+								input#txtUserDisapprove.form-control.col-md-7.col-xs-12(type='text', readonly='readonly')
+								input#txtUserDisapproveId.form-control.col-md-7.col-xs-12(type='hidden', readonly='readonly')
+								input#txtUserDisapproveRole.form-control.col-md-7.col-xs-12(type='hidden', readonly='readonly')
+						.form-group
+							label.control-label.col-md-6.col-sm-6.col-xs-12(style="text-align:right")
+								span#disapproveForm_reason Reason to Disapprove 
+								span.required *
+							.col-md-6.col-sm-6.col-xs-12
+								input#txtDisapproveReason.form-control.col-md-7.col-xs-12(type='text', required='required')
+			#ban-reason-form(title='Ban This User', style="display:none")
 				p#banForm_require.validateTips All form fields are required.
 				form
 					fieldset
@@ -258,7 +294,7 @@ block content
 								span#banForm_reason Reason to ban 
 								span.required *
 							.col-md-6.col-sm-6.col-xs-12
-								input#txtReason.form-control.col-md-7.col-xs-12(type='text', required='required')
+								input#txtBanReason.form-control.col-md-7.col-xs-12(type='text', required='required')
 			// Bootsrap javascript file
 			script(src='/guest_page/js/bootstrap.min.js')
 			// PrettyPhoto javascript file

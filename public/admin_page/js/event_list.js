@@ -13,7 +13,46 @@ $(document).ready(function() {
 
   $('#tableUpcomingEvents tbody').on('click', 'td a.linkcancelevent', cancelEvent);
 
-  document.getElementById("active-tab").click();
+  $('#tableEvents tbody').on('click', 'td a.linkcancelevent', cancelEvent);
+
+  $('#tableCancelledEvents tbody').on('click', 'td a.linkreopenevent', reopenEvent);
+
+  $('#tableEvents tbody').on('click', 'td a.linkreopenevent', reopenEvent);
+  
+  setTimeout(function(){ $('#tab-pane li a').first().click(); }, 300);
+
+  //========================== DIALOG HIDING FUNCTIONS ===================
+
+    var dialog = $( "#cancel-reason-form" ).dialog({
+        autoOpen: false,
+        show: {
+            effect: "fade",
+            duration: 200
+          },
+          hide: {
+            effect: "fade",
+            duration: 200
+          },
+        modal: true,
+        width: 400,
+        height: 250,
+        resizable: false,
+        buttons: {
+            "OK" : {
+            text: "OK",
+            id: "confirmCancelEvent",
+                click: function(){
+                    confirmCancelEvent();
+                }
+            },
+            "Cancel" : {
+                text: "Cancel",
+                click: function() {
+                    dialog.dialog( "close" );
+                }
+            }
+        }                
+    });
 
 } );
 
@@ -71,7 +110,7 @@ function showUpcomingEvents(data) {
         eventStartDate = new Date(this.eventDate.split(" - ")[0]);
         eventEndDate = new Date(this.eventDate.split(" - ")[1]);
         eventEndDate.setDate(eventEndDate.getDate() + 1);
-        if(eventEndDate.getTime() >= now.getTime() && this.status != "Cancelled"){            
+        if(eventEndDate.getTime() >= now.getTime() && this.status == "Published"){            
             counter++;
             dateCreated = new Date(this.dateCreated);
             $.ajax({
@@ -87,23 +126,23 @@ function showUpcomingEvents(data) {
             table.row.add([
                 counter,
                 '<center>'
-                    + '<a data-toggle="tooltip" title="' + $LISTEVENT_TIP_CANCEL + '" style="margin:5px" class="btn btn-danger btn-xs linkcancelevent" rel="' + this._id + '" href="#">'
-                        + '<span class="glyphicon glyphicon-remove"></span>'
-                    + '</a>'
                     + '<a data-toggle="tooltip" title="' + $LISTEVENT_TIP_EDIT + '" style="margin:5px" class="btn btn-info btn-xs" href="/events/edit/' + this._id + '">'
                         + '<span class="glyphicon glyphicon-edit"></span>'
                     + '</a>'
                     + '<a data-toggle="tooltip" title="' + $LISTEVENT_TIP_UPDATE + '" style="margin:5px" class="btn btn-success btn-xs" href="/events/update/' + this._id + '">'
                         + '<span class="glyphicon glyphicon-stats"></span>'
                     + '</a>'
+                    + '<a data-toggle="tooltip" title="' + $LISTEVENT_TIP_CANCEL + '" style="margin:5px" class="btn btn-danger btn-xs linkcancelevent" rel="' + this._id + '" href="#">'
+                        + '<span class="glyphicon glyphicon-remove"></span>'
+                    + '</a>'
                 + '</center>',
                 '<a href="/events/' + this._id + '">' + this.eventName + '</a>',
                 user,
                 email,
                 phone,
-                eventStartDate.getDate() + '/' + (eventStartDate.getMonth() + 1) + '/' +  eventStartDate.getFullYear(),
+                eventStartDate.toLocaleDateString(),
                 this.meetingAddress,
-                dateCreated.getDate() + '/' + (dateCreated.getMonth() + 1) + '/' +  dateCreated.getFullYear()
+                dateCreated.toLocaleDateString()
             ]).draw( false );
         }
     });
@@ -121,10 +160,25 @@ function showEvents(data) {
     var user = "";
     var email = "";
     var phone = "";
+    var status = "";
+    var actionContent = "";
+    var role = "";
     table.clear().draw();
+
+    $.ajax({
+        url: '/users/id/' + readCookie('user'),
+        dataType: 'json',
+        async: false,
+        success: function( dataUser ){
+            role = dataUser.role;
+        }
+    });
+
+    console.log(role);
 
     // For each item in our JSON, add a table row and cells to the content string
     $.each(data, function(){
+        console.log(data);  
         counter++;
         dateCreated = new Date(this.dateCreated);     
         $.ajax({
@@ -137,24 +191,48 @@ function showEvents(data) {
                 phone = dataUser.companyPhoneNumber;
             }
         });    
+
+        if(this.status == "Published") {
+            status = $LISTEVENT_STATUS_PUBLISHED;
+            actionContent = '<a data-toggle="tooltip" title="' + $LISTEVENT_TIP_UPDATE + '" style="margin:5px" class="btn btn-success btn-xs" href="/events/update/' + this._id + '">'
+                                + '<span class="glyphicon glyphicon-stats"></span>'
+                            + '</a>'
+                            + '<a data-toggle="tooltip" title="' + $LISTEVENT_TIP_CANCEL + '" style="margin:5px" class="btn btn-danger btn-xs linkcancelevent" href="#" rel="' + this._id + '">'
+                                + '<span class="glyphicon glyphicon-remove"></span>'
+                            + '</a>';
+        } else if(this.status == "Draft") {
+            status = $LISTEVENT_STATUS_DRAFT;
+            actionContent = '<a data-toggle="tooltip" title="' + $LISTEVENT_TIP_CANCEL + '" style="margin:5px" class="btn btn-danger btn-xs linkcancelevent" href="#" rel="' + this._id + '">'
+                                + '<span class="glyphicon glyphicon-remove"></span>'
+                            + '</a>';
+        } else if(this.status == "Cancelled") {
+            status = $LISTEVENT_STATUS_CANCELLED;
+            actionContent = '<a data-toggle="tooltip" title="' + $LISTEVENT_TIP_UPDATE + '" style="margin:5px" class="btn btn-success btn-xs" href="/events/update/' + this._id + '">'
+                                + '<span class="glyphicon glyphicon-stats"></span>'
+                            + '</a>';
+            if(role == "Admin") {
+                actionContent += '<a data-toggle="tooltip" title="' + $LISTEVENT_TIP_UNBAN + '" style="margin:5px" class="btn btn-warning btn-xs linkreopenevent" href="#" rel="' + this._id + '">'
+                                    + '<span class="glyphicon glyphicon-ok"></span>'
+                                + '</a>';
+            }
+        }
+
         table.row.add([
             counter,
             '<center>'                
                 + '<a data-toggle="tooltip" title="' + $LISTEVENT_TIP_EDIT + '" style="margin:5px" class="btn btn-info btn-xs" href="/events/edit/' + this._id + '">'
                     + '<span class="glyphicon glyphicon-edit"></span>'
                 + '</a>'
-                + '<a data-toggle="tooltip" title="' + $LISTEVENT_TIP_UPDATE + '" style="margin:5px" class="btn btn-success btn-xs" href="/events/update/' + this._id + '">'
-                    + '<span class="glyphicon glyphicon-stats"></span>'
-                + '</a>'
+                + actionContent
             + '</center>',
             '<a href="/events/' + this._id + '">' + this.eventName + '</a>',
-            this.status,            
+            status,            
             user,
             email,
             phone,
             this.eventDate.split(" - ")[0],
             this.meetingAddress,
-            dateCreated.getDate() + '/' + (dateCreated.getMonth() + 1) + '/' +  dateCreated.getFullYear()
+            dateCreated.toLocaleDateString()
         ]).draw( false );
         
     });
@@ -209,9 +287,9 @@ function showPastEvents(data) {
                 user,
                 email,
                 phone,
-                eventStartDate.getDate() + '/' + (eventStartDate.getMonth() + 1) + '/' +  eventStartDate.getFullYear(),
+                eventStartDate.toLocaleDateString(),
                 this.meetingAddress,
-                dateCreated.getDate() + '/' + (dateCreated.getMonth() + 1) + '/' +  dateCreated.getFullYear(),
+                dateCreated.toLocaleDateString(),
             ]).draw( false );
         }
     });
@@ -233,6 +311,18 @@ function showCancelledEvents(data) {
     var user = "";
     var email = "";
     var phone = "";
+    var actionContent = '';
+    var role = "";
+
+    $.ajax({
+        url: '/users/id/' + readCookie('user'),
+        dataType: 'json',
+        async: false,
+        success: function( dataUser ){
+            role = dataUser.role;
+        }
+    });
+    
 
     // For each item in our JSON, add a table row and cells to the content string
     $.each(data, function(){
@@ -251,6 +341,11 @@ function showCancelledEvents(data) {
                     phone = dataUser.companyPhoneNumber;
                 }
             }); 
+            if(role == "Admin") {
+                actionContent += '<a data-toggle="tooltip" title="' + $LISTEVENT_TIP_UNBAN + '" style="margin:5px" class="btn btn-warning btn-xs linkreopenevent" href="#" rel="' + this._id + '">'
+                                    + '<span class="glyphicon glyphicon-ok"></span>'
+                                + '</a>';
+            }
             table.row.add([
                 counter,
                 '<center>'                
@@ -260,14 +355,15 @@ function showCancelledEvents(data) {
                     + '<a data-toggle="tooltip" title="' + $LISTEVENT_TIP_UPDATE + '" style="margin:5px" class="btn btn-success btn-xs" href="/events/update/' + this._id + '">'
                         + '<span class="glyphicon glyphicon-stats"></span>'
                     + '</a>'
+                    + actionContent
                 + '</center>',
                 '<a href="/events/' + this._id + '">' + this.eventName + '</a>',                
                 user,
                 email,
                 phone,
-                eventStartDate.getDate() + '/' + (eventStartDate.getMonth() + 1) + '/' +  eventStartDate.getFullYear(),
+                eventStartDate.toLocaleDateString(),
                 this.meetingAddress,
-                dateCreated.getDate() + '/' + (dateCreated.getMonth() + 1) + '/' +  dateCreated.getFullYear()
+                dateCreated.toLocaleDateString()
             ]).draw( false );
         }
     });
@@ -276,25 +372,212 @@ function showCancelledEvents(data) {
     $('[data-toggle="tooltip"]').tooltip(); 
 }
 
-// Cancel Event Function
-function cancelEvent() {
-    var event = {
-        'status': 'Cancelled',
-        'dateModified': Date()
-    };
+// Show reason to cancel event
+function cancelEvent(event) {
+    event.preventDefault();
 
-    // If they did, do our delete
-    $.ajax({
-        type: 'PUT',
-        data: event,
-        url: '/events/updateevent/' + $(this).attr('rel')
-    }).done(function( response ) {
-        // stats for a successful (blank) response
-        if (response.msg === '') {
-            populateTables();
+    $.getJSON( '/events/details/' + $(this).attr('rel'), function( data ) {
+        $('#txtEventCancel').val(data.eventName);
+    });
+
+    $('#txtEventCancelId').val($(this).attr('rel'));
+    $('#txtCancelReason').val("");
+    
+    $('#cancel-reason-form').dialog('open');    
+}
+
+// Cancel Event Function
+function confirmCancelEvent() {
+    var eventId = $('#txtEventCancelId').val();
+    $.getJSON( '/events/details/' + eventId, function( data ) {
+        var status = "";
+        var producerId = data.userId;
+        var eventName = data.eventName;
+
+        if(data.status == "Draft") {
+            status = "DraftCancelled";
+        } else {
+            status = "Cancelled";
         }
-        else {
-            alert('Error: ' + response.msg);
+
+        var event = {
+            'status': status,
+            'dateModified': Date()
+        };
+
+        // If they did, do our delete
+        $.ajax({
+            type: 'PUT',
+            data: event,
+            url: '/events/updateevent/' + eventId
+        }).done(function( response ) {
+            // stats for a successful (blank) response
+            if (response.msg === '') {
+                populateTables();                
+                $('#cancel-reason-form').dialog('close');
+
+                // Send notifications
+                $.getJSON( '/users/id/' + readCookie('user'), function( data ) {
+                    if(data.role == "Admin") {
+                        // If admin cancel it, send notification for producer
+                        var newNotification = {
+                            'userId': producerId,
+                            'content': 'Sự kiện ' + eventName + ' của bạn đã bị hủy vì lý do: ' + $('#txtCancelReason').val(),
+                            'link': '/events/',
+                            'markedRead': 'Unread',
+                            'dateCreated': new Date()
+                        }
+
+                        // Use AJAX to post the object to our adduser service        
+                        $.ajax({
+                            type: 'POST',
+                            data: newNotification,
+                            url: '/notifications/addnotification',
+                            dataType: 'JSON'
+                        }).done(function( response ) {
+
+                            // Check for successful (blank) response
+                            if (response.msg !== '') {
+
+                                // If something goes wrong, alert the error message that our service returned
+                                showAlert('error', $LAYOUT_ERROR + response.msg);
+
+                            }
+                        });
+                    }
+
+                    // Also send notifications for participants
+                    $.getJSON( '/events/participants/' + eventId, function( data ) {
+                        for(var i = 0; i < data.length; i++) {
+                            var newNotification = {
+                                'userId': data[i]._id,
+                                'content': 'Sự kiện ' + eventName + ' mà bạn đã đăng kí tham gia đã bị hủy vì lý do: ' + $('#txtCancelReason').val(),
+                                'link': '',
+                                'markedRead': 'Unread',
+                                'dateCreated': new Date()
+                            }
+
+                            // Use AJAX to post the object to our adduser service        
+                            $.ajax({
+                                type: 'POST',
+                                data: newNotification,
+                                url: '/notifications/addnotification',
+                                dataType: 'JSON'
+                            }).done(function( response ) {
+
+                                // Check for successful (blank) response
+                                if (response.msg !== '') {
+
+                                    // If something goes wrong, alert the error message that our service returned
+                                    showAlert('error', $LAYOUT_ERROR + response.msg);
+
+                                }
+                            });
+                        }
+                    });                        
+                });
+
+            } else {
+                showAlert('error', $LAYOUT_ERROR + response.msg);
+            }
+        });   
+    });
+}
+
+// Reopen Event Function
+function reopenEvent() {
+    console.log("COME");
+    var eventId = $(this).attr('rel');
+    $.getJSON( '/events/details/' + eventId, function( data ) {
+        var status = "";
+        var producerId = data.userId;
+        var eventName = data.eventName;
+
+        if(data.status == "DraftCancelled") {
+            status = "Draft";
+        } else {
+            status = "Published";
         }
-    });   
+
+        var event = {
+            'status': status,
+            'dateModified': Date()
+        };
+
+        // If they did, do our delete
+        $.ajax({
+            type: 'PUT',
+            data: event,
+            url: '/events/updateevent/' + eventId
+        }).done(function( response ) {
+            // stats for a successful (blank) response
+            if (response.msg === '') {
+                populateTables();
+
+                // Send notifications
+                $.getJSON( '/users/id/' + readCookie('user'), function( data ) {
+                    if(data.role == "Admin") {
+                        // If admin cancel it, send notification for producer
+                        var newNotification = {
+                            'userId': producerId,
+                            'content': 'Sự kiện ' + eventName + ' của bạn đã được mở lại.',
+                            'link': '/events/',
+                            'markedRead': 'Unread',
+                            'dateCreated': new Date()
+                        }
+
+                        // Use AJAX to post the object to our adduser service        
+                        $.ajax({
+                            type: 'POST',
+                            data: newNotification,
+                            url: '/notifications/addnotification',
+                            dataType: 'JSON'
+                        }).done(function( response ) {
+
+                            // Check for successful (blank) response
+                            if (response.msg !== '') {
+
+                                // If something goes wrong, alert the error message that our service returned
+                                showAlert('error', $LAYOUT_ERROR + response.msg);
+
+                            }
+                        });
+                    }
+
+                    // Also send notifications for participants
+                    $.getJSON( '/events/participants/' + eventId, function( data ) {
+                        for(var i = 0; i < data.length; i++) {
+                            var newNotification = {
+                                'userId': data[i]._id,
+                                'content': 'Sự kiện ' + eventName + ' mà bạn đã đăng kí tham gia đã được mở lại.',
+                                'link': '',
+                                'markedRead': 'Unread',
+                                'dateCreated': new Date()
+                            }
+
+                            // Use AJAX to post the object to our adduser service        
+                            $.ajax({
+                                type: 'POST',
+                                data: newNotification,
+                                url: '/notifications/addnotification',
+                                dataType: 'JSON'
+                            }).done(function( response ) {
+
+                                // Check for successful (blank) response
+                                if (response.msg !== '') {
+
+                                    // If something goes wrong, alert the error message that our service returned
+                                    showAlert('error', $LAYOUT_ERROR + response.msg);
+
+                                }
+                            });
+                        }
+                    });                        
+                });
+
+            } else {
+                showAlert('error', $LAYOUT_ERROR + response.msg);
+            }
+        });   
+    });
 }

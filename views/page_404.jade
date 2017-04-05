@@ -1,42 +1,79 @@
-extends layout
+extends guest_page/layout
 
 block content
 	doctype html
-	html(lang='en')
+	html.no-js
 		head
-			meta(http-equiv='Content-Type', content='text/html; charset=UTF-8')
-			// Meta, title, CSS, favicons, etc.
 			meta(charset='utf-8')
-			meta(http-equiv='X-UA-Compatible', content='IE=edge')
+			title Single cause | Charity / Non-profit responsive Bootstrap HTML5 template
+			meta(name='description', content='')
 			meta(name='viewport', content='width=device-width, initial-scale=1')
-			title Page Not Found! 
-			// Bootstrap
-			link(href='../vendors/bootstrap/dist/css/bootstrap.min.css', rel='stylesheet')
-			// Font Awesome
-			link(href='../vendors/font-awesome/css/font-awesome.min.css', rel='stylesheet')
-			// NProgress
-			link(href='../vendors/nprogress/nprogress.css', rel='stylesheet')
-			// Custom Theme Style
-			link(href='../build/css/custom.min.css', rel='stylesheet')
-		body.nav-md
-			.right_col(role='main')
-				// page content
-				.col-md-12
-					.col-middle
-						.text-center.text-center
-							h1.error-number 404
-							h2 Sorry but we couldn't find this page
-							p
-								| This page you are looking for does not exist 
-								a(href='#') Report this?						
-				// /page content
-			// jQuery
-			script(src='../vendors/jquery/dist/jquery.min.js')
-			// Bootstrap
-			script(src='../vendors/bootstrap/dist/js/bootstrap.min.js')
-			// FastClick
-			script(src='../vendors/fastclick/lib/fastclick.js')
-			// NProgress
-			script(src='../vendors/nprogress/nprogress.js')
-			// Custom Theme Scripts
-			script(src='../build/js/custom.min.js')
+			// Fonts
+			link(href='http://fonts.googleapis.com/css?family=Open+Sans:400,300,700', rel='stylesheet', type='text/css')
+			link(href='http://fonts.googleapis.com/css?family=Dosis:400,700', rel='stylesheet', type='text/css')
+			// Bootsrap
+			link(rel='stylesheet', href='/guest_page/css/bootstrap.min.css')
+			// Font awesome
+			link(rel='stylesheet', href='/guest_page/css/font-awesome.min.css')
+			// Owl carousel
+			link(rel='stylesheet', href='/guest_page/css/owl.carousel.css')
+			// PrettyPhoto
+			link(rel='stylesheet', href='/guest_page/css/prettyPhoto.css')
+			// Datatables
+			link(href='/vendors/datatables.net-bs/css/dataTables.bootstrap.min.css', rel='stylesheet')
+			link(href='/vendors/datatables.net-buttons-bs/css/buttons.bootstrap.min.css', rel='stylesheet')
+			link(href='/vendors/datatables.net-fixedheader-bs/css/fixedHeader.bootstrap.min.css', rel='stylesheet')
+			link(href='/vendors/datatables.net-responsive-bs/css/responsive.bootstrap.min.css', rel='stylesheet')
+			link(href='/vendors/datatables.net-scroller-bs/css/scroller.bootstrap.min.css', rel='stylesheet')
+			// Template main Css
+			link(rel='stylesheet', href='/guest_page/css/style.css')
+			// Modernizr
+			script(src='/guest_page/js/modernizr-2.6.2.min.js')
+		body
+			.row(style="height:100px")
+			.main-container
+				.container(style="text-align:center")
+					h1.error-number 404
+						h2 Sorry but we couldn't find this page
+						p
+							| This page you are looking for does not exist
+			script(src='//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js')
+			script(src='/vendors/jquery-ui-1.12.1/jquery-ui.js')
+			script.
+				window.jQuery || document.write('<script src="/guest_page/js/jquery-1.11.1.min.js"><\\/script>')
+			// Bootsrap javascript file
+			script(src='/guest_page/js/bootstrap.min.js')
+			// PrettyPhoto javascript file
+			script(src='/guest_page/js/jquery.prettyPhoto.js')
+			// owl carouseljavascript file
+			script(src='/guest_page/js/owl.carousel.min.js')
+			// Google map
+			script(src='https://maps.googleapis.com/maps/api/js?key=AIzaSyCgKgnC06Ye-nKdA6nIZR5qH7sZWkxdprw&libraries=places')
+			// Datatables
+			script(src='../vendors/datatables.net/js/jquery.dataTables.min.js')
+			script(src='../vendors/datatables.net-bs/js/dataTables.bootstrap.min.js')
+			script(src='../vendors/datatables.net-buttons/js/dataTables.buttons.min.js')
+			script(src='../vendors/datatables.net-buttons-bs/js/buttons.bootstrap.min.js')
+			script(src='../vendors/datatables.net-buttons/js/buttons.flash.min.js')
+			script(src='../vendors/datatables.net-buttons/js/buttons.html5.min.js')
+			script(src='../vendors/datatables.net-buttons/js/buttons.print.min.js')
+			script(src='../vendors/datatables.net-fixedheader/js/dataTables.fixedHeader.min.js')
+			script(src='../vendors/datatables.net-keytable/js/dataTables.keyTable.min.js')
+			script(src='../vendors/datatables.net-responsive/js/dataTables.responsive.min.js')
+			script(src='../vendors/datatables.net-responsive-bs/js/responsive.bootstrap.js')
+			script(src='../vendors/datatables.net-scroller/js/dataTables.scroller.min.js')
+			script(src='../vendors/jszip/dist/jszip.min.js')
+			script(src='../vendors/pdfmake/build/pdfmake.min.js')
+			script(src='../vendors/pdfmake/build/vfs_fonts.js')
+			// Countdown JS
+			script(src='/vendors/countdown/countdown.js')
+			// Template main javascript
+			script(src='/guest_page/js/main.js')
+			// Google Analytics: change UA-XXXXX-X to be your site's ID.
+			script.
+				(function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=
+				function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;
+				e=o.createElement(i);r=o.getElementsByTagName(i)[0];
+				e.src='//www.google-analytics.com/analytics.js';
+				r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));
+				ga('create','UA-XXXXX-X');ga('send','pageview');

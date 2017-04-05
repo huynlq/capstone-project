@@ -44,6 +44,41 @@ block content
 						span#header-desc Create your very own event with our support!
 			.main-container
 				.container
+					.row#donationPane
+						.col-md-12
+							h2.title-style-2
+								span#header-donation Donation Details
+								span.title-under
+							form(action="javascript:;", onsubmit="addDonation()").form-horizontal.form-label-left
+								.form-group
+									label.control-label.col-md-3.col-sm-3.col-xs-12
+										span.form-donation-item Item
+										span.required  *
+									.col-md-6.col-sm-6.col-xs-12
+										input#txtDonationItem.form-control.col-md-7.col-xs-12(type='text', required='required')								
+								.form-group
+									label.control-label.col-md-3.col-sm-3.col-xs-12
+										span.form-donation-unit Unit
+										span.required  *
+									.col-md-6.col-sm-6.col-xs-12
+										input#txtDonationUnit.form-control.col-md-7.col-xs-12(type='text', required='required')
+								.form-group
+									label.control-label.col-md-3.col-sm-3.col-xs-12
+										span.form-donation-quantity Quantity
+										span.required  *
+									.col-md-6.col-sm-6.col-xs-12
+										input#txtDonationQuantity.form-control.col-md-7.col-xs-12(type='number', required='required')
+								.form-group
+									.col-md-3.col-sm-3.col-xs-12
+									.col-md-6.col-sm-6.col-xs-12
+										button#formDonationAdd.btn.btn-info(type="submit", style="float:right") Add
+							table#donationTable.table.table-bordered.table-hover.dt-responsive
+								thead
+									tr
+										th.form-donation-item Item
+										th.form-donation-unit Unit
+										th.form-donation-quantity Quantity
+										th.form-donation-action Action
 					.row
 						.col-md-12
 							h2.title-style-2

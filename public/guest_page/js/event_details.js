@@ -23,6 +23,7 @@ $(function(){
 		populateActivities(eventId);
 		populateProducer(eventId);	
 		populateTimeline(eventId);
+		populateDonationPane(eventId);
 		populateSummary(eventId);
 	}); 	
 
@@ -95,6 +96,7 @@ function populateLanguage() {
 	$('#header-location').html($EVENTDETAILS_HEADER_LOCATION);
 	$('#header-eventDescription').html($EVENTDETAILS_HEADER_EVENTDESC);
 	$('#header-activities').html($EVENTDETAILS_HEADER_ACTIVITIES);
+	$('#header-donation').html($EVENTDETAILS_HEADER_DONATION);
 	$('#btnJoin').html($EVENTDETAILS_BUTTON_JOIN);
 	$('#participate-form').attr('title',$EVENTDETAILS_FORM_TITLE);
 	$('#form-require').html($EVENTDETAILS_FORM_REQUIRE);
@@ -139,18 +141,6 @@ function populateButton(data) {
 	}	
 }
 
-function populateDonations() {
-	if($('#cashCheck').is(':checked'))
-		$('#cashDonation').show();
-	else
-		$('#cashDonation').hide();
-
-	if($('#itemCheck').is(':checked'))
-		$('#itemDonation').show();
-	else
-		$('#itemDonation').hide();
-}
-
 function addItem() {
 	$('#itemDonationPane').append('<div class="row">' +
 										'<div class="col-xs-5 col-xs-12">' +
@@ -175,6 +165,11 @@ function donate() {
 	var eventId = window.location.href.split('/')[window.location.href.split('/').length - 1].split('#')[0];
 	//$('#donationFormItems').html("");
 	var content = "";
+
+	for(var i = 0; i < $('.donateItem').length; i++) {
+		$('.donateItem')[i].value = "";
+	}
+
 	$.getJSON( '/users/id/' + userId, function( data ) {
 		var role = data.role;
 		if(role != "Sponsor") {
@@ -228,25 +223,143 @@ function confirmDonate() {
 	var userId = readCookie('user');
 	var donation;
 	var checkFlag = true;
+	var value = 0;
+	var donationString = "";
 
 	// VALIDATING
-	if($('#cashCheck').is(':checked')) {
-		if($('#txtCash').val().trim() != '') {
-			
-		} else {
-			checkFlag = false;
-			showAlert('danger', 'Vui lòng điền các trường còn thiếu.');
-		}
-	}
+	for(var i = 0; i < $('.donateItem').length; i++) {
+		value = $('.donateItem')[i].value;
+		if(value > 0 && value != "") {					
+			console.log('/events/donationrequire/id/' + $('.donateItem')[i].id);
+			$.ajax({
+		        url: '/events/donationrequire/id/' + $('.donateItem')[i].id,
+		        dataType: 'json',
+		        async: false,
+		        success: function( data ) {
+		        	console.log(data);
+		        	console.log(data.item);
+		        	donation = {
+						'eventId': eventId,
+						'userId': userId,
+						'donatorName': $('#txtDonator').val(),
+						'donatorEmail': $('#txtDonatorEmail').val(),
+						'donatorPhoneNumber': $('#txtDonatorPhone').val(),
+						'donationItem': data.item,
+						'donationNumber': value,
+						'donationUnit': data.unit,
+						'status': 'Pending',
+						'dateCreated': new Date()
+					};
+					console.log(donation);
 
-	if($('#itemCheck').is(':checked')) {
-		for(var i = 0; i < $('.txtItem').length; i++) {
-			if($('.txtItem')[i].value.trim() != '' && $('.txtItemNumber')[i].value.trim() != '' && $('.txtItemUnit')[i].value.trim() != '') {
+					donationString += data.item + ': ' + value + ' (' + data.unit + ') ';
 
-			} else {
-				checkFlag = false;
-				showAlert('danger', 'Vui lòng điền các trường còn thiếu.');
-			}
+					$.ajax({
+				        type: 'POST',
+				        data: donation,
+				        url: '/events/addDonation',
+				        dataType: 'JSON'
+				    }).done(function( response ) {
+
+				        // Check for successful (blank) response
+				        if(response.msg == '') {
+
+				        	$.getJSON( '/users/id/' + readCookie('user'), function( data ) {
+				        		var newNotification = {
+			                        'userId': $('#txtProducerId').val(),
+			                        'content': data.username + ' đã đóng góp cho sự kiện "' + $('#eventName').html() + '" của bạn.',
+			                        'link': '/events/update/' + eventId,
+			                        'markedRead': 'Unread',
+			                        'dateCreated': new Date()
+			                    }
+
+			                    // Use AJAX to post the object to our adduser service        
+			                    $.ajax({
+			                        type: 'POST',
+			                        data: newNotification,
+			                        url: '/notifications/addnotification',
+			                        dataType: 'JSON'
+			                    }).done(function( response ) {
+
+			                        // Check for successful (blank) response
+			                        if (response.msg !== '') {
+
+			                            // If something goes wrong, alert the error message that our service returned
+			                            showAlert('error', $LAYOUT_ERROR + response.msg);
+
+			                        }
+			                    });
+
+			                    // CHECK FOR SPONSOR
+								$.getJSON( '/users/id/' + readCookie('user'), function( data ) {
+							    	if(data.role == "Sponsor") {
+							    		$.getJSON( '/events/checksponsor/' + eventId + '/' + readCookie('user'), function( dataDonationEvent ) {		    		
+							    			// Check if user is in sponsor list
+							    			if(dataDonationEvent == null) {
+							    				var sponsor = {
+									    			'eventId': window.location.href.split('/')[window.location.href.split('/').length - 1].split('#')[0],
+													'userId': readCookie('user'),
+													'status': 'Pending',
+													'donation': donationString,
+													'dateCreated': new Date()
+									    		};
+
+									    		console.log(sponsor);
+
+									    		$.ajax({
+											        type: 'POST',
+											        data: sponsor,
+											        url: '/events/addsponsor',
+											        dataType: 'JSON'
+											    }).done(function( response ) {
+											    	console.log("DONE");
+											        // Check for successful (blank) response
+											        if(response.msg != '') {
+											            alert('Error: ' + response.msg);
+											        } else {
+											        	var newNotification = {
+									                        'userId': $('#txtProducerId').val(),
+									                        'content': $('#txtDonator').val() + ' muốn làm nhà tài trợ và đóng góp cho sự kiện "' + $('#eventName').html() + '" của bạn.',
+									                        'link': '/events/update/' + eventId,
+									                        'markedRead': 'Unread',
+									                        'dateCreated': new Date()
+									                    }
+
+									                    // Use AJAX to post the object to our adduser service        
+									                    $.ajax({
+									                        type: 'POST',
+									                        data: newNotification,
+									                        url: '/notifications/addnotification',
+									                        dataType: 'JSON'
+									                    }).done(function( response ) {
+
+									                        // Check for successful (blank) response
+									                        if (response.msg !== '') {
+
+									                            // If something goes wrong, alert the error message that our service returned
+									                            showAlert('danger', $LAYOUT_ERROR + response.msg);
+
+									                        }
+									                    });
+											        }
+											    });
+							    			}
+							    		});    		   	
+							    	}
+							    });
+
+					            // Update the table
+					            populateDonationPane(eventId);
+					            $('#donate-form').dialog('close'); 
+					            showAlert('success', $EVENTDETAILS_ALERT_DONATE_SUCCESS);
+				        	});				        	
+
+				        } else {
+				            showAlert('danger', $LAYOUT_ERROR + response.msg);
+				        }
+				    });
+		        }
+		    });			
 		}
 	}
 
@@ -254,71 +367,7 @@ function confirmDonate() {
 	if(checkFlag) {
 		var submitFlag = true;
 		var donationString = "";
-		if($('#cashCheck').is(':checked')) {
-			donationString += $EVENTDETAILS_DONATION_CASH + ' (' + parseInt($('#txtCash').val().trim()).toLocaleString() + ' ' + $('#txtCashUnit').val().trim() + ')';
-			donation = {
-				'eventId': eventId,
-				'userId': userId,
-				'donatorName': $('#txtDonator').val(),
-				'donatorEmail': $('#txtDonatorEmail').val(),
-				'donatorPhoneNumber': $('#txtDonatorPhone').val(),
-				'donationType': 'Cash',
-				'donationNumber': $('#txtCash').val().trim(),
-				'donationUnit': $('#txtCashUnit').val().trim(),
-				'status': 'Pending',
-				'dateCreated': new Date
-			};
-
-			$.ajax({
-		        type: 'POST',
-		        data: donation,
-		        url: '/events/addDonation',
-		        dataType: 'JSON'
-		    }).done(function( response ) {
-		        // Check for successful (blank) response
-		        if(response.msg == '') {
-		            // Do nothing
-		        } else {
-		            showAlert('danger', $LAYOUT_ERROR + response.msg);
-		            submitFlag = false;
-		        }
-		    });
-		}
-
-		if($('#itemCheck').is(':checked')) {
-			for(var i = 0; i < $('.txtItem').length; i++) {
-				donationString += ', ' + $('.txtItem')[i].value.trim() + ' (' + parseInt($('.txtItemNumber')[i].value.trim()).toLocaleString() + ' ' + $('.txtItemUnit')[i].value.trim() + ')';
-				donation = {
-					'eventId': eventId,
-					'userId': userId,
-					'donatorName': $('#txtDonator').val(),
-					'donatorEmail': $('#txtDonatorEmail').val(),
-					'donatorPhoneNumber': $('#txtDonatorPhone').val(),
-					'donationType': 'Item',
-					'donationItem': $('.txtItem')[i].value.trim(),
-					'donationNumber': $('.txtItemNumber')[i].value.trim(),
-					'donationUnit': $('.txtItemUnit')[i].value.trim(),
-					'status': 'Pending',
-					'dateCreated': new Date
-				};
-
-				$.ajax({
-			        type: 'POST',
-			        data: donation,
-			        url: '/events/addDonation',
-			        dataType: 'JSON'
-			    }).done(function( response ) {
-			        // Check for successful (blank) response
-			        if(response.msg == '') {
-			            // Do nothing			            
-			        } else {
-			            showAlert('danger', $LAYOUT_ERROR + response.msg);
-			            submitFlag = false;
-			        }
-			    });
-			}
-		}
-
+		
 		if(submitFlag == true) {
 			showAlert('success', $EVENTDETAILS_ALERT_DONATE_SUCCESS);
 
@@ -647,19 +696,23 @@ function populateActivities(eventId) {
 			    $('#activityContents').html(
 			      $('#activityContents').html() + 			      			      
 			      '<div id="activity-day-' + data[i].day + '" class="tab-pane fade">' +
-			      	'<div id="map-day-' + data[i].day + '" class="mapPane" style="height:200px; margin-top: 20px"></div><br>' +
-			        '<table class="table table-striped">' +
-			          '<thead>' +
-			            '<tr>' +
-			              '<th>' + $EVENTDETAILS_ACTIVITY_TIME + '</th>' +
-			              '<th>' + $EVENTDETAILS_ACTIVITY_LOCATION + '</th>' +
-			              '<th>' + $EVENTDETAILS_ACTIVITY_ACT + '</th>' +
-			              '<th>' + $EVENTDETAILS_ACTIVITY_NOTE + '</th>' +
-			            '</tr>' +
-			          '</thead>' +
-			          '<tbody id="activity-table-content-day' + data[i].day + '">' +
-			          '</tbody>' +
-			        '</table>' +			        
+			      	'<div class="mapTab col-md-4">' +
+			      		'<div id="map-day-' + data[i].day + '" class="mapPane" style="height:300px; margin-top: 20px"></div><br>' +
+			      	'</div>' +
+			      	'<div class="activityTab col-md-8">' +
+				        '<table class="table table-striped">' +
+				          '<thead>' +
+				            '<tr>' +
+				              '<th>' + $EVENTDETAILS_ACTIVITY_TIME + '</th>' +
+				              '<th>' + $EVENTDETAILS_ACTIVITY_LOCATION + '</th>' +
+				              '<th>' + $EVENTDETAILS_ACTIVITY_ACT + '</th>' +
+				              '<th>' + $EVENTDETAILS_ACTIVITY_NOTE + '</th>' +
+				            '</tr>' +
+				          '</thead>' +
+				          '<tbody id="activity-table-content-day' + data[i].day + '">' +
+				          '</tbody>' +
+				        '</table>' +		
+				    '</div>' +
 			      '</div>');
 			}			
 
@@ -757,7 +810,10 @@ function populateActivities(eventId) {
 				
 			}	
 		} else {
+			$('.mapTab').removeClass('col-md-4');
 			$('.mapPane').attr('style','display:none');
+			$('.activityTab').removeClass('col-md-8');
+			$('.activityTab').addClass('col-md-12');
 		}
 		
 		for(var i = 0; i < days.length; i++) {
@@ -810,6 +866,152 @@ function populateProducer(eventId) {
 	});
 }
 
+function populateDonationPane(eventId) {
+	// Populate Donations
+	var donationContent = 	'<ul id="donationPane" class="nav nav-tabs">' +
+								'<li class="tabClick"><a data-toggle="tab" href="#approved-donation">' + $EVENTDETAILS_APPROVED_DONATION + '</a></li>' +
+								'<li class="tabClick"><a data-toggle="tab" href="#pending-donation">' + $EVENTDETAILS_PENDING_DONATION + '</a></li>' +
+						    '</ul>' +
+						    '<div class="tab-content">' +      
+						    	'<div id="approved-donation" class="tab-pane fade">' +							    		
+									'<table id="tableDonations" cellspacing="0" width="100%" class="table table-style-1 table-striped table-bordered dt-responsive nowrap datatable-responsive">' +
+										'<thead>' +
+											'<tr>' +
+												'<th>#</th>' +
+												'<th>' + $EVENTDETAILS_DONATION_NAME + '</th>' +
+												'<th>' + $EVENTDETAILS_DONATION_ITEM + '</th>'+
+												'<th>' + $EVENTDETAILS_DONATION_QUANTITY + '</th>'+
+											'</tr>'+
+										'</thead>'+
+										'<tbody></tbody>'+
+									'</table>'+
+						    	'</div>' +
+						    	'<div id="pending-donation" class="tab-pane fade">' +
+									'<table id="tablePendingDonations" cellspacing="0" width="100%" class="table table-style-1 table-striped table-bordered dt-responsive nowrap datatable-responsive">' +
+										'<thead>' +
+											'<tr>' +
+												'<th>#</th>' +
+												'<th>' + $EVENTDETAILS_DONATION_NAME + '</th>' +
+												'<th>' + $EVENTDETAILS_DONATION_ITEM + '</th>'+
+												'<th>' + $EVENTDETAILS_DONATION_QUANTITY + '</th>'+
+											'</tr>'+
+										'</thead>'+
+										'<tbody></tbody>'+
+									'</table>'+
+						    	'</div>' +
+						    '</div>';
+	$('#donationPane').html(donationContent);
+
+	var tableDonations = $('#tableDonations').DataTable({"columnDefs": [{ "width": "10px", "targets": 0 }]});
+	tableDonations.clear().draw();
+	var tablePendingDonations = $('#tablePendingDonations').DataTable({"columnDefs": [{ "width": "10px", "targets": 0 }]});
+	tablePendingDonations.clear().draw();
+
+	// Populate Donations
+	$.ajax({
+        url: '/events/donations/' + eventId,
+        dataType: 'json',
+        async: false,
+        success: function( data ) {
+        	var counterApproved = 0;
+        	var counterPending = 0;
+        	var participant;
+        	var item;
+        	var number;
+        	var unit;
+        	var donator;
+        	$.each(data, function(){        		
+    			number = parseInt(this.donationNumber).toLocaleString();
+    			item = this.donationItem;
+    			if(this.status == "Approved") {
+    				counterApproved++;
+    				tableDonations.row.add([
+	        			counterApproved,
+	        			'<a href="">' + this.donatorName + '</a>',
+	        			item,
+			        	number + ' ' + this.donationUnit
+	        		]).draw('false');	        		
+    			} else {
+    				counterPending++;
+    				tablePendingDonations.row.add([
+	        			counterPending,
+	        			'<a href="">' + this.donatorName + '</a>',
+	        			item,
+			        	number + ' ' + this.donationUnit
+	        		]).draw('false');	        		
+    			}        			
+        	});
+        }
+    });
+    $('#donationPane li a').first().click();
+
+    // Populate Donation Requirement
+    var requireContent = '<div class="panel panel-default">' +					
+    						'<div class="panel-heading">Mục tiêu</div>' +
+    						'<div id="event-donation-progress" class="panel-body"></div>' +
+				    	'</div>';
+
+    $('#requiredDonationPane').html(requireContent);
+
+    $.getJSON( '/events/donationrequire/' + eventId, function( data ) {
+		//Set donation items variables
+	    var items = [];
+	    var donateContent = "";
+
+	    //Get required items
+	    for(var i = 0; i < data.length; i++) {
+	    	items.push({
+	    		item: data[i].item.trim(),
+	    		number: parseInt(data[i].quantity),
+	    		unit: data[i].unit.trim(),
+	    		current: 0
+	    	});
+
+	    	donateContent += '<div class="row form-group">'	+
+	    						'<label class="control-label col-md-3 col-sm-3 col-xs-12">' + data[i].item + '</label>' +
+								'<div class="col-md-8 col-sm-8 col-xs-12">' +
+								  '<input id="' + data[i]._id + '" class="donateItem form-control" type="number" placeholder="(' + data[i].unit + ')" class="form-control col-md-6 col-xs-10"/>' +
+								'</div>' +
+							 '</div>';
+	    }
+
+	    $('#donationFormItems').html(donateContent);
+
+	    //Get Donation data from the database
+	    $.getJSON( '/events/donations/' + window.location.href.split('/')[window.location.href.split('/').length - 1], function( dataDonation ) {
+
+	        //Count donations
+	        if(dataDonation != null) {
+	        	for(var i = 0; i < items.length; i++) {
+	        		for(var j = 0; j < dataDonation.length; j++) {
+	        			if(dataDonation[j].status != "Pending") {
+	        				if(dataDonation[j].donationItem.trim() == items[i].item) {
+	        					items[i].current = parseInt(items[i].current) + parseInt(dataDonation[j].donationNumber);
+	        				}
+	        			}
+	        		}
+	        	}
+	        }
+	        
+	        //Populate the progressbar panel
+	        var current;
+	        var required;
+	        for(var i = 0; i < items.length; i++) {
+	            current = parseInt(items[i].current);
+	            required = parseInt(items[i].number);
+	            console.log(items[i].item + ": " + current + '/' + required);
+	            $('#event-donation-progress').html( $('#event-donation-progress').html() +
+					'<label>' + items[i].item + ': </label> ' + current.toLocaleString() + '/<span id="event-donation">' + required.toLocaleString() + ' (' + items[i].unit + ')</span>' +
+	                '<div class="progress">' +                                 
+	                    '<div role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" style="width:' + (current/required)*100 + '%" class="progress-bar progress-bar-striped active"></div>' +
+	                '</div>'
+				);
+	        }
+	    });	
+	});
+
+}
+
 function populateSummary(eventId) {
 		var content = "";
 			content =   '<hr>' +
@@ -817,42 +1019,7 @@ function populateSummary(eventId) {
 						'</div>' +
 						'<h2 class="title-style-2">' + $EVENTDETAILS_HEADER_SUMMARY + ' <span class="title-under"></span></h2>' +
 						'<div id="photoGallery" class="row col-md-12 col-sm-12 col-xs-12 fadeIn animated"></div>' +
-						'<div class="row">'+
-							'<div class="col-md-6 col-sm-6 col-xs-12">' +
-								'<h3><strong>' + $EVENTDETAILS_HEADER_DONATION + '</strong></h3>' +
-								'<ul id="donationPane" class="nav nav-tabs">' +
-									'<li class="tabClick"><a data-toggle="tab" href="#approved-donation">' + $EVENTDETAILS_APPROVED_DONATION + '</a></li>' +
-									'<li class="tabClick"><a data-toggle="tab" href="#pending-donation">' + $EVENTDETAILS_PENDING_DONATION + '</a></li>' +
-							    '</ul>' +
-							    '<div class="tab-content">' +      
-							    	'<div id="approved-donation" class="tab-pane fade">' +							    		
-										'<table id="tableDonations" cellspacing="0" width="100%" class="table table-style-1 table-striped table-bordered dt-responsive nowrap datatable-responsive">' +
-											'<thead>' +
-												'<tr>' +
-													'<th>#</th>' +
-													'<th>' + $EVENTDETAILS_DONATION_NAME + '</th>' +
-													'<th>' + $EVENTDETAILS_DONATION_ITEM + '</th>'+
-													'<th>' + $EVENTDETAILS_DONATION_QUANTITY + '</th>'+
-												'</tr>'+
-											'</thead>'+
-											'<tbody></tbody>'+
-										'</table>'+
-							    	'</div>' +
-							    	'<div id="pending-donation" class="tab-pane fade">' +
-										'<table id="tablePendingDonations" cellspacing="0" width="100%" class="table table-style-1 table-striped table-bordered dt-responsive nowrap datatable-responsive">' +
-											'<thead>' +
-												'<tr>' +
-													'<th>#</th>' +
-													'<th>' + $EVENTDETAILS_DONATION_NAME + '</th>' +
-													'<th>' + $EVENTDETAILS_DONATION_ITEM + '</th>'+
-													'<th>' + $EVENTDETAILS_DONATION_QUANTITY + '</th>'+
-												'</tr>'+
-											'</thead>'+
-											'<tbody></tbody>'+
-										'</table>'+
-							    	'</div>' +
-							    '</div>' +
-							'</div>' +
+						'<div class="row">'+							
 							'<div class="col-md-1 col-sm-1 col-xs-12"></div>' +
 							'<div class="col-md-5 col-sm-5 col-xs-12">' +
 								'<h3><strong>' + $EVENTDETAILS_HEADER_PARTICIPANT + '</strong></h3>' +
@@ -905,11 +1072,7 @@ function populateSummary(eventId) {
 		var tableParticipants = $('#tableParticipants').DataTable({"columnDefs": [{ "width": "10px", "targets": 0 }]});
 		tableParticipants.clear().draw();
 		tableParticipants.columns.adjust().draw();
-
-		var tableDonations = $('#tableDonations').DataTable({"columnDefs": [{ "width": "10px", "targets": 0 }]});
-		tableDonations.clear().draw();
-		var tablePendingDonations = $('#tablePendingDonations').DataTable({"columnDefs": [{ "width": "10px", "targets": 0 }]});
-		tablePendingDonations.clear().draw();
+		
 		var tableActivityCosts = $('#tableActivityCosts').DataTable({"columnDefs": [{ "width": "10px", "targets": 0 }]});
 		tableActivityCosts.clear().draw();
 
@@ -935,50 +1098,7 @@ function populateSummary(eventId) {
 	        		}	        		
 	        	});
 	        }
-	    });
-
-		// Populate Donations
-		$.ajax({
-	        url: '/events/donations/' + eventId,
-	        dataType: 'json',
-	        async: false,
-	        success: function( data ) {
-	        	var counterApproved = 0;
-	        	var counterPending = 0;
-	        	var participant;
-	        	var item;
-	        	var number;
-	        	var unit;
-	        	var donator;
-	        	$.each(data, function(){	        		
-	        		if(this.donationType == 'Cash') {
-	        			item = $EVENTDETAILS_DONATION_CASH;	
-	        		} else {
-	        			item = this.donationItem;
-	        		}	        		
-	    			number = parseInt(this.donationNumber).toLocaleString();
-
-	    			if(this.status == "Approved") {
-	    				counterApproved++;
-	    				tableDonations.row.add([
-		        			counterApproved,
-		        			'<a href="">' + this.donatorName + '</a>',
-		        			item,
-				        	number + ' ' + this.donationUnit
-		        		]).draw('false');	        		
-	    			} else {
-	    				counterPending++;
-	    				tablePendingDonations.row.add([
-		        			counterPending,
-		        			'<a href="">' + this.donatorName + '</a>',
-		        			item,
-				        	number + ' ' + this.donationUnit
-		        		]).draw('false');	        		
-	    			}        			
-	        	});
-	        }
-	    });
-	    $('#donationPane li a').first().click();
+	    });		
 
 		// Populate Activity Costs
 		$.ajax({

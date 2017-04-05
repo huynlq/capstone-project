@@ -39,9 +39,9 @@ block content
 								span#header-event Event List
 								span.title-under
 					.row.tile_count
-						ul.nav.nav-tabs
+						ul.nav.nav-tabs#tab-pane
 							li.col-md-3.col-sm-6.col-xs-12
-								a#active-tab.count-tab(data-toggle='tab', href='#events')
+								a.count-tab(data-toggle='tab', href='#events')
 									.tileA
 										.tile_stats_count
 											span.count_top
@@ -158,6 +158,23 @@ block content
 												th.th-location Location
 												th.th-created Create Date
 										tbody
+			#cancel-reason-form(title='Cancel This Event', style="display:none")
+				p#cancelForm_require.validateTips All form fields are required.
+				form
+					fieldset
+						.form-group
+							label.control-label.col-md-6.col-sm-6.col-xs-12(style="text-align:right")
+								span#cancelForm_eventName Event to cancel 
+								span.required *
+							.col-md-6.col-sm-6.col-xs-12
+								input#txtEventCancel.form-control.col-md-7.col-xs-12(type='text', readonly='readonly')
+								input#txtEventCancelId.form-control.col-md-7.col-xs-12(type='hidden', readonly='readonly')
+						.form-group
+							label.control-label.col-md-6.col-sm-6.col-xs-12(style="text-align:right")
+								span#cancelForm_reason Reason to cancel 
+								span.required *
+							.col-md-6.col-sm-6.col-xs-12
+								input#txtCancelReason.form-control.col-md-7.col-xs-12(type='text', required='required')
 			// Bootsrap javascript file
 			script(src='/guest_page/js/bootstrap.min.js')
 			// PrettyPhoto javascript file

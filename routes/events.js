@@ -35,7 +35,21 @@ var photoGalleryUpload = multer({
 
 /* GET event listing. */
 router.get('/', function(req, res, next) {
-  res.render('admin_page/event_list', { title: 'Event Manager' });
+    var userId = req.cookies.user; 
+    if(userId != '' && userId != null) {
+        var db = req.db;
+        var collection = db.get('Users');
+        collection.findOne({'_id': userId},function(e,docs){
+            collection = db.get('Events');
+            if(docs.role == "Producer" || docs.role == "Admin") {
+                res.render('admin_page/event_list', { title: 'Event Manager' });
+            } else {
+                res.render('page_404', { title: 'Error 404: Page Not Found' });
+            }            
+        });
+    } else {
+        res.render('page_404', { title: 'Error 404: Page Not Found' });
+    }     
 });
 
 /* GET event listing. */
@@ -298,14 +312,11 @@ router.get('/all', function(req, res, next) {
 /* GET all events. */
 router.get('/alllist', function(req, res, next) {
     var userId = req.cookies.user; 
-    console.log(userId);
-    if(userId != '') {
+    if(userId != '' && userId != null) {
         var db = req.db;
         var collection = db.get('Users');
         collection.findOne({'_id': userId},function(e,docs){
             collection = db.get('Events');
-            console.log(docs);
-            console.log(docs.role);
             if(docs.role == "Producer") {
                 collection.find({'userId': userId},function(e,docs2){
                     res.json(docs2);
@@ -318,6 +329,8 @@ router.get('/alllist', function(req, res, next) {
                 res.render('page_404');
             }            
         });
+    } else {
+        res.render('page_404');
     }    
 });
 
@@ -510,11 +523,7 @@ router.get('/details/:id', function(req, res, next) {
     if(req.params.id.length != 24)
         res.render('page_404');
     collection.findOne({ '_id' : req.params.id },{},function(e,docs){
-        if(docs) {
-            res.json(docs);
-        } else {
-            res.render('page_404');
-        }
+        res.json(docs);
     });
 });
 
@@ -536,11 +545,18 @@ router.get('/donationrequire/:id', function(req, res, next) {
     if(req.params.id.length != 24)
         res.render('page_404');    
     collection.find({ 'eventId' : req.params.id },{},function(e,docs){
-        if(docs) {
-            res.json(docs);
-        } else {
-            res.render('page_404');
-        }
+        res.json(docs);
+    });
+});
+
+/* GET donations require base on id. */
+router.get('/donationrequire/id/:id', function(req, res, next) {
+    var db = req.db;
+    var collection = db.get('RequiredDonations');
+    if(req.params.id.length != 24)
+        res.render('page_404');    
+    collection.findOne({ '_id' : req.params.id },{},function(e,docs){
+        res.json(docs);
     });
 });
 
@@ -552,11 +568,7 @@ router.get('/donationrequirebyname/:eventId/:name', function(req, res, next) {
         'item' : req.params.name,
         'eventId' : req.params.eventId
     },{},function(e,docs){
-        if(docs) {
-            res.json(docs);
-        } else {
-            res.render('page_404');
-        }
+        res.json(docs);
     });
 });
 
@@ -568,11 +580,7 @@ router.get('/donations/id/:id', function(req, res, next) {
     if(req.params.id.length != 24)
         res.render('page_404');    
     collection.findOne({ '_id' : req.params.id },{},function(e,docs){
-        if(docs) {
-            res.json(docs);
-        } else {
-            res.render('page_404');
-        }
+        res.json(docs);
     });
 });
 
@@ -583,11 +591,7 @@ router.get('/donations/:id', function(req, res, next) {
     if(req.params.id.length != 24)
         res.render('page_404');    
     collection.find({ 'eventId' : req.params.id },{sort: {dateCreated: -1}},function(e,docs){
-        if(docs) {
-            res.json(docs);
-        } else {
-            res.render('page_404');
-        }
+        res.json(docs);
     });
 });
 
@@ -618,34 +622,6 @@ router.delete('/deletedonation/:id', function(req, res) {
     collection.remove({ '_id' : req.params.id }, function(err) {
         res.send((err === null) ? { msg: '' } : { msg:'error: ' + err });
     });
-});
-
-
-/* GET events based on userId. */
-router.get('/all', function(req, res, next) {
-    var user = req.cookies.username;
-    var user = req.cookies.username;
-    if(user != null) {        
-        var db = req.db;
-        var collection = db.get('Users');
-        collection.findOne({'username': user},{},function(e,docs){
-            if(docs.role == "Admin") {
-                collection = db.get('Events');
-                collection.find({},{},function(e,docs){
-                    res.json(docs);
-                });
-            } else if(docs.role == "Producer") {
-                collection = db.get('Events');
-                collection.find({ 'user': docs.username },{},function(e,docs){
-                    res.json(docs);
-                });
-            } else {
-                res.render('page_404');
-            }
-        });
-    } else {
-        res.render('page_404');
-    }
 });
 
 /*  PUT To Update Event */
