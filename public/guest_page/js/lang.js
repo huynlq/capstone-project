@@ -137,7 +137,9 @@ if(localStorage.getItem('language') == 'vi' || localStorage.getItem('language') 
 	$EVENTDETAILS_BUTTON_UNJOIN		= "HỦY THAM GIA";
 	$EVENTDETAILS_BUTTON_EDIT		= "CHỈNH SỬA";
 	$EVENTDETAILS_BUTTON_UPDATE		= "QUẢN LÝ";
+	$EVENTDETAILS_BUTTON_LOGIN		= "ĐĂNG KÍ";
 	$EVENTDETAILS_BUTTON_JOIN_REQUIRE = "HÃY ĐĂNG KÍ ĐỂ THAM GIA";
+	$EVENTDETAILS_BUTTON_JOIN_ENDED = "ĐÃ HẾT HẠN ĐĂNG KÍ";
 
 	$EVENTDETAILS_DATECREATED		= "Ngày tạo";
 	$EVENTDETAILS_DEADLINE			= "Hạn chót";
@@ -165,7 +167,7 @@ if(localStorage.getItem('language') == 'vi' || localStorage.getItem('language') 
 	$EVENTDETAILS_PARTICIPANT		= "Tên người tham gia";
 
 	$EVENTDETAILS_FORM_TITLE		= "Thông tin người tham gia";
-	$EVENTDETAILS_FORM_REQUIRE		= "Hãy điền tất cả thông tin sau.";
+	$EVENTDETAILS_FORM_REQUIRE		= "Hãy điền tất cả thông tin.";
 	$EVENTDETAILS_FORM_NAME			= "Họ tên";
 	$EVENTDETAILS_FORM_EMAIL		= "Email";
 	$EVENTDETAILS_FORM_PHONE		= "Điện thoại";
@@ -245,6 +247,8 @@ if(localStorage.getItem('language') == 'vi' || localStorage.getItem('language') 
 	$EVENTUPDATE_TIP_EDIT_COST			= "Cập nhật chi phí";
 	$EVENTUPDATE_TIP_MARK_ABSENT		= "Đánh vắng";
 	$EVENTUPDATE_TIP_MARK_PRESENT		= "Có mặt";
+
+	$EVENTUPDATE_ALERT_ACTUALCOST		= "Cập nhật chi phí thành công!";
 
 	//============== POST LIST ========================================================
 
@@ -603,7 +607,9 @@ if(localStorage.getItem('language') == 'vi' || localStorage.getItem('language') 
 	$EVENTDETAILS_BUTTON_UNJOIN		= "CANCEL PARTICIPATE";
 	$EVENTDETAILS_BUTTON_EDIT		= "EDIT EVENT";
 	$EVENTDETAILS_BUTTON_UPDATE		= "UPDATE EVENT";
+	$EVENTDETAILS_BUTTON_LOGIN		= "SIGN IN";
 	$EVENTDETAILS_BUTTON_JOIN_REQUIRE = "PLEASE SIGN IN TO PARTICIPATE";
+	$EVENTDETAILS_BUTTON_JOIN_ENDED = "PARTICIPATE DEADLINE IS DUE";
 
 	$EVENTDETAILS_DATECREATED		= "Created";
 	$EVENTDETAILS_DEADLINE			= "Deadline";
@@ -711,6 +717,8 @@ if(localStorage.getItem('language') == 'vi' || localStorage.getItem('language') 
 	$EVENTUPDATE_TIP_EDIT_COST			= "Update Cost";
 	$EVENTUPDATE_TIP_MARK_ABSENT		= "Mark Absent";
 	$EVENTUPDATE_TIP_MARK_PRESENT		= "Mark Present";
+
+	$EVENTUPDATE_ALERT_ACTUALCOST		= "Successfully edit cost.";
 
 	//============== POST LIST ========================================================
 

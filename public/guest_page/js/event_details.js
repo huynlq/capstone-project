@@ -24,7 +24,9 @@ $(function(){
 		populateProducer(eventId);	
 		populateTimeline(eventId);
 		populateDonationPane(eventId);
-		populateSummary(eventId);
+		populateParticipants(eventId);
+		populateParticipateForm(data);
+		//populateSummary(eventId);
 	}); 	
 
 	//========================== DIALOG HIDING FUNCTIONS ===================
@@ -949,7 +951,8 @@ function populateDonationPane(eventId) {
     var requireContent = '<div class="panel panel-default">' +					
     						'<div class="panel-heading">Mục tiêu</div>' +
     						'<div id="event-donation-progress" class="panel-body"></div>' +
-				    	'</div>';
+				    	'</div>' +
+				    	'<a id="btnDonation" style="width: 100%" onclick="donate()" class="btn btn-info"><strong id="btnDonate">ĐÓNG GÓP</strong></a>';
 
     $('#requiredDonationPane').html(requireContent);
 
@@ -1010,6 +1013,105 @@ function populateDonationPane(eventId) {
 	    });	
 	});
 
+}
+
+function populateParticipants(eventId) {
+	var content = '<thead>'+
+						'<tr>'+
+							'<th>#</th>' +
+							'<th>' + $EVENTDETAILS_PARTICIPANT + '</th>' +
+						'</tr>' +
+					'</thead>' +
+					'<tbody></tbody>';
+	$('#tableParticipants').html(content);
+	var tableParticipants = $('#tableParticipants').DataTable({"columnDefs": [{ "width": "10px", "targets": 0 }]});
+	tableParticipants.clear().draw();
+	tableParticipants.columns.adjust().draw();
+
+	// Populate Participants
+	$.ajax({
+        url: '/events/participants/' + eventId,
+        dataType: 'json',
+        async: false,
+        success: function( data ) {
+        	var counter = 0;
+        	var participant;
+        	$.each(data, function(){
+        		if(this.status != "Absent") {
+        			$.getJSON( '/users/id/' + this.userId, function( userData ) {
+	        			counter++;
+		        		tableParticipants.row.add([
+		        			counter,
+		        			'<a href="/users/' + userData._id + '">' + userData.username + '</a>'
+		        		]).draw('false');
+	        		});        		
+        		}	        		
+        	});
+        }
+    });		
+}
+
+function populateParticipateForm(data) {
+	// Check if event have meet participate deadline
+	var deadlineFlag = false;
+	var now = new Date();
+	var eventEndDate = new Date($('#event-date').html().split(" - ")[1]);
+	var deadline = new Date(data.eventDeadline);
+	eventEndDate.setDate(eventEndDate.getDate() + 1);
+	if(deadline < now.getTime()){
+		// If deadline have met
+		deadlineFlag = true;
+	}
+
+	// Check if user is log in
+	var userId = readCookie('user');
+	if(userId != '' &&  userId != $('#txtProducerId').val()) {
+		$.getJSON( '/users/id/' + userId, function( userData ) {
+			// If true => Populate form from user data
+			$('#txtParticipantFullName').val(userData.fullName);
+			$('#txtParticipantEmail').val(userData.email);
+			$('#txtParticipantPhone').val(userData.phoneNumber);
+
+			// Check if user have join
+			$.getJSON( '/events/participants/' + data._id + '/' + userId, function( dataParticipate ) {
+				if(dataParticipate.msg == 'true') {			
+					// If joined => Form become read only, button become unjoin	
+					$('#txtParticipantFullName').attr('readonly','readonly');
+					$('#txtParticipantEmail').attr('readonly','readonly');
+					$('#txtParticipantPhone').attr('readonly','readonly');
+					$('#btnParticipate').removeClass('btn-info');
+					$('#btnParticipate').addClass('btn-danger');
+					$('#btnParticipate').attr('onclick','unjoin()');
+					$('#btnJoin').html($EVENTDETAILS_BUTTON_UNJOIN);
+				} else {
+					// If not => Form can be written, button become join	
+					$('#txtParticipantFullName').removeAttr('readonly');
+					$('#txtParticipantEmail').removeAttr('readonly');
+					$('#txtParticipantPhone').removeAttr('readonly');
+					$('#btnParticipate').removeClass('btn-danger');
+					$('#btnParticipate').addClass('btn-info');
+					$('#btnParticipate').attr('onclick','join()');
+					$('#btnJoin').html($EVENTDETAILS_BUTTON_JOIN);
+				}
+
+				if(deadlineFlag == true) {
+					$('#btnParticipate').removeClass('btn-info');
+					$('#btnParticipate').addClass('btn-danger');
+					$('#btnParticipate').attr('onclick','');
+					$('#btnParticipate').attr('disabled','disabled');
+					$('#btnJoin').html($EVENTDETAILS_BUTTON_JOIN_ENDED);
+				}
+			});			
+		});
+	} else if(userId == '') {
+		// If false => Log in button
+		$('#participationForm').html('<div class="page-heading text-center">' +
+										  '<div class="zoomIn animated">' +
+										  	'<h1 style="text-transform: uppercase;" class="page-title">' + $EVENTDETAILS_BUTTON_JOIN_REQUIRE + '<span class="title-under"></span></h1>' +
+										    '<br><a href="/login" class="btn btn-primary"><strong id="btnJoin">' + $EVENTDETAILS_BUTTON_LOGIN + '</strong></a>' +
+										  '</div>' +
+										'</div>')
+	}	
 }
 
 function populateSummary(eventId) {
@@ -1109,15 +1211,20 @@ function populateSummary(eventId) {
 	        	var estimate;
 	        	var actual;
 	        	var counter = 0;
+	        	var actualCost = ""
 	        	$.each(data, function(){
+	        		actualCost = "";
 	        		if(this.actualCost != '' && this.actualCost != null) {
+	        			for(var i = 0; i < this.actualCost.length; i++) {
+		                    actualCost += '<p>' + this.actualCost[i].item + ': ' + this.actualCost[i].cost + ' (' + this.actualCost[i].unit + ')</p>';
+		                }
 	        			counter++;
 	        			tableActivityCosts.row.add([
 	        				counter,
 	        				this.day,
 	        				this.place,
 	        				this.activity,
-	        				this.actualCost
+	        				actualCost
 	        			]).draw('false');
 	        		}
 	        	});
@@ -1327,79 +1434,82 @@ function join() {
 				});
 				
 				if(flag == false) {
-					//IF USER DOESN'T HAVE ANY DUPLICATED EVENTS
-					$.getJSON( '/users/id/' + userId, function( data ) {
-						if(data.fullName != null && data.fullName != '' && data.phoneNumber != null && data.phoneNumber != '' && data.email != null && data.email != '') {
-							
-							var newJoin = {
-								'userId': userId,
-								'eventId': eventId,
-								'status': 'Present',
-								'dateCreated': new Date
-							};
-
-							$.ajax({
-						        type: 'POST',
-						        data: newJoin,
-						        url: '/events/addparticipant',
-						        dataType: 'JSON'
-						    }).done(function( response ) {
-
-						        // Check for successful (blank) response
-						        if (response.msg === '') {
-						            
-						            // Update the table
-						            populateButton(eventId);
-						            showAlert('success', $EVENTDETAILS_ALERT_JOIN_SUCCESS);
-
-						            var newNotification = {
-				                        'userId': $('#txtProducerId').val(),
-				                        'content': data.fullName + ' đã đăng kí tham gia sự kiện "' + $('#eventName').html() + '" của bạn.',
-				                        'link': '/events/update/' + eventId,
-				                        'markedRead': 'Unread',
-				                        'dateCreated': new Date()
-				                    }
-
-				                    // Use AJAX to post the object to our adduser service        
-				                    $.ajax({
-				                        type: 'POST',
-				                        data: newNotification,
-				                        url: '/notifications/addnotification',
-				                        dataType: 'JSON'
-				                    }).done(function( response ) {
-
-				                        // Check for successful (blank) response
-				                        if (response.msg !== '') {
-
-				                            // If something goes wrong, alert the error message that our service returned
-				                            showAlert('danger', $LAYOUT_ERROR + response.msg);
-
-				                        }
-				                    });
-						        }
-						        else {
-
-						            // If something goes wrong, alert the error message that our service returned
-						            showAlert('danger', $LAYOUT_ERROR + response.msg);
-
-						        }
-						    });
-
-						} else {
-							// If user doesn't have enough information, show information dialog
-							if(data.fullName != null && data.fullName != "")
-								$('#txtParticipantFullName').val(data.fullName);
-
-							if(data.email != null && data.email != "")
-								$('#txtParticipantEmail').val(data.email);
-
-							if(data.phoneNumber != null && data.phoneNumber != "")
-								$('#txtParticipantPhone').val(data.phoneNumber);
-							   
-							    
-							$('#participate-form').dialog('open'); 
+					if($('#txtParticipantFullName').val() != '' && $('#txtParticipantEmail').val() != '' && $('#txtParticipantPhone').val() != '') {
+						var userData = {
+							'fullName':    $('#txtParticipantFullName').val(),
+							'email': 	   $('#txtParticipantEmail').val(),
+							'phoneNumber': $('#txtParticipantPhone').val(),
+							'dateModified': new Date()
 						}
-					});	
+
+						$.ajax({
+						    type: 'PUT',
+						    data: userData,
+						    url: '/users/updateuser/' + userId,
+						    dataType: 'JSON'
+						}).done(function( response ) {						    
+						    if (response.msg === '') {
+						    	//IF USER DOESN'T HAVE ANY DUPLICATED EVENTS						
+										
+								var newJoin = {
+									'userId': userId,
+									'eventId': eventId,
+									'status': 'Present',
+									'dateCreated': new Date
+								};
+
+								$.ajax({
+							        type: 'POST',
+							        data: newJoin,
+							        url: '/events/addparticipant',
+							        dataType: 'JSON'
+							    }).done(function( response ) {
+
+							        // Check for successful (blank) response
+							        if (response.msg === '') {
+							            
+							            // Update the table
+							            populateParticipants(eventId);
+							            populateParticipateForm(eventId);
+							            showAlert('success', $EVENTDETAILS_ALERT_JOIN_SUCCESS);
+
+							            var newNotification = {
+					                        'userId': $('#txtProducerId').val(),
+					                        'content': $('#txtParticipantFullName').val() + ' đã đăng kí tham gia sự kiện "' + $('#eventName').html() + '" của bạn.',
+					                        'link': '/events/update/' + eventId,
+					                        'markedRead': 'Unread',
+					                        'dateCreated': new Date()
+					                    }
+
+					                    // Use AJAX to post the object to our adduser service        
+					                    $.ajax({
+					                        type: 'POST',
+					                        data: newNotification,
+					                        url: '/notifications/addnotification',
+					                        dataType: 'JSON'
+					                    }).done(function( response ) {
+
+					                        // Check for successful (blank) response
+					                        if (response.msg !== '') {
+
+					                            // If something goes wrong, alert the error message that our service returned
+					                            showAlert('danger', $LAYOUT_ERROR + response.msg);
+
+					                        }
+					                    });
+							        }
+							        else {
+
+							            // If something goes wrong, alert the error message that our service returned
+							            showAlert('danger', $LAYOUT_ERROR + response.msg);
+
+							        }
+							    });		
+						    }
+						});						
+					} else {
+						showAlert('danger', $EVENTDETAILS_FORM_REQUIRE);
+					}					
 				} else {
 					//IF USER HAVE ANY DUPLICATED EVENTS
 					showAlert('danger', $EVENTDETAILS_ALERT_DUPLICATE);
@@ -1427,7 +1537,8 @@ function unjoin(){
         if (response.msg === '') {
             
             // Update the table
-            populateButton(eventId);
+            populateParticipateForm(eventId);
+            populateParticipants(eventId);
             showAlert('success', $EVENTDETAILS_ALERT_UNJOIN_SUCCESS);
 
             $.getJSON('/users/id/' + userId, function(data) {

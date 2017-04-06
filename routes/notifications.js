@@ -10,7 +10,7 @@ router.get('/', function(req, res, next) {
 router.get('/:id', function(req, res, next) {
     var db = req.db;
     var collection = db.get('Notifications');
-    collection.find({'userId': req.params.id},{sort: {dateCreated: -1}},function(e,docs){
+    collection.find({'userId': req.params.id},{sort: {datefield: 1}},function(e,docs){
         res.json(docs);
     });
 });

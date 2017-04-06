@@ -231,7 +231,7 @@ block content
 											span.tab-cost Activity Costs
 									.clearfix
 								.x_content
-									table#tableActivityCosts.table.table-style-1.table-striped.table-bordered.dt-responsive.nowrap.datatable-responsive(cellspacing='0', width='100%')
+									table#tableActivityCosts.table.table-style-1.table-striped.table-bordered.dt-responsive.datatable-responsive(cellspacing='0', width='100%')
 										thead
 											tr
 												th #
@@ -239,7 +239,6 @@ block content
 												th.th-time Time
 												th.th-place Place
 												th.th-activity Activity
-												th.th-note Note
 												th.th-cost Actual Cost
 												th.th-action Action
 										tbody
@@ -264,42 +263,33 @@ block content
 									br
 									.row
 										#galleryPane
-			#edit-actual-cost-form(title='Edit Actual Cost')
+			#edit-actual-cost-form(title='Edit Actual Cost', style="display: none")
 				p.validateTips All form fields are required.
 				form
 					fieldset
-						.form-group
-							label.control-label.col-md-2.col-sm-2.col-xs-12(style="text-align:right")
-								span.th-day Day 								
-							.col-md-10.col-sm-10.col-xs-12
-								input#txtEditActivityDay.form-control.col-md-7.col-xs-12(type='text', readonly='readonly')
+						.col-md-6.col-sm-6.col-xs-12
+							.row
+								strong.th-day Day
+								| :								
+								span#txtEditActivityDay
 								span#txtEditActivityId(style='display:none')
-						.form-group
-							label.control-label.col-md-2.col-sm-2.col-xs-12(style="text-align:right")
-								span.th-time Time 								
-							.col-md-10.col-sm-10.col-xs-12
-								input#txtEditActivityTime.form-control.col-md-7.col-xs-12(type='text', readonly='readonly')
-						.form-group
-							label.control-label.col-md-2.col-sm-2.col-xs-12(style="text-align:right")
-								span.th-place Place 								
-							.col-md-10.col-sm-10.col-xs-12
-								input#txtEditActivityPlace.form-control.col-md-7.col-xs-12(type='text', readonly='readonly')
-						.form-group
-							label.control-label.col-md-2.col-sm-2.col-xs-12(style="text-align:right")
-								span.th-activity Activity 								
-							.col-md-10.col-sm-10.col-xs-12
-								input#txtEditActivity.form-control.col-md-7.col-xs-12(type='text', readonly='readonly')			
-						.form-group
-							label.control-label.col-md-2.col-sm-2.col-xs-12(style="text-align:right")
-								span.th-note Note								
-							.col-md-10.col-sm-10.col-xs-12
-								input#txtEditActivityEstCost.form-control.col-md-7.col-xs-12(type='text', readonly='readonly')
-						.form-group
-							label.control-label.col-md-2.col-sm-2.col-xs-12(style="text-align:right")
-								span.th-cost Actual Cost
-								span.required  *
-							.col-md-10.col-sm-10.col-xs-12
-								input#txtEditActivityActualCost.form-control.col-md-7.col-xs-12(type='text', required='required')
+							.row
+								strong.th-time Time 
+								| : 
+								span#txtEditActivityTime
+							.row
+								strong.th-place Place 
+								| : 
+								span#txtEditActivityPlace
+							.row
+								strong.th-activity Activity 
+								| : 
+								span#txtEditActivity
+							.row
+								strong.th-note Note
+								| : 
+								span#txtEditActivityEstCost
+						.col-md-6.col-sm-6.col-xs-12#donationFormItems
 			// Bootsrap javascript file
 			script(src='/guest_page/js/bootstrap.min.js')
 			// PrettyPhoto javascript file

@@ -248,7 +248,7 @@ router.post('/addphoto', function(req, res) {
 router.get('/photo/:id', function(req, res, next) {
     var db = req.db;
     var collection = db.get('Gallery');
-    collection.find({eventId: req.params.id},{sort: {dateCreated: -1}},function(e,docs){
+    collection.find({eventId: req.params.id},{sort: {datefield: 1}},function(e,docs){
         res.json(docs);
     });
 });
@@ -472,7 +472,7 @@ router.get('/checksponsor/:eventId/:userId', function(req, res, next) {
 router.get('/sponsor/:eventId', function(req, res, next) {
     var db = req.db;
     var collection = db.get('EventSponsored');
-    collection.find({'eventId' : req.params.eventId},{sort: {dateCreated: -1}},function(e,docs){
+    collection.find({'eventId' : req.params.eventId},{sort: {datefield: 1}},function(e,docs){
         res.json(docs);
     });
 });
@@ -484,7 +484,7 @@ router.get('/featuredsponsor/:eventId', function(req, res, next) {
     collection.find({
         'eventId' : req.params.eventId,
         $or: [{'status' : 'Featured'},{'status' : 'Approved'}]
-    },{sort: {dateCreated: -1}},function(e,docs){
+    },{sort: {datefield: 1}},function(e,docs){
         res.json(docs);
     });
 });
@@ -590,7 +590,7 @@ router.get('/donations/:id', function(req, res, next) {
     var collection = db.get('Donations');
     if(req.params.id.length != 24)
         res.render('page_404');    
-    collection.find({ 'eventId' : req.params.id },{sort: {dateCreated: -1}},function(e,docs){
+    collection.find({ 'eventId' : req.params.id },{sort: {datefield: 1}},function(e,docs){
         res.json(docs);
     });
 });

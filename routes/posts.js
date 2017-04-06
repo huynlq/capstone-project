@@ -41,7 +41,7 @@ router.get('/creator/', function(req, res, next) {
 router.get('/all', function(req, res, next) {
     var db = req.db;
     var collection  = db.get('Posts');
-        collection.find({},{sort: {dateCreated: -1}},function(e,docs){
+        collection.find({},{sort: {datefield: 1}},function(e,docs){
             res.json(docs);
         });
 });
@@ -50,7 +50,7 @@ router.get('/all', function(req, res, next) {
 router.get('/news', function(req, res, next) {
     var db = req.db;
     var collection =  db.get('Posts');
-    collection.find({'postType': 'News'},{sort: {dateCreated: -1}},function(e,docs){
+    collection.find({'postType': 'News'},{sort: {datefield: 1}},function(e,docs){
         res.json(docs);
     })
 });
@@ -59,7 +59,7 @@ router.get('/news', function(req, res, next) {
 router.get('/board', function(req, res, next) {
     var db = req.db;
     var collection =  db.get('Posts');
-    collection.find({'postType': 'Community Board'},{sort: {dateCreated: -1}},function(e,docs){
+    collection.find({'postType': 'Community Board'},{sort: {datefield: 1}},function(e,docs){
         res.json(docs);
     })
 });
@@ -265,7 +265,7 @@ router.get('/comment/:id', function(req, res, next) {
     var collection2 = db.get('Ratings');
     var resdocs = [];
     var id = req.params.id;
-    collection.find({ 'postId' : id },{sort: {dateCreated: -1}},function(e,docs){        
+    collection.find({ 'postId' : id },{sort: {datefield: 1}},function(e,docs){        
         for(var i = 0; i < docs.length; i++) {
             resdocs[i] = docs[i]._id.toString();
         }
