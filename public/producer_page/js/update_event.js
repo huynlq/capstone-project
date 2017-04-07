@@ -404,7 +404,7 @@ function deleteDonation(event) {
         url: '/events/donations/id/' + donationId,
         async: false
     }).done(function( docs ) {
-
+        console.log(docs);
         var userId = docs.userId;
         if(userId == '') {
             //If they did, do our delete
@@ -433,6 +433,8 @@ function deleteDonation(event) {
             }).done(function( response ) {
                 // Check for a successful (blank) response
                 if (response.msg === '') {
+                    // Update the table
+                    populateTables();                    
                     var eventId = window.location.href.split('/')[window.location.href.split('/').length - 1].split('#')[0];
                     $.getJSON( '/events/details/' + eventId, function( dataEvent ) {        
                         var producerId = dataEvent.userId;
@@ -977,4 +979,20 @@ function removePhoto(event) {
             showAlert('danger', $LAYOUT_ERROR + response.msg);
         }
     });  
+}
+
+// Export Event
+function exportEvent(eventId) {
+    $.ajax({
+        type: 'GET',
+        url: '/events/export/' + eventId,
+        async: false
+    }).done(function( response ) {
+        console.log(response);
+        if(response.msg == "") {
+            showAlert('success', $EVENTUPDATE_ALERT_EXPORT);
+        } else {
+            showAlert('danger', $LAYOUT_ERROR + response.msg);
+        }        
+    })
 }

@@ -46,7 +46,7 @@ block content
 				  overflow:visible;
 				}
 				.progress-bar{
-				   background:rgb(23,44,60); 
+				   
 				  -webkit-transition: width 1.5s ease-in-out;
 				  transition: width 1.5s ease-in-out;
 				}
@@ -179,7 +179,11 @@ block content
 									.row.form-group(style="text-align:right")
 										a#btnParticipate.btn.btn-info(style="width: 50%" onclick='join()')
 											strong#btnJoin THAM GIA NGAY
-					.row
+					.row#costPane
+						.col-md-12.col-xs-12.fadeIn.animate-onscroll
+							h2.title-style-2
+								span#header-cost Chi phí
+								span.title-under
 						#eventSummary
 					.row
 						#eventProducerButtons.col-md-12.col-xs-12

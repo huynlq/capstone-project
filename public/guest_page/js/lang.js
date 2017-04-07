@@ -249,6 +249,7 @@ if(localStorage.getItem('language') == 'vi' || localStorage.getItem('language') 
 	$EVENTUPDATE_TIP_MARK_PRESENT		= "Có mặt";
 
 	$EVENTUPDATE_ALERT_ACTUALCOST		= "Cập nhật chi phí thành công!";
+	$EVENTUPDATE_ALERT_EXPORT			= "Xuất báo cáo Excel thành công!";
 
 	//============== POST LIST ========================================================
 
@@ -719,6 +720,7 @@ if(localStorage.getItem('language') == 'vi' || localStorage.getItem('language') 
 	$EVENTUPDATE_TIP_MARK_PRESENT		= "Mark Present";
 
 	$EVENTUPDATE_ALERT_ACTUALCOST		= "Successfully edit cost.";
+	$EVENTUPDATE_ALERT_EXPORT			= "Successfully export report."
 
 	//============== POST LIST ========================================================
 

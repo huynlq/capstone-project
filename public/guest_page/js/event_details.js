@@ -26,7 +26,7 @@ $(function(){
 		populateDonationPane(eventId);
 		populateParticipants(eventId);
 		populateParticipateForm(data);
-		//populateSummary(eventId);
+		populateCost(eventId);
 	}); 	
 
 	//========================== DIALOG HIDING FUNCTIONS ===================
@@ -364,127 +364,6 @@ function confirmDonate() {
 		    });			
 		}
 	}
-
-	// AFTER VALIDATE
-	if(checkFlag) {
-		var submitFlag = true;
-		var donationString = "";
-		
-		if(submitFlag == true) {
-			showAlert('success', $EVENTDETAILS_ALERT_DONATE_SUCCESS);
-
-			// CHECK FOR SPONSOR
-			$.getJSON( '/users/id/' + readCookie('user'), function( data ) {
-		    	if(data.role == "Sponsor") {
-		    		$.getJSON( '/events/checksponsor/' + eventId + '/' + readCookie('user'), function( dataDonationEvent ) {		    		
-		    			// Check if user is in sponsor list
-		    			if(dataDonationEvent == null) {
-		    				var sponsor = {
-				    			'eventId': window.location.href.split('/')[window.location.href.split('/').length - 1].split('#')[0],
-								'userId': readCookie('user'),
-								'status': 'Pending',
-								'donation': donationString,
-								'dateCreated': new Date()
-				    		};
-
-				    		console.log(sponsor);
-
-				    		$.ajax({
-						        type: 'POST',
-						        data: sponsor,
-						        url: '/events/addsponsor',
-						        dataType: 'JSON'
-						    }).done(function( response ) {
-						    	console.log("DONE");
-						        // Check for successful (blank) response
-						        if(response.msg != '') {
-						            alert('Error: ' + response.msg);
-						        } else {
-						        	var newNotification = {
-				                        'userId': $('#txtProducerId').val(),
-				                        'content': $('#txtDonator').val() + ' muốn làm nhà tài trợ và đóng góp cho sự kiện "' + $('#eventName').html() + '" của bạn.',
-				                        'link': '/events/update/' + eventId,
-				                        'markedRead': 'Unread',
-				                        'dateCreated': new Date()
-				                    }
-
-				                    // Use AJAX to post the object to our adduser service        
-				                    $.ajax({
-				                        type: 'POST',
-				                        data: newNotification,
-				                        url: '/notifications/addnotification',
-				                        dataType: 'JSON'
-				                    }).done(function( response ) {
-
-				                        // Check for successful (blank) response
-				                        if (response.msg !== '') {
-
-				                            // If something goes wrong, alert the error message that our service returned
-				                            showAlert('danger', $LAYOUT_ERROR + response.msg);
-
-				                        }
-				                    });
-						        }
-						    });
-		    			} else {
-		    				var newNotification = {
-		                        'userId': $('#txtProducerId').val(),
-		                        'content': $('#txtDonator').val() + ' muốn đóng góp cho sự kiện "' + $('#eventName').html() + '" của bạn.',
-		                        'link': '/events/update/' + eventId,
-		                        'markedRead': 'Unread',
-		                        'dateCreated': new Date()
-		                    }
-
-		                    // Use AJAX to post the object to our adduser service        
-		                    $.ajax({
-		                        type: 'POST',
-		                        data: newNotification,
-		                        url: '/notifications/addnotification',
-		                        dataType: 'JSON'
-		                    }).done(function( response ) {
-
-		                        // Check for successful (blank) response
-		                        if (response.msg !== '') {
-
-		                            // If something goes wrong, alert the error message that our service returned
-		                            showAlert('danger', $LAYOUT_ERROR + response.msg);
-
-		                        }
-		                    });
-		    			}
-		    		});    		   	
-		    	} else {
-                    
-                    var newNotification = {
-                        'userId': $('#txtProducerId').val(),
-                        'content': $('#txtDonator').val() + ' muốn đóng góp cho sự kiện "' + $('#eventName').html() + '" của bạn.',
-                        'link': '/events/update/' + eventId,
-                        'markedRead': 'Unread',
-                        'dateCreated': new Date()
-                    }
-
-                    // Use AJAX to post the object to our adduser service        
-                    $.ajax({
-                        type: 'POST',
-                        data: newNotification,
-                        url: '/notifications/addnotification',
-                        dataType: 'JSON'
-                    }).done(function( response ) {
-
-                        // Check for successful (blank) response
-                        if (response.msg !== '') {
-
-                            // If something goes wrong, alert the error message that our service returned
-                            showAlert('danger', $LAYOUT_ERROR + response.msg);
-
-                        }
-                    });
-		    	}
-	    	});   
-		}
-
-    	$('#donate-form').dialog('close'); 
-    }
 
 	
 
@@ -999,14 +878,23 @@ function populateDonationPane(eventId) {
 	        //Populate the progressbar panel
 	        var current;
 	        var required;
+	        var progressing;
 	        for(var i = 0; i < items.length; i++) {
 	            current = parseInt(items[i].current);
 	            required = parseInt(items[i].number);
+	            progressing = parseFloat((current/required)*100);
+	            var status = '';
+	            var status2 = '';
+	            if(progressing > 100) {
+	            	status = 'progress-bar-success';
+	            	status2 = '<i class="fa fa-check" style="color:green" aria-hidden="true"></i>';
+	            	progressing = 100;
+	            }
 	            console.log(items[i].item + ": " + current + '/' + required);
 	            $('#event-donation-progress').html( $('#event-donation-progress').html() +
-					'<label>' + items[i].item + ': </label> ' + current.toLocaleString() + '/<span id="event-donation">' + required.toLocaleString() + ' (' + items[i].unit + ')</span>' +
+					'<label>' + items[i].item + ': </label> ' + current.toLocaleString() + '/<span id="event-donation">' + required.toLocaleString() + ' (' + items[i].unit + ') ' + status2 + '</span>' +
 	                '<div class="progress">' +                                 
-	                    '<div role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" style="width:' + (current/required)*100 + '%" class="progress-bar progress-bar-striped active"></div>' +
+	                    '<div role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" style="width:' + progressing + '%" class="progress-bar progress-bar-striped ' + status + ' active"></div>' +	                    
 	                '</div>'
 				);
 	        }
@@ -1114,93 +1002,38 @@ function populateParticipateForm(data) {
 	}	
 }
 
-function populateSummary(eventId) {
+function populateCost(eventId) {
 		var content = "";
-			content =   '<hr>' +
-						'<div id="event-status-header">' +							
-						'</div>' +
-						'<h2 class="title-style-2">' + $EVENTDETAILS_HEADER_SUMMARY + ' <span class="title-under"></span></h2>' +
-						'<div id="photoGallery" class="row col-md-12 col-sm-12 col-xs-12 fadeIn animated"></div>' +
-						'<div class="row">'+							
-							'<div class="col-md-1 col-sm-1 col-xs-12"></div>' +
-							'<div class="col-md-5 col-sm-5 col-xs-12">' +
-								'<h3><strong>' + $EVENTDETAILS_HEADER_PARTICIPANT + '</strong></h3>' +
-								'<table id="tableParticipants" cellspacing="0" width="100%" class="table table-style-1 table-striped table-bordered dt-responsive nowrap datatable-responsive">'+
-									'<thead>'+
-										'<tr>'+
-											'<th>#</th>'+
-											'<th>' + $EVENTDETAILS_PARTICIPANT + '</th>'+
-										'</tr>'+
-									'</thead>'+
-									'<tbody></tbody>'+
-								'</table>'+
-							'</div>' +
-						'</div>' +
-						'<br>' +
-						'<div class="col-md-12 col-sm-12 col-xs-12">' +
-							'<h3><strong>' + $EVENTDETAILS_HEADER_COST + '</strong></h3>' +
-							'<table id="tableActivityCosts" cellspacing="0" width="100%" class="table table-style-1 table-striped table-bordered dt-responsive nowrap datatable-responsive">'+
-								'<thead>'+
-									'<tr>'+
-										'<th>#</th>'+
-										'<th>' + $EVENTDETAILS_ACTIVITY_DAY + '</th>' +
-										'<th>' + $EVENTDETAILS_ACTIVITY_LOCATION + '</th>' +
-										'<th>' + $EVENTDETAILS_ACTIVITY_ACT + '</th>' +
-										'<th>' + $EVENTDETAILS_ACTIVITY_COST + '</th>'+
-									'</tr>'+
-								'</thead>'+
-								'<tbody></tbody>'+
-							'</table>'+
-						'</div>' +						
-						'<hr>';
+			content =   '<table id="tableActivityCosts" cellspacing="0" width="100%" class="table table-style-1 table-striped table-bordered dt-responsive nowrap datatable-responsive">'+
+							'<thead>'+
+								'<tr>'+
+									'<th>#</th>'+
+									'<th>' + $EVENTDETAILS_ACTIVITY_DAY + '</th>' +
+									'<th>' + $EVENTDETAILS_ACTIVITY_LOCATION + '</th>' +
+									'<th>' + $EVENTDETAILS_ACTIVITY_ACT + '</th>' +
+									'<th>' + $EVENTDETAILS_ACTIVITY_COST + '</th>'+
+								'</tr>'+
+							'</thead>'+
+							'<tbody></tbody>'+
+						'</table>';
 		console.log(content);
 		$('#eventSummary').html(content);
 
-		var now = new Date();
-		var eventEndDate = new Date($('#event-date').html().split(" - ")[1]);
-		eventEndDate.setDate(eventEndDate.getDate() + 1);
-		if(eventEndDate.getTime() < now.getTime()){
-			$('#event-status-header').html('<div class="page-heading text-center">' +
-												'<div class="container zoomIn animated">' +
-											    	'<h1 style="text-transform: uppercase;" class="page-title">' + $EVENTDETAILS_HEADER_END + '<span class="title-under"></span></h1>' +
-											    	'<p class="page-description">' + $EVENTDETAILS_HEADER_END_DESC + '</p>' +
-											  	'</div>' +
-											'</div>');
-			populateRating(eventId);
-		}
-	// 	$('#btnParticipate').hide();
-		// $('#btnDonation').attr('style','width:100%');
-
-		var tableParticipants = $('#tableParticipants').DataTable({"columnDefs": [{ "width": "10px", "targets": 0 }]});
-		tableParticipants.clear().draw();
-		tableParticipants.columns.adjust().draw();
+		// var now = new Date();
+		// var eventEndDate = new Date($('#event-date').html().split(" - ")[1]);
+		// eventEndDate.setDate(eventEndDate.getDate() + 1);
+		// if(eventEndDate.getTime() < now.getTime()){
+		// 	$('#event-status-header').html('<div class="page-heading text-center">' +
+		// 										'<div class="container zoomIn animated">' +
+		// 									    	'<h1 style="text-transform: uppercase;" class="page-title">' + $EVENTDETAILS_HEADER_END + '<span class="title-under"></span></h1>' +
+		// 									    	'<p class="page-description">' + $EVENTDETAILS_HEADER_END_DESC + '</p>' +
+		// 									  	'</div>' +
+		// 									'</div>');
+		// 	populateRating(eventId);
+		// }
 		
 		var tableActivityCosts = $('#tableActivityCosts').DataTable({"columnDefs": [{ "width": "10px", "targets": 0 }]});
 		tableActivityCosts.clear().draw();
-
-		$('#tableParticipants_wrapper .row .col-sm-6').first().removeClass("col-sm-6").addClass("col-sm-5");
-
-		// Populate Participants
-		$.ajax({
-	        url: '/events/participants/' + eventId,
-	        dataType: 'json',
-	        async: false,
-	        success: function( data ) {
-	        	var counter = 0;
-	        	var participant;
-	        	$.each(data, function(){
-	        		if(this.status != "Absent") {
-	        			$.getJSON( '/users/id/' + this.userId, function( userData ) {
-		        			counter++;
-			        		tableParticipants.row.add([
-			        			counter,
-			        			'<a href="/users/' + userData._id + '">' + userData.username + '</a>'
-			        		]).draw('false');
-		        		});        		
-	        		}	        		
-	        	});
-	        }
-	    });		
 
 		// Populate Activity Costs
 		$.ajax({
@@ -1229,8 +1062,7 @@ function populateSummary(eventId) {
 	        		}
 	        	});
 	        }
-	    });	
-	    populateGallery(eventId);		
+	    });			
 	//}	
 }
 
