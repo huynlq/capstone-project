@@ -1,5 +1,14 @@
 // DOM Ready =============================================================
 $(document).ready(function() {
+	var user = readCookie('user');
+	if(user != '') {
+		$.getJSON( '/users/id/' + user, function( data ) {
+			populateAboutButtons(data.role);
+		});		
+	} else {
+		populateAboutButtons("Guest");
+	}
+
 	populateLanguage();
 })
 
@@ -19,5 +28,16 @@ function populateLanguage() {
 	$('#volunteer-btn').html($ABOUT_VOLUNTEER_BTN);
 	$('#sponsor-btn').html($ABOUT_SPONSOR_BTN);
 	$('#producer-btn').html($ABOUT_PRODUCER_BTN);
+}
 
+function populateAboutButtons(role) {
+	if(role == "User") {
+
+	} else if(role == "Guest") {
+		$('#btnPromote1').attr('href','/login');
+		$('#btnPromote2').attr('href','/login');
+	} else {
+		$('#btnPromote1').attr('disabled','disabled');
+		$('#btnPromote2').attr('disabled','disabled');
+	}
 }

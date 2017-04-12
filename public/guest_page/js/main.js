@@ -4,6 +4,7 @@ $(function(){
 	/*  Populate countdown
  	================================================*/ 
 
+ 	populateMainButtons();
  	populateLanguage();
  	populateEvents();
  	populateSponsors();
@@ -449,5 +450,17 @@ function populateLanguage() {
 		$('#slider1-btn').attr('href','/login');
 		$('#slider2-btn').attr('href','/login');
 		$('#slider3-btn').attr('href','/login');
+	}
+}
+
+function populateMainButtons() {
+	var user = readCookie('user');
+	if(user != '') {
+		$.getJSON( '/users/id/' + user, function( data ) {
+			if(data.role != "User") {
+				$('#slider2-btn').attr('disabled','disabled');
+				$('#slider3-btn').attr('disabled','disabled');
+			}
+		});		
 	}
 }

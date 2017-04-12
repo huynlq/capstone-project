@@ -45,6 +45,19 @@ block content
 							label.checkbox-inline
 								input#txtSearchAddress(type="checkbox" checked="checked", name="searchAddress", onchange="search()")
 								span#searchBy-address Address
+							label(style="margin-right: 20px; cursor: default") | 
+							label.checkbox-inline
+								input#txtSearchDeadline(type="checkbox" checked="checked", name="searchDeadline", onchange="search()")
+								span#searchBy-deadline Deadline
+							label.checkbox-inline
+								input#txtSearchUpcoming(type="checkbox" checked="checked", name="searchUpcoming", onchange="search()")
+								span#searchBy-upcoming Upcoming
+							label.checkbox-inline
+								input#txtSearchInProgress(type="checkbox" checked="checked", name="searchInProgress", onchange="search()")
+								span#searchBy-inProgress In Progress
+							label.checkbox-inline
+								input#txtSearchPast(type="checkbox" checked="checked", name="searchPast", onchange="search()")
+								span#searchBy-past Past
 							.pull-right
 								label.radio-inline#sortBy
 									| Sort by: 

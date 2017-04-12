@@ -1,6 +1,6 @@
 // DOM Ready =============================================================
 $(document).ready(function() {
-
+    numberField();
     populateLanguageLayout();
     var languageContent = "";
     if(localStorage.getItem('language') == 'vi' || localStorage.getItem('language') == null) {
@@ -212,4 +212,29 @@ function signOut() {
 //Show alert | type = {"info", "success", "danger", "warning"}
 function showAlert(type, message) {
   $('#alert_placeholder').html('<div class="alert alert-' + type + ' fade in alert-dismissable"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><span id="alert_message"><strong>' + message + '</strong></span></div>');
+}
+
+// Validate number field
+function numberField() {
+  $('.numberField').keydown(function (e) {
+    // Allow: backspace, delete, tab, escape, enter and .
+    if ($.inArray(e.keyCode, [46, 8, 9, 27, 13, 110, 190]) !== -1 ||
+         // Allow: Ctrl+A
+        (e.keyCode == 65 && e.ctrlKey === true) || 
+         // Allow: home, end, left, right
+        (e.keyCode >= 35 && e.keyCode <= 39)) {
+             // let it happen, don't do anything
+             return;
+    }
+    // Ensure that it is a number and stop the keypress
+    if ((e.shiftKey || (e.keyCode < 48 || e.keyCode > 57)) && (e.keyCode < 96 || e.keyCode > 105)) {
+        e.preventDefault();
+    }
+  });
+}
+
+// Validate Email
+function validateEmail(email) {
+    var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return re.test(email);
 }

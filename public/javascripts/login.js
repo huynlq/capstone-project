@@ -17,40 +17,44 @@ function register() {
 	var email    = $('#txtRegisterEmail').val();
 	var password = $('#txtRegisterPassword').val();
 
-	//Login Success => Add new user to database
-    var newUser = {
-        'username': username,
-        'password': password,
-        'email': email,
-        'role': "User",
-        'fullName': '',
-        'phoneNumber': '',
-        'address': '',
-        'image': '',
-        'markBanned': '0',
-        'dateCreated': Date(),
-        'dateModified': Date(),
-        'deleteFlag': ''
-    }
+    if(validateEmail(email)) {
+        //Login Success => Add new user to database
+        var newUser = {
+            'username': username,
+            'password': password,
+            'email': email,
+            'role': "User",
+            'fullName': '',
+            'phoneNumber': '',
+            'address': '',
+            'image': '',
+            'markBanned': '0',
+            'dateCreated': Date(),
+            'dateModified': Date(),
+            'deleteFlag': ''
+        }
 
-    // Use AJAX to post the object to our adduser service        
-    $.ajax({
-        type: 'POST',
-        data: newUser,
-        url: '/register',
-        dataType: 'JSON'
-    }).done(function( response ) {
-        // Check for successful (blank) response
-        if (response.msg === '') {
-            writeCookie('username', username, 7);
-            writeCookie('role', 'User', 7);
-            writeCookie('user', response.id, 7);
-            window.location.replace(location.origin + '/');
-        }
-        else {
-        	$('#errMsg').html(response.msg);
-        }
-    });
+        // Use AJAX to post the object to our adduser service        
+        $.ajax({
+            type: 'POST',
+            data: newUser,
+            url: '/register',
+            dataType: 'JSON'
+        }).done(function( response ) {
+            // Check for successful (blank) response
+            if (response.msg === '') {
+                writeCookie('username', username, 7);
+                writeCookie('role', 'User', 7);
+                writeCookie('user', response.id, 7);
+                window.location.replace(location.origin + '/');
+            }
+            else {
+                $('#errMsg').html(response.msg);
+            }
+        });    
+    } else {
+        $('#errMsg').html("Email is not valid");
+    }	
 }
 
 function login() {
@@ -94,4 +98,10 @@ function writeCookie(param, value,days) {
         expires = "";
     }
     document.cookie = param + "=" + value + expires + "; path=/";
+}
+
+// Validate Email
+function validateEmail(email) {
+    var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return re.test(email);
 }

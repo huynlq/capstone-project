@@ -11,23 +11,56 @@ $(function(){
 
  	populateLanguage();
 
- 	$.getJSON('/events/details/' + eventId, function(data) {
-		google.maps.event.addDomListener(window, 'load', populateMap(data));
-		var date = new Date(data.eventDate.split(' - ')[0]);
-		$('#event-date').html(data.eventDate);
-		$('#eventDay').html(date.getDate());
-		$('#eventMonthYear').html(date.toLocaleString(lang, { month: "long" }) + ', ' + date.getFullYear());
-		$('#eventTime').html(data.meetingTime);
-		$('#eventDescription').html(data.eventDescription.replace(/&lt;/g, '<').replace(/&gt;/g, '>'));		
-		populateButton(data);
-		populateActivities(eventId);
-		populateProducer(eventId);	
-		populateTimeline(eventId);
-		populateDonationPane(eventId);
-		populateParticipants(eventId);
-		populateParticipateForm(data);
-		populateCost(eventId);
+ 	//$.getJSON('/events/details/' + eventId, function(data) {
+ 	$.ajax({
+        url: '/events/details/' + eventId,
+        dataType: 'json',
+        async: false,
+        success: function( data ) {
+			google.maps.event.addDomListener(window, 'load', populateMap(data));
+			var date = new Date(data.eventDate.split(' - ')[0]);
+			$('#event-date').html(data.eventDate);
+			$('#eventDay').html(date.getDate());
+			$('#eventMonthYear').html(date.toLocaleString(lang, { month: "long" }) + ', ' + date.getFullYear());
+			$('#eventTime').html(data.meetingTime);
+			$('#eventDescription').html(data.eventDescription.replace(/&lt;/g, '<').replace(/&gt;/g, '>'));		
+			populateButton(data);
+			populateActivities(eventId);
+			populateProducer(eventId);	
+			populateTimeline(eventId);
+			populateDonationPane(eventId);
+			populateParticipants(eventId);
+			populateParticipateForm(data);
+			populateCost(eventId);
+			populateEventSponsors(eventId);
+		}
 	}); 	
+
+	//========================== OWL CAROUSEL ==============================
+
+	if( $("#eventsponsor-carousel li").length > 0 ) {
+
+		$("#eventsponsor-carousel").owlCarousel({
+			center:true,
+			 loop:true,
+			 margin:25,
+			 stagePadding: 25,
+	   		 nav:true,
+	   		 navText: [
+		      "<i class='glyphicon glyphicon-chevron-left'></i>",
+		      "<i class='glyphicon glyphicon-chevron-right'></i>"
+		    ],
+		    responsive:{
+		        0:{
+		            items:2
+		        },
+		        1000:{
+		            items:4
+		        }
+		    }
+
+		});
+	}
 
 	//========================== DIALOG HIDING FUNCTIONS ===================
 
@@ -740,8 +773,16 @@ function populateProducer(eventId) {
 
 		if(readCookie('user') == data._id) {
 			$('#eventParticipation').html('');
-			$('#eventProducerButtons').html('<br><hr><div class="col-md-3"></div>' +
-  				'<div class="col-md-3 col-xs-11"><a href="edit/' + eventId + '" style="background-color:#1f76bd; width: 100%" class="btn btn-info"><strong>' + $EVENTDETAILS_BUTTON_EDIT + '</strong></a></div>' +
+			var btnEdit = "";
+			// Check if event has started
+			if(new Date($('#event-date').html().split(' - ')[0]).getTime() > new Date().getTime()) {
+				// If not started => Enable edit button
+				btnEdit = '<div class="col-md-3 col-xs-11"><a href="edit/' + eventId + '" style="background-color:#1f76bd; width: 100%" class="btn btn-info"><strong>' + $EVENTDETAILS_BUTTON_EDIT + '</strong></a></div>';
+			} else {
+				btnEdit = '<div class="col-md-3 col-xs-11"><a style="width: 100%" class="btn btn-danger" disabled><strong>' + $EVENTDETAILS_BUTTON_EDIT + '</strong></a></div>';
+			}
+
+			$('#eventProducerButtons').html('<br><hr><div class="col-md-3"></div>' + btnEdit +
   				'<div class="col-md-3 col-xs-11"><a href="update/' + eventId + '" style="background-color:#1f76bd; width: 100%" class="btn btn-info"><strong>' + $EVENTDETAILS_BUTTON_UPDATE + '</strong></a></div>');
 		}
 	});
@@ -946,7 +987,11 @@ function populateParticipateForm(data) {
 	var eventEndDate = new Date($('#event-date').html().split(" - ")[1]);
 	var deadline = new Date(data.eventDeadline);
 	eventEndDate.setDate(eventEndDate.getDate() + 1);
-	if(deadline < now.getTime()){
+	console.log(deadline);
+	console.log(deadline.getTime());
+	console.log(now);
+	console.log(now.getTime());
+	if(deadline.getTime() < now.getTime()){
 		// If deadline have met
 		deadlineFlag = true;
 	}
@@ -982,6 +1027,8 @@ function populateParticipateForm(data) {
 					$('#btnJoin').html($EVENTDETAILS_BUTTON_JOIN);
 				}
 
+				console.log("STATUS:" + deadlineFlag);
+
 				if(deadlineFlag == true) {
 					$('#btnParticipate').removeClass('btn-info');
 					$('#btnParticipate').addClass('btn-danger');
@@ -999,7 +1046,10 @@ function populateParticipateForm(data) {
 										    '<br><a href="/login" class="btn btn-primary"><strong id="btnJoin">' + $EVENTDETAILS_BUTTON_LOGIN + '</strong></a>' +
 										  '</div>' +
 										'</div>')
-	}	
+	} else {
+		// If is producer => disable form
+		$('#participationForm').hide();
+	}
 }
 
 function populateCost(eventId) {
@@ -1430,4 +1480,31 @@ function confirmInputInfo() {
 		    showAlert('danger', $LAYOUT_ERROR + response.msg);
 		}
 	});
+}
+
+function populateEventSponsors(eventId) {
+	$.ajax({
+        url: '/events/sponsor/' + eventId,
+        dataType: 'json',
+        async: false,
+        success: function( data ) {
+        	var content = "";
+
+        	if(data.length == 0) {
+        		$('#sponsorPane').hide();
+        	} else {
+        		$.each(data, function(){
+	        		$.ajax({
+				        url: '/users/id/' + this.userId,
+				        dataType: 'json',
+				        async: false,
+				        success: function( data ) {
+			        		content = '<li><a href="/users/' + data._id + '"><img src="' + data.companyImage + '" alt=""/></a></li>';
+			        		$('#eventsponsor-carousel').html($('#eventsponsor-carousel').html() + content);
+			        	}
+			        });
+	        	});
+        	}        	        
+        }
+    });	
 }

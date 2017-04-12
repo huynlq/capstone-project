@@ -904,7 +904,10 @@ router.get('/checksponsor/:eventId/:userId', function(req, res, next) {
 router.get('/sponsor/:eventId', function(req, res, next) {
     var db = req.db;
     var collection = db.get('EventSponsored');
-    collection.find({'eventId' : req.params.eventId},{sort: {datefield: 1}},function(e,docs){
+    collection.find({
+        'eventId' : req.params.eventId,
+        'status': {'$ne': 'Pending'}
+    },{sort: {datefield: 1}},function(e,docs){
         res.json(docs);
     });
 });

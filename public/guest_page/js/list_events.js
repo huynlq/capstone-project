@@ -19,6 +19,10 @@ function populateLanguage() {
 	$('#sortBy').html($EVENTLIST_SORT_BY);
 	$('#sortBy-date').html($EVENTLIST_SORT_BY_DATE);
 	$('#sortBy-location').html($EVENTLIST_SORT_BY_PLACE);
+	$('#searchBy-deadline').html($EVENTLIST_SEARCH_DEADLINE);
+	$('#searchBy-upcoming').html($EVENTLIST_SEARCH_UPCOMING);
+	$('#searchBy-inProgress').html($EVENTLIST_SEARCH_IN_PROGRESS);
+	$('#searchBy-past').html($EVENTLIST_SEARCH_PAST);
 }
 
 function fade() {
@@ -31,15 +35,23 @@ function fade() {
 function search() {	
     var input, filter, search, i, value;
     var flag;
+    var now = new Date();
     input = $('#txtSearch').val();
     filter = input.toUpperCase();
-    searchName = $('.eventSearchName');
-    searchDesc = $('.eventSearchDesc');
-    searchAddress = $('.eventSearchAddress');
+    var searchName = $('.eventSearchName');
+    var searchDesc = $('.eventSearchDesc');
+    var searchAddress = $('.eventSearchAddress');
+    var searchDate = $('.eventSearchDate');
+    var searchDeadline = $('.eventSearchDeadline');
 
     // Loop through all table rows, and hide those who don't match the search query
     for (i = 0; i < searchName.length; i++) {
+    	console.log(now);
+    	console.log(now.getTime());
+    	console.log(new Date(searchDate[i].innerHTML.split(' - ')[0]));
+    	console.log(new Date(searchDate[i].innerHTML.split(' - ')[0]).getTime());
         flag = false;
+        statusFlag = false;
         if($('input[name="searchName"]').is(':checked')) {
             if(searchName[i].innerHTML.toUpperCase().indexOf(filter) > -1) {
                 flag = true;
@@ -56,7 +68,39 @@ function search() {
             }
         }
 
-        if (flag) {
+        if($('input[name="searchDeadline"]').is(':checked')) {
+        	if(new Date(searchDeadline[i].innerHTML).getTime() > now.getTime()) {
+        		statusFlag = true;
+        	} else {
+        		statusFlag = false;
+        	}
+        }
+
+        if($('input[name="searchUpcoming"]').is(':checked')) {
+        	if(new Date(searchDate[i].innerHTML.split(' - ')[0]).getTime() > now.getTime()) {
+        		statusFlag = true;
+        	} else {
+        		statusFlag = false;
+        	}
+        }
+
+        if($('input[name="searchInProgress"]').is(':checked')) {
+        	if(new Date(searchDate[i].innerHTML.split(' - ')[0]).getTime() < now.getTime() && new Date(searchDate[i].innerHTML.split(' - ')[1]).getTime() > now.getTime()) {
+        		statusFlag = true;
+        	} else {
+        		statusFlag = false;
+        	}
+        }
+
+        if($('input[name="searchPast"]').is(':checked')) {
+        	if(new Date(searchDate[i].innerHTML.split(' - ')[1]).getTime() < now.getTime()) {
+        		statusFlag = true;
+        	} else {
+        		statusFlag = false;
+        	}
+        }
+
+        if (flag && statusFlag) {
             searchName[i].closest('.item').style.display = "";
         } else {
             searchName[i].closest('.item').style.display = "none";
@@ -119,6 +163,8 @@ function nearby() {
 										  '<div class="on-hover hidden-xs">' +
 										    '<p>' + this.eventShortDescription + '</p>' +
 										    '<div class="eventSearchDesc" style="display:none">' + this.eventShortDescription + ' ' + this.eventDescription + '</div>' +
+										    '<div class="eventSearchDate" style="display:none">' + this.eventDate + '</div>' +
+										    '<div class="eventSearchDeadline" style="display:none">' + this.eventDeadline + '</div>' +
 										  '</div>' +
 										'</div>' +
 							    	"</div>";    	
@@ -206,6 +252,8 @@ function populateEvents() {
 								  '<div class="on-hover hidden-xs">' +
 								    '<p>' + this.eventShortDescription + '</p>' +
 								    '<div class="eventSearchDesc" style="display:none">' + this.eventShortDescription + ' ' + this.eventDescription + '</div>' +
+								    '<div class="eventSearchDate" style="display:none">' + this.eventDate + '</div>' +
+									'<div class="eventSearchDeadline" style="display:none">' + this.eventDeadline + '</div>' +
 								  '</div>' +
 								'</div>' +
 					    	"</div>";    	

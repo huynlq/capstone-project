@@ -46,7 +46,7 @@ block content
 					.form-horizontal.form-label-left
 						h3#header-userInfo(style='margin-left: 50px') User Information
 						hr
-						form(action="/users/updatemyuserinfo", method="post", enctype="multipart/form-data").row
+						form(action="/users/updatemyuserinfo", method="post", enctype="multipart/form-data", onsubmit="validateUserForm();").row
 							.col-md-1.col-sm-1
 							.col-md-3.col-sm-3.col-xs-12(style='text-align: center')
 								img#txtUserImageSrc(src='#', alt='Set your profile image!', style='height: 150px; max-width: 300px')
@@ -81,7 +81,7 @@ block content
 									label#userForm-phone.control-label.col-md-2.col-sm-2.col-xs-12
 										| Phone 
 									.col-md-7.col-sm-7.col-xs-12
-										input#txtPhone.form-control.col-md-7.col-xs-12(type='text', name='phoneNumber')
+										input#txtPhone.numberField.form-control.col-md-7.col-xs-12(type='text', name='phoneNumber', maxlength="12")
 								.row
 									.col-md-6.col-sm-6
 									.col-md-1.col-sm-1.col-xs-12
@@ -91,7 +91,7 @@ block content
 						#companyInfoDiv
 							h3#header-companyInfo(style='margin-left: 50px') Company Information
 							hr
-							form(action="/users/updatemycompanyinfo", method="post", enctype="multipart/form-data").row
+							form(action="/users/updatemycompanyinfo", method="post", enctype="multipart/form-data", onsubmit="validateCompanyForm();").row
 								.col-md-1.col-sm-1
 								.col-md-3.col-sm-3.col-xs-12(style='text-align: center')
 									img#txtCompanyImageSrc(src='#', alt='Set your company image!', style='height: 150px; max-width: 300px')
@@ -121,7 +121,7 @@ block content
 										label#companyForm-phone.control-label.col-md-2.col-sm-2.col-xs-12
 											| Phone 
 										.col-md-7.col-sm-7.col-xs-12
-											input#txtCompanyPhone.form-control.col-md-7.col-xs-12(type='text', name='companyPhoneNumber')
+											input#txtCompanyPhone.numberField.form-control.col-md-7.col-xs-12(type='text', name='companyPhoneNumber', maxlength="12")
 									.form-group
 										label#companyForm-website.control-label.col-md-2.col-sm-2.col-xs-12
 											| Website 

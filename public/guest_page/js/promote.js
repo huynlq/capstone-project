@@ -58,3 +58,53 @@ function populateCheckbox() {
     $('#btnSubmit').attr('disabled','disabled');
   }
 }
+
+function validatePromoteForm() {
+  if(validateEmail($('#txtCompanyEmail').val())) {
+    sendNotification();
+  } else {
+    event.preventDefault();
+    $('#txtCompanyEmail').focus();
+    showAlert('danger',$USERPAGE_ALERT_WRONG_EMAIL);
+  }
+}
+
+function sendNotification() {
+  var userData;
+
+  $.ajax({
+    type: 'GET',
+    url: '/users/id/' + readCookie('user'),
+    async: false
+  }).done(function( docs ) {
+    userData = docs;
+  });
+
+  $.getJSON('/users/role/Admin', function(data) {
+    for(var i = 0; i < data.length; i++) {
+      var newNotification = {
+        'userId': data[i]._id,
+        'content': userData.username + ' muốn đăng kí làm "' + $('#txtPosition').val() + '" với tư cách là "' + $('#txtCompanyName').val() + '"',
+        'link': '/users/',
+        'markedRead': 'Unread',
+        'dateCreated': new Date()
+      }
+
+      $.ajax({
+          type: 'POST',
+          data: newNotification,
+          url: '/notifications/addnotification',
+          dataType: 'JSON'
+      }).done(function( response ) {
+
+          // Check for successful (blank) response
+          if (response.msg !== '') {
+
+              // If something goes wrong, alert the error message that our service returned
+              showAlert('error', $LAYOUT_ERROR + response.msg);
+
+          }
+      });
+    }
+  });
+}

@@ -660,7 +660,7 @@ function disapproveUser(event) {
     var data = $('#tablePendingUsers').DataTable().row( $(this).parents('tr') ).data();
 
     $('#txtUserDisapproveId').val($(this).attr('rel'));
-    $('#txtUserDisapprove').val(data[2]);
+    $('#txtUserDisapprove').val(data[2].split('>')[1].split('<')[0]);
     $('#txtUserDisapproveRole').val(data[4]);
     
     $('#disapprove-reason-form').dialog('open');    

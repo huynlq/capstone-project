@@ -104,6 +104,10 @@ if(localStorage.getItem('language') == 'vi' || localStorage.getItem('language') 
 	$EVENTLIST_SEARCH_NAME			= "Tên";
 	$EVENTLIST_SEARCH_ADDRESS		= "Địa chỉ";
 	$EVENTLIST_SEARCH_DESCRIPTION	= "Chi tiết";
+	$EVENTLIST_SEARCH_DEADLINE		= "Trước hạn đăng kí";
+	$EVENTLIST_SEARCH_UPCOMING		= "Sắp tới";
+	$EVENTLIST_SEARCH_IN_PROGRESS	= "Đang diễn ra";
+	$EVENTLIST_SEARCH_PAST			= "Đã kết thúc";
 	$EVENTLIST_SORT_BY				= "Sắp xếp theo:";
 	$EVENTLIST_SORT_BY_DATE			= "Thời gian";
 	$EVENTLIST_SORT_BY_PLACE		= "Gần tôi";
@@ -323,6 +327,8 @@ if(localStorage.getItem('language') == 'vi' || localStorage.getItem('language') 
 
 	$USERPAGE_NO_EVENT				= "Hiện chưa có sự kiện nào.";
 
+	$USERPAGE_ALERT_WRONG_EMAIL		= "Email không hợp lệ.";
+
 	//============== MY USER PAGE ======================================================
 
 	$MYUSERPAGE_HEADER				= "TRANG CÁ NHÂN";
@@ -350,6 +356,7 @@ if(localStorage.getItem('language') == 'vi' || localStorage.getItem('language') 
 	$MYUSERPAGE_COMPFORM_SAVE		= "Lưu thông tin";
 
 	$MYUSERPAGE_NO_EVENT			= "Hiện chưa có sự kiện nào.";
+	$MYUSERPAGE_ALERT_WRONG_EMAIL	= "Email không hợp lệ.";
 
 	//============== PROMOTE ==========================================================
 
@@ -575,6 +582,10 @@ if(localStorage.getItem('language') == 'vi' || localStorage.getItem('language') 
 	$EVENTLIST_SEARCH_NAME			= "Name";
 	$EVENTLIST_SEARCH_ADDRESS		= "Address";
 	$EVENTLIST_SEARCH_DESCRIPTION	= "Description";
+	$EVENTLIST_SEARCH_UPCOMING		= "Upcoming";
+	$EVENTLIST_SEARCH_IN_PROGRESS	= "In Progress";
+	$EVENTLIST_SEARCH_PAST			= "Past";
+	$EVENTLIST_SEARCH_DEADLINE		= "Before Deadline";
 	$EVENTLIST_SORT_BY				= "Sort By:";
 	$EVENTLIST_SORT_BY_DATE			= "Time";
 	$EVENTLIST_SORT_BY_PLACE		= "Nearby";
@@ -821,6 +832,7 @@ if(localStorage.getItem('language') == 'vi' || localStorage.getItem('language') 
 	$MYUSERPAGE_COMPFORM_SAVE		= "Save Company Info";
 
 	$MYUSERPAGE_NO_EVENT			= "None at the moment.";
+	$USERPAGE_ALERT_WRONG_EMAIL		= "Email is not valid.";
 
 	//============== PROMOTE ==========================================================
 

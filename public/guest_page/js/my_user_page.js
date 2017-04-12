@@ -77,6 +77,22 @@ function populateLanguage() {
   $('#companyForm-save').html($MYUSERPAGE_COMPFORM_SAVE);
 }
 
+function validateUserForm() {
+  if(!validateEmail($('#txtEmail').val())){
+    event.preventDefault();
+    $('#txtEmail').focus();
+    showAlert('danger',$USERPAGE_ALERT_WRONG_EMAIL);
+  };
+}
+
+function validateCompanyForm() {
+  if(!validateEmail($('#txtCompanyEmail').val())){
+    event.preventDefault();
+    $('#txtCompanyEmail').focus();
+    showAlert('danger',$USERPAGE_ALERT_WRONG_EMAIL);
+  };
+}
+
 function populateForms() {
 	var id = readCookie("user");
 	$.getJSON( '/users/id/' + id, function( data ) {
