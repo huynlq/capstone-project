@@ -626,6 +626,7 @@ function approveUser(event) {
             var newNotification = {
                 'userId': userId,
                 'content': 'Yêu cầu được làm "' + data[4] + '" của bạn đã được xét duyệt.',
+                'link': '/my',
                 'markedRead': 'Unread',
                 'dateCreated': new Date()
             }
@@ -685,6 +686,7 @@ function confirmDisapproveUser() {
             var newNotification = {
                 'userId': $('#txtUserDisapproveId').val(),
                 'content': 'Yêu cầu được làm "' + $('#txtUserDisapproveRole').val() + '" của bạn đã bị bác bỏ vì: ' + $('#txtDisapproveReason').val(),
+                'link': '/my',
                 'markedRead': 'Unread',
                 'dateCreated': new Date()
             }
@@ -749,6 +751,7 @@ function confirmDemoteUser() {
             var newNotification = {
                 'userId': $('#txtUserDemoteId').val(),
                 'content': 'Bạn đã bị cách chức "' + $('#txtUserDemoteRole').val() + '" vì lý do: ' + $('#txtDemoteReason').val(),
+                'link': '/my',
                 'markedRead': 'Unread',
                 'dateCreated': new Date()
             }

@@ -101,6 +101,10 @@ router.post('/login', function(req, res) {
 				id: doc._id
 			}
 		);
+	  } else if (doc.markBanned == 1) {
+	  	res.send(
+            { msg: "Account banned. Reason: " + doc.bannedReason }
+        );
 	  } else {
 	  	res.send(
             { msg: "Invalid username and/or password" }

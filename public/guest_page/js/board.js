@@ -4,6 +4,7 @@ $(function(){
 	/*  Populate countdown
  	================================================*/ 
  	populateLanguage();
+ 	populateButton();
  	populatePosts();
 
 });
@@ -16,6 +17,12 @@ function populateLanguage() {
 	$('#th-comment').html($BOARD_TABLE_COMMENT);
 	$('#th-date').html($BOARD_TABLE_DATE);
 	$('#btnCreatePost').html($BOARD_CREATE_POST);
+}
+
+function populateButton() {
+	if(readCookie('user') == '') {
+		$('#btnCreator').attr('href','/login');
+	}	
 }
 
 function populatePosts() {
