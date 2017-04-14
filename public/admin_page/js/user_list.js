@@ -506,7 +506,7 @@ function banUser(event) {
 function confirmBanUser() {
     var user = {
         'markBanned': '1',
-        'bannedReason': $('#txtReason').val(),
+        'bannedReason': $('#txtBanReason').val(),
         'dateModified': Date()
     };
 
@@ -521,7 +521,7 @@ function confirmBanUser() {
 
             var newNotification = {
                 'userId': $('#txtUserBanId').val(),
-                'content': 'Tài khoản của bạn đã bị cấm vì lý do: ' + $('#txtReason').val(),
+                'content': 'Tài khoản của bạn đã bị cấm vì lý do: ' + $('#txtBanReason').val(),
                 'markedRead': 'Unread',
                 'dateCreated': new Date()
             }
@@ -539,7 +539,7 @@ function confirmBanUser() {
                     populateTables();
                     $('#txtUserBanId').val("");
                     $('#txtUserBan').val("");
-                    $('#txtReason').val("");
+                    $('#txtBanReason').val("");
                     $('#ban-reason-form').dialog('close');                    
                 } else {
                     // If something goes wrong, alert the error message that our service returned

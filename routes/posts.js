@@ -299,8 +299,8 @@ router.get('/comment/id/:id', function(req, res, next) {
 router.get('/commentnumber/:id', function(req, res, next) {
     var db = req.db;
     var collection = db.get('Comments');    
-    collection.count({ 'postId' : req.params.id },{},function(e,count){
-        res.json(count);
+    collection.find({ 'postId' : req.params.id },{},function(e,docs){
+        res.json(docs.length);
     }); 
 });
 

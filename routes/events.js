@@ -1104,11 +1104,11 @@ router.get('/participants/:id', function(req, res, next) {
 router.get('/participantsnumber/:id', function(req, res, next) {
     var db = req.db;
     var collection = db.get('EventJoined');
-    collection.count({
+    collection.find({
         'eventId': req.params.id,
         'status': 'Present'
     },{}, function(e,docs){
-        res.json(docs);
+        res.json(docs.length);
     });
 });
 
@@ -1200,11 +1200,11 @@ router.get('/sponsoredevents/:id', function(req, res, next) {
 router.get('/sponsornumber/:id', function(req, res, next) {
     var db = req.db;
     var collection = db.get('EventSponsored');
-    collection.count({
+    collection.find({
         'eventId': req.params.id,
         'status': {'$ne': 'Pending'}
     },{}, function(e,docs){
-        res.json(docs);
+        res.json(docs.length);
     });
 });
 
@@ -1212,11 +1212,11 @@ router.get('/sponsornumber/:id', function(req, res, next) {
 router.get('/sponsoredbyuser/:id', function(req, res, next) {
     var db = req.db;
     var collection = db.get('EventSponsored');
-    collection.count({
+    collection.find({
         'userId': req.params.id,
         'status': {'$ne': 'Pending'}
     },{}, function(e,docs){
-        res.json(docs);
+        res.json(docs.length);
     });
 });
 
@@ -1224,11 +1224,11 @@ router.get('/sponsoredbyuser/:id', function(req, res, next) {
 router.get('/createdbyuser/:id', function(req, res, next) {
     var db = req.db;
     var collection = db.get('Events');
-    collection.count({
+    collection.find({
         'userId': req.params.id,
         'status': 'Published'
     },{}, function(e,docs){
-        res.json(docs);
+        res.json(docs.length);
     });
 }); 
 

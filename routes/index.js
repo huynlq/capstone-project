@@ -94,17 +94,19 @@ router.post('/login', function(req, res) {
 
 	collection.findOne({"username": username,"password": password}, function(err, doc) {
 	  if (doc != null) {
-		res.send(
-			{ 
-				msg: "",
-				role: doc.role,
-				id: doc._id
-			}
-		);
-	  } else if (doc.markBanned == 1) {
-	  	res.send(
-            { msg: "Account banned. Reason: " + doc.bannedReason }
-        );
+	  	if (doc.markBanned == 1) {
+	  		res.send(
+            	{ msg: "Account banned. Reason: " + doc.bannedReason }
+        	)
+        } else {
+	  		res.send(
+				{ 
+					msg: "",
+					role: doc.role,
+					id: doc._id
+				}
+			);
+        }		
 	  } else {
 	  	res.send(
             { msg: "Invalid username and/or password" }
