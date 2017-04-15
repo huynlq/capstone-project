@@ -22,19 +22,37 @@ var uploading = multer({
 
 /* GET users listing. */
 router.get('/', function(req, res, next) {
-  res.render('admin_page/post_list', { title: 'Posts' });
+    var user = req.cookies.user;
+    if(user != null) {
+        var db = req.db;
+        var collection = db.get('Users');
+        var userId = req.params.id;
+        collection.findOne({'_id': user},{},function(e,docs){
+            if(docs.role == "Admin")
+                res.render('admin_page/post_list', { title: 'Posts' });
+            else
+                res.render('page_404');
+        });        
+    } else {
+        res.render('page_404');
+    }  
 });
 
 /* GET users listing. */
 router.get('/creator/', function(req, res, next) {
-    var docs = {
-        '_id':'',
-        'postContent':'',
-        'postDescription':'',
-        'postImage':'',
-        'postName':'',
-    };
-    res.render('admin_page/post_creator', { title: 'Post Creator', docs: docs });
+    var user = req.cookies.user;
+    if(user != null) {
+        var docs = {
+            '_id':'',
+            'postContent':'',
+            'postDescription':'',
+            'postImage':'',
+            'postName':'',
+        };
+        res.render('admin_page/post_creator', { title: 'Post Creator', docs: docs });
+    } else {
+        res.render('page_404');
+    }      
 });
 
 /* GET all posts. */
@@ -147,17 +165,22 @@ router.post('/addpost', uploading.single('displayPostImage'), function(req, res)
 
 /* GET post edit page by id. */
 router.get('/updatepost/:id', function(req, res, next) {
-    var db = req.db;
-    var collection = db.get('Posts');
-    if(req.params.id.length != 24)
-        res.render('page_404');
-    collection.findOne({ '_id' : req.params.id },{},function(e,docs){
-        if(docs) {
-            res.render('admin_page/post_creator', { title: 'Charity Event | Post Creator', 'docs': docs });
-        } else {
+    var user = req.cookies.user;
+    if(user != null) {
+        var db = req.db;
+        var collection = db.get('Posts');
+        if(req.params.id.length != 24)
             res.render('page_404');
-        }
-    });
+        collection.findOne({ '_id' : req.params.id },{},function(e,docs){
+            if(docs) {
+                res.render('admin_page/post_creator', { title: 'Charity Event | Post Creator', 'docs': docs });
+            } else {
+                res.render('page_404');
+            }
+        });
+    } else {
+        res.render('page_404');
+    }     
 });
 
 /*  POST To Update Post */

@@ -37,6 +37,7 @@ if(localStorage.getItem('language') == 'vi' || localStorage.getItem('language') 
 
 	$LAYOUT_ERROR					= "Lỗi: ";
 	$LAYOUT_BAN_MESSAGE				= "Tài khoản của bạn đã bị cấm với lý do: ";
+	$LAYOUT_USER_EXIST_MESSAGE		= "Tên tài khoản hoặc email bị trùng.";
 
 	$LAYOUT_TIME_DAY				= "Ngày";
 	$LAYOUT_TIME_HOUR				= "Giờ";
@@ -515,6 +516,7 @@ if(localStorage.getItem('language') == 'vi' || localStorage.getItem('language') 
 
 	$LAYOUT_ERROR					= "Error: ";
 	$LAYOUT_BAN_MESSAGE				= "Your account has been banned for: ";
+	$LAYOUT_USER_EXIST_MESSAGE		= "Username or email exists.";
 
 	$LAYOUT_TIME_DAY				= "Days";
 	$LAYOUT_TIME_HOUR				= "Hours";

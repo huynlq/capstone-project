@@ -22,7 +22,20 @@ var uploading = multer({
 
 /* GET users listing. */
 router.get('/', function(req, res, next) {
-  res.render('admin_page/user_list', { title: 'Users Manager' });
+    var user = req.cookies.user;
+    if(user != null) {
+        var db = req.db;
+        var collection = db.get('Users');
+        var userId = req.params.id;
+        collection.findOne({'_id': user},{},function(e,docs){
+            if(docs.role == "Admin")
+                res.render('admin_page/user_list', { title: 'Users Manager' });
+            else
+                res.render('page_404');
+        });        
+    } else {
+        res.render('page_404');
+    }
 });
 
 /* GET event listing. */
@@ -72,18 +85,24 @@ router.get('/role/:role', function(req, res, next) {
 router.post('/adduser', function(req, res) {
     var db = req.db;
     var collection = db.get('Users');
-    collection.insert(req.body, function(err, result){
-        download('http://www.infinitemd.com/wp-content/uploads/2017/02/default.jpg', 'public/images/user/' + result._id + '.jpg', function(){
-                        console.log('done');
-                    });
-        collection.update({ '_id' : result._id }, { $set:{'image':'/images/user/' + result._id + '.jpg'} }, function(err) {
-            res.send(
-                (err === null) ? { msg: ''} : { msg: err, 'message': 'An error occured. Please try again.' }
-            );
-        });  
+    collection.findOne({$or:[{"username": req.body.username},{"email": req.body.email}]}, function(err, doc) {
+      if (doc == null) {        
+        collection.insert(req.body, function(err, result){
+            download('http://www.infinitemd.com/wp-content/uploads/2017/02/default.jpg', 'public/images/user/' + result._id + '.jpg', function(){
+                console.log('done');
+            });
+            collection.update({ '_id' : result._id }, { $set:{'image':'/images/user/' + result._id + '.jpg'} }, function(err) {
+                res.send(
+                    (err === null) ? {msg: '', id: result._id} : {msg: err}
+                );
+            });         
+        });
+      } else {
+        res.send(
+            { msg: "EXISTED" }
+        );
+      }
     });
-
-
 });
 
 /* DELETE to deleteuser. */

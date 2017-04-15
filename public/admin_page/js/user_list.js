@@ -175,41 +175,49 @@ function populateLanguage(){
 
 // Create new admin
 function createAdmin(){
-    var newUser = {
-        'username': $('#txtAdminUsername').val(),
-        'password': $('#txtAdminPassword').val(),
-        'email': $('#txtAdminEmail').val(),
-        'role': 'Admin',
-        'dateCreated': new Date()
-    }
-
-    // Use AJAX to post the object to our adduser service        
-    $.ajax({
-        type: 'POST',
-        data: newUser,
-        url: '/users/adduser',
-        dataType: 'JSON'
-    }).done(function( response ) {
-
-        // Check for successful (blank) response
-        if (response.msg === '') {
-
-            // Clear the form inputs
-            $('#txtAdminUsername').val('');
-            $('#txtAdminPassword').val('');
-            $('#txtAdminEmail').val('');
-
-            // Update the table
-            populateTables();
-
+    if(validateEmail($('#txtAdminEmail').val())) {
+        var newUser = {
+            'username': $('#txtAdminUsername').val(),
+            'password': $('#txtAdminPassword').val(),
+            'email': $('#txtAdminEmail').val(),
+            'role': 'Admin',
+            'dateCreated': new Date()
         }
-        else {
 
-            // If something goes wrong, alert the error message that our service returned
-            showAlert('danger', $LAYOUT_ERROR + response.msg);
+        // Use AJAX to post the object to our adduser service        
+        $.ajax({
+            type: 'POST',
+            data: newUser,
+            url: '/users/adduser',
+            dataType: 'JSON'
+        }).done(function( response ) {
 
-        }
-    });
+            // Check for successful (blank) response
+            if (response.msg === '') {
+
+                // Clear the form inputs
+                $('#txtAdminUsername').val('');
+                $('#txtAdminPassword').val('');
+                $('#txtAdminEmail').val('');
+
+                // Update the table
+                populateTables();
+
+            } else if (response.msg == 'EXISTED') {
+
+                showAlert('warning', $LAYOUT_USER_EXIST_MESSAGE);
+
+            } else {
+
+                // If something goes wrong, alert the error message that our service returned
+                showAlert('danger', $LAYOUT_ERROR + response.msg);
+
+            }
+        });
+    } else {
+        $('#txtAdminEmail').focus();
+        showAlert('warning',$USERPAGE_ALERT_WRONG_EMAIL);
+    }    
 }
 
 // Populate all tables
@@ -290,15 +298,12 @@ function showUsers(data) {
             dateCreated = new Date(this.dateCreated);        
             table.row.add([
                 counter,
-                '<center>'
-                    + '<a data-toggle="tooltip" title="' + $LISTUSER_TIP_DETAILS + '" class="btn btn-info btn-xs" href="users/' + this._id + '">'
-                        + '<span class="glyphicon glyphicon-search"></span>'
-                    + '</a>'
+                '<center>'                    
                     + '<a data-toggle="tooltip" title="' + $LISTUSER_TIP_BAN + '" class="btn btn-danger btn-xs linkbanuser" rel="' + this._id + '" href="#">'
                         + '<span class="glyphicon glyphicon-remove"></span>'
                     + '</a>'
                 + '</center>',
-                this.username,
+                '<a href="/users/' + this._id + '">' + this.username + '</a>',
                 this.fullName,
                 this.email,
                 this.phoneNumber,
@@ -318,20 +323,26 @@ function showAdmin(data) {
 	var dateCreated = "";
 	var tableContent = "";
 	var table = $('#tableAdmins').DataTable();
+    var actionContent = "";
     table.clear().draw();
     // For each item in our JSON, add a table row and cells to the content string
     $.each(data, function(){
     	if(this.role == "Admin") {
     		counter++;
 	    	dateCreated = new Date(this.dateCreated);
+            if(this._id != readCookie('user')) {
+                actionContent = '<center>'
+                    + '<a data-toggle="tooltip" title="' + $LISTUSER_TIP_DELETE + '" class="btn btn-danger btn-xs linkremoveadmin" rel="' + this._id + '">'
+                        + '<span class="glyphicon glyphicon-remove"></span>'
+                    + '</a>'
+                + '</center>';
+            } else {
+                actionContent = "";
+            }
 	    	table.row.add([
 	    		counter,
-	    		'<center>'
-                    + '<a data-toggle="tooltip" title="' + $LISTUSER_TIP_DELETE + '" class="btn btn-danger btn-xs linkremoveadmin" rel="' + this._id + '">'
-                    	+ '<span class="glyphicon glyphicon-remove"></span>'
-                    + '</a>'
-	        	+ '</center>',
-	        	this.username,
+	    		actionContent,
+	        	'<a href="/users/' + this._id + '">' + this.username + '</a>',
 	        	this.email
 	    	]).draw( false );
     	}    	
@@ -366,9 +377,6 @@ function showProducers(data) {
             table.row.add([
                 counter,
                 '<center>'
-                    + '<a data-toggle="tooltip" title="' + $LISTUSER_TIP_DETAILS + '" class="btn btn-info btn-xs" href="/users/' + this._id + '">'
-                        + '<span class="glyphicon glyphicon-search"></span>'
-                    + '</a>'                    
                     + '<a data-toggle="tooltip" title="' + $LISTUSER_TIP_DEMOTE + '" class="btn btn-warning btn-xs linkdemoteuser" rel="' + this._id + '">'
                         + '<span class="glyphicon glyphicon-arrow-down"></span>'
                     + '</a>'
@@ -376,7 +384,7 @@ function showProducers(data) {
                         + '<span class="glyphicon glyphicon-remove"></span>'
                     + '</a>'
                 + '</center>',
-                this.username,
+                '<a href="/users/' + this._id + '">' + this.username + '</a>',
                 this.companyName,
                 this.email,
                 this.phoneNumber,
@@ -442,15 +450,12 @@ function showBannedUser(data) {
             dateCreated = new Date(this.dateCreated);
             table.row.add([
                 counter,
-                '<center>'
-                    + '<a data-toggle="tooltip" title="' + $LISTUSER_TIP_DETAILS + '" class="btn btn-info btn-xs" href="users/' + this._id + '">'
-                        + '<span class="glyphicon glyphicon-search"></span>'
-                    + '</a>'
+                '<center>'                    
                     + '<a data-toggle="tooltip" title="' + $LISTUSER_TIP_UNBAN + '" class="btn btn-success btn-xs linkunbanuser" rel="' + this._id + '">'
                         + '<span class="glyphicon glyphicon-ok"></span>'
                     + '</a>'
                 + '</center>',
-                this.username,
+                '<a href="/users/' + this._id + '">' + this.username + '</a>',
                 this.role,
                 this.fullName,
                 this.email,
