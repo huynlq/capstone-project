@@ -9,8 +9,8 @@ $(document).ready(function() {
 
     $('[data-toggle="tooltip"]').tooltip(); 
 
-    populateTables();    
-    populateUnit();
+    populateTables();        
+
     $('#tab-pane li a').first().click();
 
     $('#tableDonation tbody').on('click', 'td a.linkremovedonation', deleteDonation);
@@ -92,8 +92,10 @@ function populateLanguage() {
     $('#header').html($EVENTUPDATE_HEADER);
 
     $('.tab-donation').html($EVENTUPDATE_TAB_DONATION);
+    $('.tab-pending-donation').html($EVENTUPDATE_TAB_PENDING_DONATION);
     $('.tab-participant').html($EVENTUPDATE_TAB_PARTICIPANT);
     $('.tab-cost').html($EVENTUPDATE_TAB_COST);
+    $('.tab-sponsor').html($EVENTUPDATE_TAB_SPONSOR);
     $('.tab-gallery').html($EVENTUPDATE_TAB_GALLERY);
 
     $('.th-action').html();
@@ -101,11 +103,7 @@ function populateLanguage() {
     $('.th-donator').html($EVENTDETAILS_DONATION_NAME);
     $('.th-item').html($EVENTDETAILS_DONATION_ITEM);
     $('.th-quantity').html($EVENTDETAILS_DONATION_QUANTITY);
-    $('.th-unit').html($EVENTUPDATE_DONATEFORM_UNIT);
-    $('.th-type').html($EVENTUPDATE_DONATEFORM_TYPE);
     $('#donateForm-add').html($EVENTUPDATE_DONATEFORM_ADD);
-    $('#typeCash').html($EVENTUPDATE_DONATEFORM_TYPE_CASH);
-    $('#typeItem').html($EVENTUPDATE_DONATEFORM_TYPE_ITEM);
 
     $('.th-day').html($EVENTDETAILS_ACTIVITY_DAY);
     $('.th-time').html($EVENTDETAILS_ACTIVITY_TIME);
@@ -142,6 +140,8 @@ function populateTables() {
         showGallery(data._id);
         showSponsors(data._id);
         populateDonationForm(data._id);
+        populateUnit();
+        
         // showActivities(data);
         $('[data-toggle="tooltip"]').tooltip();         
     }); 
@@ -158,28 +158,28 @@ function showDonations(data) {
         var counter = 0;        
         var item;
         if(dataDonation != null) {
-            $.each(dataDonation, function(){
-                if(this.status != "Pending") {
-                    if(this.donationType == "Cash")
+            for(var i = dataDonation.length - 1; i >= 0; i--) {
+                if(dataDonation[i].status != "Pending") {
+                    if(dataDonation[i].donationType == "Cash")
                         item = $EVENTDETAILS_DONATION_CASH;
                     else
-                        item = this.donationItem;
+                        item = dataDonation[i].donationItem;
                     counter++;
-                    dateCreated = new Date(this.dateCreated);        
+                    dateCreated = new Date(dataDonation[i].dateCreated);        
                     table.row.add([
                         counter,
                         '<center>'
-                            + '<a data-toggle="tooltip" title="' + $EVENTUPDATE_TIP_DELETE + '" class="btn btn-danger btn-xs linkremovedonation" rel="' + this._id + '" href="#">'
+                            + '<a data-toggle="tooltip" title="' + $EVENTUPDATE_TIP_DELETE + '" class="btn btn-danger btn-xs linkremovedonation" rel="' + dataDonation[i]._id + '" href="#">'
                                 + '<span class="glyphicon glyphicon-remove"></span>'
                             + '</a>'
                         + '</center>',
-                        '<a href="/users/' + this.userId + '">' + this.donatorName + '</a>',
+                        '<a href="/users/' + dataDonation[i].userId + '">' + dataDonation[i].donatorName + '</a>',
                         item,
-                        parseInt(this.donationNumber).toLocaleString() + ' ' + this.donationUnit,
+                        parseInt(dataDonation[i].donationNumber).toLocaleString() + ' ' + dataDonation[i].donationUnit,
                         dateCreated.toLocaleDateString()
                     ]).draw( false );
-                }                
-            });
+                }
+            }
             $('#countDonations').html(counter);
         }
         $('[data-toggle="tooltip"]').tooltip(); 
@@ -334,43 +334,28 @@ function showSponsors(_id) {
 
 // Populate Unit
 function populateUnit() {
-    if($('#txtDonationType').val() == $EVENTUPDATE_DONATEFORM_TYPE_CASH) {
-        $('#donationItemForm').hide();
-        $('#donationUnitForm').html('<select id="txtDonationUnit" class="form-control col-md-7 col-xs-12"><option>VND</option><option>USD</option></select>');
-    } else {
-        $('#donationItemForm').show();
-        $('#donationUnitForm').html('<input id="txtDonationUnit" type="text" required="required" class="form-control col-md-7 col-xs-12"/>');        
-    }
+    var eventId = window.location.href.split('/')[window.location.href.split('/').length - 1].split('#')[0];
+    $.getJSON( '/events/donationrequire/' + eventId, function( data ) {
+        for(var i = 0; i < data.length; i++) {
+            if($('#txtDonationItem').val() == data[i].item)
+                $('#txtDonationNumber').attr('placeholder',data[i].unit);
+        }
+    });
 }
 
 // Add new donation
 function addDonation() {
     var eventId = window.location.href.split('/')[window.location.href.split('/').length - 1].split('#')[0];
-    var newDonation;
-    if($('#txtDonationType').val() == $EVENTUPDATE_DONATEFORM_TYPE_CASH) {
-        newDonation = {
-            'eventId': eventId,            
-            'userId': '',
-            'donatorName': $('#txtDonatorName').val(),
-            'donationType': 'Cash',
-            'donationNumber': $('#txtDonationNumber').val(),
-            'donationUnit': $('#txtDonationUnit').val(),
-            'status': 'Approved',
-            'dateCreated': new Date()
-        };
-    } else {
-        newDonation = {
-            'eventId': eventId,            
-            'userId': '',
-            'donatorName': $('#txtDonatorName').val(),
-            'donationType': 'Item',
-            'donationItem': $('#txtDonationItem').val(),
-            'donationNumber': $('#txtDonationNumber').val(),
-            'donationUnit': $('#txtDonationUnit').val(),
-            'status': 'Approved',
-            'dateCreated': new Date()
-        };
-    }
+    var newDonation = {
+        'eventId': eventId,            
+        'userId': '',
+        'donatorName': $('#txtDonatorName').val(),
+        'donationItem': $('#txtDonationItem').val(),
+        'donationNumber': $('#txtDonationNumber').val(),
+        'donationUnit': $('#txtDonationNumber').attr('placeholder'),
+        'status': 'Approved',
+        'dateCreated': new Date()
+    };
     
 
     $.ajax({
@@ -496,33 +481,33 @@ function showPendingDonations(data) {
         var counter = 0;     
         var item;   
         if(dataDonation != null) {
-            $.each(dataDonation, function(){
-                if(this.status == "Pending") {
-                    if(this.donationType == "Cash")
+            for(var i = dataDonation.length - 1; i >= 0; i--) {
+                if(dataDonation[i].status == "Pending") {
+                    if(dataDonation[i].donationType == "Cash")
                         item = $EVENTDETAILS_DONATION_CASH;
                     else
-                        item = this.donationItem;
+                        item = dataDonation[i].donationItem;
                     counter++;
-                    dateCreated = new Date(this.dateCreated);        
+                    dateCreated = new Date(dataDonation[i].dateCreated);        
                     table.row.add([
                         counter,
                         '<center>'
-                            + '<a data-toggle="tooltip" title="Approve" class="btn btn-success btn-xs linkapprovedonation" rel="' + this._id + '" href="#">'
+                            + '<a data-toggle="tooltip" title="Approve" class="btn btn-success btn-xs linkapprovedonation" rel="' + dataDonation[i]._id + '" href="#">'
                                 + '<span class="glyphicon glyphicon-ok"></span>'
                             + '</a>'
-                            + '<a data-toggle="tooltip" title="Disapprove" class="btn btn-danger btn-xs linkremovedonation" rel="' + this._id + '" href="#">'
+                            + '<a data-toggle="tooltip" title="Disapprove" class="btn btn-danger btn-xs linkremovedonation" rel="' + dataDonation[i]._id + '" href="#">'
                                 + '<span class="glyphicon glyphicon-remove"></span>'
                             + '</a>'
                         + '</center>',
-                        '<a href="/users/' + this.userId + '">' + this.donatorName + '</a>',
-                        this.donatorEmail,
-                        this.donatorPhoneNumber,
+                        '<a href="/users/' + dataDonation[i].userId + '">' + dataDonation[i].donatorName + '</a>',
+                        dataDonation[i].donatorEmail,
+                        dataDonation[i].donatorPhoneNumber,
                         item,
-                        parseInt(this.donationNumber).toLocaleString() + ' ' + this.donationUnit,
+                        parseInt(dataDonation[i].donationNumber).toLocaleString() + ' ' + dataDonation[i].donationUnit,
                         dateCreated.toLocaleDateString()
                     ]).draw( false );
-                }                
-            });
+                }
+            }
             $('#countPendingDonations').html(counter);
         }
         $('[data-toggle="tooltip"]').tooltip(); 
@@ -787,6 +772,7 @@ function populateDonationForm(eventId) {
         //Set donation items variables
         var items = [];
         var donateContent = "";
+        var itemContent = "";
 
         //Get required items
         for(var i = 0; i < data.length; i++) {
@@ -803,9 +789,11 @@ function populateDonationForm(eventId) {
                                   '<input id="' + data[i]._id + '" class="donateItem form-control" type="number" placeholder="(' + data[i].unit + ')" class="form-control col-md-6 col-xs-10"/>' +
                                 '</div>' +
                              '</div>';
+            itemContent += '<option>' + data[i].item + '</option>';
         }
 
         $('#donationFormItems').html(donateContent);
+        $('#txtDonationItem').html(itemContent);
     });
 }
 
@@ -991,6 +979,7 @@ function exportEvent(eventId) {
         console.log(response);
         if(response.msg == "") {
             showAlert('success', $EVENTUPDATE_ALERT_EXPORT);
+            window.location = response.link;
         } else {
             showAlert('danger', $LAYOUT_ERROR + response.msg);
         }        

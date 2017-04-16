@@ -842,27 +842,33 @@ function populateDonationPane(eventId) {
         	var number;
         	var unit;
         	var donator;
-        	$.each(data, function(){        		
-    			number = parseInt(this.donationNumber).toLocaleString();
-    			item = this.donationItem;
-    			if(this.status == "Approved") {
+        	var link;
+        	for(var i = data.length - 1; i >= 0; i --) {
+        		number = parseInt(data[i].donationNumber).toLocaleString();
+    			item = data[i].donationItem;
+    			if(data[i].userId != '') {
+    				link = '<a href="/users/' + data[i].userId + '">' + data[i].donatorName + '</a>';
+    			} else {
+    				link = data[i].donatorName;
+    			}
+    			if(data[i].status == "Approved") {
     				counterApproved++;
     				tableDonations.row.add([
 	        			counterApproved,
-	        			'<a href="">' + this.donatorName + '</a>',
+	        			link,
 	        			item,
-			        	number + ' ' + this.donationUnit
+			        	number + ' ' + data[i].donationUnit
 	        		]).draw('false');	        		
     			} else {
     				counterPending++;
     				tablePendingDonations.row.add([
 	        			counterPending,
-	        			'<a href="">' + this.donatorName + '</a>',
+	        			link,
 	        			item,
-			        	number + ' ' + this.donationUnit
+			        	number + ' ' + data[i].donationUnit
 	        		]).draw('false');	        		
-    			}        			
-        	});
+    			} 
+        	}
         }
     });
     $('#donationPane li a').first().click();
@@ -899,6 +905,38 @@ function populateDonationPane(eventId) {
 	    }
 
 	    $('#donationFormItems').html(donateContent);
+
+	    // Populate Participants
+		$.ajax({
+	        url: '/events/participants/' + eventId,
+	        dataType: 'json',
+	        async: false,
+	        success: function( data ) {
+	        	var counter = 0;
+	        	for(var  i = 0; i < data.length; i++) {
+	        		if(data[i].status != "Absent")
+	        			counter ++;
+	        	}
+	        	counter = parseInt(counter);
+	            var volunteersNeeded = 0;
+	            if($('#volunteersNeeded').html() != null && $('#volunteersNeeded').html() != '') {
+	            	volunteersNeeded = parseInt($('#volunteersNeeded').html());
+	            }	            
+	            var volunteerPercent = parseFloat((counter/volunteersNeeded)*100);
+	            var status = '';
+	            var status2 = '';
+	            if(volunteerPercent > 100) {
+	            	status = 'progress-bar-success';
+	            	status2 = '<i class="fa fa-check" style="color:green" aria-hidden="true"></i>';
+	            	volunteerPercent = 100;
+	            }
+	    		$('#event-donation-progress').html('<label>' + $EVENTDETAILS_HEADER_PARTICIPANT + ': </label> ' + counter.toLocaleString() + '/<span id="event-donation">' + volunteersNeeded.toLocaleString() + ' ' + status2 + '</span>' +
+	                '<div class="progress">' +                                 
+	                    '<div role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" style="width:' + volunteerPercent + '%" class="progress-bar progress-bar-striped ' + status + ' active"></div>' +	                    
+	                '</div>');    	
+	        }
+	    });		
+	    
 
 	    //Get Donation data from the database
 	    $.getJSON( '/events/donations/' + window.location.href.split('/')[window.location.href.split('/').length - 1], function( dataDonation ) {

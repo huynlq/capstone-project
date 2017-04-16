@@ -77,6 +77,12 @@ block content
 														i.glyphicon.glyphicon-calendar.fa.fa-calendar
 													input#eventDeadline.form-control(type='text', style='width: 200px', name='eventDeadline', value='#{docs.eventDeadline}')
 								.form-group
+									label.control-label.col-md-3.col-sm-3.col-xs-12
+										span#form-volunteer Meeting Address 
+										span.required  *
+									.col-md-6.col-sm-6.col-xs-12
+										input#txtVolunteersNeeded.form-control.col-md-7.col-xs-12(placeholder='', type='number', name='volunteersNeeded', value='#{docs.volunteersNeeded}')
+								.form-group
 									label.control-label.col-md-3.col-sm-3.col-xs-3
 										span#form-time Meeting Time 
 										span.required  *

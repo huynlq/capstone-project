@@ -66,6 +66,7 @@ function populateLanguage() {
   $('#form-name').html($EVENTCREATOR_EVENTFORM_NAME);
   $('#form-date').html($EVENTCREATOR_EVENTFORM_DATE);
   $('#form-deadline').html($EVENTCREATOR_EVENTFORM_DEADLINE);
+  $('#form-volunteer').html($EVENTCREATOR_EVENTFORM_VOLUNTEER);
   $('#form-time').html($EVENTCREATOR_EVENTFORM_TIME);
   $('#form-address').html($EVENTCREATOR_EVENTFORM_ADDRESS);
   $('#form-image').html($EVENTCREATOR_EVENTFORM_IMAGE);

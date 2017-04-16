@@ -192,6 +192,7 @@ if(localStorage.getItem('language') == 'vi' || localStorage.getItem('language') 
 	$EVENTCREATOR_EVENTFORM_NAME		= "Tên sự kiện";
 	$EVENTCREATOR_EVENTFORM_DATE		= "Ngày tổ chức";
 	$EVENTCREATOR_EVENTFORM_DEADLINE	= "Hạn chót đăng kí";
+	$EVENTCREATOR_EVENTFORM_VOLUNTEER	= "Số người tình nguyện cần thiết";
 	$EVENTCREATOR_EVENTFORM_TIME		= "Thời gian tập trung";
 	$EVENTCREATOR_EVENTFORM_ADDRESS		= "Địa điểm tập trung";
 	$EVENTCREATOR_EVENTFORM_IMAGE		= "Hình ảnh";
@@ -222,8 +223,10 @@ if(localStorage.getItem('language') == 'vi' || localStorage.getItem('language') 
 	$EVENTUPDATE_HEADER					= "QUẢN LÝ SỰ KIỆN";
 
 	$EVENTUPDATE_TAB_DONATION			= "Quyên góp";
+	$EVENTUPDATE_TAB_PENDING_DONATION	= "Quyên góp chờ duyệt";
 	$EVENTUPDATE_TAB_PARTICIPANT		= "Người tham gia";
 	$EVENTUPDATE_TAB_COST				= "Chi phí";
+	$EVENTUPDATE_TAB_SPONSOR			= "Tài trợ";
 	$EVENTUPDATE_TAB_GALLERY			= "Thư viện hình";
 
 	$EVENTUPDATE_TH_ACTION				= "Hành động";
@@ -235,10 +238,7 @@ if(localStorage.getItem('language') == 'vi' || localStorage.getItem('language') 
 	$EVENTUPDATE_TH_JOIN				= "Ngày tham gia";
 	$EVENTUPDATE_TH_DONATION			= "Đóng góp";
 
-	$EVENTUPDATE_DONATEFORM_UNIT		= "Đơn vị";
-	$EVENTUPDATE_DONATEFORM_TYPE		= "Thể loại";
-	$EVENTUPDATE_DONATEFORM_TYPE_CASH	= "Tiền mặt";
-	$EVENTUPDATE_DONATEFORM_TYPE_ITEM	= "Nhu yếu phẩm";
+	$EVENTUPDATE_DONATEFORM_ITEM		= "Thể loại";
 
 	$EVENTUPDATE_DONATEFORM_ADD			= "Thêm >>";
 
@@ -671,6 +671,7 @@ if(localStorage.getItem('language') == 'vi' || localStorage.getItem('language') 
 	$EVENTCREATOR_EVENTFORM_NAME		= "Event Name";
 	$EVENTCREATOR_EVENTFORM_DATE		= "Event Date";
 	$EVENTCREATOR_EVENTFORM_DEADLINE	= "Participation Deadline";
+	$EVENTCREATOR_EVENTFORM_VOLUNTEER	= "Volunteers Needed"
 	$EVENTCREATOR_EVENTFORM_TIME		= "Meeting Time";
 	$EVENTCREATOR_EVENTFORM_ADDRESS		= "Meeting Address";
 	$EVENTCREATOR_EVENTFORM_IMAGE		= "Image";
@@ -701,8 +702,10 @@ if(localStorage.getItem('language') == 'vi' || localStorage.getItem('language') 
 	$EVENTUPDATE_HEADER					= "UPDATE EVENT";
 
 	$EVENTUPDATE_TAB_DONATION			= "Donations";
+	$EVENTUPDATE_TAB_PENDING_DONATION	= "Pending Donations";
 	$EVENTUPDATE_TAB_PARTICIPANT		= "Participants";
 	$EVENTUPDATE_TAB_COST				= "Costs";
+	$EVENTUPDATE_TAB_SPONSOR			= "Sponsors";
 	$EVENTUPDATE_TAB_GALLERY			= "Photo Gallery";
 
 	$EVENTUPDATE_TH_ACTION				= "Action";
@@ -714,10 +717,7 @@ if(localStorage.getItem('language') == 'vi' || localStorage.getItem('language') 
 	$EVENTUPDATE_TH_JOIN				= "Join Date";
 	$EVENTUPDATE_TH_DONATION			= "Donation";
 
-	$EVENTUPDATE_DONATEFORM_UNIT		= "Unit";
-	$EVENTUPDATE_DONATEFORM_TYPE		= "Type";
-	$EVENTUPDATE_DONATEFORM_TYPE_CASH	= "Cash";
-	$EVENTUPDATE_DONATEFORM_TYPE_ITEM	= "Item";
+	$EVENTUPDATE_DONATEFORM_ITEM		= "Item";
 
 	$EVENTUPDATE_DONATEFORM_ADD			= "Add >>";
 

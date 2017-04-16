@@ -158,7 +158,7 @@ router.get('/export/:id', function(req, res){
             current = 0;
             for(var j = 0; j < approvedDonations.length; j++) {
                 if(approvedDonations[j].donationItem == requireData[i].item)
-                    current += parseInt(approvedDonations[i].donationNumber);
+                    current += parseInt(approvedDonations[j].donationNumber);
             }
 
             worksheet.getCell('C' + (8 + i + 1)).value = i + 1;
@@ -458,8 +458,8 @@ router.get('/export/:id', function(req, res){
         }
 
         // Write to a file
-        workbook.xlsx.writeFile("CCMA-Report-" + eventData.eventName + ".xlsx").then(function() {
-            res.send({msg: ''});
+        workbook.xlsx.writeFile("public/files/CCMA-Report-" + eventData.eventName + ".xlsx").then(function() {
+            res.send({msg: '', link: "/files/CCMA-Report-" + eventData.eventName + ".xlsx"});
         });
     });
 });
@@ -497,6 +497,7 @@ router.get('/creator_event', function(req, res, next) {
         'eventDescription' : '',
         'eventDate' : '',
         'eventDeadline' : '',
+        'volunteersNeeded' : '',
         'meetingTime' : '',
         'meetingAddress' : '',
         'meetingAddressLat' : '',
@@ -1019,13 +1020,13 @@ router.get('/donations/id/:id', function(req, res, next) {
     });
 });
 
-/* GET event donations base on id. */
+/* GET event donations base on eventId. */
 router.get('/donations/:id', function(req, res, next) {
     var db = req.db;
     var collection = db.get('Donations');
     if(req.params.id.length != 24)
         res.render('page_404');    
-    collection.find({ 'eventId' : req.params.id },{sort: {datefield: 1}},function(e,docs){
+    collection.find({ 'eventId' : req.params.id },function(e,docs){
         res.json(docs);
     });
 });
