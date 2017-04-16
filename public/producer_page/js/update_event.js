@@ -259,16 +259,12 @@ function approveDonation(event) {
 
 // Populate Sponsors Tables
 function showSponsors(_id) {
-    $('#tableSponsor_wrapper .row').first().css('margin-left', '30px');
-    $('#tableSponsor_wrapper .row .col-sm-6').first().removeClass("col-sm-6").addClass("col-sm-2");
-
-    $('#tablePendingSponsor_wrapper .row').first().css('margin-left', '30px');
-    $('#tablePendingSponsor_wrapper .row .col-sm-6').first().removeClass("col-sm-6").addClass("col-sm-2");
 
     var sponsorData;
 
     //Get Donation data from the database
     $.getJSON( '/events/allsponsor/' + _id, function( dataSponsor ) {
+        console.log(dataSponsor);
         var tableSponsor = $('#tableSponsor').DataTable();
         var tablePendingSponsor = $('#tablePendingSponsor').DataTable();
         tableSponsor.clear().draw();
@@ -292,9 +288,6 @@ function showSponsors(_id) {
                             '<center>'
                                 + '<a data-toggle="tooltip" title="Approve" class="btn btn-success btn-xs linkapprovesponsor" rel="' + sponsorData._id + '" href="#">'
                                     + '<span class="glyphicon glyphicon-ok"></span>'
-                                + '</a>'
-                                + '<a data-toggle="tooltip" title="Disapprove" class="btn btn-danger btn-xs linkremovesponsor" rel="' + sponsorData._id + '" href="#">'
-                                    + '<span class="glyphicon glyphicon-remove"></span>'
                                 + '</a>'
                             + '</center>',
                             '<a href="/users/' + dataUser._id + '">' + dataUser.companyName + '</a>',
@@ -914,19 +907,25 @@ function unfeatureSponsor(event) {
 // Remove sponsor
 function removeSponsor(event) {
     event.preventDefault();
+    var eventId = window.location.href.split('/')[window.location.href.split('/').length - 1].split('#')[0];
+
+    var status = {
+        'status': 'Pending'
+    }
 
     $.ajax({
-        type: 'DELETE',
-        url: '/events/removesponsor/' + $(this).attr('rel')
+        type: 'PUT',
+        data: status,
+        url: '/events/updatesponsor/' + $(this).attr('rel')
     }).done(function( response ) {
         // Check for a successful (blank) response
         if (response.msg === '') {
-            showSponsors();
+            showSponsors(eventId);
         }
         else {
             showAlert('danger', $LAYOUT_ERROR + response.msg);
         }
-    });  
+    });
 }
 
 // Show Gallery
