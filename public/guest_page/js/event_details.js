@@ -30,7 +30,7 @@ $(function(){
 			populateTimeline(eventId);
 			populateDonationPane(eventId);
 			populateParticipants(eventId);
-			populateParticipateForm(data);
+			populateParticipateForm(eventId);
 			populateCost(eventId);
 			populateEventSponsors(eventId);
 		}
@@ -824,6 +824,8 @@ function populateDonationPane(eventId) {
 						    '</div>';
 	$('#donationPane').html(donationContent);
 
+	$('#event-donation-progress').html('');
+
 	var tableDonations = $('#tableDonations').DataTable({"columnDefs": [{ "width": "10px", "targets": 0 }]});
 	tableDonations.clear().draw();
 	var tablePendingDonations = $('#tablePendingDonations').DataTable({"columnDefs": [{ "width": "10px", "targets": 0 }]});
@@ -983,6 +985,7 @@ function populateDonationPane(eventId) {
 }
 
 function populateParticipants(eventId) {
+	$('#tableParticipants').html('');
 	var content = '<thead>'+
 						'<tr>'+
 							'<th>#</th>' +
@@ -994,7 +997,12 @@ function populateParticipants(eventId) {
 	var tableParticipants = $('#tableParticipants').DataTable({"columnDefs": [{ "width": "10px", "targets": 0 }]});
 	tableParticipants.clear().draw();
 	tableParticipants.columns.adjust().draw();
+	refreshParticipantTable(eventId);			
+}
 
+function refreshParticipantTable(eventId) {	
+	var tableParticipants = $('#tableParticipants').DataTable();
+	tableParticipants.clear().draw();
 	// Populate Participants
 	$.ajax({
         url: '/events/participants/' + eventId,
@@ -1015,79 +1023,86 @@ function populateParticipants(eventId) {
         		}	        		
         	});
         }
-    });		
+    });
 }
 
-function populateParticipateForm(data) {
-	// Check if event have meet participate deadline
-	var deadlineFlag = false;
-	var now = new Date();
-	var eventEndDate = new Date($('#event-date').html().split(" - ")[1]);
-	var deadline = new Date(data.eventDeadline);
-	eventEndDate.setDate(eventEndDate.getDate() + 1);
-	console.log(deadline);
-	console.log(deadline.getTime());
-	console.log(now);
-	console.log(now.getTime());
-	if(deadline.getTime() < now.getTime()){
-		// If deadline have met
-		deadlineFlag = true;
-	}
+function populateParticipateForm(eventId) {
+	$.ajax({
+	    url: '/events/details/' + eventId,
+	    dataType: 'json',
+	    async: false,
+	    success: function(data) {
+	    	// Check if event have meet participate deadline
+			var deadlineFlag = false;
+			var now = new Date();
+			var eventEndDate = new Date($('#event-date').html().split(" - ")[1]);
+			var deadline = new Date(data.eventDeadline);
+			eventEndDate.setDate(eventEndDate.getDate() + 1);
+			console.log(deadline);
+			console.log(deadline.getTime());
+			console.log(now);
+			console.log(now.getTime());
+			if(deadline.getTime() < now.getTime()){
+				// If deadline have met
+				deadlineFlag = true;
+			}
 
-	// Check if user is log in
-	var userId = readCookie('user');
-	if(userId != '' &&  userId != $('#txtProducerId').val()) {
-		$.getJSON( '/users/id/' + userId, function( userData ) {
-			// If true => Populate form from user data
-			$('#txtParticipantFullName').val(userData.fullName);
-			$('#txtParticipantEmail').val(userData.email);
-			$('#txtParticipantPhone').val(userData.phoneNumber);
+			// Check if user is log in
+			var userId = readCookie('user');
+			if(userId != '' &&  userId != $('#txtProducerId').val()) {
+				$.getJSON( '/users/id/' + userId, function( userData ) {
+					// If true => Populate form from user data
+					$('#txtParticipantFullName').val(userData.fullName);
+					$('#txtParticipantEmail').val(userData.email);
+					$('#txtParticipantPhone').val(userData.phoneNumber);
 
-			// Check if user have join
-			$.getJSON( '/events/participants/' + data._id + '/' + userId, function( dataParticipate ) {
-				if(dataParticipate.msg == 'true') {			
-					// If joined => Form become read only, button become unjoin	
-					$('#txtParticipantFullName').attr('readonly','readonly');
-					$('#txtParticipantEmail').attr('readonly','readonly');
-					$('#txtParticipantPhone').attr('readonly','readonly');
-					$('#btnParticipate').removeClass('btn-info');
-					$('#btnParticipate').addClass('btn-danger');
-					$('#btnParticipate').attr('onclick','unjoin()');
-					$('#btnJoin').html($EVENTDETAILS_BUTTON_UNJOIN);
-				} else {
-					// If not => Form can be written, button become join	
-					$('#txtParticipantFullName').removeAttr('readonly');
-					$('#txtParticipantEmail').removeAttr('readonly');
-					$('#txtParticipantPhone').removeAttr('readonly');
-					$('#btnParticipate').removeClass('btn-danger');
-					$('#btnParticipate').addClass('btn-info');
-					$('#btnParticipate').attr('onclick','join()');
-					$('#btnJoin').html($EVENTDETAILS_BUTTON_JOIN);
-				}
+					// Check if user have join
+					$.getJSON( '/events/participants/' + data._id + '/' + userId, function( dataParticipate ) {
+						if(dataParticipate.msg == 'true') {			
+							// If joined => Form become read only, button become unjoin	
+							$('#txtParticipantFullName').attr('readonly','readonly');
+							$('#txtParticipantEmail').attr('readonly','readonly');
+							$('#txtParticipantPhone').attr('readonly','readonly');
+							$('#btnParticipate').removeClass('btn-info');
+							$('#btnParticipate').addClass('btn-danger');
+							$('#btnParticipate').attr('onclick','unjoin()');
+							$('#btnJoin').html($EVENTDETAILS_BUTTON_UNJOIN);
+						} else {
+							// If not => Form can be written, button become join	
+							$('#txtParticipantFullName').removeAttr('readonly');
+							$('#txtParticipantEmail').removeAttr('readonly');
+							$('#txtParticipantPhone').removeAttr('readonly');
+							$('#btnParticipate').removeClass('btn-danger');
+							$('#btnParticipate').addClass('btn-info');
+							$('#btnParticipate').attr('onclick','join()');
+							$('#btnJoin').html($EVENTDETAILS_BUTTON_JOIN);
+						}
 
-				console.log("STATUS:" + deadlineFlag);
+						console.log("STATUS:" + deadlineFlag);
 
-				if(deadlineFlag == true) {
-					$('#btnParticipate').removeClass('btn-info');
-					$('#btnParticipate').addClass('btn-danger');
-					$('#btnParticipate').attr('onclick','');
-					$('#btnParticipate').attr('disabled','disabled');
-					$('#btnJoin').html($EVENTDETAILS_BUTTON_JOIN_ENDED);
-				}
-			});			
-		});
-	} else if(userId == '') {
-		// If false => Log in button
-		$('#participationForm').html('<div class="page-heading text-center">' +
-										  '<div class="zoomIn animated">' +
-										  	'<h1 style="text-transform: uppercase;" class="page-title">' + $EVENTDETAILS_BUTTON_JOIN_REQUIRE + '<span class="title-under"></span></h1>' +
-										    '<br><a href="/login" class="btn btn-primary"><strong id="btnJoin">' + $EVENTDETAILS_BUTTON_LOGIN + '</strong></a>' +
-										  '</div>' +
-										'</div>')
-	} else {
-		// If is producer => disable form
-		$('#participationForm').hide();
-	}
+						if(deadlineFlag == true) {
+							$('#btnParticipate').removeClass('btn-info');
+							$('#btnParticipate').addClass('btn-danger');
+							$('#btnParticipate').attr('onclick','');
+							$('#btnParticipate').attr('disabled','disabled');
+							$('#btnJoin').html($EVENTDETAILS_BUTTON_JOIN_ENDED);
+						}
+					});			
+				});
+			} else if(userId == '') {
+				// If false => Log in button
+				$('#participationForm').html('<div class="page-heading text-center">' +
+												  '<div class="zoomIn animated">' +
+												  	'<h1 style="text-transform: uppercase;" class="page-title">' + $EVENTDETAILS_BUTTON_JOIN_REQUIRE + '<span class="title-under"></span></h1>' +
+												    '<br><a href="/login" class="btn btn-primary"><strong id="btnJoin">' + $EVENTDETAILS_BUTTON_LOGIN + '</strong></a>' +
+												  '</div>' +
+												'</div>')
+			} else {
+				// If is producer => disable form
+				$('#participationForm').hide();
+			}
+	    }
+	});	
 }
 
 function populateCost(eventId) {
@@ -1325,6 +1340,7 @@ function join() {
 		var startDate = new Date(dates[0]).getTime();
 		var endDate = new Date(dates[1]).getTime();
 		var flag = false;
+		var eventDATA;
 
 		//CHECK IF USER HAS JOINED ANY DUPLICATED EVENTS
 		$.ajax({
@@ -1389,7 +1405,7 @@ function join() {
 							        if (response.msg === '') {
 							            
 							            // Update the table
-							            populateParticipants(eventId);
+							            refreshParticipantTable(eventId);
 							            populateParticipateForm(eventId);
 							            showAlert('success', $EVENTDETAILS_ALERT_JOIN_SUCCESS);
 
@@ -1458,7 +1474,7 @@ function unjoin(){
             
             // Update the table
             populateParticipateForm(eventId);
-            populateParticipants(eventId);
+            refreshParticipantTable(eventId);
             showAlert('success', $EVENTDETAILS_ALERT_UNJOIN_SUCCESS);
 
             $.getJSON('/users/id/' + userId, function(data) {

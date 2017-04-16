@@ -268,7 +268,7 @@ function showSponsors(_id) {
     var sponsorData;
 
     //Get Donation data from the database
-    $.getJSON( '/events/sponsor/' + _id, function( dataSponsor ) {
+    $.getJSON( '/events/allsponsor/' + _id, function( dataSponsor ) {
         var tableSponsor = $('#tableSponsor').DataTable();
         var tablePendingSponsor = $('#tablePendingSponsor').DataTable();
         tableSponsor.clear().draw();

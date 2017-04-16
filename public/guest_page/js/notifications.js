@@ -87,6 +87,8 @@ function get_time_diff( datetime )
 
     var date_diff = new Date( milisec_diff );
 
+    date_diff.setHours(date_diff.getHours() - 7);
+
     var content = "";
     var limit = 2;
     var counter = 0;
