@@ -260,12 +260,13 @@ function confirmDonate() {
 	var checkFlag = true;
 	var value = 0;
 	var donationString = "";
+	var flag = false;
 
 	// VALIDATING
 	for(var i = 0; i < $('.donateItem').length; i++) {
 		value = $('.donateItem')[i].value;
-		if(value > 0 && value != "") {					
-			console.log('/events/donationrequire/id/' + $('.donateItem')[i].id);
+		if(value > 0 && value != "") {		
+			flag = true;			
 			$.ajax({
 		        url: '/events/donationrequire/id/' + $('.donateItem')[i].id,
 		        dataType: 'json',
@@ -285,7 +286,6 @@ function confirmDonate() {
 						'status': 'Pending',
 						'dateCreated': new Date()
 					};
-					console.log(donation);
 
 					donationString += data.item + ': ' + value + ' (' + data.unit + ') ';
 
@@ -297,97 +297,7 @@ function confirmDonate() {
 				    }).done(function( response ) {
 
 				        // Check for successful (blank) response
-				        if(response.msg == '') {
-
-				        	$.getJSON( '/users/id/' + readCookie('user'), function( data ) {
-				        		var newNotification = {
-			                        'userId': $('#txtProducerId').val(),
-			                        'content': data.username + ' đã đóng góp cho sự kiện "' + $('#eventName').html() + '" của bạn.',
-			                        'link': '/events/update/' + eventId,
-			                        'markedRead': 'Unread',
-			                        'dateCreated': new Date()
-			                    }
-
-			                    // Use AJAX to post the object to our adduser service        
-			                    $.ajax({
-			                        type: 'POST',
-			                        data: newNotification,
-			                        url: '/notifications/addnotification',
-			                        dataType: 'JSON'
-			                    }).done(function( response ) {
-
-			                        // Check for successful (blank) response
-			                        if (response.msg !== '') {
-
-			                            // If something goes wrong, alert the error message that our service returned
-			                            showAlert('error', $LAYOUT_ERROR + response.msg);
-
-			                        }
-			                    });
-
-			                    // CHECK FOR SPONSOR
-								$.getJSON( '/users/id/' + readCookie('user'), function( data ) {
-							    	if(data.role == "Sponsor") {
-							    		$.getJSON( '/events/checksponsor/' + eventId + '/' + readCookie('user'), function( dataDonationEvent ) {		    		
-							    			// Check if user is in sponsor list
-							    			if(dataDonationEvent == null) {
-							    				var sponsor = {
-									    			'eventId': window.location.href.split('/')[window.location.href.split('/').length - 1].split('#')[0],
-													'userId': readCookie('user'),
-													'status': 'Pending',
-													'donation': donationString,
-													'dateCreated': new Date()
-									    		};
-
-									    		console.log(sponsor);
-
-									    		$.ajax({
-											        type: 'POST',
-											        data: sponsor,
-											        url: '/events/addsponsor',
-											        dataType: 'JSON'
-											    }).done(function( response ) {
-											    	console.log("DONE");
-											        // Check for successful (blank) response
-											        if(response.msg != '') {
-											            alert('Error: ' + response.msg);
-											        } else {
-											        	var newNotification = {
-									                        'userId': $('#txtProducerId').val(),
-									                        'content': $('#txtDonator').val() + ' muốn làm nhà tài trợ và đóng góp cho sự kiện "' + $('#eventName').html() + '" của bạn.',
-									                        'link': '/events/update/' + eventId,
-									                        'markedRead': 'Unread',
-									                        'dateCreated': new Date()
-									                    }
-
-									                    // Use AJAX to post the object to our adduser service        
-									                    $.ajax({
-									                        type: 'POST',
-									                        data: newNotification,
-									                        url: '/notifications/addnotification',
-									                        dataType: 'JSON'
-									                    }).done(function( response ) {
-
-									                        // Check for successful (blank) response
-									                        if (response.msg !== '') {
-
-									                            // If something goes wrong, alert the error message that our service returned
-									                            showAlert('danger', $LAYOUT_ERROR + response.msg);
-
-									                        }
-									                    });
-											        }
-											    });
-							    			}
-							    		});    		   	
-							    	}
-							    });
-
-					            // Update the table
-					            populateDonationPane(eventId);
-					            $('#donate-form').dialog('close'); 
-					            showAlert('success', $EVENTDETAILS_ALERT_DONATE_SUCCESS);
-				        	});				        	
+				        if(response.msg == '') {				        				        	
 
 				        } else {
 				            showAlert('danger', $LAYOUT_ERROR + response.msg);
@@ -398,7 +308,98 @@ function confirmDonate() {
 		}
 	}
 
-	
+	if(flag == true) {
+		$.getJSON( '/users/id/' + readCookie('user'), function( data ) {
+			var newNotification = {
+	            'userId': $('#txtProducerId').val(),
+	            'content': data.username + ' đã đóng góp cho sự kiện "' + $('#eventName').html() + '" của bạn.',
+	            'link': '/events/update/' + eventId,
+	            'markedRead': 'Unread',
+	            'dateCreated': new Date()
+	        }
+
+	        // Use AJAX to post the object to our adduser service        
+	        $.ajax({
+	            type: 'POST',
+	            data: newNotification,
+	            url: '/notifications/addnotification',
+	            dataType: 'JSON'
+	        }).done(function( response ) {
+
+	            // Check for successful (blank) response
+	            if (response.msg !== '') {
+
+	                // If something goes wrong, alert the error message that our service returned
+	                showAlert('error', $LAYOUT_ERROR + response.msg);
+
+	            }
+	        });
+
+	        // CHECK FOR SPONSOR
+			$.getJSON( '/users/id/' + readCookie('user'), function( data ) {
+		    	if(data.role == "Sponsor") {
+		    		$.getJSON( '/events/checksponsor/' + eventId + '/' + readCookie('user'), function( dataDonationEvent ) {		    		
+		    			// Check if user is in sponsor list
+		    			if(dataDonationEvent == null) {
+		    				var sponsor = {
+				    			'eventId': window.location.href.split('/')[window.location.href.split('/').length - 1].split('#')[0],
+								'userId': readCookie('user'),
+								'status': 'Pending',
+								'donation': donationString,
+								'dateCreated': new Date()
+				    		};
+
+				    		console.log(sponsor);
+
+				    		$.ajax({
+						        type: 'POST',
+						        data: sponsor,
+						        url: '/events/addsponsor',
+						        dataType: 'JSON'
+						    }).done(function( response ) {
+						    	console.log("DONE");
+						        // Check for successful (blank) response
+						        if(response.msg != '') {
+						            alert('Error: ' + response.msg);
+						        } else {
+						        	var newNotification = {
+				                        'userId': $('#txtProducerId').val(),
+				                        'content': $('#txtDonator').val() + ' muốn làm nhà tài trợ và đóng góp cho sự kiện "' + $('#eventName').html() + '" của bạn.',
+				                        'link': '/events/update/' + eventId,
+				                        'markedRead': 'Unread',
+				                        'dateCreated': new Date()
+				                    }
+
+				                    // Use AJAX to post the object to our adduser service        
+				                    $.ajax({
+				                        type: 'POST',
+				                        data: newNotification,
+				                        url: '/notifications/addnotification',
+				                        dataType: 'JSON'
+				                    }).done(function( response ) {
+
+				                        // Check for successful (blank) response
+				                        if (response.msg !== '') {
+
+				                            // If something goes wrong, alert the error message that our service returned
+				                            showAlert('danger', $LAYOUT_ERROR + response.msg);
+
+				                        }
+				                    });
+						        }
+						    });
+		    			}
+		    		});    		   	
+		    	}
+		    });
+
+	        // Update the table
+	        console.log("UPDATE");
+	        populateDonationPane(eventId);
+	        $('#donate-form').dialog('close'); 
+	        showAlert('success', $EVENTDETAILS_ALERT_DONATE_SUCCESS);
+		});	
+	}	
 
 	// // POST donation request
 	// for(var i = 1; i <= parseInt($('#numOfDonations').html()); i++) {
@@ -822,9 +823,7 @@ function populateDonationPane(eventId) {
 									'</table>'+
 						    	'</div>' +
 						    '</div>';
-	$('#donationPane').html(donationContent);
-
-	$('#event-donation-progress').html('');
+	$('#donationPane').html(donationContent);	
 
 	var tableDonations = $('#tableDonations').DataTable({"columnDefs": [{ "width": "10px", "targets": 0 }]});
 	tableDonations.clear().draw();
@@ -883,6 +882,8 @@ function populateDonationPane(eventId) {
 				    	'<a id="btnDonation" style="width: 100%" onclick="donate()" class="btn btn-info"><strong id="btnDonate">ĐÓNG GÓP</strong></a>';
 
     $('#requiredDonationPane').html(requireContent);
+
+    $('#event-donation-progress').html('');
 
     $.getJSON( '/events/donationrequire/' + eventId, function( data ) {
 		//Set donation items variables
@@ -1461,56 +1462,59 @@ function join() {
 
 
 function unjoin(){
-	var eventId = window.location.href.split('/')[window.location.href.split('/').length - 1].split('#')[0];
-	var userId = readCookie("user");
-	$.ajax({
-        type: 'DELETE',
-        url: '/events/removeparticipant/' + eventId + '/' + userId,
-        dataType: 'JSON'
-    }).done(function( response ) {
+	var r = confirm($EVENTDETAILS_ALERT_UNJOIN);
+	if (r == true) {
+	  	var eventId = window.location.href.split('/')[window.location.href.split('/').length - 1].split('#')[0];
+		var userId = readCookie("user");
+		$.ajax({
+	        type: 'DELETE',
+	        url: '/events/removeparticipant/' + eventId + '/' + userId,
+	        dataType: 'JSON'
+	    }).done(function( response ) {
 
-        // Check for successful (blank) response
-        if (response.msg === '') {
-            
-            // Update the table
-            populateParticipateForm(eventId);
-            refreshParticipantTable(eventId);
-            showAlert('success', $EVENTDETAILS_ALERT_UNJOIN_SUCCESS);
+	        // Check for successful (blank) response
+	        if (response.msg === '') {
+	            
+	            // Update the table
+	            populateParticipateForm(eventId);
+	            refreshParticipantTable(eventId);
+	            showAlert('success', $EVENTDETAILS_ALERT_UNJOIN_SUCCESS);
 
-            $.getJSON('/users/id/' + userId, function(data) {
-            	var newNotification = {
-	                'userId': $('#txtProducerId').val(),
-	                'content': data.fullName + ' đã hủy đăng kí tham gia sự kiện "' + $('#eventName').html() + '" của bạn.',
-	                'link': '/events/' + eventId,
-	                'markedRead': 'Unread',
-	                'dateCreated': new Date()
-	            }
+	            $.getJSON('/users/id/' + userId, function(data) {
+	            	var newNotification = {
+		                'userId': $('#txtProducerId').val(),
+		                'content': data.fullName + ' đã hủy đăng kí tham gia sự kiện "' + $('#eventName').html() + '" của bạn.',
+		                'link': '/events/' + eventId,
+		                'markedRead': 'Unread',
+		                'dateCreated': new Date()
+		            }
 
-	            // Use AJAX to post the object to our adduser service        
-	            $.ajax({
-	                type: 'POST',
-	                data: newNotification,
-	                url: '/notifications/addnotification',
-	                dataType: 'JSON'
-	            }).done(function( response ) {
+		            // Use AJAX to post the object to our adduser service        
+		            $.ajax({
+		                type: 'POST',
+		                data: newNotification,
+		                url: '/notifications/addnotification',
+		                dataType: 'JSON'
+		            }).done(function( response ) {
 
-	                // Check for successful (blank) response
-	                if (response.msg !== '') {
+		                // Check for successful (blank) response
+		                if (response.msg !== '') {
 
-	                    // If something goes wrong, alert the error message that our service returned
-	                    showAlert('danger', $LAYOUT_ERROR + response.msg);
+		                    // If something goes wrong, alert the error message that our service returned
+		                    showAlert('danger', $LAYOUT_ERROR + response.msg);
 
-	                }
-	            });
-            });            
-        }
-        else {
+		                }
+		            });
+	            });            
+	        }
+	        else {
 
-            // If something goes wrong, alert the error message that our service returned
-            showAlert('danger', $LAYOUT_ERROR + response.msg);
+	            // If something goes wrong, alert the error message that our service returned
+	            showAlert('danger', $LAYOUT_ERROR + response.msg);
 
-        }
-    });
+	        }
+	    });  
+	} 	
 }
 
 function confirmInputInfo() {

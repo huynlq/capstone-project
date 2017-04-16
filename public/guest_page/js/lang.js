@@ -181,6 +181,7 @@ if(localStorage.getItem('language') == 'vi' || localStorage.getItem('language') 
 	$EVENTDETAILS_ALERT_JOIN_SUCCESS = "Tham gia sự kiện thành công."
 	$EVENTDETAILS_ALERT_UNJOIN_SUCCESS = "Hủy tham gia sự kiện thành công.";
 	$EVENTDETAILS_ALERT_DONATE_SUCCESS = "Cám ơn bạn đã đóng góp, ban tổ chức sẽ xem xét và liên lạc với bạn.";
+	$EVENTDETAILS_ALERT_UNJOIN 		= "Bạn muốn hủy tham gia?";
 
 	//============== EVENT CREATOR =====================================================
 
@@ -660,6 +661,7 @@ if(localStorage.getItem('language') == 'vi' || localStorage.getItem('language') 
 	$EVENTDETAILS_ALERT_JOIN_SUCCESS = "Successfully join event.";
 	$EVENTDETAILS_ALERT_UNJOIN_SUCCESS = "Successfully cancel participate this event.";
 	$EVENTDETAILS_ALERT_DONATE_SUCCESS = "Thank you! Your donations will be reviewed by the producer.";
+	$EVENTDETAILS_ALERT_UNJOIN 		= "Are you sre to unjoin this event?";
 
 	//============== EVENT CREATOR =====================================================
 
