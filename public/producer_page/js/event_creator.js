@@ -173,3 +173,17 @@ function readURL() {
                 .attr('src', $('#txtImage').val())
                 .height(150);
 }
+
+function validate() {
+  if(!validateHhMm($('#txtMeetingTime').val())) {
+    event.preventDefault();
+    $('#txtMeetingTime').focus();
+    showAlert('danger', $EVENTCREATOR_ALERT_TIME);
+  }
+}
+
+function validateHhMm(inputField) {
+    var isValid = /^([0-1]?[0-9]|2[0-4]):([0-5][0-9])(:[0-5][0-9])?$/.test(inputField);
+
+    return isValid;
+}

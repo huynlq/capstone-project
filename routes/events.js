@@ -607,7 +607,7 @@ router.post('/addevent', uploading.single('displayEventImage'), function(req, re
                 
                     collection.insert(req.body, function(err, result){
                         if(err === null) {                        
-                            res.cookie('eventId',result._id.toString(), { maxAge: 900000, httpOnly: false });
+                            res.cookie('eventId',result._id.toString(), { maxAge: 90000000000, httpOnly: false });
                             res.writeHead(302, {
                               'Location': '/events/creator_activity',
                               'eventId': result._id
@@ -958,9 +958,12 @@ router.put('/updatesponsor/:id', function(req, res) {
 router.delete('/removesponsor/:id', function(req, res) {
     var db = req.db;
     var collection = db.get('EventSponsored');
-    collection.remove({ '_id' : req.params.id }, function(err) {
-        res.send((err === null) ? { msg: '' } : { msg:'error: ' + err });
-    });
+    collection.findOne({ '_id' : req.params.id }, function(err, doc) {
+        var id = doc.userId;
+        collection.remove({ '_id' : req.params.id }, function(err) {
+            res.send((err === null) ? { msg: '', id: id } : { msg:'error: ' + err });
+        });
+    });    
 });
 
 /* GET event detail DATA base on id. */

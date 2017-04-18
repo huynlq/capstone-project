@@ -3,12 +3,17 @@
 $(document).ready(function() {
   
   populateNotifications();
+  populateLanguage();
 
   markRead();
 
 });
 
 // Functions =============================================================
+
+function populateLanguage() {
+    $('#header').html($NOTIFICATION_HEADER);
+}
 
 function populateNotifications() {
 	var userId = readCookie('user');

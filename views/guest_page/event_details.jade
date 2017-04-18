@@ -147,6 +147,13 @@ block content
 							div(role='tabpanel')
 								#mapPane
 								#activityPane
+					.row#galleryPane
+						.col-md-12.col-xs-12.fadeIn.animate-onscroll
+							h2.title-style-2
+								span#header-gallery Hình ảnh
+								span.title-under
+							div(role='tabpanel')
+								#photoGallery
 					hr
 					.row
 						.col-md-12.col-xs-12.fadeIn.animate-onscroll
@@ -193,6 +200,9 @@ block content
 								span#header-cost Chi phí
 								span.title-under
 						#eventSummary
+					.row
+						.col-md-12.col-xs-12(style="text-align:center")
+							a#btnExport.btn.btn-info(href='#', style="width: 50%") Xuất báo cáo
 					.row
 						#eventProducerButtons.col-md-12.col-xs-12
 			#participate-form(title='Participant Information', style="display: none")

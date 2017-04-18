@@ -84,7 +84,14 @@ function validateMap() {
 function populateLanguage() {
   $('#header').html($EVENTCREATOR_HEADER);
   $('#header-desc').html($EVENTCREATOR_HEADER_DESC);
-  $('#header-activity').html($EVENTCREATOR_HEADER_ACTIVITY);
+  $('#header-donation').html($EVENTCREATOR_DONATEFORM_HEADER);
+  $('#header-activity').html($EVENTCREATOR_ACTFORM_HEADER);
+
+  $('.form-donation-item').html($EVENTCREATOR_DONATEFORM_ITEM);
+  $('.form-donation-unit').html($EVENTCREATOR_DONATEFORM_UNIT);
+  $('.form-donation-quantity').html($EVENTCREATOR_DONATEFORM_QUANTITY);
+  $('.form-donation-minimum').html($EVENTCREATOR_DONATEFORM_MINIMUM);
+  $('#formDonationAdd').html($EVENTCREATOR_ACTFORM_ADD);
 
   $('#form-date').html($EVENTCREATOR_ACTFORM_DATE);
   $('#form-time').html($EVENTCREATOR_ACTFORM_TIME);
@@ -131,9 +138,9 @@ function initiateSchedule() {
     for (var i = 1; i <= diffDays; i++) {
       currentDate = addDays(date1, i-1);
       dateString = currentDate.getDate() + '/' + currentDate.getMonth() + '/' + currentDate.getFullYear();
-      content += '<option>' + i + ' (' + dateString + ')</option>';
+      content += '<option value="' + i + '">' + i + ' (' + dateString + ')</option>';
 
-      content1 = '<li id="tab-day-' + i + '"><a data-toggle="tab" href="#day' + i + '">' + $EVENTCREATOR_ACTTAB_DAY + ' ' + i + '</a></li>';
+      content1 = '<li id="tab-day-' + i + '"><a data-toggle="tab" onClick="setDate(' + i + ')" href="#day' + i + '">' + $EVENTCREATOR_ACTTAB_DAY + ' ' + i + '</a></li>';
       content2 = '<div id="day' + i + '" class="tab-pane fade"><h3 class="title-style-2">' + $EVENTCREATOR_ACTTAB_DAY + ' ' + i + ' (' + dateString + ')<span class="title-under"></span></h3><p>'
                   + '<div class="row clearfix">'
                     + '<div class="col-md-12 column">'
@@ -199,6 +206,7 @@ function addDays(date, days) {
 }
 
 function addActivity() {
+  if(validateActivity() == true) {
     var day = $('#txtActivityDate').val().split(' ')[0];
     var time = $('#txtActivityTime').val();
     var place = $('#txtActivityPlace').val();
@@ -219,23 +227,27 @@ function addActivity() {
     $('#txtActivityPlace').val('');
     $('#txtActivity').val('');
     $('#txtActivityNote').val('');
+  }    
 }
 
 function addDonation() {
   var item = $('#txtDonationItem').val();
   var unit = $('#txtDonationUnit').val();
   var quantity = $('#txtDonationQuantity').val();
+  var minimum = $('#txtDonationMinimum').val();
 
     $('#donationTable').DataTable().row.add( [
             item,
             unit,
             quantity,
+            minimum,
             '<center><a class="btn btn-danger" onclick="deleteDonation(this)"><i class="fa fa-remove"></i></a></center>'
         ] ).draw( false );
 
     $('#txtDonationItem').val("");
     $('#txtDonationUnit').val("");
     $('#txtDonationQuantity').val("");
+    $('#txtDonationMinimum').val("");
 }
 
 function addingActivity(obj) {
@@ -302,6 +314,7 @@ function goNext() {
           item:         donationTable.fnGetData()[i][0],
           unit:         donationTable.fnGetData()[i][1],
           quantity:     donationTable.fnGetData()[i][2],
+          minimum:      donationTable.fnGetData()[i][3],
           dateCreated:  new Date()
         };
 
@@ -358,3 +371,22 @@ function goNext() {
     alert('Something goes horribly wrong, please restart the event creator process.')
   }  
 }  
+
+function validateActivity() {
+  if(!validateHhMm($('#txtActivityTime').val())) {    
+    $('#txtActivityTime').focus();
+    showAlert('danger', $EVENTCREATOR_ALERT_TIME);
+    return false;
+  }
+  return true;
+}
+
+function validateHhMm(inputField) {
+    var isValid = /^([0-1]?[0-9]|2[0-4]):([0-5][0-9])(:[0-5][0-9])?$/.test(inputField);
+
+    return isValid;
+}
+
+function setDate(day) {
+  $('#txtActivityDate').val(day);
+}

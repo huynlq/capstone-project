@@ -45,7 +45,7 @@ block content
 							h2.title-style-2
 								span#header-event Event Details
 								span.title-under
-							form(action="/events/addevent", method="post", enctype="multipart/form-data").form-horizontal.form-label-left
+							form(action="/events/addevent", method="post", onsubmit="validate()", enctype="multipart/form-data").form-horizontal.form-label-left
 								input#txtUserId(type='hidden', name='userId', value='#{docs.userId}')
 								input#txtEventId.form-control.col-md-7.col-xs-12(type='hidden', name="_id", value="#{docs._id}")
 								.form-group
@@ -81,7 +81,7 @@ block content
 										span#form-volunteer Meeting Address 
 										span.required  *
 									.col-md-6.col-sm-6.col-xs-12
-										input#txtVolunteersNeeded.form-control.col-md-7.col-xs-12(placeholder='', type='number', name='volunteersNeeded', value='#{docs.volunteersNeeded}')
+										input#txtVolunteersNeeded.form-control.col-md-7.col-xs-12(placeholder='', type='number', min='0', name='volunteersNeeded', value='#{docs.volunteersNeeded}')
 								.form-group
 									label.control-label.col-md-3.col-sm-3.col-xs-3
 										span#form-time Meeting Time 

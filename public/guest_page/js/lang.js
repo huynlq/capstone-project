@@ -26,6 +26,7 @@ if(localStorage.getItem('language') == 'vi' || localStorage.getItem('language') 
 	$LAYOUT_NAVBAR_BOARD			= "DIỄN ĐÀN";
 	$LAYOUT_NAVBAR_SPONSORS			= "TÀI TRỢ";
 	$LAYOUT_NAVBAR_USER				= "NGƯỜI DÙNG";
+	$LAYOUT_NAVBAR_PROMOTE			= "Đăng kí làm ban tổ chức / nhà tài trợ";
 	$LAYOUT_NAVBAR_USER_PAGE		= "Trang cá nhân";
 	$LAYOUT_NAVBAR_ADMIN			= "QUYỀN ADMIN";
 	$LAYOUT_NAVBAR_USER_LIST		= "Quản lý người dùng";
@@ -42,7 +43,11 @@ if(localStorage.getItem('language') == 'vi' || localStorage.getItem('language') 
 	$LAYOUT_TIME_DAY				= "Ngày";
 	$LAYOUT_TIME_HOUR				= "Giờ";
 	$LAYOUT_TIME_MINUTE				= "Phút";
-	$LAYOUT_TIME_SECOND				= "Giây";
+	$LAYOUT_TIME_SECOND				= "Giây";	
+
+	//============== NOTIFICATION =======================================================
+
+	$NOTIFICATION_HEADER			= "TIN NHẮN";
 
 	//============== HOMEPAGE ===========================================================
 
@@ -143,6 +148,7 @@ if(localStorage.getItem('language') == 'vi' || localStorage.getItem('language') 
 	$EVENTDETAILS_BUTTON_EDIT		= "CHỈNH SỬA";
 	$EVENTDETAILS_BUTTON_UPDATE		= "QUẢN LÝ";
 	$EVENTDETAILS_BUTTON_LOGIN		= "ĐĂNG KÍ";
+	$EVENTDETAILS_BUTTON_EXPORT		= "XUẤT BÁO CÁO";
 	$EVENTDETAILS_BUTTON_JOIN_REQUIRE = "HÃY ĐĂNG KÍ ĐỂ THAM GIA";
 	$EVENTDETAILS_BUTTON_JOIN_ENDED = "ĐÃ HẾT HẠN ĐĂNG KÍ";
 
@@ -166,8 +172,11 @@ if(localStorage.getItem('language') == 'vi' || localStorage.getItem('language') 
 	$EVENTDETAILS_DONATION_OTHER	= "Nhu yếu phẩm";
 	$EVENTDETAILS_DONATION_ADD		= "Thêm";
 	$EVENTDETAILS_DONATION_NAME		= "Người góp";
+	$EVENTDETAILS_DONATION_EMAIL	= "Email";
+	$EVENTDETAILS_DONATION_PHONE	= "Điện thoại";
 	$EVENTDETAILS_DONATION_ITEM		= "Đồ góp";
 	$EVENTDETAILS_DONATION_QUANTITY	= "Số lượng";
+	$EVENTDETAILS_DONATION_MINIMUM	= "Tối thiểu";
 
 	$EVENTDETAILS_PARTICIPANT		= "Tên người tham gia";
 
@@ -182,6 +191,7 @@ if(localStorage.getItem('language') == 'vi' || localStorage.getItem('language') 
 	$EVENTDETAILS_ALERT_UNJOIN_SUCCESS = "Hủy tham gia sự kiện thành công.";
 	$EVENTDETAILS_ALERT_DONATE_SUCCESS = "Cám ơn bạn đã đóng góp, ban tổ chức sẽ xem xét và liên lạc với bạn.";
 	$EVENTDETAILS_ALERT_UNJOIN 		= "Bạn muốn hủy tham gia?";
+	$EVENTDETAILS_ALERT_UNDER_MINIMUM = "Bạn đang đóng góp số lượng thấp hơn mức tối thiểu để trở thành nhà tài trợ cho sự kiện này. Bạn có muốn tiếp tục đóng góp theo danh nghĩa của một người dùng bình thường?"
 
 	//============== EVENT CREATOR =====================================================
 
@@ -200,6 +210,13 @@ if(localStorage.getItem('language') == 'vi' || localStorage.getItem('language') 
 	$EVENTCREATOR_EVENTFORM_SHORTDESC	= "Lời dẫn";
 	$EVENTCREATOR_EVENTFORM_DESC		= "Chi tiết sự kiện";
 
+	$EVENTCREATOR_DONATEFORM_HEADER		= "THÔNG TIN ĐÓNG GÓP";
+	$EVENTCREATOR_DONATEFORM_ITEM		= "Đồ góp";
+	$EVENTCREATOR_DONATEFORM_UNIT		= "Đơn vị";
+	$EVENTCREATOR_DONATEFORM_QUANTITY	= "Số lượng";
+	$EVENTCREATOR_DONATEFORM_MINIMUM	= "Mức tối thiểu cho nhà tài trợ";
+
+	$EVENTCREATOR_ACTFORM_HEADER		= "THÔNG TIN HOẠT ĐỘNG";
 	$EVENTCREATOR_ACTFORM_DATE			= "Ngày";
 	$EVENTCREATOR_ACTFORM_TIME			= "Giờ";
 	$EVENTCREATOR_ACTFORM_PLACE			= "Địa điểm";
@@ -211,6 +228,8 @@ if(localStorage.getItem('language') == 'vi' || localStorage.getItem('language') 
 	$EVENTCREATOR_ACTTABLE_ACTION		= "Hành động";
 
 	$EVENTCREATOR_CONTINUE				= "TIẾP TỤC >>";
+
+	$EVENTCREATOR_ALERT_TIME			= "Thời gian không hợp lệ.";
 
 	//============== EVENT PREVIEW ====================================================
 
@@ -256,6 +275,9 @@ if(localStorage.getItem('language') == 'vi' || localStorage.getItem('language') 
 
 	$EVENTUPDATE_ALERT_ACTUALCOST		= "Cập nhật chi phí thành công!";
 	$EVENTUPDATE_ALERT_EXPORT			= "Xuất báo cáo Excel thành công!";
+	$EVENTUPDATE_ALERT_REQUIRE			= "Vui lòng điền tất cả các trường.";
+	$EVENTUPDATE_ALERT_EMAIL			= "Email không hợp lệ.";
+	$EVENTUPDATE_ALERT_NUMBER			= "Số lượng đóng góp không hợp lệ.";
 
 	//============== POST LIST ========================================================
 
@@ -506,6 +528,7 @@ if(localStorage.getItem('language') == 'vi' || localStorage.getItem('language') 
 	$LAYOUT_NAVBAR_BOARD			= "FORUM";
 	$LAYOUT_NAVBAR_SPONSORS			= "SPONSORS";
 	$LAYOUT_NAVBAR_USER				= "USER";
+	$LAYOUT_NAVBAR_PROMOTE			= "Promote";
 	$LAYOUT_NAVBAR_USER_PAGE		= "My Page";
 	$LAYOUT_NAVBAR_ADMIN			= "ADMIN";
 	$LAYOUT_NAVBAR_USER_LIST		= "Manage Users";
@@ -523,6 +546,10 @@ if(localStorage.getItem('language') == 'vi' || localStorage.getItem('language') 
 	$LAYOUT_TIME_HOUR				= "Hours";
 	$LAYOUT_TIME_MINUTE				= "Minutes";
 	$LAYOUT_TIME_SECOND				= "Seconds";
+
+	//============== NOTIFICATION =======================================================
+
+	$NOTIFICATION_HEADER			= "NOTIFICATIONS";
 
 	//============== HOMEPAGE ===========================================================
 
@@ -623,6 +650,7 @@ if(localStorage.getItem('language') == 'vi' || localStorage.getItem('language') 
 	$EVENTDETAILS_BUTTON_EDIT		= "EDIT EVENT";
 	$EVENTDETAILS_BUTTON_UPDATE		= "UPDATE EVENT";
 	$EVENTDETAILS_BUTTON_LOGIN		= "SIGN IN";
+	$EVENTDETAILS_BUTTON_EXPORT		= "EXPORT REPORT";
 	$EVENTDETAILS_BUTTON_JOIN_REQUIRE = "PLEASE SIGN IN TO PARTICIPATE";
 	$EVENTDETAILS_BUTTON_JOIN_ENDED = "PARTICIPATE DEADLINE IS DUE";
 
@@ -646,8 +674,11 @@ if(localStorage.getItem('language') == 'vi' || localStorage.getItem('language') 
 	$EVENTDETAILS_DONATION_OTHER	= "Items";
 	$EVENTDETAILS_DONATION_ADD		= "Add";
 	$EVENTDETAILS_DONATION_NAME		= "Donator";
+	$EVENTDETAILS_DONATION_EMAIL	= "Email";
+	$EVENTDETAILS_DONATION_PHONE	= "Phone";
 	$EVENTDETAILS_DONATION_ITEM		= "Item";
 	$EVENTDETAILS_DONATION_QUANTITY	= "Quantity";
+	$EVENTDETAILS_DONATION_MINIMUM	= "Minimum";
 
 	$EVENTDETAILS_PARTICIPANT		= "Participant";
 
@@ -662,6 +693,7 @@ if(localStorage.getItem('language') == 'vi' || localStorage.getItem('language') 
 	$EVENTDETAILS_ALERT_UNJOIN_SUCCESS = "Successfully cancel participate this event.";
 	$EVENTDETAILS_ALERT_DONATE_SUCCESS = "Thank you! Your donations will be reviewed by the producer.";
 	$EVENTDETAILS_ALERT_UNJOIN 		= "Are you sre to unjoin this event?";
+	$EVENTDETAILS_ALERT_UNDER_MINIMUM = "You have donate lower than the minimum require to be a sponsor for this event. Do you want to continue donate as a normal user?";
 
 	//============== EVENT CREATOR =====================================================
 
@@ -680,6 +712,13 @@ if(localStorage.getItem('language') == 'vi' || localStorage.getItem('language') 
 	$EVENTCREATOR_EVENTFORM_SHORTDESC	= "Short Description";
 	$EVENTCREATOR_EVENTFORM_DESC		= "Description";
 
+	$EVENTCREATOR_DONATEFORM_HEADER		= "DONATION DETAILS";
+	$EVENTCREATOR_DONATEFORM_ITEM		= "Item";
+	$EVENTCREATOR_DONATEFORM_UNIT		= "Unit";
+	$EVENTCREATOR_DONATEFORM_QUANTITY	= "Quantity";
+	$EVENTCREATOR_DONATEFORM_MINIMUM	= "Minimum require for sponsors";
+
+	$EVENTCREATOR_ACTFORM_HEADER		= "ACTIVITY DETAILS";
 	$EVENTCREATOR_ACTFORM_DATE			= "Day";
 	$EVENTCREATOR_ACTFORM_TIME			= "Time";
 	$EVENTCREATOR_ACTFORM_PLACE			= "Place";
@@ -691,6 +730,8 @@ if(localStorage.getItem('language') == 'vi' || localStorage.getItem('language') 
 	$EVENTCREATOR_ACTTABLE_ACTION		= "Action";
 
 	$EVENTCREATOR_CONTINUE				= "CONTINUE >>";
+
+	$EVENTCREATOR_ALERT_TIME			= "Invalid time.";
 
 	//============== EVENT PREVIEW ====================================================
 
@@ -735,7 +776,10 @@ if(localStorage.getItem('language') == 'vi' || localStorage.getItem('language') 
 	$EVENTUPDATE_TIP_MARK_PRESENT		= "Mark Present";
 
 	$EVENTUPDATE_ALERT_ACTUALCOST		= "Successfully edit cost.";
-	$EVENTUPDATE_ALERT_EXPORT			= "Successfully export report."
+	$EVENTUPDATE_ALERT_EXPORT			= "Successfully export report.";
+	$EVENTUPDATE_ALERT_REQUIRE			= "Please fill in all form fields.";
+	$EVENTUPDATE_ALERT_EMAIL			= "Invalid email";
+	$EVENTUPDATE_ALERT_NUMBER			= "Invalid quantity";
 
 	//============== POST LIST ========================================================
 

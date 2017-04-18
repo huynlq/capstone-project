@@ -34,9 +34,7 @@ block content
 			.main-container
 				.container
 					.row
-						.col-md-12
-							.pull-right(style="margin-top: 30px")
-								a.btn.btn-info(style="cursor:pointer", onclick="exportEvent('#{docs._id}')") Export Event
+						.col-md-12							
 							h2.title-style-2
 								span#header Update Event
 								&nbsp;&nbsp;
@@ -122,6 +120,18 @@ block content
 													input#txtDonatorName.form-control.col-md-7.col-xs-12(type='text', required='required')
 											.form-group
 												label.control-label.col-md-3.col-sm-3.col-xs-12
+													span.th-donator-email Email 
+													span.required  *
+												.col-md-9.col-sm-9.col-xs-12
+													input#txtDonatorEmail.form-control.col-md-7.col-xs-12(type='text', required='required')
+											.form-group
+												label.control-label.col-md-3.col-sm-3.col-xs-12
+													span.th-donator-phone Phone 
+													span.required  *
+												.col-md-9.col-sm-9.col-xs-12
+													input#txtDonatorPhone.form-control.col-md-7.col-xs-12(type='text', required='required')
+											.form-group
+												label.control-label.col-md-3.col-sm-3.col-xs-12
 													span.th-item Donation Item
 													span.required  *
 												.col-md-9.col-sm-9.col-xs-12
@@ -131,7 +141,7 @@ block content
 													span.th-quantity Quantity 
 													span.required  *
 												.col-md-9.col-sm-9.col-xs-12
-													input#txtDonationNumber.form-control.col-md-7.col-xs-12(type='number', required='required')
+													input#txtDonationNumber.form-control.col-md-7.col-xs-12(type='number', min="0", required='required')
 											.row
 												.col-md-5.col-sm-5
 												.col-md-4.col-sm-4.col-xs-12

@@ -46,12 +46,8 @@ function search() {
 
     // Loop through all table rows, and hide those who don't match the search query
     for (i = 0; i < searchName.length; i++) {
-    	console.log(now);
-    	console.log(now.getTime());
-    	console.log(new Date(searchDate[i].innerHTML.split(' - ')[0]));
-    	console.log(new Date(searchDate[i].innerHTML.split(' - ')[0]).getTime());
         flag = false;
-        statusFlag = false;
+        statusFlag = true;
         if($('input[name="searchName"]').is(':checked')) {
             if(searchName[i].innerHTML.toUpperCase().indexOf(filter) > -1) {
                 flag = true;
@@ -68,34 +64,20 @@ function search() {
             }
         }
 
-        if($('input[name="searchDeadline"]').is(':checked')) {
-        	if(new Date(searchDeadline[i].innerHTML).getTime() > now.getTime()) {
-        		statusFlag = true;
-        	} else {
-        		statusFlag = false;
-        	}
-        }
-
-        if($('input[name="searchUpcoming"]').is(':checked')) {
+        if(!$('input[name="searchUpcoming"]').is(':checked')) {
         	if(new Date(searchDate[i].innerHTML.split(' - ')[0]).getTime() > now.getTime()) {
-        		statusFlag = true;
-        	} else {
         		statusFlag = false;
         	}
         }
 
-        if($('input[name="searchInProgress"]').is(':checked')) {
+        if(!$('input[name="searchInProgress"]').is(':checked')) {
         	if(new Date(searchDate[i].innerHTML.split(' - ')[0]).getTime() < now.getTime() && new Date(searchDate[i].innerHTML.split(' - ')[1]).getTime() > now.getTime()) {
-        		statusFlag = true;
-        	} else {
         		statusFlag = false;
         	}
         }
 
-        if($('input[name="searchPast"]').is(':checked')) {
+        if(!$('input[name="searchPast"]').is(':checked')) {
         	if(new Date(searchDate[i].innerHTML.split(' - ')[1]).getTime() < now.getTime()) {
-        		statusFlag = true;
-        	} else {
         		statusFlag = false;
         	}
         }

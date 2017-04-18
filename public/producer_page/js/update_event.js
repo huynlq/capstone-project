@@ -27,7 +27,7 @@ $(document).ready(function() {
 
     $('#tablePendingSponsor tbody').on('click', 'td a.linkapprovesponsor', approveSponsor);
 
-    $('#tablePendingSponsor tbody').on('click', 'td a.linkremovesponsor', removeSponsor);
+    $('#tablePendingSponsor tbody').on('click', 'td a.linkdisapprovesponsor', disapproveSponsor);
 
     $('#tableSponsor tbody').on('click', 'td a.linkfeaturesponsor', featureSponsor);
 
@@ -101,6 +101,8 @@ function populateLanguage() {
     $('.th-action').html();
 
     $('.th-donator').html($EVENTDETAILS_DONATION_NAME);
+    $('.th-donator').html($EVENTDETAILS_DONATION_EMAIL);
+    $('.th-donator').html($EVENTDETAILS_DONATION_PHONE);
     $('.th-item').html($EVENTDETAILS_DONATION_ITEM);
     $('.th-quantity').html($EVENTDETAILS_DONATION_QUANTITY);
     $('#donateForm-add').html($EVENTUPDATE_DONATEFORM_ADD);
@@ -289,6 +291,9 @@ function showSponsors(_id) {
                                 + '<a data-toggle="tooltip" title="Approve" class="btn btn-success btn-xs linkapprovesponsor" rel="' + sponsorData._id + '" href="#">'
                                     + '<span class="glyphicon glyphicon-ok"></span>'
                                 + '</a>'
+                                + '<a data-toggle="tooltip" title="Disapprove" class="btn btn-danger btn-xs linkdisapprovesponsor" rel="' + sponsorData._id + '" href="#">'
+                                    + '<span class="glyphicon glyphicon-remove"></span>'
+                                + '</a>'
                             + '</center>',
                             '<a href="/users/' + dataUser._id + '">' + dataUser.companyName + '</a>',
                             dataUser.companyEmail,
@@ -338,40 +343,91 @@ function populateUnit() {
 
 // Add new donation
 function addDonation() {
-    var eventId = window.location.href.split('/')[window.location.href.split('/').length - 1].split('#')[0];
-    var newDonation = {
-        'eventId': eventId,            
-        'userId': '',
-        'donatorName': $('#txtDonatorName').val(),
-        'donationItem': $('#txtDonationItem').val(),
-        'donationNumber': $('#txtDonationNumber').val(),
-        'donationUnit': $('#txtDonationNumber').attr('placeholder'),
-        'status': 'Approved',
-        'dateCreated': new Date()
-    };
-    
+    if(validateAddDonation() == true) {
+        var eventId = window.location.href.split('/')[window.location.href.split('/').length - 1].split('#')[0];
+        var newDonation = {
+            'eventId': eventId,            
+            'userId': '',
+            'donatorName': $('#txtDonatorName').val(),
+            'donationItem': $('#txtDonationItem').val(),
+            'donationNumber': $('#txtDonationNumber').val(),
+            'donationUnit': $('#txtDonationNumber').attr('placeholder'),
+            'status': 'Approved',
+            'dateCreated': new Date()
+        };
+        
 
-    $.ajax({
-        type: 'POST',
-        data: newDonation,
-        url: '/events/addDonation',
-        dataType: 'JSON'
-    }).done(function( response ) {
+        $.ajax({
+            type: 'POST',
+            data: newDonation,
+            url: '/events/addDonation',
+            dataType: 'JSON'
+        }).done(function( response ) {
 
-        // Check for successful (blank) response
-        if(response.msg == '') {
-            // Clear the form inputs
-            $('#txtDonatorName').val('');
-            $('#txtDonationItem').val('');
-            $('#txtDonationNumber').val('');
-            $('#txtDonationUnit').val('');
+            // Check for successful (blank) response
+            if(response.msg == '') {
+                // Clear the form inputs
+                $('#txtDonatorName').val('');
+                $('#txtDonatorEmail').val('');
+                $('#txtDonatorPhone').val('');
+                $('#txtDonationItem').val('');
+                $('#txtDonationNumber').val('');
+                $('#txtDonationUnit').val('');
 
-            // Update the table
-            populateTables();
-        } else {
-            showAlert('danger', $LAYOUT_ERROR + response.msg);
-        }
-    });
+                // Update the table
+                populateTables();
+            } else {
+                showAlert('danger', $LAYOUT_ERROR + response.msg);
+            }
+        });
+    }    
+}
+
+// Validate Form
+function validateAddDonation() {
+    if($('#txtDonatorName').val() == '') {
+        showAlert('danger', $EVENTUPDATE_ALERT_REQUIRE);
+        $('#txtDonatorName').focus();
+        return false;
+    }
+
+    if($('#txtDonatorEmail').val() == '') {
+        showAlert('danger', $EVENTUPDATE_ALERT_REQUIRE);
+        $('#txtDonatorEmail').focus();
+        return false;
+    }
+
+    if($('#txtDonatorPhone').val() == '') {
+        showAlert('danger', $EVENTUPDATE_ALERT_REQUIRE);
+        $('#txtDonatorPhone').focus();
+        return false;
+    }
+
+    if($('#txtDonationNumber').val() == '') {
+        showAlert('danger', $EVENTUPDATE_ALERT_REQUIRE);
+        $('#txtDonationNumber').focus();
+        return false;
+    }
+
+    if(!validateEmail($('#txtDonatorEmail').val())) {
+        showAlert('danger', $EVENTUPDATE_ALERT_EMAIL);
+        return false;
+        $('#txtDonatorEmail').focus();
+    }
+
+    if($('#txtDonationNumber').val() <= 0) {
+        showAlert('danger', $EVENTUPDATE_ALERT_NUMBER);
+        return false;
+        $('#txtDonationNumber').focus();
+    }
+
+    return true;
+}
+
+// Validate email
+function validateEmail(email) {
+    var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return re.test(email);
 }
 
 // Delete donation
@@ -928,6 +984,62 @@ function removeSponsor(event) {
     });
 }
 
+// Remove sponsor
+function disapproveSponsor(event) {
+    event.preventDefault();
+    var eventId = window.location.href.split('/')[window.location.href.split('/').length - 1].split('#')[0];
+
+    var status = {
+        'status': 'Pending'
+    }
+
+    $.ajax({
+        type: 'DELETE',
+        data: status,
+        url: '/events/removesponsor/' + $(this).attr('rel')
+    }).done(function( response ) {
+        // Check for a successful (blank) response
+        if (response.msg === '') {
+            $.getJSON( '/events/details/' + eventId, function( dataEvent ) {                                
+                eventName = dataEvent.eventName;
+                showSponsors(eventId);
+                var newNotification = {
+                    'userId': response.id,
+                    'content': 'Yêu cầu tài trợ cho sự kiện "' + eventName + '" của bạn đã bị bác bỏ',
+                    'link': '/events/' + eventId,
+                    'markedRead': 'Unread',
+                    'dateCreated': new Date()
+                }
+
+                // Use AJAX to post the object to our adduser service        
+                $.ajax({
+                    type: 'POST',
+                    data: newNotification,
+                    url: '/notifications/addnotification',
+                    dataType: 'JSON'
+                }).done(function( response ) {
+
+                    // Check for successful (blank) response
+                    if (response.msg !== '') {
+
+                        // If something goes wrong, alert the error message that our service returned
+                        showAlert('danger', $LAYOUT_ERROR + response.msg);
+
+                    } else {
+                        $('#txtUserDisapproveId').val("");
+                        $('#txtUserDisapprove').val("");
+                        $('#txtDisapproveReason').val("");
+                        $('#disapprove-reason-form').dialog('close');
+                    }
+                });
+            });
+        }
+        else {
+            showAlert('danger', $LAYOUT_ERROR + response.msg);
+        }
+    });
+}
+
 // Show Gallery
 function showGallery(eventId) {
     var content = '';
@@ -966,21 +1078,4 @@ function removePhoto(event) {
             showAlert('danger', $LAYOUT_ERROR + response.msg);
         }
     });  
-}
-
-// Export Event
-function exportEvent(eventId) {
-    $.ajax({
-        type: 'GET',
-        url: '/events/export/' + eventId,
-        async: false
-    }).done(function( response ) {
-        console.log(response);
-        if(response.msg == "") {
-            showAlert('success', $EVENTUPDATE_ALERT_EXPORT);
-            window.location = response.link;
-        } else {
-            showAlert('danger', $LAYOUT_ERROR + response.msg);
-        }        
-    })
 }

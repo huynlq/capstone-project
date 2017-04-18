@@ -57,6 +57,7 @@ $(document).ready(function() {
               $('#navbar-below').html($('#navbar-below').html() + '<li><a>' + $LAYOUT_NAVBAR_USER + '  <i class="fa fa-chevron-circle-down" style="font-size: 10px" aria-hidden="true"></i></a>' +
                                                                     '<ul class="submenu">' +
                                                                       '<li class="submenu-item"><a href="/my">' + $LAYOUT_NAVBAR_USER_PAGE + '</a></li>' +
+                                                                      '<li class="submenu-item"><a href="/promote">' + $LAYOUT_NAVBAR_PROMOTE + '</a></li>' +
                                                                     '</ul>' +
                                                                   '</li>');
             }

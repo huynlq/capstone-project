@@ -1,0 +1,52 @@
+<html>
+  <head>
+    <meta charset="utf8">
+    <title>SuitArt Business Card</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <style>
+    html, body {
+        width: 100%;
+        height: 100%;
+    }
+    html {
+        display: table;
+    }
+    body {
+        display: table-cell;
+        vertical-align: middle;
+    }
+    .page {
+        position: relative;
+        display: block;
+        page-break-after:always;
+        overflow: hidden;
+        margin: 50px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page">
+      #{eventPane}
+    </div>
+    <div class="page">
+      #{producerPane}
+    </div>
+    <div class="page">
+      #{donationProgressPane}
+      #{donationPane}
+      #{pendingDonationPane}
+    </div>
+    <div class="page">
+      #{totalDonationPane}
+    </div>
+    <div class="page">
+      #{participantPane}
+    </div>
+    <div class="page">
+      #{sponsorPane}
+    </div>
+  </body>
+</html>
