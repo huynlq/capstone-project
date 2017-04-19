@@ -209,9 +209,9 @@ router.get('/export/:id', function(req, res, next) {
 
             var content = 	'<tr>' +
         						'<td>' + requireData[i].item + '</td>' +
-        						'<td>' + current + ' ' + requireData[i].unit + '</td>' +
+        						'<td>' + parseInt(current).toLocaleString() + ' ' + requireData[i].unit + '</td>' +
         						'<td>' + parseInt(requireData[i].quantity).toLocaleString() + ' ' + requireData[i].unit + '</td>' +
-        						'<td>' + parseFloat(parseInt(current)/parseInt(requireData[i].quantity)).toFixed(2) + '%</td>' +
+        						'<td>' + parseFloat(parseInt(current)/parseInt(requireData[i].quantity) * 100).toFixed(2).toLocaleString() + '%</td>' +
         					'</tr>';     
 
         	progressContent += content;     

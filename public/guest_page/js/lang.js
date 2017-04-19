@@ -183,11 +183,11 @@ if(localStorage.getItem('language') == 'vi' || localStorage.getItem('language') 
 	$EVENTDETAILS_DONATION_CASH		= "Tiền mặt";
 	$EVENTDETAILS_DONATION_OTHER	= "Nhu yếu phẩm";
 	$EVENTDETAILS_DONATION_ADD		= "Thêm";
-	$EVENTDETAILS_DONATION_NAME		= "Người góp";
+	$EVENTDETAILS_DONATION_NAME		= "Tên";
 	$EVENTDETAILS_DONATION_EMAIL	= "Email";
-	$EVENTDETAILS_DONATION_PHONE	= "Điện thoại";
+	$EVENTDETAILS_DONATION_PHONE	= "ĐT";
 	$EVENTDETAILS_DONATION_ITEM		= "Đồ góp";
-	$EVENTDETAILS_DONATION_QUANTITY	= "Số lượng";
+	$EVENTDETAILS_DONATION_QUANTITY	= "SL";
 	$EVENTDETAILS_DONATION_MINIMUM	= "Tối thiểu";
 
 	$EVENTDETAILS_PARTICIPANT		= "Tên người tham gia";
@@ -263,7 +263,7 @@ if(localStorage.getItem('language') == 'vi' || localStorage.getItem('language') 
 	$EVENTUPDATE_HEADER					= "QUẢN LÝ SỰ KIỆN";
 
 	$EVENTUPDATE_TAB_DONATION			= "Quyên góp";
-	$EVENTUPDATE_TAB_PENDING_DONATION	= "Quyên góp chờ duyệt";
+	$EVENTUPDATE_TAB_PENDING_DONATION	= "QG chờ duyệt";
 	$EVENTUPDATE_TAB_PARTICIPANT		= "Người tham gia";
 	$EVENTUPDATE_TAB_COST				= "Chi phí";
 	$EVENTUPDATE_TAB_SPONSOR			= "Tài trợ";
@@ -274,7 +274,7 @@ if(localStorage.getItem('language') == 'vi' || localStorage.getItem('language') 
 	$EVENTUPDATE_TH_USER				= "Người dùng";
 	$EVENTUPDATE_TH_FULLNAME			= "Tên";
 	$EVENTUPDATE_TH_EMAIL				= "Email";
-	$EVENTUPDATE_TH_PHONE				= "Điện thoại";
+	$EVENTUPDATE_TH_PHONE				= "ĐT";
 	$EVENTUPDATE_TH_JOIN				= "Ngày tham gia";
 	$EVENTUPDATE_TH_DONATION			= "Đóng góp";
 
@@ -466,6 +466,8 @@ if(localStorage.getItem('language') == 'vi' || localStorage.getItem('language') 
 	$LISTPOST_TIP_DETAILS			= "Xem";
 	$LISTPOST_TIP_EDIT				= "Sửa";
 	$LISTPOST_TIP_DELETE			= "Xóa";
+
+	$LISTPOST_CONFIRM_DELETE		= "Bạn muốn xóa bài viết này?";
 
 	//============== LIST USER (ADMIN) ===============================================
 
@@ -986,6 +988,8 @@ if(localStorage.getItem('language') == 'vi' || localStorage.getItem('language') 
 	$LISTPOST_TIP_DETAILS			= "Details";
 	$LISTPOST_TIP_EDIT				= "Edit";
 	$LISTPOST_TIP_DELETE			= "Delete";
+
+	$LISTPOST_CONFIRM_DELETE		= "Confirm delete this post?";
 
 	//============== LIST USER (ADMIN) ===============================================
 

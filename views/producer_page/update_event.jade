@@ -47,49 +47,49 @@ block content
 									.tileA
 										.tile_stats_count
 											span.count_top
-												i.fa.fa-bar-chart&nbsp;&nbsp;
+												i.fa.fa-gift&nbsp;&nbsp;
 												strong.tab-donation Donations
-											#countDonations.count 0
+											#countDonations.count 
 							li.col-md-2.col-sm-6.col-xs-12
 								a.count-tab(data-toggle='tab', href='#pendingDonations')
 									.tileA
 										.tile_stats_count
 											span.count_top
-												i.fa.fa-bar-chart&nbsp;&nbsp;
+												i.fa.fa-spinner&nbsp;&nbsp;
 												strong.tab-pending-donation Pending Donations
-											#countPendingDonations.count 0
+											#countPendingDonations.count 
 							li.col-md-2.col-sm-6.col-xs-12
 								a.count-tab(data-toggle='tab', href='#participants')
 									.tileA
 										.tile_stats_count
 											span.count_top
-												i.fa.fa-spinner.fa-pulse&nbsp;&nbsp;
+												i.fa.fa-street-view&nbsp;&nbsp;
 												strong.tab-participant Participants		
-											#countParticipants.count 0		
+											#countParticipants.count 
 							li.col-md-2.col-sm-6.col-xs-12
 								a.count-tab(data-toggle='tab', href='#sponsors')
 									.tileA
 										.tile_stats_count
 											span.count_top
-												i.fa.fa-spinner.fa-pulse&nbsp;&nbsp;
+												i.fa.fa-briefcase&nbsp;&nbsp;
 												strong.tab-sponsor Sponsors
-											#countSponsors.count 0	
+											#countSponsors.count 
 							li.col-md-2.col-sm-6.col-xs-12
 								a.count-tab(data-toggle='tab', href='#costs')
 									.tileA
 										.tile_stats_count
 											span.count_top
-												i.fa.fa-thumbs-o-up&nbsp;&nbsp;
+												i.fa.fa-money&nbsp;&nbsp;
 												strong.tab-cost Activity Costs
-											#countActivities.count 0
+											#countActivities.count 
 							li.col-md-2.col-sm-6.col-xs-12
 								a.count-tab(data-toggle='tab', href='#gallery')
 									.tileA
 										.tile_stats_count
 											span.count_top
-												i.fa.fa-thumbs-o-up&nbsp;&nbsp;
+												i.fa.fa-picture-o&nbsp;&nbsp;
 												strong.tab-gallery Photo Gallery
-											#countGallery.count 0
+											#countGallery.count 
 					.tab-content
 						#donations.tab-pane.fade
 							.row
@@ -129,7 +129,7 @@ block content
 													span.th-donator-phone Phone 
 													span.required  *
 												.col-md-9.col-sm-9.col-xs-12
-													input#txtDonatorPhone.form-control.col-md-7.col-xs-12(type='text', required='required')
+													input#txtDonatorPhone.numberField.form-control.col-md-7.col-xs-12(type='text', required='required')
 											.form-group
 												label.control-label.col-md-3.col-sm-3.col-xs-12
 													span.th-item Donation Item
@@ -141,7 +141,7 @@ block content
 													span.th-quantity Quantity 
 													span.required  *
 												.col-md-9.col-sm-9.col-xs-12
-													input#txtDonationNumber.form-control.col-md-7.col-xs-12(type='number', min="0", required='required')
+													input#txtDonationNumber.numberField.form-control.col-md-7.col-xs-12(type='number', min="0", required='required')
 											.row
 												.col-md-5.col-sm-5
 												.col-md-4.col-sm-4.col-xs-12

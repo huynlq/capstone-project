@@ -101,8 +101,8 @@ function populateLanguage() {
     $('.th-action').html();
 
     $('.th-donator').html($EVENTDETAILS_DONATION_NAME);
-    $('.th-donator').html($EVENTDETAILS_DONATION_EMAIL);
-    $('.th-donator').html($EVENTDETAILS_DONATION_PHONE);
+    $('.th-donator-email').html($EVENTDETAILS_DONATION_EMAIL);
+    $('.th-donator-phone').html($EVENTDETAILS_DONATION_PHONE);
     $('.th-item').html($EVENTDETAILS_DONATION_ITEM);
     $('.th-quantity').html($EVENTDETAILS_DONATION_QUANTITY);
     $('#donateForm-add').html($EVENTUPDATE_DONATEFORM_ADD);
@@ -570,6 +570,7 @@ function showParticipants(_id) {
     var dateJoined = "";
     var counter = 0;
     var actionPanel = "";
+    $('#countParticipants').html(counter);
 
     $.getJSON( '/events/participants/' + _id, function( data ) {
         $.each(data, function(){

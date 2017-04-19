@@ -251,7 +251,7 @@ function signOut() {
     deleteCookie('user');
     deleteCookie('role');
     deleteCookie('username');
-    window.location.replace(window.location.href);
+    window.location.replace('/');
 }
 
 //Show alert | type = {"info", "success", "danger", "warning"}
