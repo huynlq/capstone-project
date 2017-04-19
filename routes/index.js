@@ -656,9 +656,7 @@ router.post('/register', function(req, res) {
 		    });			
 		});
 	  } else {
-	  	res.send(
-            { msg: "Username and/or email exists." }
-        );
+	  	res.send({ msg: 1 });
 	  }
 	});
 });
@@ -673,10 +671,13 @@ router.post('/login', function(req, res) {
 	var flagEmailExists = false;
 
 	collection.findOne({"username": username,"password": password}, function(err, doc) {
+        //Error Code:
+        //1. Invalid username and/or password
+        //2. Account banned.
 	  if (doc != null) {
 	  	if (doc.markBanned == 1) {
 	  		res.send(
-            	{ msg: "Account banned. Reason: " + doc.bannedReason }
+            	{ msg: 2, reason: doc.bannedReason }
         	)
         } else {
 	  		res.send(
@@ -689,7 +690,7 @@ router.post('/login', function(req, res) {
         }		
 	  } else {
 	  	res.send(
-            { msg: "Invalid username and/or password" }
+            { msg: 1 }
         );
 	  }
 	});

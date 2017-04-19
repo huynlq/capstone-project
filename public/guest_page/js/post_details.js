@@ -135,7 +135,7 @@ function postComment() {
 function populateComments() {
   $('#commentPane').html('');
   if(readCookie('user') == '') {
-    $('#commentForm').html('<div class="row" style="text-align: center"><a href="/login" class="btn btn-info">' + $POSTDETAILS_FORM_LOGIN + '</a></div>');
+    $('#commentForm').html('<div class="row" style="text-align: center"><a href="" onclick="showLogin()" class="btn btn-info">' + $POSTDETAILS_FORM_LOGIN + '</a></div>');
   }
 
   var counter = 0;

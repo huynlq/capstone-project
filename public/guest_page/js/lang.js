@@ -40,6 +40,18 @@ if(localStorage.getItem('language') == 'vi' || localStorage.getItem('language') 
 	$LAYOUT_BAN_MESSAGE				= "Tài khoản của bạn đã bị cấm với lý do: ";
 	$LAYOUT_USER_EXIST_MESSAGE		= "Tên tài khoản hoặc email bị trùng.";
 
+	$LAYOUT_FORM_LOGIN_HEADER		= "Đăng nhập";
+	$LAYOUT_FORM_LOGIN_USERNAME		= "Tên đăng nhập";
+	$LAYOUT_FORM_LOGIN_PASSWORD		= "Mật khẩu";
+	$LAYOUT_FORM_LOGIN_BUTTON		= "Đăng nhập";
+	$LAYOUT_FORM_REGISTER_HEADER	= "Đăng kí tài khoản";
+	$LAYOUT_FORM_REGISTER_EMAIL		= "Email";
+	$LAYOUT_FORM_REGISTER_BUTTON	= "Đăng kí";
+
+	$LAYOUT_FORM_REGISTER_MSG_EMAIL = "Email không hợp lệ";
+	$LAYOUT_FORM_LOGIN_MSG_INVALID	= "Tên tài khoản hoặc mật khẩu không đúng";
+	$LAYOUT_FORM_LOGIN_MSG_BANNED	= "Tài khoản của bạn đã bị cấm vì: ";
+
 	$LAYOUT_TIME_DAY				= "Ngày";
 	$LAYOUT_TIME_HOUR				= "Giờ";
 	$LAYOUT_TIME_MINUTE				= "Phút";
@@ -180,11 +192,19 @@ if(localStorage.getItem('language') == 'vi' || localStorage.getItem('language') 
 
 	$EVENTDETAILS_PARTICIPANT		= "Tên người tham gia";
 
-	$EVENTDETAILS_FORM_TITLE		= "Thông tin người tham gia";
+	$EVENTDETAILS_JOINFORM_TITLE	= "Thông tin người tham gia";
+	$EVENTDETAILS_DONATEFORM_TITLE	= "Thông tin đóng góp";
 	$EVENTDETAILS_FORM_REQUIRE		= "Hãy điền tất cả thông tin.";
 	$EVENTDETAILS_FORM_NAME			= "Họ tên";
 	$EVENTDETAILS_FORM_EMAIL		= "Email";
 	$EVENTDETAILS_FORM_PHONE		= "Điện thoại";
+
+	$EVENTDETAILS_DONATEFORM_INFO	= "Thông tin người góp";
+	$EVENTDETAILS_DONATEFORM_DONATE	= "Số lượng đóng góp";
+
+	$EVENTDETAILS_FORM_MSG_REQUIRE	= "Vui lòng nhập đầy đủ thông tin.";
+	$EVENTDETAILS_FORM_MSG_EMAIL	= "Email không hợp lệ.";
+	$EVENTDETAILS_FORM_MSG_DONATE	= "Thông tin đóng góp không hợp lệ.";
 
 	$EVENTDETAILS_ALERT_DUPLICATE	= "Bạn đã tham gia sự kiện khác trùng với ngày diễn ra của sự kiện này."
 	$EVENTDETAILS_ALERT_JOIN_SUCCESS = "Tham gia sự kiện thành công."
@@ -542,6 +562,18 @@ if(localStorage.getItem('language') == 'vi' || localStorage.getItem('language') 
 	$LAYOUT_BAN_MESSAGE				= "Your account has been banned for: ";
 	$LAYOUT_USER_EXIST_MESSAGE		= "Username or email exists.";
 
+	$LAYOUT_FORM_LOGIN_HEADER		= "Login";
+	$LAYOUT_FORM_LOGIN_USERNAME		= "Username";
+	$LAYOUT_FORM_LOGIN_PASSWORD		= "Password";
+	$LAYOUT_FORM_LOGIN_BUTTON		= "Login";
+	$LAYOUT_FORM_REGISTER_HEADER	= "Register";
+	$LAYOUT_FORM_REGISTER_EMAIL		= "Email";
+	$LAYOUT_FORM_REGISTER_BUTTON	= "Register";
+
+	$LAYOUT_FORM_REGISTER_MSG_EMAIL = "Invalid email.";
+	$LAYOUT_FORM_LOGIN_MSG_INVALID	= "Invalid username or password";
+	$LAYOUT_FORM_LOGIN_MSG_BANNED	= "Your acocunt has been banned for: ";
+
 	$LAYOUT_TIME_DAY				= "Days";
 	$LAYOUT_TIME_HOUR				= "Hours";
 	$LAYOUT_TIME_MINUTE				= "Minutes";
@@ -682,11 +714,19 @@ if(localStorage.getItem('language') == 'vi' || localStorage.getItem('language') 
 
 	$EVENTDETAILS_PARTICIPANT		= "Participant";
 
-	$EVENTDETAILS_FORM_TITLE		= "Participant Info";
-	$EVENTDETAILS_FORM_REQUIRE		= "All forms are required.";
+	$EVENTDETAILS_JOINFORM_TITLE	= "Paritipant Info";
+	$EVENTDETAILS_DONATEFORM_TITLE	= "Donate Info";
+	$EVENTDETAILS_FORM_REQUIRE		= "Please fill in all infomation.";
 	$EVENTDETAILS_FORM_NAME			= "Full Name";
 	$EVENTDETAILS_FORM_EMAIL		= "Email";
-	$EVENTDETAILS_FORM_PHONE		= "Phone";
+	$EVENTDETAILS_FORM_PHONE		= "Phone Number";
+
+	$EVENTDETAILS_DONATEFORM_INFO	= "Donator Info";
+	$EVENTDETAILS_DONATEFORM_DONATE	= "Donate Info";
+
+	$EVENTDETAILS_FORM_MSG_REQUIRE	= "Please fill in all infomation.";
+	$EVENTDETAILS_FORM_MSG_EMAIL	= "Invalid email.";
+	$EVENTDETAILS_FORM_MSG_DONATE	= "Invalid donation info.";
 
 	$EVENTDETAILS_ALERT_DUPLICATE	= "You have participated in an event with the same date.";
 	$EVENTDETAILS_ALERT_JOIN_SUCCESS = "Successfully join event.";

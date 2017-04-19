@@ -34,8 +34,10 @@ function populateAboutButtons(role) {
 	if(role == "User") {
 
 	} else if(role == "Guest") {
-		$('#btnPromote1').attr('href','/login');
-		$('#btnPromote2').attr('href','/login');
+		$('#btnPromote1').removeAttr('href');
+		$('#btnPromote2').removeAttr('href');
+		$('#btnPromote1').attr('onclick','showLogin()');
+		$('#btnPromote2').attr('onclick','showLogin()');
 	} else {
 		$('#btnPromote1').attr('disabled','disabled');
 		$('#btnPromote2').attr('disabled','disabled');

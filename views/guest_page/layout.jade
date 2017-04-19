@@ -2,13 +2,15 @@ doctype html
 html
 	head
 		title= title
-		link(rel='stylesheet', href='/stylesheets/style.css')
-		script(src='/vendors/jquery/dist/jquery.min.js')
+		link(rel='stylesheet', href='/stylesheets/style.css')		
 		link(href='/vendors/jquery-ui-1.12.1/jquery-ui.css', rel='stylesheet')
+		script(src='//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js')
 		script(src='/vendors/jquery-ui-1.12.1/jquery-ui.js')
+		script.
+			window.jQuery || document.write('<script src="/guest_page/js/jquery-1.11.1.min.js"><\\/script>')
 		script(src='/javascripts/global.js')		
 		script(src='/guest_page/js/lang.js')
-		script(src='/guest_page/js/layout.js')		
+		script(src='/guest_page/js/layout.js')
 		// Countdown JS
 		script(src='/vendors/countdown/countdown.js')			
 		script.
@@ -20,7 +22,7 @@ html
 				fjs.parentNode.insertBefore(js, fjs);
 			}(document, 'script', 'facebook-jssdk'));
 
-	body
+	body		
 		header.main-header
 				nav.navbar.navbar-static-top.navbar-inverse(data-spy="affix")
 					.navbar-top
@@ -76,6 +78,43 @@ html
 					// /.navbar-main
 			// /. main-header
 		block content
+		// Log in dialog
+		#login-form(title='Log In', style="display: none; padding: 30px 50px")
+			.row(style="text-align:center; color: red")
+				p#errLoginMsg
+			form(onsubmit="login()")
+				fieldset
+					.row.form-group
+						.col-md-12.col-sm-12.col-xs-12
+							input#txtLoginUsername.form-username.form-control.col-md-7.col-xs-12(type='text', required='required')
+					.row.form-group
+						.col-md-12.col-sm-12.col-xs-12
+							input#txtLoginPassword.form-password.form-control.col-md-7.col-xs-12(type='password', required='required')
+					hr
+					.row.form-group
+						input#btnLogin.btn.btn-info.col-md-6.col-sm-6.col-xs-6(type="submit")
+						div.col-md-6.col-sm-6.col-xs-6(style="text-align:center;")
+							a#btnShowRegister.btn(onclick="showRegister()", style="cursor:pointer; background-color:none; text-decoration: underline;")
+		// Register dialog
+		#register-form(title='Register', style="display: none; padding: 30px 50px")
+			.row(style="text-align:center; color: red")
+				p#errRegisterMsg
+			form(onsubmit="register()")
+				fieldset
+					.row.form-group
+						.col-md-12.col-sm-12.col-xs-12
+							input#txtRegisterUsername.form-username.form-control.col-md-7.col-xs-12(type='text', required='required')
+					.row.form-group
+						.col-md-12.col-sm-12.col-xs-12
+							input#txtRegisterEmail.form-email.form-control.col-md-7.col-xs-12(type='text', required='required')
+					.row.form-group
+						.col-md-12.col-sm-12.col-xs-12
+							input#txtRegisterPassword.form-password.form-control.col-md-7.col-xs-12(type='password', required='required')
+					hr
+					.row.form-group
+						input#btnRegister.btn.btn-info.col-md-6.col-sm-6.col-xs-6(type="submit")
+						div.col-md-6.col-sm-6.col-xs-6(style="text-align:center;")
+							a#btnShowLogin.btn(onclick="showLogin()", style="cursor:pointer; background-color:none; text-decoration: underline;")
 		#alert_placeholder
 		footer.main-footer
 			.footer-top
@@ -106,4 +145,4 @@ html
 						.clearfix
 			.footer-bottom
 				.container.text-right
-					| Sadaka @ copyrights 2017 - by numbuh1
+					| Sadaka @ copyrights 2017 - by numbuh1		

@@ -447,9 +447,10 @@ function populateLanguage() {
 	$('#header-producers').html($HOMEPAGE_HEADER_PRODUCERS);
 
 	if(readCookie('user') == '') {
-		$('#slider1-btn').attr('href','/login');
-		$('#slider2-btn').attr('href','/login');
-		$('#slider3-btn').attr('href','/login');
+		$('#slider2-btn').removeAttr('href','');
+		$('#slider3-btn').removeAttr('href','');
+		$('#slider2-btn').attr('onclick','showLogin()');
+		$('#slider3-btn').attr('onclick','showLogin()');
 	}
 }
 

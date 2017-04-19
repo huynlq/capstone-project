@@ -69,13 +69,45 @@ $(document).ready(function() {
                           '<li>|</li>' +
                           '<li>' + languageContent + '</li>' +
                           '<li>|</li>' +
-                          '<li><a href="/login" style="cursor: pointer">' + $LAYOUT_NAVBAR_SIGNIN + '</a>' +
+                          '<li><a onclick="showLogin()" style="cursor: pointer">' + $LAYOUT_NAVBAR_SIGNIN + '</a>' +
                           '</li>');
     }
 
     populateFeed('1562432787368293','404393089920980|jCrsml4DJDN41CWNUZCQZYV0_LQ');
     //$('.fb-share-button').attr('data-href', window.location.href);
     console.log(window.location.href);
+
+    //========================== DIALOG HIDING FUNCTIONS ===================
+
+    var loginDialog = $( "#login-form" ).dialog({
+          autoOpen: false,
+          show: {
+              effect: "fade",
+              duration: 200
+            },
+          hide: {
+              effect: "fade",
+              duration: 200
+            },
+          modal: true,
+          resizable: true,
+          width: 500
+    });
+
+    var registerDialog = $( "#register-form" ).dialog({
+          autoOpen: false,
+          show: {
+              effect: "fade",
+              duration: 200
+            },
+          hide: {
+              effect: "fade",
+              duration: 200
+            },
+          modal: true,
+          resizable: true,
+          width: 500
+    });    
 });
 
 // Functions =============================================================
@@ -96,6 +128,16 @@ function populateLanguageLayout() {
   $('#navbar-sponsors').html($LAYOUT_NAVBAR_SPONSORS);
   $('#about-us').html($LAYOUT_FOOTER_ABOUT);
   $('#about-us-desc').html($LAYOUT_FOOTER_ABOUT_DESC);
+
+  $('#login-form').attr('title', $LAYOUT_FORM_LOGIN_HEADER);
+  $('#register-form').attr('title', $LAYOUT_FORM_REGISTER_HEADER);
+  $('.form-username').attr('placeholder',$LAYOUT_FORM_LOGIN_USERNAME);
+  $('.form-password').attr('placeholder',$LAYOUT_FORM_LOGIN_PASSWORD);
+  $('.form-email').attr('placeholder',$LAYOUT_FORM_REGISTER_EMAIL);
+  $('#btnLogin').attr('value',$LAYOUT_FORM_LOGIN_BUTTON);
+  $('#btnShowLogin').html($LAYOUT_FORM_LOGIN_BUTTON + " >>");
+  $('#btnRegister').attr('value',$LAYOUT_FORM_REGISTER_BUTTON);
+  $('#btnShowRegister').html($LAYOUT_FORM_REGISTER_BUTTON + " >>");
 }
 
 //Populate Facebook feed
@@ -209,7 +251,7 @@ function signOut() {
     deleteCookie('user');
     deleteCookie('role');
     deleteCookie('username');
-    window.location = "/login";
+    window.location.replace(window.location.href);
 }
 
 //Show alert | type = {"info", "success", "danger", "warning"}
@@ -240,4 +282,106 @@ function numberField() {
 function validateEmail(email) {
     var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     return re.test(email);
+}
+
+// Show Login Dialog
+function showLogin() {
+  $('#txtLoginUsername').val("");
+  $('#txtLoginPassword').val("");  
+  $('#errLoginMsg').html("");
+  $( "#register-form" ).dialog('close');
+  $( "#login-form" ).dialog('open');
+}
+
+// Login function
+function login() {
+  event.preventDefault();
+  var username = $('#txtLoginUsername').val();
+  var password = $('#txtLoginPassword').val();
+
+  //Login Success => Add new user to database
+  var user = {
+      'username': username,
+      'password': password
+  }
+
+  // Use AJAX to post the object to our adduser service        
+  $.ajax({
+      type: 'POST',
+      data: user,
+      url: '/login',
+      dataType: 'JSON'
+  }).done(function( response ) {
+      // Check for successful (blank) response
+      if (response.msg === '') {
+          writeCookie('username', username, 7);
+          writeCookie('role', response.role, 7);
+          writeCookie('user', response.id, 7);
+          window.location.replace(window.location.href);
+      }
+      else if(response.msg == 1) {
+        $('#errLoginMsg').html($LAYOUT_FORM_LOGIN_MSG_INVALID);
+      } else {
+        $('#errLoginMsg').html($LAYOUT_FORM_LOGIN_MSG_BANNED + response.reason);
+      }
+  });
+}
+
+// Show Register Dialog
+function showRegister() {
+  $('#txtRegisterUsername').val("");
+  $('#txtRegisterPassword').val("");  
+  $('#txtRegisterEmail').val("");  
+  $('#errRegisterMsg').html("");
+  $( "#login-form" ).dialog('close');
+  $( "#register-form" ).dialog('open');
+}
+
+// Register function
+function register() {
+  event.preventDefault();
+  var username = $('#txtRegisterUsername').val();
+  var email    = $('#txtRegisterEmail').val();
+  var password = $('#txtRegisterPassword').val();
+
+  if(validateEmail(email)) {
+      //Login Success => Add new user to database
+      var newUser = {
+          'username': username,
+          'password': password,
+          'email': email,
+          'role': "User",
+          'fullName': '',
+          'phoneNumber': '',
+          'address': '',
+          'image': '',
+          'markBanned': '0',
+          'dateCreated': Date(),
+          'dateModified': Date(),
+          'deleteFlag': ''
+      }
+
+      // Use AJAX to post the object to our adduser service        
+      $.ajax({
+          type: 'POST',
+          data: newUser,
+          url: '/register',
+          dataType: 'JSON'
+      }).done(function( response ) {
+          // Check for successful (blank) response
+          console.log(response.msg);
+          if (response.msg === '') {
+              writeCookie('username', username, 7);
+              writeCookie('role', 'User', 7);
+              writeCookie('user', response.id, 7);
+              window.location.replace(window.location.href);
+          } else if (response.msg == 1) {
+              $('#errRegisterMsg').html($LAYOUT_USER_EXIST_MESSAGE);
+          } else {
+            $('#errRegisterMsg').html(response.msg);
+          }
+      });    
+  } else {
+      $('#errRegisterMsg').html($LAYOUT_FORM_REGISTER_MSG_EMAIL);
+  } 
 }
