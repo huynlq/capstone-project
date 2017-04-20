@@ -97,6 +97,9 @@ function populateLanguage() {
     $('.tab-cost').html($EVENTUPDATE_TAB_COST);
     $('.tab-sponsor').html($EVENTUPDATE_TAB_SPONSOR);
     $('.tab-gallery').html($EVENTUPDATE_TAB_GALLERY);
+    $('.tab-pending-donation-long').html($EVENTUPDATE_TAB_PENDING_DONATION_LG);
+    $('.tab-current-sponsor').html($EVENTUPDATE_TAB_SPONSOR_CR);
+    $('.tab-pending-sponsor').html($EVENTUPDATE_TAB_SPONSOR_PD);
 
     $('.th-action').html();
 

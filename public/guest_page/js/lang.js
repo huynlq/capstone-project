@@ -264,9 +264,12 @@ if(localStorage.getItem('language') == 'vi' || localStorage.getItem('language') 
 
 	$EVENTUPDATE_TAB_DONATION			= "Quyên góp";
 	$EVENTUPDATE_TAB_PENDING_DONATION	= "QG chờ duyệt";
+	$EVENTUPDATE_TAB_PENDING_DONATION_LG= "Quyên góp chờ duyệt";
 	$EVENTUPDATE_TAB_PARTICIPANT		= "Người tham gia";
 	$EVENTUPDATE_TAB_COST				= "Chi phí";
 	$EVENTUPDATE_TAB_SPONSOR			= "Tài trợ";
+	$EVENTUPDATE_TAB_SPONSOR_CR			= "Hiện tại";
+	$EVENTUPDATE_TAB_SPONSOR_PD			= "Chờ duyệt";
 	$EVENTUPDATE_TAB_GALLERY			= "Thư viện hình";
 
 	$EVENTUPDATE_TH_ACTION				= "Hành động";
@@ -788,9 +791,12 @@ if(localStorage.getItem('language') == 'vi' || localStorage.getItem('language') 
 
 	$EVENTUPDATE_TAB_DONATION			= "Donations";
 	$EVENTUPDATE_TAB_PENDING_DONATION	= "Pending Donations";
+	$EVENTUPDATE_TAB_PENDING_DONATION_LG= "Pending Donations";
 	$EVENTUPDATE_TAB_PARTICIPANT		= "Participants";
 	$EVENTUPDATE_TAB_COST				= "Costs";
 	$EVENTUPDATE_TAB_SPONSOR			= "Sponsors";
+	$EVENTUPDATE_TAB_SPONSOR_CR			= "Current Sponsors";
+	$EVENTUPDATE_TAB_SPONSOR_PD			= "Pending Sponsors";
 	$EVENTUPDATE_TAB_GALLERY			= "Photo Gallery";
 
 	$EVENTUPDATE_TH_ACTION				= "Action";
