@@ -564,11 +564,12 @@ router.get('/edit_activities/:id', function(req, res, next) {
 /* GET event update page. */
 router.get('/update/:id', function(req, res, next) {
     var db = req.db;
+    var userId = req.cookies.user; 
     var collection = db.get('Events');
     if(req.params.id.length != 24)
         res.render('page_404');
     collection.findOne({ '_id' : req.params.id },{},function(e,docs){
-        if(docs) {
+        if(docs.userId == userId) {
             res.render('producer_page/update_event', { title: 'Charity Event | Updating ' + docs.eventName, 'docs': docs });
         } else {
             res.render('page_404');
@@ -822,7 +823,7 @@ router.get('/nearby/:lat/:lng', function(req, res, next) {
 router.get('/activities/:id', function(req, res, next) {
     var db = req.db;
     var collection = db.get('Activities');
-    collection.find({ 'eventId' : req.params.id },{},function(e,docs){
+    collection.find({ 'eventId' : req.params.id },{sort: {day: 1}},function(e,docs){
         res.json(docs);
     });
 });
@@ -857,6 +858,15 @@ router.put('/updateactivity/:id', function(req, res) {
     var collection = db.get('Activities');
     collection.update({ '_id' : req.params.id }, { $set: req.body}, function(err) {
         res.send((err === null) ? { msg: ''} : { msg:'error: ' + err});
+    });
+});
+
+/* DELETE activities by its id. */
+router.delete('/removeactivitiesbyid/:id', function(req, res) {
+    var db = req.db;
+    var collection = db.get('Activities');
+    collection.remove({ '_id' : req.params.id }, function(err) {
+        res.send((err === null) ? { msg: '' } : { msg:'error: ' + err });
     });
 });
 
@@ -988,6 +998,17 @@ router.post('/adddonationrequire', function(req, res) {
     });
 });
 
+/* PUT to edit donation require. */
+router.put('/editdonationrequire/:id', function(req, res) {
+    var db = req.db;
+    var collection = db.get('RequiredDonations');
+    collection.update({ '_id' : req.params.id }, { $set: req.body}, function(err){                
+        res.send(
+            (err === null) ? { msg: ''} : { msg: err, 'message': 'An error occured. Please try again.' }
+        );
+    });
+});
+
 /* GET donations require base on eventid. */
 router.get('/donationrequire/:id', function(req, res, next) {
     var db = req.db;
@@ -1019,6 +1040,15 @@ router.get('/donationrequirebyname/:eventId/:name', function(req, res, next) {
         'eventId' : req.params.eventId
     },{},function(e,docs){
         res.json(docs);
+    });
+});
+
+/* DELETE to Delete Requried Donation. */
+router.delete('/deleterequireddonation/:id', function(req, res) {
+    var db = req.db;
+    var collection = db.get('RequiredDonations');
+    collection.remove({ '_id' : req.params.id }, function(err) {
+        res.send((err === null) ? { msg: '' } : { msg:'error: ' + err });
     });
 });
 

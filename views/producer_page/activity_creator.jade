@@ -49,7 +49,7 @@ block content
 							h2.title-style-2
 								span#header-donation Donation Details
 								span.title-under
-							form(action="javascript:;", onsubmit="addDonation()").form-horizontal.form-label-left
+							form#donationForm(action="javascript:;", onsubmit="addDonation()").form-horizontal.form-label-left
 								.form-group
 									label.control-label.col-md-3.col-sm-3.col-xs-12
 										span.form-donation-item Item
@@ -76,7 +76,7 @@ block content
 										input#txtDonationMinimum.form-control.col-md-7.col-xs-12(type='number', min='0', required='required')
 								.form-group
 									.col-md-3.col-sm-3.col-xs-12
-									.col-md-6.col-sm-6.col-xs-12
+									.col-md-6.col-sm-6.col-xs-12#donationButtonForm
 										button#formDonationAdd.btn.btn-info(type="submit", style="float:right") Add
 							table#donationTable.table.table-bordered.table-hover.dt-responsive
 								thead
@@ -91,7 +91,7 @@ block content
 							h2.title-style-2
 								span#header-activity Activity Details
 								span.title-under
-							form(action="javascript:;", onsubmit="addActivity()").form-horizontal.form-label-left
+							form#activityForm(action="javascript:;", onsubmit="addActivity()").form-horizontal.form-label-left
 								input#txtEventId(type='hidden')
 								input#txtEventIdEdit(type='hidden', value="#{docs._id}")
 								input#txtNumberOfDates(type='hidden', value='0')
@@ -130,7 +130,7 @@ block content
 										input#txtActivityNote.form-control.col-md-7.col-xs-12(type='text')
 								.form-group
 									.col-md-3.col-sm-3.col-xs-12
-									.col-md-6.col-sm-6.col-xs-12
+									.col-md-6.col-sm-6.col-xs-12#activityButtonForm
 										button#form-add.btn.btn-info(type="submit", style="float:right") Add
 							ul#activityDates.nav.nav-tabs
 							#activityContents.tab-content
@@ -139,7 +139,7 @@ block content
 							.row
 								.col-md-7.col-sm-7
 								.col-md-2.col-sm-2.col-xs-12
-									button#formSubmit.btn.btn-info.col-xs-12(onclick="goNext()") Continue >>
+									a#formSubmit.btn.btn-info.col-xs-12(href='/events/creator_preview') Continue >>
 			// Bootsrap javascript file
 			script(src='/guest_page/js/bootstrap.min.js')
 			// PrettyPhoto javascript file

@@ -57,6 +57,9 @@ if(localStorage.getItem('language') == 'vi' || localStorage.getItem('language') 
 	$LAYOUT_TIME_MINUTE				= "Phút";
 	$LAYOUT_TIME_SECOND				= "Giây";	
 
+	$LAYOUT_CONFIRM_OK				= "OK";
+	$LAYOUT_CONFIRM_CANCEL			= "Hủy";
+
 	//============== NOTIFICATION =======================================================
 
 	$NOTIFICATION_HEADER			= "TIN NHẮN";
@@ -205,6 +208,9 @@ if(localStorage.getItem('language') == 'vi' || localStorage.getItem('language') 
 	$EVENTDETAILS_FORM_MSG_REQUIRE	= "Vui lòng nhập đầy đủ thông tin.";
 	$EVENTDETAILS_FORM_MSG_EMAIL	= "Email không hợp lệ.";
 	$EVENTDETAILS_FORM_MSG_DONATE	= "Thông tin đóng góp không hợp lệ.";
+
+	$EVENTDETAILS_WAIT_EXPORT		= "Đang xuất báo cáo...";
+	$EVENTDETAILS_MSG_EXPORT_SUCCESS= "Đã xuất thành công, nếu không xuất hiện cửa số mới, vui lòng bật chức năng popup";
 
 	$EVENTDETAILS_ALERT_DUPLICATE	= "Bạn đã tham gia sự kiện khác trùng với ngày diễn ra của sự kiện này."
 	$EVENTDETAILS_ALERT_JOIN_SUCCESS = "Tham gia sự kiện thành công."
@@ -584,6 +590,9 @@ if(localStorage.getItem('language') == 'vi' || localStorage.getItem('language') 
 	$LAYOUT_TIME_MINUTE				= "Minutes";
 	$LAYOUT_TIME_SECOND				= "Seconds";
 
+	$LAYOUT_CONFIRM_OK				= "OK";
+	$LAYOUT_CONFIRM_CANCEL			= "Cancel";
+
 	//============== NOTIFICATION =======================================================
 
 	$NOTIFICATION_HEADER			= "NOTIFICATIONS";
@@ -732,6 +741,9 @@ if(localStorage.getItem('language') == 'vi' || localStorage.getItem('language') 
 	$EVENTDETAILS_FORM_MSG_REQUIRE	= "Please fill in all infomation.";
 	$EVENTDETAILS_FORM_MSG_EMAIL	= "Invalid email.";
 	$EVENTDETAILS_FORM_MSG_DONATE	= "Invalid donation info.";
+
+	$EVENTDETAILS_WAIT_EXPORT		= "Writing file...";
+	$EVENTDETAILS_MSG_EXPORT_SUCCESS= "Export success. Please turn off popup blocker if you don't see it.";
 
 	$EVENTDETAILS_ALERT_DUPLICATE	= "You have participated in an event with the same date.";
 	$EVENTDETAILS_ALERT_JOIN_SUCCESS = "Successfully join event.";

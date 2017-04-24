@@ -273,41 +273,35 @@ function confirmEditComment(event) {
 
 // Delete comment
 function deleteComment(event) {
-  var r = confirm($POSTDETAILS_COMMENT_DELETE_CONFIRM);
-  if (r == true) {
-    $.ajax({
-      type: 'DELETE',
-      url: '/posts/deletecomment/' + $(this).attr('rel')
-    }).done(function( response ) {
+  $.ajax({
+    type: 'DELETE',
+    url: '/posts/deletecomment/' + $(this).attr('rel')
+  }).done(function( response ) {
 
-        // Check for a successful (blank) response
-        if (response.msg === '') {
-          // Update the table
-          showAlert('success', $POSTDETAILS_COMMENT_DELETE_ALERT);
-          populateComments();
-        } else {
-            showAlert('danger', $LAYOUT_ERROR + response.msg);
-        }
-    });
-  }
+      // Check for a successful (blank) response
+      if (response.msg === '') {
+        // Update the table
+        showAlert('success', $POSTDETAILS_COMMENT_DELETE_ALERT);
+        populateComments();
+      } else {
+          showAlert('danger', $LAYOUT_ERROR + response.msg);
+      }
+  });
 }
 
 // Delete post
 function deletePost(postId) {
-  var r = confirm($POSTDETAILS_FORM_DELETE_CONFIRM);
-  if (r == true) {
-    $.ajax({
-      type: 'DELETE',
-      url: '/posts/deletepost/' + postId
-    }).done(function( response ) {
+  $.ajax({
+    type: 'DELETE',
+    url: '/posts/deletepost/' + postId
+  }).done(function( response ) {
 
-        // Check for a successful (blank) response
-        if (response.msg === '') {
-          // Update the table
-          window.location = "/community_board";
-        } else {
-            showAlert('danger', $LAYOUT_ERROR + response.msg);
-        }
-    });
-  }
+      // Check for a successful (blank) response
+      if (response.msg === '') {
+        // Update the table
+        window.location = "/community_board";
+      } else {
+          showAlert('danger', $LAYOUT_ERROR + response.msg);
+      }
+  });
 }

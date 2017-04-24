@@ -179,26 +179,23 @@ function showPosts(data) {
 }
 
 function deletePost(event) {
-    var confirmation = confirm($LISTPOST_CONFIRM_DELETE);
-    if(confirmation == true) {
-        event.preventDefault();
+    event.preventDefault();
 
-        // If they did, do our delete
-        $.ajax({
-            type: 'DELETE',
-            url: '/posts/deletepost/' + $(this).attr('rel')
-        }).done(function( response ) {
+    // If they did, do our delete
+    $.ajax({
+        type: 'DELETE',
+        url: '/posts/deletepost/' + $(this).attr('rel')
+    }).done(function( response ) {
 
-            // Check for a successful (blank) response
-            if (response.msg === '') {
-            }
-            else {
-                alert('Error: ' + response.msg);
-            }
+        // Check for a successful (blank) response
+        if (response.msg === '') {
+        }
+        else {
+            alert('Error: ' + response.msg);
+        }
 
-            // Update the table
-            populateTables();
+        // Update the table
+        populateTables();
 
-        });
-    }    
+    });  
 }

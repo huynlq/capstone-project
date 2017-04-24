@@ -21,7 +21,7 @@ function populateLanguage() {
 
 function populateButton() {
 	if(readCookie('user') == '') {
-		$('#btnCreator').attr('href','/login');
+		$('#btnCreator').attr('onclick','showLogin()');
 	}	
 }
 

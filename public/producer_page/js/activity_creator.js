@@ -104,20 +104,23 @@ function populateLanguage() {
 
 function initiateDonations() {
   $('#donationTable').DataTable();
-  if($('#txtEventIdEdit').val() == '' || $('#txtEventIdEdit').val() == undefined || $('#txtEventIdEdit').val() == 'undefined' || $('#txtEventIdEdit').val() == null || $('#txtEventIdEdit') == 'null') {
+  
+  // if($('#txtEventIdEdit').val() == '' || $('#txtEventIdEdit').val() == undefined || $('#txtEventIdEdit').val() == 'undefined' || $('#txtEventIdEdit').val() == null || $('#txtEventIdEdit') == 'null') {
     
-  } else {    
-    $.getJSON( '/events/donationrequire/' + $('#txtEventId').val(), function( data ) {
-      $.each(data, function(){
-        $('#donationTable').DataTable().row.add( [
-                this.item,
-                this.unit,
-                this.quantity,
-                ' '
-            ] ).draw( false );
-      });
-    });
-  }
+  // } else {    
+  //   $.getJSON( '/events/donationrequire/' + $('#txtEventId').val(), function( data ) {
+  //     $.each(data, function(){
+  //       $('#donationTable').DataTable().row.add( [
+  //               this.item,
+  //               this.unit,
+  //               '<input type="text" class="form-control donation-quantity" value="' + this.quantity + '" />',
+  //               '<input type="text" class="form-control donation-minimum" value="' + this.minimum + '" />',
+  //               ' '
+  //           ] ).draw( false );
+  //     });
+  //   });
+  // }
+  refreshDonationTable();
 }
 
 function initiateSchedule() {
@@ -176,26 +179,28 @@ function initiateSchedule() {
         }); 
     }
 
-    $.getJSON( '/events/activities/' + $('#txtEventId').val(), function( activityData ) {
-      if(activityData == '') {
-        activityData = JSON.parse(localStorage.getItem('activityItem'));
-        if(activityData == '' || activityData == null) {
-          //ABSOLUTELY NOTHING
-        } else {
-          for (var i = 0; i < activityData.length; i++) {
-            if(activityData[i].day <= diffDays) {
-              addingActivity(activityData[i]);
-            }          
-          }          
-        }
-      } else {
-        for (var i = 0; i < activityData.length; i++) {
-          if(activityData[i].day <= diffDays) {
-            addingActivity(activityData[i]);
-          }          
-        }
-      }
-    });
+    refreshActivityTable();
+
+    // $.getJSON( '/events/activities/' + $('#txtEventId').val(), function( activityData ) {
+    //   if(activityData == '') {
+    //     activityData = JSON.parse(localStorage.getItem('activityItem'));
+    //     if(activityData == '' || activityData == null) {
+    //       //ABSOLUTELY NOTHING
+    //     } else {
+    //       for (var i = 0; i < activityData.length; i++) {
+    //         if(activityData[i].day <= diffDays) {
+    //           addingActivity(activityData[i]);
+    //         }          
+    //       }          
+    //     }
+    //   } else {
+    //     for (var i = 0; i < activityData.length; i++) {
+    //       if(activityData[i].day <= diffDays) {
+    //         addingActivity(activityData[i]);
+    //       }          
+    //     }
+    //   }
+    // });
   });  
 }
 
@@ -207,6 +212,7 @@ function addDays(date, days) {
 
 function addActivity() {
   if(validateActivity() == true) {
+    var eventId = $('#txtEventId').val();
     var day = $('#txtActivityDate').val().split(' ')[0];
     var time = $('#txtActivityTime').val();
     var place = $('#txtActivityPlace').val();
@@ -215,18 +221,30 @@ function addActivity() {
     var lat = $('#txtActivityLat').val();
     var lng = $('#txtActivityLng').val();
 
-    $('#table-day-' + day).DataTable().row.add( [
-            time,
-            place + '<div style="display:none"><p class="lat">' + lat + '</p><p class="lng">' + lng + '</p></div>',
-            activity,
-            note,
-            '<center><a class="btn btn-danger" onclick="deleteActivity(' + day + ', this)"><i class="fa fa-remove"></i></a></center>'
-        ] ).draw( false );
+    var activity = {
+      eventId:    eventId,
+      day:        day,
+      time:       time,
+      place:      place,
+      activity:   activity,
+      note:       note,
+      latitude:   lat,
+      longitude:  lng
+    };
 
-    $('#txtActivityTime').val('');
-    $('#txtActivityPlace').val('');
-    $('#txtActivity').val('');
-    $('#txtActivityNote').val('');
+    $.ajax({
+      type: 'POST',
+      data: activity,
+      url: '/events/addactivity',
+      async: false,
+      dataType: 'JSON'
+    }).done(function( response ) {
+        if (response.msg === '') {
+          refreshActivityTable();
+        } else {
+          showAlert('error', $LAYOUT_ERROR + response.msg);
+        }
+    });
   }    
 }
 
@@ -236,56 +254,273 @@ function addDonation() {
   var quantity = $('#txtDonationQuantity').val();
   var minimum = $('#txtDonationMinimum').val();
 
-    $('#donationTable').DataTable().row.add( [
-            item,
-            unit,
-            quantity,
-            minimum,
-            '<center><a class="btn btn-danger" onclick="deleteDonation(this)"><i class="fa fa-remove"></i></a></center>'
-        ] ).draw( false );
+  var eventId = $('#txtEventId').val();
+  var donation = {
+    eventId:      eventId,
+    item:         item,
+    unit:         unit,
+    quantity:     quantity,
+    minimum:      minimum,
+    dateCreated:  new Date()
+  };
 
-    $('#txtDonationItem').val("");
-    $('#txtDonationUnit').val("");
-    $('#txtDonationQuantity').val("");
-    $('#txtDonationMinimum').val("");
+  $.ajax({
+    type: 'POST',
+    data: donation,
+    url: '/events/adddonationrequire',
+    async: false,
+    dataType: 'JSON'
+  }).done(function( response ) {
+      if (response.msg === '') {
+        refreshDonationTable();
+      } else {
+        showAlert('error', $LAYOUT_ERROR + response.msg);
+      }
+  });
 }
 
-function addingActivity(obj) {
-    var day = obj.day;
-    var time = obj.time;
-    var place = obj.place;
-    var activity = obj.activity;
-    var note = obj.note;
-    var lat = obj.latitude;
-    var lng = obj.longitude;
+function refreshActivityTable() {
+  $('#txtActivityTime').val('');
+  $('#txtActivityPlace').val('');
+  $('#txtActivity').val('');
+  $('#txtActivityNote').val('');  
+  $('#txtActivityLat').val('');
+  $('#txtActivityLng').val('');
+  var eventId = $('#txtEventId').val();
+  var diffDays = document.getElementById("txtNumberOfDates").value;  
+  $.getJSON( '/events/activities/' + $('#txtEventId').val(), function( activityData ) {
+    for(var i = 1; i <= diffDays; i++) {
+      $('#table-day-' + i).DataTable().clear().draw();
+    }
 
-    $('#table-day-' + day).DataTable().row.add( [
-            time,
-            place + '<div style="display:none"><p class="lat">' + lat + '</p><p class="lng">' + lng + '</p></div>',
-            activity,
-            note,
-            '<center><a class="btn btn-danger" onclick="deleteActivity(' + day + ', this)"><i class="fa fa-remove"></i></a></center>'
-        ] ).draw( false );
+    for(var i = 0; i < activityData.length; i++) {
+      $('#table-day-' + activityData[i].day).DataTable().row.add([
+        activityData[i].time,
+        activityData[i].place,
+        activityData[i].activity,
+        activityData[i].note,
+        '<center>' +
+          '<a class="btn btn-info" onclick="showEditActivity(\'' + activityData[i]._id + '\')"><i class="fa fa-edit"></i></a>' +
+          '<a class="btn btn-danger" onclick="deleteActivity(\'' + activityData[i]._id + '\')"><i class="fa fa-remove"></i></a>' +
+        '</center>'
+      ]).draw( false );
+    }
+  });
+}
 
+function showEditActivity(_id) {
+  $.getJSON( '/events/activities/id/' + _id, function( data ) {
+    $('#txtActivityTime').val(data.time);
+    $('#txtActivityPlace').val(data.place);
+    $('#txtActivity').val(data.activity);
+    $('#txtActivityNote').val(data.note);
+    $('#txtActivityLat').val(data.latitude);
+    $('#txtActivityLng').val(data.longitude);
+    initialize();
+    populateActivityButtons(_id);
+  });
+}
+
+function populateActivityButtons(_id) {
+  if(_id == "") {
     $('#txtActivityTime').val('');
     $('#txtActivityPlace').val('');
     $('#txtActivity').val('');
     $('#txtActivityNote').val('');
+    $('#txtActivityLat').val('');
+    $('#txtActivityLng').val('');
+    $('#activityForm').attr('onsubmit', 'addActivity()');
+    $('#activityButtonForm').html('<button id="#form-add" type="submit" style="float:right" class="btn btn-info">' + $EVENTCREATOR_ACTFORM_ADD + '</button>');
+  } else {
+    $('#activityForm').attr('onsubmit', 'editActivity(\'' + _id + '\')');
+    $('#activityButtonForm').html('<button type="submit" style="float:right" class="btn btn-success"><i class="fa fa-check"></i></button><button onclick="populateActivityButtons(\'\')" style="float:right" class="btn btn-danger"><i class="fa fa-remove"></i></button>');
+  }
 }
 
-function deleteActivity(day, that) {
-  $('#table-day-' + day).DataTable()
-            .row( $(that).parents('tr') )
-            .remove()
-            .draw();
+function refreshDonationTable() {
+  $('#txtDonationItem').val("");
+  $('#txtDonationUnit').val("");
+  $('#txtDonationQuantity').val("");
+  $('#txtDonationMinimum').val("");    
+  var eventId = $('#txtEventId').val();
+  $('#donationTable').DataTable().clear().draw();
+  $.getJSON( '/events/donationrequire/' + $('#txtEventId').val(), function( data ) {
+    $.each(data, function(){
+      $('#donationTable').DataTable().row.add( [
+              this.item,
+              this.unit,
+              parseInt(this.quantity).toLocaleString(),
+              parseInt(this.minimum).toLocaleString(),
+              '<center>' +
+                '<a class="btn btn-info" onclick="showEditDonation(\'' + this._id + '\')"><i class="fa fa-edit"></i></a>' +
+                '<a class="btn btn-danger" onclick="deleteDonation(\'' + this._id + '\')"><i class="fa fa-remove"></i></a>' +
+              '</center>'
+          ] ).draw( false );
+    });
+  });
 }
 
-function deleteDonation(that) {
-  $('#donationTable').DataTable()
-            .row( $(that).parents('tr') )
-            .remove()
-            .draw();
+function showEditDonation(_id) {
+  $.getJSON( '/events/donationrequire/id/' + _id, function( data ) {
+    $('#txtDonationItem').val(data.item);
+    $('#txtDonationUnit').val(data.unit);
+    $('#txtDonationQuantity').val(data.quantity);
+    $('#txtDonationMinimum').val(data.minimum);
+    $('#txtDonationItem').attr('readonly','readonly');
+    $('#txtDonationUnit').attr('readonly','readonly');
+    populateDonationButtons(_id);
+  });
 }
+
+function editActivity(_id) {
+  var day = $('#txtActivityDate').val().split(' ')[0];
+  var time = $('#txtActivityTime').val();
+  var place = $('#txtActivityPlace').val();
+  var activity = $('#txtActivity').val();
+  var note = $('#txtActivityNote').val();
+  var lat = $('#txtActivityLat').val();
+  var lng = $('#txtActivityLng').val();
+
+  var activity = {
+    day:        day,
+    time:       time,
+    place:      place,
+    activity:   activity,
+    note:       note,
+    latitude:   lat,
+    longitude:  lng
+  };
+
+  $.ajax({
+    type: 'PUT',
+    data: activity,
+    url: '/events/updateactivity/' + _id,
+    async: false,
+    dataType: 'JSON'
+  }).done(function( response ) {
+      if (response.msg === '') {
+        refreshActivityTable();
+        populateActivityButtons('');
+      } else {
+        showAlert('error', $LAYOUT_ERROR + response.msg);
+      }
+  });
+}
+
+function deleteActivity(_id) {
+  $.ajax({
+    type: 'DELETE',
+    url: '/events/removeactivitiesbyid/' + _id,
+    async: false
+  }).done(function( response ) {
+      if (response.msg === '') {
+        refreshActivityTable();
+        populateActivityButtons('');
+      } else {
+        showAlert('error', $LAYOUT_ERROR + response.msg);
+      }
+  });  
+}
+
+function populateDonationButtons(_id) {
+  if(_id == "") {
+    $('#txtDonationItem').val("");
+    $('#txtDonationUnit').val("");
+    $('#txtDonationQuantity').val("");
+    $('#txtDonationMinimum').val("");
+    $('#txtDonationItem').removeAttr('readonly');
+    $('#txtDonationUnit').removeAttr('readonly');
+    $('#donationForm').attr('onsubmit', 'addDonation()');
+    $('#donationButtonForm').html('<button id="formDonationAdd" type="submit" style="float:right" class="btn btn-info">' + $EVENTCREATOR_ACTFORM_ADD + '</button>');
+  } else {
+    $('#donationForm').attr('onsubmit', 'editDonation(\'' + _id + '\')');
+    $('#donationButtonForm').html('<button type="submit" style="float:right" class="btn btn-success"><i class="fa fa-check"></i></button><button onclick="populateDonationButtons(\'\')" style="float:right" class="btn btn-danger"><i class="fa fa-remove"></i></button>');
+  }
+}
+
+function editDonation(_id) {
+  var item = $('#txtDonationItem').val();
+  var unit = $('#txtDonationUnit').val();
+  var quantity = $('#txtDonationQuantity').val();
+  var minimum = $('#txtDonationMinimum').val();
+
+  var eventId = $('#txtEventId').val();
+  var donation = {
+    eventId:      eventId,
+    item:         item,
+    unit:         unit,
+    quantity:     quantity,
+    minimum:      minimum,
+    dateCreated:  new Date()
+  };
+
+  $.ajax({
+    type: 'PUT',
+    data: donation,
+    url: '/events/editdonationrequire/' + _id,
+    async: false,
+    dataType: 'JSON'
+  }).done(function( response ) {
+      if (response.msg === '') {
+        refreshDonationTable();
+        populateDonationButtons('');
+      } else {
+        showAlert('error', $LAYOUT_ERROR + response.msg);
+      }
+  });
+}
+
+function deleteDonation(_id) {
+  $.ajax({
+    type: 'DELETE',
+    url: '/events/deleterequireddonation/' + _id,
+    async: false
+  }).done(function( response ) {
+      if (response.msg === '') {
+        refreshDonationTable();
+        populateDonationButtons('');
+      } else {
+        showAlert('error', $LAYOUT_ERROR + response.msg);
+      }
+  });  
+}
+
+// function addingActivity(obj) {
+//     var day = obj.day;
+//     var time = obj.time;
+//     var place = obj.place;
+//     var activity = obj.activity;
+//     var note = obj.note;
+//     var lat = obj.latitude;
+//     var lng = obj.longitude;
+
+//     $('#table-day-' + day).DataTable().row.add( [
+//             time,
+//             place + '<div style="display:none"><p class="lat">' + lat + '</p><p class="lng">' + lng + '</p></div>',
+//             activity,
+//             note,
+//             '<center><a class="btn btn-danger" onclick="deleteActivity(' + day + ', this)"><i class="fa fa-remove"></i></a></center>'
+//         ] ).draw( false );
+
+//     $('#txtActivityTime').val('');
+//     $('#txtActivityPlace').val('');
+//     $('#txtActivity').val('');
+//     $('#txtActivityNote').val('');
+// }
+
+// function deleteActivity(day, that) {
+//   $('#table-day-' + day).DataTable()
+//             .row( $(that).parents('tr') )
+//             .remove()
+//             .draw();
+// }
+
+// function deleteDonation(that) {
+//   $('#donationTable').DataTable()
+//             .row( $(that).parents('tr') )
+//             .remove()
+//             .draw();
+// }
 
 function turnOffMap() {
   $('#map').html("");
@@ -298,78 +533,9 @@ function turnOffMap() {
   google.maps.event.clearInstanceListeners(autocomplete);
 }
 
-function goNext() {
-  var eventId = $('#txtEventId').val();
-  if(eventId != '') {
-
-    if($('#txtEventIdEdit').val() == '' || $('#txtEventIdEdit').val() == undefined || $('#txtEventIdEdit').val() == 'undefined' || $('#txtEventIdEdit').val() == null || $('#txtEventIdEdit') == 'null') {
-      // Save Donation Data
-
-      var donationData = [];
-      var donation = new Object();
-      var donationTable = $('#donationTable').dataTable();
-      for (var i = 0; i < donationTable.fnGetData().length; i++) {
-        donation = {
-          eventId:      eventId,
-          item:         donationTable.fnGetData()[i][0],
-          unit:         donationTable.fnGetData()[i][1],
-          quantity:     donationTable.fnGetData()[i][2],
-          minimum:      donationTable.fnGetData()[i][3],
-          dateCreated:  new Date()
-        };
-
-        $.ajax({
-          type: 'POST',
-          data: donation,
-          url: '/events/adddonationrequire',
-          async: false,
-          dataType: 'JSON'
-        }).done(function( response ) {
-            if (response.msg === '') {
-              
-            } else {
-              showAlert('error', $LAYOUT_ERROR + response.msg);
-            }
-        });
-      }
-    }
-
-    // Save Activities Data
-
-    var schedule = [];
-    var activity = new Object();
-    var diffDays = document.getElementById("txtNumberOfDates").value;
-    var place = "";
-    var lat = "";
-    var lng = "";
-    for (var i = 1; i <= diffDays; i++) {
-      var oTable = $('#table-day-' + i).dataTable();
-      oTable.fnGetData();
-      for (var j = 0; j < oTable.fnGetData().length; j++) {
-        activity + '<div style="display:none"><p class="lat">' + lat + '</p><p class="lng">' + lng + '</p></div>';
-        place = oTable.fnGetData()[j][1].split('<div style="display:none"><p class="lat">')[0];
-        lat = oTable.fnGetData()[j][1].split('<div style="display:none"><p class="lat">')[1].split('</p><p class="lng">')[0];
-        lng = oTable.fnGetData()[j][1].split('</p><p class="lng">')[1].split('</p></div>')[0];
-        activity = {
-          day:        i,
-          time:       oTable.fnGetData()[j][0],
-          place:      place,
-          latitude:   lat,
-          longitude:  lng,
-          activity:   oTable.fnGetData()[j][2],
-          note:       oTable.fnGetData()[j][3]
-        }
-        schedule.push(activity);
-      } 
-    }
-    localStorage.setItem("activityItem", JSON.stringify(schedule));          
-
+function goNext() {         
     var rootURL = window.location.origin?window.location.origin+'/':window.location.protocol+'/'+window.location.host+'/';
-
-    window.location = rootURL + "events/creator_preview";  
-  } else {
-    alert('Something goes horribly wrong, please restart the event creator process.')
-  }  
+    window.location = rootURL + "events/creator_preview";
 }  
 
 function validateActivity() {

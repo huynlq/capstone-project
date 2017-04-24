@@ -6,6 +6,7 @@ $(document).ready(function() {
   populateEvent();
   populateProducer();
   populateTimeline();
+  populateDonationPane();
   $('[data-toggle="tooltip"]').tooltip(); 
   $('#linkEditEvent').attr('href','/events/edit/' + readCookie('eventId'));
 
@@ -128,7 +129,15 @@ function populateProducer() {
 
 
 function populateActivities() {
-  var activityObj = JSON.parse(localStorage.getItem('activityItem'));
+  var activityObj;
+  $.ajax({
+    url: '/events/activities/' + readCookie('eventId'),
+    dataType: 'json',
+    async: false,
+    success: function( data ) {
+      activityObj = data;
+    }
+  });
   $('#activityPane').html('' +
         '<ul id="activityDays" class="nav nav-tabs">' +
         '</ul>' +
@@ -168,8 +177,180 @@ function populateActivities() {
   }
 
   $('#activityDays li a').first().click();
-  console.log($('#activityDays').html());
-  console.log($('#activityContents').html());
+}
+
+function populateDonationPane() {
+  var eventId = readCookie('eventId');
+  // Populate Donations
+  var donationContent =   '<ul id="donationPane" class="nav nav-tabs">' +
+                '<li class="tabClick"><a data-toggle="tab" href="#approved-donation">' + $EVENTDETAILS_APPROVED_DONATION + '</a></li>' +
+                '<li class="tabClick"><a data-toggle="tab" href="#pending-donation">' + $EVENTDETAILS_PENDING_DONATION + '</a></li>' +
+                '</ul>' +
+                '<div class="tab-content">' +      
+                  '<div id="approved-donation" class="tab-pane fade">' +                      
+                  '<table id="tableDonations" cellspacing="0" width="100%" class="table table-style-1 table-striped table-bordered dt-responsive nowrap datatable-responsive">' +
+                    '<thead>' +
+                      '<tr>' +
+                        '<th>#</th>' +
+                        '<th>' + $EVENTDETAILS_DONATION_NAME + '</th>' +
+                        '<th>' + $EVENTDETAILS_DONATION_ITEM + '</th>'+
+                        '<th>' + $EVENTDETAILS_DONATION_QUANTITY + '</th>'+
+                      '</tr>'+
+                    '</thead>'+
+                    '<tbody></tbody>'+
+                  '</table>'+
+                  '</div>' +
+                  '<div id="pending-donation" class="tab-pane fade">' +
+                  '<table id="tablePendingDonations" cellspacing="0" width="100%" class="table table-style-1 table-striped table-bordered dt-responsive nowrap datatable-responsive">' +
+                    '<thead>' +
+                      '<tr>' +
+                        '<th>#</th>' +
+                        '<th>' + $EVENTDETAILS_DONATION_NAME + '</th>' +
+                        '<th>' + $EVENTDETAILS_DONATION_ITEM + '</th>'+
+                        '<th>' + $EVENTDETAILS_DONATION_QUANTITY + '</th>'+
+                      '</tr>'+
+                    '</thead>'+
+                    '<tbody></tbody>'+
+                  '</table>'+
+                  '</div>' +
+                '</div>';
+  $('#donationPane').html(donationContent); 
+
+  var tableDonations = $('#tableDonations').DataTable({"columnDefs": [{ "width": "10px", "targets": 0 }]});
+  tableDonations.clear().draw();
+  var tablePendingDonations = $('#tablePendingDonations').DataTable({"columnDefs": [{ "width": "10px", "targets": 0 }]});
+  tablePendingDonations.clear().draw();
+
+  // Populate Donations
+  $.ajax({
+        url: '/events/donations/' + eventId,
+        dataType: 'json',
+        async: false,
+        success: function( data ) {
+          var counterApproved = 0;
+          var counterPending = 0;
+          var participant;
+          var item;
+          var number;
+          var unit;
+          var donator;
+          var link;
+          for(var i = data.length - 1; i >= 0; i --) {
+            number = parseInt(data[i].donationNumber).toLocaleString();
+          item = data[i].donationItem;
+          if(data[i].userId != '') {
+            link = '<a href="/users/' + data[i].userId + '">' + data[i].donatorName + '</a>';
+          } else {
+            link = data[i].donatorName;
+          }
+          if(data[i].status == "Approved") {
+            counterApproved++;
+            tableDonations.row.add([
+                counterApproved,
+                link,
+                item,
+                number + ' ' + data[i].donationUnit
+              ]).draw('false');             
+          } else {
+            counterPending++;
+            tablePendingDonations.row.add([
+                counterPending,
+                link,
+                item,
+                number + ' ' + data[i].donationUnit
+              ]).draw('false');             
+          } 
+          }
+        }
+    });
+    $('#donationPane li a').first().click();
+
+    // Populate Donation Requirement
+    var requireContent = '<div class="panel panel-default">' +          
+                '<div class="panel-heading">Mục tiêu</div>' +
+                '<div id="event-donation-progress" class="panel-body"></div>' +
+              '</div>';
+
+    $('#requiredDonationPane').html(requireContent);
+
+    $('#event-donation-progress').html('');
+
+    $.getJSON( '/events/donationrequire/' + eventId, function( data ) {
+      if(data.length == 0) {
+        $('#btnDonation').hide();
+      }
+
+    //Set donation items variables
+      var items = [];
+      var donateContent = "";
+
+      //Get required items
+      for(var i = 0; i < data.length; i++) {
+        items.push({
+          item: data[i].item.trim(),
+          number: parseInt(data[i].quantity),
+          unit: data[i].unit.trim(),
+          current: 0
+        });
+
+        donateContent += '<div class="row form-group">' +
+                  '<div class="col-md-3 col-sm-3 col-xs-12" style="text-align:right">' +
+                    '<label class="control-label">' + data[i].item + '</label>' +
+                  '</div>' +
+                '<div class="col-md-8 col-sm-8 col-xs-12">' +
+                  '<input id="' + data[i]._id + '" class="donateItem form-control numberField" type="text" placeholder="(' + data[i].unit + ')" class="form-control col-md-6 col-xs-10"/>' +
+                  '<p class="donateItemMinimum" style="display:none">' + data[i].minimum + '</p>' +
+                  '<p class="donateItemUnit" style="display:none">' + data[i].unit + '</p>' +
+                '</div>' +
+               '</div>';
+      }
+
+      $('#donationFormItems').html(donateContent);
+
+      numberField();
+
+      //Get Donation data from the database
+      $.getJSON( '/events/donations/' + eventId, function( dataDonation ) {
+
+          //Count donations
+          if(dataDonation != null) {
+            for(var i = 0; i < items.length; i++) {
+              for(var j = 0; j < dataDonation.length; j++) {
+                if(dataDonation[j].status != "Pending") {
+                  if(dataDonation[j].donationItem.trim() == items[i].item) {
+                    items[i].current = parseInt(items[i].current) + parseInt(dataDonation[j].donationNumber);
+                  }
+                }
+              }
+            }
+          }
+          
+          //Populate the progressbar panel
+          var current;
+          var required;
+          var progressing;
+          for(var i = 0; i < items.length; i++) {
+              current = parseInt(items[i].current);
+              required = parseInt(items[i].number);
+              progressing = parseFloat((current/required)*100);
+              var status = '';
+              var status2 = '';
+              if(progressing > 100) {
+                status = 'progress-bar-success';
+                status2 = '<i class="fa fa-check" style="color:green" aria-hidden="true"></i>';
+                progressing = 100;
+              }
+              console.log(items[i].item + ": " + current + '/' + required);
+              $('#event-donation-progress').html( $('#event-donation-progress').html() +
+          '<label>' + items[i].item + ': </label> ' + current.toLocaleString() + '/<span id="event-donation">' + required.toLocaleString() + ' (' + items[i].unit + ') ' + status2 + '</span>' +
+                  '<div class="progress">' +                                 
+                      '<div role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" style="width:' + progressing + '%" class="progress-bar progress-bar-striped ' + status + ' active"></div>' +                      
+                  '</div>'
+        );
+          }
+      }); 
+  });
+
 }
 
 function goNext() {
@@ -188,49 +369,9 @@ function goNext() {
         var id = readCookie('eventId');
         // Check for successful (blank) response
         if (response.msg === '') {
-          // Remove any old activities
-          $.ajax({
-              type: 'DELETE',
-              url: '/events/removeactivities/' + readCookie('eventId'),
-              dataType: 'JSON'
-          }).done(function( response ) {
-            if (response.msg === '') {
-              // Insert Activities to Database
-              var activityObj = JSON.parse(localStorage.getItem('activityItem'));
-              var newActivity = [];
-              for(var i = 0; i < activityObj.length; i++) {
-                newActivity = {
-                  eventId : id,
-                  day: activityObj[i].day,
-                  time: activityObj[i].time,
-                  place: activityObj[i].place,
-                  activity: activityObj[i].activity,
-                  note: activityObj[i].note,
-                  latitude: activityObj[i].latitude,
-                  longitude: activityObj[i].longitude,
-                };
-
-                $.ajax({
-                  type: 'POST',
-                  data: newActivity,
-                  url: '/events/addactivity',
-                  async: false,
-                  dataType: 'JSON'
-                }).done(function( response ) {
-                    if (response.msg === '') {
-                      
-                    } else {
-                      alert(response.msg);
-                    }
-                });
-              }
-              
-              // localStorage.removeItem("donationItem");
-              deleteCookie('eventId');
-              localStorage.removeItem("activityItem");
-              window.location.replace(location.origin + '/events/' + id); 
-            }            
-          });    
+          deleteCookie('eventId');
+          localStorage.removeItem("activityItem");
+          window.location.replace(location.origin + '/events/' + id); 
         }
         else {
 

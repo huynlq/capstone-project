@@ -588,12 +588,11 @@ router.get('/export/:id', function(req, res, next) {
 		var link = '/files/Report-' + eventData._id + '.pdf';
 
         pdf.create(html, options).toFile('./public' + link, function(err, response) {
-		if (err) return console.log(err);
-			res.writeHead(302, {
-				'Location': link
-			});
-			res.end();
-			console.log(response); // { filename: '/app/businesscard.pdf' } 
+    		if (err) {
+                res.json({ msg: err });
+            } else {            
+    			res.json({ msg: '', link: link });
+            }
 		});
     });	
 });

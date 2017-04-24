@@ -734,7 +734,7 @@ function showActivityCosts(_id) {
                 
             } else {                
                 for(var i = 0; i < this.actualCost.length; i++) {
-                    actualCost += '<p>' + this.actualCost[i].item + ': ' + this.actualCost[i].cost + ' (' + this.actualCost[i].unit + ')</p>';
+                    actualCost += '<p>' + this.actualCost[i].item + ': ' + parseInt(this.actualCost[i].cost).toLocaleString() + ' (' + this.actualCost[i].unit + ')</p>';
                 }
             }                
             counter++;
@@ -758,21 +758,24 @@ function showActivityCosts(_id) {
 function editActualCost(event) {
     event.preventDefault();
 
-    
+    for(var j = 0; j < $('.donateItem').length; j++) {
+        $('.donateItem')[j].value = '';
+    }
 
     $.getJSON( '/events/activities/id/' + $(this).attr('rel'), function( data ) {
-        console.log(data);
-        console.log(data.day);
         $('#txtEditActivityDay').html(data.day);
         $('#txtEditActivityTime').html(data.time);
         $('#txtEditActivityPlace').html(data.place);
         $('#txtEditActivity').html(data.activity);
         $('#txtEditActivityEstCost').html(data.note);
         if(data.actualCost != null) {
-            for(var i = 0; i < $('.donateItem').length; i++) {
-                if(data.actualCost[i] != null)
-                    if(data.actualCost[i].cost != null && data.actualCost[i].cost != '')
-                        $('.donateItem')[i].value = data.actualCost[i].cost;
+            for(var i = 0; i < data.actualCost.length; i++) {
+                if(data.actualCost[i] != null) {
+                    for(var j = 0; j < $('.donateItem').length; j++) {
+                        if(data.actualCost[i].cost != null && data.actualCost[i].cost != '' && data.actualCost[i].item == $('.donateItemLabel')[j].innerHTML)
+                            $('.donateItem')[j].value = data.actualCost[i].cost;
+                    }
+                }                    
             }
         }        
     });

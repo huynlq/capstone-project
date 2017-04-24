@@ -24,7 +24,7 @@ $(function(){
 			$('#eventMonthYear').html(date.toLocaleString(lang, { month: "long" }) + ', ' + date.getFullYear());
 			$('#eventTime').html(data.meetingTime);
 			$('#eventDescription').html(data.eventDescription.replace(/&lt;/g, '<').replace(/&gt;/g, '>'));	
-			$('#btnExport').attr('href','/export/' + eventId);
+			$('#btnExport').attr('onclick','exportReport()');
 			populateButton(data);
 			populateActivities(eventId);
 			populateProducer(eventId);	
@@ -101,6 +101,24 @@ $(function(){
         }                
     });
 });
+
+function exportReport() {	
+	var eventId = window.location.href.split('/')[window.location.href.split('/').length - 1].split('#')[0];
+	$.ajax({
+        url: '/export/' + eventId,
+        dataType: 'json',
+        async: false,
+        success: function( data ) {
+        	// Set minimum requirement to false if the user is sponsor
+			if(data.msg === '') {
+				window.open(data.link);
+				showAlert('info', $EVENTDETAILS_MSG_EXPORT_SUCCESS);
+			} else {
+				showAlert('danger', $LAYOUT_ERROR + response.msg);
+			}
+        }
+    });
+}
 
 function populateLanguage() {
 	$('#header-desc').html($EVENTDETAILS_HEADER_DESC);
@@ -286,9 +304,6 @@ function confirmDonate() {
 	        }
 	    });
 
-	    console.log("MINIMUM: " + minimumFlag);
-		console.log("DONATE: " + donateFlag);
-
 		// Check if there are at least one item is being donated and if it pass the minimum requirement
 		for(var i = 0; i < $('.donateItem').length; i++) {
 			value = $('.donateItem')[i].value;
@@ -300,21 +315,15 @@ function confirmDonate() {
 			}
 		}
 
-		console.log("MINIMUM: " + minimumFlag);
-		console.log("DONATE: " + donateFlag);
-
 		// If the user fail to meet requirement => Ask if they will donate as user instead of sponsor		
-		if(donateFlag == true && minimumFlag == false) {
-			var confirmMinimum = confirm($EVENTDETAILS_ALERT_UNDER_MINIMUM);
-			if(!confirmMinimum) {
-				donateFlag = false;
-			} else {
-				donateFlag = true;
-			}
-		}
-
-		console.log("MINIMUM: " + minimumFlag);
-		console.log("DONATE: " + donateFlag);
+		// if(donateFlag == true && minimumFlag == false) {
+		// 	var confirmMinimum = confirm($EVENTDETAILS_ALERT_UNDER_MINIMUM);
+		// 	if(!confirmMinimum) {
+		// 		donateFlag = false;
+		// 	} else {
+		// 		donateFlag = true;
+		// 	}
+		// }
 
 		// If meet all requirement and validation => Donate
 		if(donateFlag == true) {
@@ -957,6 +966,10 @@ function populateDonationPane(eventId) {
     $('#event-donation-progress').html('');
 
     $.getJSON( '/events/donationrequire/' + eventId, function( data ) {
+    	if(data.length == 0) {
+    		$('#btnDonation').hide();
+    	}
+
 		//Set donation items variables
 	    var items = [];
 	    var donateContent = "";
@@ -1230,7 +1243,7 @@ function populateCost(eventId) {
 	        		actualCost = "";
 	        		if(this.actualCost != '' && this.actualCost != null) {
 	        			for(var i = 0; i < this.actualCost.length; i++) {
-		                    actualCost += '<p>' + this.actualCost[i].item + ': ' + this.actualCost[i].cost + ' (' + this.actualCost[i].unit + ')</p>';
+		                    actualCost += '<p>' + this.actualCost[i].item + ': ' + parseInt(this.actualCost[i].cost).toLocaleString() + ' (' + this.actualCost[i].unit + ')</p>';
 		                }
 	        			counter++;
 	        			tableActivityCosts.row.add([
@@ -1541,59 +1554,56 @@ function join() {
 
 
 function unjoin(){
-	var r = confirm($EVENTDETAILS_ALERT_UNJOIN);
-	if (r == true) {
-	  	var eventId = window.location.href.split('/')[window.location.href.split('/').length - 1].split('#')[0];
-		var userId = readCookie("user");
-		$.ajax({
-	        type: 'DELETE',
-	        url: '/events/removeparticipant/' + eventId + '/' + userId,
-	        dataType: 'JSON'
-	    }).done(function( response ) {
+  	var eventId = window.location.href.split('/')[window.location.href.split('/').length - 1].split('#')[0];
+	var userId = readCookie("user");
+	$.ajax({
+        type: 'DELETE',
+        url: '/events/removeparticipant/' + eventId + '/' + userId,
+        dataType: 'JSON'
+    }).done(function( response ) {
 
-	        // Check for successful (blank) response
-	        if (response.msg === '') {
-	            
-	            // Update the table
-	            populateParticipateForm(eventId);
-	            refreshParticipantTable(eventId);
-	            showAlert('success', $EVENTDETAILS_ALERT_UNJOIN_SUCCESS);
+        // Check for successful (blank) response
+        if (response.msg === '') {
+            
+            // Update the table
+            populateParticipateForm(eventId);
+            refreshParticipantTable(eventId);
+            showAlert('success', $EVENTDETAILS_ALERT_UNJOIN_SUCCESS);
 
-	            $.getJSON('/users/id/' + userId, function(data) {
-	            	var newNotification = {
-		                'userId': $('#txtProducerId').val(),
-		                'content': data.fullName + ' đã hủy đăng kí tham gia sự kiện "' + $('#eventName').html() + '" của bạn.',
-		                'link': '/events/' + eventId,
-		                'markedRead': 'Unread',
-		                'dateCreated': new Date()
-		            }
+            $.getJSON('/users/id/' + userId, function(data) {
+            	var newNotification = {
+	                'userId': $('#txtProducerId').val(),
+	                'content': data.fullName + ' đã hủy đăng kí tham gia sự kiện "' + $('#eventName').html() + '" của bạn.',
+	                'link': '/events/' + eventId,
+	                'markedRead': 'Unread',
+	                'dateCreated': new Date()
+	            }
 
-		            // Use AJAX to post the object to our adduser service        
-		            $.ajax({
-		                type: 'POST',
-		                data: newNotification,
-		                url: '/notifications/addnotification',
-		                dataType: 'JSON'
-		            }).done(function( response ) {
+	            // Use AJAX to post the object to our adduser service        
+	            $.ajax({
+	                type: 'POST',
+	                data: newNotification,
+	                url: '/notifications/addnotification',
+	                dataType: 'JSON'
+	            }).done(function( response ) {
 
-		                // Check for successful (blank) response
-		                if (response.msg !== '') {
+	                // Check for successful (blank) response
+	                if (response.msg !== '') {
 
-		                    // If something goes wrong, alert the error message that our service returned
-		                    showAlert('danger', $LAYOUT_ERROR + response.msg);
+	                    // If something goes wrong, alert the error message that our service returned
+	                    showAlert('danger', $LAYOUT_ERROR + response.msg);
 
-		                }
-		            });
-	            });            
-	        }
-	        else {
+	                }
+	            });
+            });            
+        }
+        else {
 
-	            // If something goes wrong, alert the error message that our service returned
-	            showAlert('danger', $LAYOUT_ERROR + response.msg);
+            // If something goes wrong, alert the error message that our service returned
+            showAlert('danger', $LAYOUT_ERROR + response.msg);
 
-	        }
-	    });  
-	} 	
+        }
+    });
 }
 
 function populateEventSponsors(eventId) {
