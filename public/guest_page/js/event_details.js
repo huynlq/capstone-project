@@ -25,7 +25,7 @@ $(function(){
 			$('#eventTime').html(data.meetingTime);
 			$('#eventDescription').html(data.eventDescription.replace(/&lt;/g, '<').replace(/&gt;/g, '>'));	
 			$('#btnExport').attr('onclick','exportReport()');
-			populateButton(data);
+			//populateButton(data);
 			populateActivities(eventId);
 			populateProducer(eventId);	
 			populateTimeline(eventId);
@@ -152,7 +152,7 @@ function populateButton(data) {
 
 		if(userId != "") {
 			$.getJSON( '/events/participants/' + data._id + '/' + userId, function( dataParticipate ) {
-				if(dataParticipate.msg == 'true') {			
+				if(dataParticipate.msg == 'true') {								
 					$('#btnParticipate').attr('onclick', 'unjoin()');
 					$('#btnParticipate').removeClass('btn-info');
 					$('#btnParticipate').addClass('btn-danger');

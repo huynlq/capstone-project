@@ -491,33 +491,75 @@ router.get('/list', function(req, res, next) {
 
 /* GET event creator page. */
 router.get('/creator_event', function(req, res, next) {
-    var docs = {
-        '_id' : '',
-        'eventName' : '',
-        'eventDescription' : '',
-        'eventDate' : '',
-        'eventDeadline' : '',
-        'volunteersNeeded' : '',
-        'meetingTime' : '',
-        'meetingAddress' : '',
-        'meetingAddressLat' : '',
-        'meetingAddressLng' : '',
-        'eventImage' : ''
+    var userId = req.cookies.user; 
+    if(userId != '' && userId != null) {
+        var db = req.db;
+        var collection = db.get('Users');
+        collection.findOne({'_id': userId},function(e,docs){
+            collection = db.get('Events');
+            if(docs.role == "Producer") {
+                var docs = {
+                    '_id' : '',
+                    'eventName' : '',
+                    'eventDescription' : '',
+                    'eventDate' : '',
+                    'eventDeadline' : '',
+                    'volunteersNeeded' : '',
+                    'meetingTime' : '',
+                    'meetingAddress' : '',
+                    'meetingAddressLat' : '',
+                    'meetingAddressLng' : '',
+                    'eventImage' : ''
+                }
+                res.render('producer_page/event_creator', { title: 'Event Creator', 'docs': docs });
+            } else {
+                res.render('page_404', { title: 'Error 404: Page Not Found' });
+            }            
+        });
+    } else {
+        res.render('page_404', { title: 'Error 404: Page Not Found' });
     }
-  res.render('producer_page/event_creator', { title: 'Event Creator', 'docs': docs });
 });
 
 /* GET activity creator page. */
 router.get('/creator_activity', function(req, res, next) {
-    var docs = {
-        '_id' : ''
-    }
-  res.render('producer_page/activity_creator', { title: 'Activity Creator' , 'docs': docs});
+    var userId = req.cookies.user; 
+    if(userId != '' && userId != null) {
+        var db = req.db;
+        var collection = db.get('Users');
+        collection.findOne({'_id': userId},function(e,docs){
+            collection = db.get('Events');
+            if(docs.role == "Producer") {
+                var docs = {
+                    '_id' : ''
+                }
+                res.render('producer_page/activity_creator', { title: 'Activity Creator' , 'docs': docs});
+            } else {
+                res.render('page_404', { title: 'Error 404: Page Not Found' });
+            }            
+        });
+    } else {
+        res.render('page_404', { title: 'Error 404: Page Not Found' });
+    }    
 });
 
 /* GET event preview page. */
 router.get('/creator_preview', function(req, res, next) {
-  res.render('producer_page/event_preview', { title: 'Event Preview' });
+    var userId = req.cookies.user; 
+    if(userId != '' && userId != null) {
+        var db = req.db;
+        var collection = db.get('Users');
+        collection.findOne({'_id': userId},function(e,docs){
+            collection = db.get('Events');
+            if(docs.role == "Producer") {
+                res.render('producer_page/event_preview', { title: 'Event Preview' });
+            } else {
+                res.render('page_404', { title: 'Error 404: Page Not Found' });
+            }            
+        });
+    } else {
+        res.render('page_404', { title: 'Error 404: Page Not Found' });
+    }   
 });
 
 /* GET number of event by userid. */

@@ -547,9 +547,6 @@ function showPendingDonations(data) {
                             + '<a data-toggle="tooltip" title="Approve" class="btn btn-success btn-xs linkapprovedonation" rel="' + dataDonation[i]._id + '" href="#">'
                                 + '<span class="glyphicon glyphicon-ok"></span>'
                             + '</a>'
-                            + '<a data-toggle="tooltip" title="Disapprove" class="btn btn-danger btn-xs linkremovedonation" rel="' + dataDonation[i]._id + '" href="#">'
-                                + '<span class="glyphicon glyphicon-remove"></span>'
-                            + '</a>'
                         + '</center>',
                         '<a href="/users/' + dataDonation[i].userId + '">' + dataDonation[i].donatorName + '</a>',
                         dataDonation[i].donatorEmail,

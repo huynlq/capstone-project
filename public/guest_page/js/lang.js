@@ -441,6 +441,12 @@ if(localStorage.getItem('language') == 'vi' || localStorage.getItem('language') 
 	$LISTEVENT_STATUS_DRAFT			= "Đang hoàn thiện";
 	$LISTEVENT_STATUS_CANCELLED		= "Đã hủy";
 
+	$LISTEVENT_FORM_CANCEL_EVENT	= "Sự kiện muốn hủy";
+	$LISTEVENT_FORM_CANCEL_REASON	= "Lý do";
+
+	$LISTEVENT_MSG_CANCEL_SUCCESS	= "Hủy sự kiện thành công.";
+	$LISTEVENT_MSG_UNCANCEL_SUCCESS	= "Mở lại sự kiện thành công.";
+
 	$LISTEVENT_TH_ACTION			= "Hành động";
 	$LISTEVENT_TH_EVENT				= "Sự kiện";
 	$LISTEVENT_TH_STATUS			= "Tình trạng";
@@ -971,6 +977,12 @@ if(localStorage.getItem('language') == 'vi' || localStorage.getItem('language') 
 	$LISTEVENT_STATUS_PUBLISHED		= "Published";
 	$LISTEVENT_STATUS_DRAFT			= "Draft";
 	$LISTEVENT_STATUS_CANCELLED		= "Cancelled";
+
+	$LISTEVENT_FORM_CANCEL_EVENT	= "Event To Cancel";
+	$LISTEVENT_FORM_CANCEL_REASON	= "Reason";
+
+	$LISTEVENT_MSG_CANCEL_SUCCESS	= "Successfully cancel event.";
+	$LISTEVENT_MSG_UNCANCEL_SUCCESS	= "Successfully resume event.";
 
 	$LISTEVENT_TH_ACTION			= "Action";
 	$LISTEVENT_TH_EVENT				= "Event";

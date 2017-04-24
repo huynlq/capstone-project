@@ -53,6 +53,12 @@ $(document).ready(function() {
                                                                       '<li class="submenu-item"><a href="/posts/creator">' + $LAYOUT_NAVBAR_POST_CREATE + '</a></li>' +                                                                  
                                                                     '</ul>' +
                                                                   '</li>');
+            } else if(data.role == "Sponsor") {
+              $('#navbar-below').html($('#navbar-below').html() + '<li><a>' + $LAYOUT_NAVBAR_USER + '  <i class="fa fa-chevron-circle-down" style="font-size: 10px" aria-hidden="true"></i></a>' +
+                                                                    '<ul class="submenu">' +
+                                                                      '<li class="submenu-item"><a href="/my">' + $LAYOUT_NAVBAR_USER_PAGE + '</a></li>' +                                                                      
+                                                                    '</ul>' +
+                                                                  '</li>');
             } else {
               $('#navbar-below').html($('#navbar-below').html() + '<li><a>' + $LAYOUT_NAVBAR_USER + '  <i class="fa fa-chevron-circle-down" style="font-size: 10px" aria-hidden="true"></i></a>' +
                                                                     '<ul class="submenu">' +
