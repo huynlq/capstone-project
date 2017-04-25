@@ -31,7 +31,7 @@ function populateEventJoined() {
   $('#eventJoined-panel').html('<div class="section-home our-sponsors fadeIn">' +
                                   '<div class="container">' +
                                     '<h2 class="title-style-1">' + $USERPAGE_HEADER_JOINEDEVENTS + ' <span class="title-under"></span></h2>' +
-                                    '<table id="eventJoinedTable" class="table table-style-1 table-striped table-bordered dt-responsive nowrap datatable-responsive fadeIn"><thead>' +
+                                    '<table id="eventJoinedTable" class="table table-striped table-bordered dt-responsive nowrap datatable-responsive fadeIn"><thead>' +
                                       '<tr>' +
                                         '<th>#</th>' +
                                         '<th>' + $LISTEVENT_TH_EVENT + '</th>' +
@@ -48,14 +48,16 @@ function populateEventJoined() {
         dateCreated = new Date(this.dateCreated);
         eventId = this.eventId;
         $.getJSON('/events/details/' + eventId, function( dataEvent ) {
-          counter++;        
-          table.row.add([
-              counter,
-              '<a href="/events/' + dataEvent._id + '">' + dataEvent.eventName + '</a>',
-              dataEvent.eventDate,
-              dataEvent.meetingAddress
-          ]).draw( false );
-          $('[data-toggle="tooltip"]').tooltip(); 
+          if(dataEvent != null) {
+            counter++;        
+            table.row.add([
+                counter,
+                '<a href="/events/' + dataEvent._id + '">' + dataEvent.eventName + '</a>',
+                dataEvent.eventDate,
+                dataEvent.meetingAddress
+            ]).draw( false );
+            $('[data-toggle="tooltip"]').tooltip(); 
+          }          
         });
       }      
     });
@@ -169,7 +171,7 @@ function populateEventProduced() {
       $('#eventProduced-panel').html('<div class="section-home our-sponsors fadeIn">' +
                                       '<div class="container">' +
                                         '<h2 class="title-style-1">' + $USERPAGE_HEADER_HOSTEDEVENTS + ' <span class="title-under"></span></h2>' +
-                                        '<table id="eventHostedTable" class="table table-style-1 table-striped table-bordered dt-responsive nowrap datatable-responsive fadeIn"><thead>' +
+                                        '<table id="eventHostedTable" class="table table-striped table-bordered dt-responsive nowrap datatable-responsive fadeIn"><thead>' +
                                           '<tr>' +
                                             '<th>#</th>' +
                                             '<th>' + $LISTEVENT_TH_EVENT + '</th>' +
@@ -291,9 +293,7 @@ function populateEventProduced() {
 // Populate event sponsored
 function populateEventSponsored() {
   var id = window.location.href.split('/')[window.location.href.split('/').length - 1].split('#')[0];
-  console.log("1");
   $.getJSON('/users/id/' + id, function( userData ) {
-    console.log("2");
     console.log(userData);
     if(userData.role == "Sponsor") {
       var counter = 0;
@@ -301,7 +301,7 @@ function populateEventSponsored() {
       $('#eventSponsored-panel').html('<div class="section-home our-sponsors fadeIn">' +
                                       '<div class="container">' +
                                         '<h2 class="title-style-1">' + $USERPAGE_HEADER_SPONSOREDEVENTS + ' <span class="title-under"></span></h2>' +
-                                        '<table id="eventSponsoredTable" class="table table-style-1 table-striped table-bordered dt-responsive nowrap datatable-responsive fadeIn"><thead>' +
+                                        '<table id="eventSponsoredTable" class="table table-striped table-bordered dt-responsive nowrap datatable-responsive fadeIn"><thead>' +
                                           '<tr>' +
                                             '<th>#</th>' +
                                             '<th>' + $LISTEVENT_TH_EVENT + '</th>' +

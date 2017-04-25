@@ -69,6 +69,9 @@ function populateLanguage() {
     $('#tabContent-pastEvent').html($LISTEVENT_TAB_PASTEVENT);
     $('#tabContent-cancelledEvent').html($LISTEVENT_TAB_CANCELLEDEVENT);
 
+    $('#cancelForm_reason').html($LISTEVENT_FORM_CANCEL_REASON);
+    $('#cancelForm_eventName').html($LISTEVENT_FORM_CANCEL_EVENT);
+
     $('.th-action').html($LISTEVENT_TH_ACTION);
     $('.th-event').html($LISTEVENT_TH_EVENT);
     $('.th-status').html($LISTEVENT_TH_STATUS);
@@ -104,6 +107,17 @@ function showUpcomingEvents(data) {
     var user = "";
     var email = "";
     var phone = "";
+    var role = "";
+    var actionContent = "";
+
+    $.ajax({
+        url: '/users/id/' + readCookie('user'),
+        dataType: 'json',
+        async: false,
+        success: function( dataUser ){
+            role = dataUser.role;
+        }
+    });
 
     // For each item in our JSON, add a table row and cells to the content string
     $.each(data, function(){
@@ -123,18 +137,25 @@ function showUpcomingEvents(data) {
                     phone = dataUser.companyPhoneNumber;
                 }
             }); 
+
+            actionContent = "";
+            if(role == "Producer") {
+                actionContent = '<a data-toggle="tooltip" title="' + $LISTEVENT_TIP_EDIT + '" style="margin:5px" class="btn btn-info btn-xs" href="/events/edit/' + this._id + '">'
+                                    + '<span class="glyphicon glyphicon-edit"></span>'
+                                + '</a>'
+                                + '<a data-toggle="tooltip" title="' + $LISTEVENT_TIP_UPDATE + '" style="margin:5px" class="btn btn-success btn-xs" href="/events/update/' + this._id + '">'
+                                    + '<span class="glyphicon glyphicon-stats"></span>'
+                                + '</a>';
+            }
+
+            actionContent += '<a data-toggle="tooltip" title="' + $LISTEVENT_TIP_CANCEL + '" style="margin:5px" class="btn btn-danger btn-xs linkcancelevent" rel="' + this._id + '" href="#">'
+                                + '<span class="glyphicon glyphicon-remove"></span>'
+                            + '</a>';
+
             table.row.add([
                 counter,
                 '<center>'
-                    + '<a data-toggle="tooltip" title="' + $LISTEVENT_TIP_EDIT + '" style="margin:5px" class="btn btn-info btn-xs" href="/events/edit/' + this._id + '">'
-                        + '<span class="glyphicon glyphicon-edit"></span>'
-                    + '</a>'
-                    + '<a data-toggle="tooltip" title="' + $LISTEVENT_TIP_UPDATE + '" style="margin:5px" class="btn btn-success btn-xs" href="/events/update/' + this._id + '">'
-                        + '<span class="glyphicon glyphicon-stats"></span>'
-                    + '</a>'
-                    + '<a data-toggle="tooltip" title="' + $LISTEVENT_TIP_CANCEL + '" style="margin:5px" class="btn btn-danger btn-xs linkcancelevent" rel="' + this._id + '" href="#">'
-                        + '<span class="glyphicon glyphicon-remove"></span>'
-                    + '</a>'
+                    + actionContent
                 + '</center>',
                 '<a href="/events/' + this._id + '">' + this.eventName + '</a>',
                 user,
@@ -174,8 +195,6 @@ function showEvents(data) {
         }
     });
 
-    console.log(role);
-
     // For each item in our JSON, add a table row and cells to the content string
     $.each(data, function(){
         console.log(data);  
@@ -192,26 +211,42 @@ function showEvents(data) {
             }
         });    
 
+        actionContent = "";
         if(this.status == "Published") {
             status = $LISTEVENT_STATUS_PUBLISHED;
-            actionContent = '<a data-toggle="tooltip" title="' + $LISTEVENT_TIP_UPDATE + '" style="margin:5px" class="btn btn-success btn-xs" href="/events/update/' + this._id + '">'
-                                + '<span class="glyphicon glyphicon-stats"></span>'
+            if(role == "Producer") {
+                actionContent = '<a data-toggle="tooltip" title="' + $LISTEVENT_TIP_EDIT + '" style="margin:5px" class="btn btn-info btn-xs" href="/events/edit/' + this._id + '">'
+                                + '<span class="glyphicon glyphicon-edit"></span>'
                             + '</a>'
-                            + '<a data-toggle="tooltip" title="' + $LISTEVENT_TIP_CANCEL + '" style="margin:5px" class="btn btn-danger btn-xs linkcancelevent" href="#" rel="' + this._id + '">'
+                            + '<a data-toggle="tooltip" title="' + $LISTEVENT_TIP_UPDATE + '" style="margin:5px" class="btn btn-success btn-xs" href="/events/update/' + this._id + '">'
+                                + '<span class="glyphicon glyphicon-stats"></span>'
+                            + '</a>';
+            }
+            actionContent += '<a data-toggle="tooltip" title="' + $LISTEVENT_TIP_CANCEL + '" style="margin:5px" class="btn btn-danger btn-xs linkcancelevent" href="#" rel="' + this._id + '">'
                                 + '<span class="glyphicon glyphicon-remove"></span>'
                             + '</a>';
         } else if(this.status == "Draft") {
             status = $LISTEVENT_STATUS_DRAFT;
-            actionContent = '<a data-toggle="tooltip" title="' + $LISTEVENT_TIP_CANCEL + '" style="margin:5px" class="btn btn-danger btn-xs linkcancelevent" href="#" rel="' + this._id + '">'
+            if(role == "Producer") {
+                actionContent = '<a data-toggle="tooltip" title="' + $LISTEVENT_TIP_EDIT + '" style="margin:5px" class="btn btn-info btn-xs" href="/events/edit/' + this._id + '">'
+                                + '<span class="glyphicon glyphicon-edit"></span>'
+                            + '</a>';
+            }
+            actionContent += '<a data-toggle="tooltip" title="' + $LISTEVENT_TIP_CANCEL + '" style="margin:5px" class="btn btn-danger btn-xs linkcancelevent" href="#" rel="' + this._id + '">'
                                 + '<span class="glyphicon glyphicon-remove"></span>'
                             + '</a>';
         } else if(this.status == "Cancelled") {
             status = $LISTEVENT_STATUS_CANCELLED;
-            actionContent = '<a data-toggle="tooltip" title="' + $LISTEVENT_TIP_UPDATE + '" style="margin:5px" class="btn btn-success btn-xs" href="/events/update/' + this._id + '">'
+            if(role == "Producer") {
+                actionContent = '<a data-toggle="tooltip" title="' + $LISTEVENT_TIP_EDIT + '" style="margin:5px" class="btn btn-info btn-xs" href="/events/edit/' + this._id + '">'
+                                + '<span class="glyphicon glyphicon-edit"></span>'
+                            + '</a>'
+                            + '<a data-toggle="tooltip" title="' + $LISTEVENT_TIP_UPDATE + '" style="margin:5px" class="btn btn-success btn-xs" href="/events/update/' + this._id + '">'
                                 + '<span class="glyphicon glyphicon-stats"></span>'
                             + '</a>';
+            }
             if(role == "Admin") {
-                actionContent += '<a data-toggle="tooltip" title="' + $LISTEVENT_TIP_UNBAN + '" style="margin:5px" class="btn btn-warning btn-xs linkreopenevent" href="#" rel="' + this._id + '">'
+                actionContent = '<a data-toggle="tooltip" title="' + $LISTEVENT_TIP_UNBAN + '" style="margin:5px" class="btn btn-warning btn-xs linkreopenevent" href="#" rel="' + this._id + '">'
                                     + '<span class="glyphicon glyphicon-ok"></span>'
                                 + '</a>';
             }
@@ -219,10 +254,7 @@ function showEvents(data) {
 
         table.row.add([
             counter,
-            '<center>'                
-                + '<a data-toggle="tooltip" title="' + $LISTEVENT_TIP_EDIT + '" style="margin:5px" class="btn btn-info btn-xs" href="/events/edit/' + this._id + '">'
-                    + '<span class="glyphicon glyphicon-edit"></span>'
-                + '</a>'
+            '<center>'
                 + actionContent
             + '</center>',
             '<a href="/events/' + this._id + '">' + this.eventName + '</a>',
@@ -254,6 +286,17 @@ function showPastEvents(data) {
     var user = "";
     var email = "";
     var phone = "";
+    var role = "";
+    var dataContent = "";
+
+    $.ajax({
+        url: '/users/id/' + readCookie('user'),
+        dataType: 'json',
+        async: false,
+        success: function( dataUser ){
+            role = dataUser.role;
+        }
+    });
 
     // For each item in our JSON, add a table row and cells to the content string
     $.each(data, function(){
@@ -273,15 +316,20 @@ function showPastEvents(data) {
                     phone = dataUser.companyPhoneNumber;
                 }
             }); 
+            dataContent = "";
+            if(role == "Producer") {
+                dataContent = '<a data-toggle="tooltip" title="' + $LISTEVENT_TIP_EDIT + '" style="margin:5px" class="btn btn-info btn-xs" href="/events/edit/' + this._id + '">'
+                                + '<span class="glyphicon glyphicon-edit"></span>'
+                            + '</a>'
+                            + '<a data-toggle="tooltip" title="' + $LISTEVENT_TIP_UPDATE + '" style="margin:5px" class="btn btn-success btn-xs" href="/events/update/' + this._id + '">'
+                                + '<span class="glyphicon glyphicon-stats"></span>'
+                            + '</a>';
+            }
+
             table.row.add([
                 counter,                
                 '<center>'                
-                    + '<a data-toggle="tooltip" title="' + $LISTEVENT_TIP_EDIT + '" style="margin:5px" class="btn btn-info btn-xs" href="/events/edit/' + this._id + '">'
-                        + '<span class="glyphicon glyphicon-edit"></span>'
-                    + '</a>'
-                    + '<a data-toggle="tooltip" title="' + $LISTEVENT_TIP_UPDATE + '" style="margin:5px" class="btn btn-success btn-xs" href="/events/update/' + this._id + '">'
-                        + '<span class="glyphicon glyphicon-stats"></span>'
-                    + '</a>'
+                    + dataContent
                 + '</center>',
                 '<a href="/events/' + this._id + '">' + this.eventName + '</a>',                
                 user,
@@ -341,6 +389,15 @@ function showCancelledEvents(data) {
                     phone = dataUser.companyPhoneNumber;
                 }
             }); 
+            actionContent = "";
+            if(role == "Producer") {
+                actionContent += '<a data-toggle="tooltip" title="' + $LISTEVENT_TIP_EDIT + '" style="margin:5px" class="btn btn-info btn-xs" href="/events/edit/' + this._id + '">'
+                                    + '<span class="glyphicon glyphicon-edit"></span>'
+                                + '</a>'
+                                + '<a data-toggle="tooltip" title="' + $LISTEVENT_TIP_UPDATE + '" style="margin:5px" class="btn btn-success btn-xs" href="/events/update/' + this._id + '">'
+                                    + '<span class="glyphicon glyphicon-stats"></span>'
+                                + '</a>';   
+            }
             if(role == "Admin") {
                 actionContent += '<a data-toggle="tooltip" title="' + $LISTEVENT_TIP_UNBAN + '" style="margin:5px" class="btn btn-warning btn-xs linkreopenevent" href="#" rel="' + this._id + '">'
                                     + '<span class="glyphicon glyphicon-ok"></span>'
@@ -349,12 +406,6 @@ function showCancelledEvents(data) {
             table.row.add([
                 counter,
                 '<center>'                
-                    + '<a data-toggle="tooltip" title="' + $LISTEVENT_TIP_EDIT + '" style="margin:5px" class="btn btn-info btn-xs" href="/events/edit/' + this._id + '">'
-                        + '<span class="glyphicon glyphicon-edit"></span>'
-                    + '</a>'
-                    + '<a data-toggle="tooltip" title="' + $LISTEVENT_TIP_UPDATE + '" style="margin:5px" class="btn btn-success btn-xs" href="/events/update/' + this._id + '">'
-                        + '<span class="glyphicon glyphicon-stats"></span>'
-                    + '</a>'
                     + actionContent
                 + '</center>',
                 '<a href="/events/' + this._id + '">' + this.eventName + '</a>',                
@@ -415,6 +466,7 @@ function confirmCancelEvent() {
             if (response.msg === '') {
                 populateTables();                
                 $('#cancel-reason-form').dialog('close');
+                showAlert('success', $LISTEVENT_MSG_CANCEL_SUCCESS);
 
                 // Send notifications
                 $.getJSON( '/users/id/' + readCookie('user'), function( data ) {
@@ -513,6 +565,7 @@ function reopenEvent() {
             // stats for a successful (blank) response
             if (response.msg === '') {
                 populateTables();
+                showAlert('success', $LISTEVENT_MSG_UNCANCEL_SUCCESS);
 
                 // Send notifications
                 $.getJSON( '/users/id/' + readCookie('user'), function( data ) {

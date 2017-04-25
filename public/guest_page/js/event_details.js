@@ -24,7 +24,8 @@ $(function(){
 			$('#eventMonthYear').html(date.toLocaleString(lang, { month: "long" }) + ', ' + date.getFullYear());
 			$('#eventTime').html(data.meetingTime);
 			$('#eventDescription').html(data.eventDescription.replace(/&lt;/g, '<').replace(/&gt;/g, '>'));	
-			$('#btnExport').attr('onclick','exportReport()');
+			$('#btnExport').attr('onclick', 'exportReport(\'' + eventId + '\')');
+			//$('#btnExport').attr('onclick','exportReport()');
 			//populateButton(data);
 			populateActivities(eventId);
 			populateProducer(eventId);	
@@ -102,22 +103,8 @@ $(function(){
     });
 });
 
-function exportReport() {	
-	var eventId = window.location.href.split('/')[window.location.href.split('/').length - 1].split('#')[0];
-	$.ajax({
-        url: '/export/' + eventId,
-        dataType: 'json',
-        async: false,
-        success: function( data ) {
-        	// Set minimum requirement to false if the user is sponsor
-			if(data.msg === '') {
-				window.open(data.link);
-				showAlert('info', $EVENTDETAILS_MSG_EXPORT_SUCCESS);
-			} else {
-				showAlert('danger', $LAYOUT_ERROR + response.msg);
-			}
-        }
-    });
+function exportReport(eventId) {	
+	window.open('/export/' + eventId);
 }
 
 function populateLanguage() {
@@ -1450,14 +1437,16 @@ function join() {
 					    dataType: 'json',
 					    async: false,
 					    success: function(eventData) {
-					    	eventDates = eventData.eventDate.split(' - ');
-							eventStartDate = new Date(eventDates[0]).getTime();
-							eventEndDate = new Date(eventDates[1]).getTime();							
-							if(endDate < eventStartDate || startDate > eventEndDate) {
-								
-							} else {
-								flag = true;
-							}
+					    	if(eventData != null) {
+					    		eventDates = eventData.eventDate.split(' - ');
+								eventStartDate = new Date(eventDates[0]).getTime();
+								eventEndDate = new Date(eventDates[1]).getTime();							
+								if(endDate < eventStartDate || startDate > eventEndDate) {
+									
+								} else {
+									flag = true;
+								}
+					    	}					    	
 					    }
 					});
 				});

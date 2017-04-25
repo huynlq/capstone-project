@@ -588,11 +588,18 @@ router.get('/export/:id', function(req, res, next) {
 		var link = '/files/Report-' + eventData._id + '.pdf';
 
         pdf.create(html, options).toFile('./public' + link, function(err, response) {
-    		if (err) {
-                res.json({ msg: err });
-            } else {            
-    			res.json({ msg: '', link: link });
-            }
+    		// if (err) {
+      //           res.json({ msg: err });
+      //       } else {            
+    		// 	res.writeHead(302, {
+      //             'Location': link
+      //           });
+      //           res.end();
+      //       }
+            res.writeHead(302, {
+                'Location': link
+            });
+            res.end();
 		});
     });	
 });
