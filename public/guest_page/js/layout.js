@@ -14,8 +14,10 @@ $(document).ready(function() {
 
     if(loginSession != '') {
       $.getJSON( '/users/id/' + loginSession, function( data ) {
-        if(data.markBanned == 1 || data == '') {
+        if(data == null) {
           // Automatically sign out if user data is deleted or being banned
+          signOut();
+        } else if (data.markBanned == 1) {
           signOut();
         } else {
           $.getJSON( '/notifications/number/' + loginSession, function( countNoti ) {
