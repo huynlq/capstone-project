@@ -474,7 +474,7 @@ function confirmCancelEvent() {
                         // If admin cancel it, send notification for producer
                         var newNotification = {
                             'userId': producerId,
-                            'content': 'Sự kiện ' + eventName + ' của bạn đã bị hủy vì lý do: ' + $('#txtCancelReason').val(),
+                            'content': 'Sự kiện <b>' + eventName + '</b> của bạn đã bị hủy vì lý do: <b>' + $('#txtCancelReason').val() + '</b>',
                             'link': '/events/',
                             'markedRead': 'Unread',
                             'dateCreated': new Date()
@@ -494,6 +494,9 @@ function confirmCancelEvent() {
                                 // If something goes wrong, alert the error message that our service returned
                                 showAlert('error', $LAYOUT_ERROR + response.msg);
 
+                            } else {
+                                var socket = io.connect('http://localhost:3000');
+                                socket.emit('notification', newNotification);
                             }
                         });
                     }
@@ -503,7 +506,7 @@ function confirmCancelEvent() {
                         for(var i = 0; i < data.length; i++) {
                             var newNotification = {
                                 'userId': data[i]._id,
-                                'content': 'Sự kiện ' + eventName + ' mà bạn đã đăng kí tham gia đã bị hủy vì lý do: ' + $('#txtCancelReason').val(),
+                                'content': 'Sự kiện <b>' + eventName + '</b> mà bạn đã đăng kí tham gia đã bị hủy vì lý do: <b>' + $('#txtCancelReason').val() + '</b>',
                                 'link': '',
                                 'markedRead': 'Unread',
                                 'dateCreated': new Date()
@@ -573,7 +576,7 @@ function reopenEvent() {
                         // If admin cancel it, send notification for producer
                         var newNotification = {
                             'userId': producerId,
-                            'content': 'Sự kiện ' + eventName + ' của bạn đã được mở lại.',
+                            'content': 'Sự kiện <b>' + eventName + '</b> của bạn đã được mở lại.',
                             'link': '/events/',
                             'markedRead': 'Unread',
                             'dateCreated': new Date()
@@ -593,6 +596,9 @@ function reopenEvent() {
                                 // If something goes wrong, alert the error message that our service returned
                                 showAlert('error', $LAYOUT_ERROR + response.msg);
 
+                            } else {
+                                var socket = io.connect('http://localhost:3000');
+                                socket.emit('notification', newNotification);
                             }
                         });
                     }
@@ -602,7 +608,7 @@ function reopenEvent() {
                         for(var i = 0; i < data.length; i++) {
                             var newNotification = {
                                 'userId': data[i]._id,
-                                'content': 'Sự kiện ' + eventName + ' mà bạn đã đăng kí tham gia đã được mở lại.',
+                                'content': 'Sự kiện <b>' + eventName + '</b> mà bạn đã đăng kí tham gia đã được mở lại.',
                                 'link': '',
                                 'markedRead': 'Unread',
                                 'dateCreated': new Date()
@@ -622,6 +628,9 @@ function reopenEvent() {
                                     // If something goes wrong, alert the error message that our service returned
                                     showAlert('error', $LAYOUT_ERROR + response.msg);
 
+                                } else {
+                                    var socket = io.connect('http://localhost:3000');
+                                    socket.emit('notification', newNotification);
                                 }
                             });
                         }

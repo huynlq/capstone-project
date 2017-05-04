@@ -147,7 +147,7 @@ function initiateSchedule() {
       content2 = '<div id="day' + i + '" class="tab-pane fade"><h3 class="title-style-2">' + $EVENTCREATOR_ACTTAB_DAY + ' ' + i + ' (' + dateString + ')<span class="title-under"></span></h3><p>'
                   + '<div class="row clearfix">'
                     + '<div class="col-md-12 column">'
-                      + '<table id="table-day-' + i + '" class="table table-style-1 table-bordered table-hover dt-responsive">'
+                      + '<table id="table-day-' + i + '" class="table table-bordered table-hover dt-responsive">'
                         + '<thead>'
                           + '<tr >'
                             + '<th class="text-center">' + $EVENTCREATOR_ACTFORM_TIME + '</th>'

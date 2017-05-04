@@ -1,5 +1,5 @@
 // DOM Ready =============================================================
-$(document).ready(function() {
+$(document).ready(function() {  
     numberField();
     populateLanguageLayout();
     var languageContent = "";
@@ -20,55 +20,60 @@ $(document).ready(function() {
         } else if (data.markBanned == 1) {
           signOut();
         } else {
-          $.getJSON( '/notifications/number/' + loginSession, function( countNoti ) {
-            var noti = "";
-            if(countNoti > 0) {
-              noti = '<li><a href="/notifications"><i class="fa fa-envelope-o"></i> <span class="badge" style="background-color: red">' + countNoti + '</span></a></li>';
-            } else {
-              noti = '<li><a href="/notifications"><i class="fa fa-envelope-o"></i></a></li>';
-            }
-            $('#navbar').html('<li>' + $LAYOUT_NAVBAR_WELCOME + data.username + '</li>' +
+          if(data.role == "Producer") {
+            $('#navbar-below').html($('#navbar-below').html() + '<li><a>' + $LAYOUT_NAVBAR_PRODUCER + '  <i class="fa fa-chevron-circle-down" style="font-size: 10px" aria-hidden="true"></i></a>' +
+                                                                  '<ul class="submenu">' +
+                                                                    '<li class="submenu-item"><a href="/my">' + $LAYOUT_NAVBAR_USER_PAGE + '</a></li>' +
+                                                                    '<li class="submenu-item"><a href="/events">' + $LAYOUT_NAVBAR_EVENT_LIST + '</a></li>' +
+                                                                    '<li class="submenu-item"><a href="/events/creator_event">' + $LAYOUT_NAVBAR_EVENT_CREATE + '</a></li>' +
+                                                                  '</ul>' +
+                                                                '</li>');
+          } else if(data.role == "Admin") {
+            $('#navbar-below').html($('#navbar-below').html() + '<li><a>' + $LAYOUT_NAVBAR_ADMIN + '  <i class="fa fa-chevron-circle-down" style="font-size: 10px" aria-hidden="true"></i></a>' +
+                                                                  '<ul class="submenu">' +
+                                                                    '<li class="submenu-item"><a href="/my">' + $LAYOUT_NAVBAR_USER_PAGE + '</a></li>' +
+                                                                    '<li class="submenu-item"><a href="/users">' + $LAYOUT_NAVBAR_USER_LIST + '</a></li>' +
+                                                                    '<li class="submenu-item"><a href="/events">' + $LAYOUT_NAVBAR_EVENT_LIST + '</a></li>' +
+                                                                    '<li class="submenu-item"><a href="/posts">' + $LAYOUT_NAVBAR_POST_LIST + '</a></li>' +
+                                                                    '<li class="submenu-item"><a href="/posts/creator">' + $LAYOUT_NAVBAR_POST_CREATE + '</a></li>' +                                                                  
+                                                                  '</ul>' +
+                                                                '</li>');
+          } else if(data.role == "Sponsor" || data.role.indexOf('Pending') != -1) {
+            $('#navbar-below').html($('#navbar-below').html() + '<li><a>' + $LAYOUT_NAVBAR_USER + '  <i class="fa fa-chevron-circle-down" style="font-size: 10px" aria-hidden="true"></i></a>' +
+                                                                  '<ul class="submenu">' +
+                                                                    '<li class="submenu-item"><a href="/my">' + $LAYOUT_NAVBAR_USER_PAGE + '</a></li>' +                                                                      
+                                                                  '</ul>' +
+                                                                '</li>');
+          } else {
+            $('#navbar-below').html($('#navbar-below').html() + '<li><a>' + $LAYOUT_NAVBAR_USER + '  <i class="fa fa-chevron-circle-down" style="font-size: 10px" aria-hidden="true"></i></a>' +
+                                                                  '<ul class="submenu">' +
+                                                                    '<li class="submenu-item"><a href="/my">' + $LAYOUT_NAVBAR_USER_PAGE + '</a></li>' +
+                                                                    '<li class="submenu-item"><a href="/promote">' + $LAYOUT_NAVBAR_PROMOTE + '</a></li>' +
+                                                                  '</ul>' +
+                                                                '</li>');
+          }
+
+          $('#navbar').html('<li>' + $LAYOUT_NAVBAR_WELCOME + data.username + '</li>' +
                               '<li>|</li>' +
-                              noti +
+                              '<li><a href="/notifications"><i class="fa fa-envelope-o"></i><span id="countNoti" class="badge" style="background-color: red"></span></a></li>' +
                               '<li>|</li>' +
                               '<li>' + languageContent + '</li>' +
                               '<li>|</li>' +
                               '<li><a style="cursor: pointer" onclick="signOut()">' + $LAYOUT_NAVBAR_SIGNOUT + '</a>' +
                               '</li>');
-            $('#navbar-user').html($LAYOUT_NAVBAR_WELCOME + data.username);
-            $('#navbar-signlink').html("<a onclick='signOut()'>" + $LAYOUT_NAVBAR_SIGNOUT + "</a>");
-            if(data.role == "Producer") {
-              $('#navbar-below').html($('#navbar-below').html() + '<li><a>' + $LAYOUT_NAVBAR_PRODUCER + '  <i class="fa fa-chevron-circle-down" style="font-size: 10px" aria-hidden="true"></i></a>' +
-                                                                    '<ul class="submenu">' +
-                                                                      '<li class="submenu-item"><a href="/my">' + $LAYOUT_NAVBAR_USER_PAGE + '</a></li>' +
-                                                                      '<li class="submenu-item"><a href="/events">' + $LAYOUT_NAVBAR_EVENT_LIST + '</a></li>' +
-                                                                      '<li class="submenu-item"><a href="/events/creator_event">' + $LAYOUT_NAVBAR_EVENT_CREATE + '</a></li>' +
-                                                                    '</ul>' +
-                                                                  '</li>');
-            } else if(data.role == "Admin") {
-              $('#navbar-below').html($('#navbar-below').html() + '<li><a>' + $LAYOUT_NAVBAR_ADMIN + '  <i class="fa fa-chevron-circle-down" style="font-size: 10px" aria-hidden="true"></i></a>' +
-                                                                    '<ul class="submenu">' +
-                                                                      '<li class="submenu-item"><a href="/my">' + $LAYOUT_NAVBAR_USER_PAGE + '</a></li>' +
-                                                                      '<li class="submenu-item"><a href="/users">' + $LAYOUT_NAVBAR_USER_LIST + '</a></li>' +
-                                                                      '<li class="submenu-item"><a href="/events">' + $LAYOUT_NAVBAR_EVENT_LIST + '</a></li>' +
-                                                                      '<li class="submenu-item"><a href="/posts">' + $LAYOUT_NAVBAR_POST_LIST + '</a></li>' +
-                                                                      '<li class="submenu-item"><a href="/posts/creator">' + $LAYOUT_NAVBAR_POST_CREATE + '</a></li>' +                                                                  
-                                                                    '</ul>' +
-                                                                  '</li>');
-            } else if(data.role == "Sponsor") {
-              $('#navbar-below').html($('#navbar-below').html() + '<li><a>' + $LAYOUT_NAVBAR_USER + '  <i class="fa fa-chevron-circle-down" style="font-size: 10px" aria-hidden="true"></i></a>' +
-                                                                    '<ul class="submenu">' +
-                                                                      '<li class="submenu-item"><a href="/my">' + $LAYOUT_NAVBAR_USER_PAGE + '</a></li>' +                                                                      
-                                                                    '</ul>' +
-                                                                  '</li>');
-            } else {
-              $('#navbar-below').html($('#navbar-below').html() + '<li><a>' + $LAYOUT_NAVBAR_USER + '  <i class="fa fa-chevron-circle-down" style="font-size: 10px" aria-hidden="true"></i></a>' +
-                                                                    '<ul class="submenu">' +
-                                                                      '<li class="submenu-item"><a href="/my">' + $LAYOUT_NAVBAR_USER_PAGE + '</a></li>' +
-                                                                      '<li class="submenu-item"><a href="/promote">' + $LAYOUT_NAVBAR_PROMOTE + '</a></li>' +
-                                                                    '</ul>' +
-                                                                  '</li>');
-            }
+          $('#navbar-user').html($LAYOUT_NAVBAR_WELCOME + data.username);
+          $('#navbar-signlink').html("<a onclick='signOut()'>" + $LAYOUT_NAVBAR_SIGNOUT + "</a>");
+
+          loadNoti();
+
+          var socket = io.connect('http://localhost:3000');
+          socket.on('notification', function(notiObj) {
+            console.log('HI');
+            console.log(notiObj);
+            if(notiObj.userId == readCookie('user')) {
+              showNoti(notiObj);
+              loadNoti();
+            }            
           });
         }                
       });
@@ -267,6 +272,19 @@ function showAlert(type, message) {
   $('#alert_placeholder').html('<div class="alert alert-' + type + ' fade in alert-dismissable"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><span id="alert_message"><strong>' + message + '</strong></span></div>');
 }
 
+// Show notificatoin
+function showNoti(notiObj) {
+  $('#noti_placeholder').html('' +
+    '<div class="alert alert-info fade in alert-dismissable">' +
+      '<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>' +
+      '<p><strong>Thông báo:</strong></p>' +
+      '<a href="' + notiObj.link + '"><span id="alert_message">' + notiObj.content + '</span></a>' +
+    '</div>');
+  setTimeout(function() {
+    $('#noti_placeholder').fadeOut('slow');
+  }, 10000);
+}
+
 // Validate number field
 function numberField() {
   $('.numberField').keydown(function (e) {
@@ -392,4 +410,15 @@ function register() {
   } else {
       $('#errRegisterMsg').html($LAYOUT_FORM_REGISTER_MSG_EMAIL);
   } 
+}
+
+function loadNoti() {
+  $.getJSON( '/notifications/number/' + readCookie('user'), function( countNoti ) {
+    var noti = "";
+    if(countNoti > 0) {
+      $('#countNoti').html(countNoti);
+    } else {
+      $('#countNoti').html('');
+    }
+  });
 }

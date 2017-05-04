@@ -630,7 +630,7 @@ function approveUser(event) {
             populateTables();            
             var newNotification = {
                 'userId': userId,
-                'content': 'Yêu cầu được làm "' + data[4] + '" của bạn đã được xét duyệt.',
+                'content': 'Yêu cầu được làm <b>"' + data[4] + '"</b> của bạn đã được xét duyệt.',
                 'link': '/my',
                 'markedRead': 'Unread',
                 'dateCreated': new Date()
@@ -650,6 +650,9 @@ function approveUser(event) {
                     // If something goes wrong, alert the error message that our service returned
                     showAlert('danger', $LAYOUT_ERROR + response.msg);
 
+                } else {
+                    var socket = io.connect('http://localhost:3000');
+                    socket.emit('notification', newNotification);
                 }
             });
         }
@@ -690,7 +693,7 @@ function confirmDisapproveUser() {
             populateTables();            
             var newNotification = {
                 'userId': $('#txtUserDisapproveId').val(),
-                'content': 'Yêu cầu được làm "' + $('#txtUserDisapproveRole').val() + '" của bạn đã bị bác bỏ vì: ' + $('#txtDisapproveReason').val(),
+                'content': 'Yêu cầu được làm <b>"' + $('#txtUserDisapproveRole').val() + '"</b> của bạn đã bị bác bỏ vì: <b>' + $('#txtDisapproveReason').val() + '</b>',
                 'link': '/my',
                 'markedRead': 'Unread',
                 'dateCreated': new Date()
@@ -711,6 +714,8 @@ function confirmDisapproveUser() {
                     showAlert('danger', $LAYOUT_ERROR + response.msg);
 
                 } else {
+                    var socket = io.connect('http://localhost:3000');
+                    socket.emit('notification', newNotification);
                     $('#txtUserDisapproveId').val("");
                     $('#txtUserDisapprove').val("");
                     $('#txtDisapproveReason').val("");
@@ -755,7 +760,7 @@ function confirmDemoteUser() {
             populateTables();
             var newNotification = {
                 'userId': $('#txtUserDemoteId').val(),
-                'content': 'Bạn đã bị cách chức "' + $('#txtUserDemoteRole').val() + '" vì lý do: ' + $('#txtDemoteReason').val(),
+                'content': 'Bạn đã bị cách chức <b>"' + $('#txtUserDemoteRole').val() + '"</b> vì lý do: <b>' + $('#txtDemoteReason').val() + '</b>',
                 'link': '/my',
                 'markedRead': 'Unread',
                 'dateCreated': new Date()
@@ -776,6 +781,8 @@ function confirmDemoteUser() {
                     showAlert('danger', $LAYOUT_ERROR + response.msg);
 
                 } else {
+                    var socket = io.connect('http://localhost:3000');
+                    socket.emit('notification', newNotification);
                     $('#txtUserDemoteId').val("");
                     $('#txtUserDemote').val("");
                     $('#txtDemoteReason').val("");

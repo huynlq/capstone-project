@@ -229,7 +229,7 @@ function approveDonation(event) {
 
                     var newNotification = {
                         'userId': data.userId,
-                        'content': 'Đóng góp của bạn cho sự kiện ' + eventName + 'đã được xác nhận',
+                        'content': 'Đóng góp của bạn cho sự kiện <b>' + eventName + '</b> đã được xác nhận',
                         'link': '/events/' + eventId,
                         'markedRead': 'Unread',
                         'dateCreated': new Date()
@@ -249,6 +249,9 @@ function approveDonation(event) {
                             // If something goes wrong, alert the error message that our service returned
                             showAlert('error', $LAYOUT_ERROR + response.msg);
 
+                        } else {
+                            var socket = io.connect('http://localhost:3000');
+                            socket.emit('notification', newNotification);
                         }
                     });
                 });   
@@ -489,7 +492,7 @@ function deleteDonation(event) {
 
                         var newNotification = {
                             'userId': userId,
-                            'content': 'Đóng góp của bạn cho sự kiện "' + eventName + '" đã bị bác bỏ.',
+                            'content': 'Đóng góp của bạn cho sự kiện <b>"' + eventName + '"</b> đã bị bác bỏ.',
                             'link': '/events/' + eventId,
                             'markedRead': 'Unread',
                             'dateCreated': new Date()
@@ -509,6 +512,9 @@ function deleteDonation(event) {
                                 // If something goes wrong, alert the error message that our service returned
                                 showAlert('error', $LAYOUT_ERROR + response.msg);
 
+                            } else {
+                                var socket = io.connect('http://localhost:3000');
+                                socket.emit('notification', newNotification);
                             }
                         });
                     });                      
@@ -553,7 +559,8 @@ function showPendingDonations(data) {
                         dataDonation[i].donatorPhoneNumber,
                         item,
                         parseInt(dataDonation[i].donationNumber).toLocaleString() + ' ' + dataDonation[i].donationUnit,
-                        dateCreated.toLocaleDateString()
+                        dateCreated.toLocaleDateString(),
+                        dataDonation[i]._id
                     ]).draw( false );
                 }
             }
@@ -648,7 +655,7 @@ function markAbsent(event) {
                     console.log(dataParticipant);
                     var newNotification = {
                         'userId': dataParticipant[0].userId,
-                        'content': 'Bạn đã bị đánh vắng cho sự kiện "' + eventName + '"',
+                        'content': 'Bạn đã bị đánh vắng cho sự kiện <b>"' + eventName + '"</b>',
                         'link': '/events/' + eventId,
                         'markedRead': 'Unread',
                         'dateCreated': new Date()
@@ -670,6 +677,9 @@ function markAbsent(event) {
                             // If something goes wrong, alert the error message that our service returned
                             showAlert('error', $LAYOUT_ERROR + response.msg);
 
+                        } else {
+                            var socket = io.connect('http://localhost:3000');
+                            socket.emit('notification', newNotification);
                         }
                     });
                 });                  
@@ -890,7 +900,7 @@ function approveSponsor(event) {
                     
                     var newNotification = {
                         'userId': userId,
-                        'content': 'Bạn đã được xác nhận làm Nhà tài trợ cho sự kiện "' + eventName + '"',
+                        'content': 'Bạn đã được xác nhận làm Nhà tài trợ cho sự kiện <b>"' + eventName + '"</b>',
                         'link': '/events/' + eventId,
                         'markedRead': 'Unread',
                         'dateCreated': new Date()
@@ -910,6 +920,9 @@ function approveSponsor(event) {
                             // If something goes wrong, alert the error message that our service returned
                             showAlert('danger', $LAYOUT_ERROR + response.msg);
 
+                        } else {
+                            var socket = io.connect('http://localhost:3000');
+                            socket.emit('notification', newNotification);
                         }
                     });
                 
@@ -1009,7 +1022,7 @@ function disapproveSponsor(event) {
                 showSponsors(eventId);
                 var newNotification = {
                     'userId': response.id,
-                    'content': 'Yêu cầu tài trợ cho sự kiện "' + eventName + '" của bạn đã bị bác bỏ',
+                    'content': 'Yêu cầu tài trợ cho sự kiện <b>"' + eventName + '"</b> của bạn đã bị bác bỏ',
                     'link': '/events/' + eventId,
                     'markedRead': 'Unread',
                     'dateCreated': new Date()
@@ -1030,6 +1043,8 @@ function disapproveSponsor(event) {
                         showAlert('danger', $LAYOUT_ERROR + response.msg);
 
                     } else {
+                        var socket = io.connect('http://localhost:3000');
+                        socket.emit('notification', newNotification);
                         $('#txtUserDisapproveId').val("");
                         $('#txtUserDisapprove').val("");
                         $('#txtDisapproveReason').val("");

@@ -103,8 +103,8 @@ block content
 										span.required  *								
 									.col-md-6.col-sm-6.col-xs-12								
 										.row
-											input#txtImageSrc(type="hidden", name="eventImage")									
-											input#inputEventImage.btn.btn-info.col-md-8.col-sm-8.col-xs-12(type="file", name="displayEventImage", accept=".png,.jpg,.jpeg", required='required')
+											input#txtImageSrc(type="hidden", name="eventImage", value="#{docs.eventImage}")
+											input#inputEventImage.btn.btn-info.col-md-8.col-sm-8.col-xs-12(type="file", required='required', name="displayEventImage", accept=".png,.jpg,.jpeg")
 										.row
 											br
 											img#txtImage(src='#{docs.eventImage}', alt='Please chooose another image!', style='height: 150px; max-width: 300px; display:none')

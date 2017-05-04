@@ -84,7 +84,7 @@ function sendNotification() {
     for(var i = 0; i < data.length; i++) {
       var newNotification = {
         'userId': data[i]._id,
-        'content': userData.username + ' muốn đăng kí làm "' + $('#txtPosition').val() + '" với tư cách là "' + $('#txtCompanyName').val() + '"',
+        'content': '<b>' + userData.username + '</b> muốn đăng kí làm <b>"' + $('#txtPosition').val() + '"</b> với tư cách là <b>"' + $('#txtCompanyName').val() + '"</b>',
         'link': '/users/',
         'markedRead': 'Unread',
         'dateCreated': new Date()
@@ -103,6 +103,9 @@ function sendNotification() {
               // If something goes wrong, alert the error message that our service returned
               showAlert('error', $LAYOUT_ERROR + response.msg);
 
+          } else {
+            var socket = io.connect('http://localhost:3000');
+            socket.emit('notification', newNotification);
           }
       });
     }

@@ -22,6 +22,11 @@ router.get('/', function(req, res, next) {
   res.render('guest_page/index');
 });
 
+/* GET home page. */
+router.get('/chat', function(req, res, next) {
+  res.render('guest_page/chat');
+});
+
 /* GET export page. */
 router.get('/export/:id', function(req, res, next) {
 	// var html = '<!DOCTYPE html><html><head><title>My Webpage</title></head>' +
@@ -606,32 +611,32 @@ router.get('/export/:id', function(req, res, next) {
 
 /* GET event list page. */
 router.get('/events_list', function(req, res, next) {
-  res.render('guest_page/list_events');
+  res.render('guest_page/list_events', { title: 'Events' });
 });
 
 /* GET sponsor list page. */
 router.get('/sponsors_list', function(req, res, next) {
-  res.render('guest_page/list_sponsors');
+  res.render('guest_page/list_sponsors', { title: 'Sponsors' });
 });
 
 /* GET news list page. */
 router.get('/news_list', function(req, res, next) {
-  res.render('guest_page/list_posts');
+  res.render('guest_page/list_posts', { title: 'News' });
 });
 
 /* GET news list page. */
 router.get('/community_board', function(req, res, next) {
-  res.render('guest_page/board');
+  res.render('guest_page/board', { title: 'Forum' });
 });
 
 /* GET sponsor list page. */
 router.get('/promote', function(req, res, next) {
-  res.render('guest_page/promote');
+  res.render('guest_page/promote', { title: 'Promote' });
 });
 
 /* GET sponsor list page. */
 router.get('/about', function(req, res, next) {
-  res.render('guest_page/about_us');
+  res.render('guest_page/about_us', { title: 'About Us' });
 });
 
 /* GET login page. */

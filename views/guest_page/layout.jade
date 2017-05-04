@@ -7,7 +7,9 @@ html
 		script(src='//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js')
 		script(src='/vendors/jquery-ui-1.12.1/jquery-ui.js')
 		script.
-			window.jQuery || document.write('<script src="/guest_page/js/jquery-1.11.1.min.js"><\\/script>')
+			window.jQuery || document.write('<script src="/guest_page/js/jquery-1.11.1.min.js"><\\/script>')		
+		// Socket.io
+		script(src='/socket.io/socket.io.js')
 		script(src='/javascripts/global.js')		
 		script(src='/guest_page/js/lang.js')
 		script(src='/guest_page/js/layout.js')
@@ -116,6 +118,7 @@ html
 						div.col-md-6.col-sm-6.col-xs-6(style="text-align:center;")
 							a#btnShowLogin.btn(onclick="showLogin()", style="cursor:pointer; background-color:none; text-decoration: underline;")
 		#alert_placeholder
+		#noti_placeholder
 		footer.main-footer
 			.footer-top
 			.footer-main

@@ -354,31 +354,153 @@ function populateDonationPane() {
 }
 
 function goNext() {
-  var a = new Date();
-  var eventObj = {
-    status: "Published",
-    dateModified: a.toString()
-  };
-
+  var status;
+  var name;
+  var eventId = readCookie('eventId');
   $.ajax({
-        type: 'POST',
-        data: eventObj,
-        url: '/events/finishevent/' + readCookie('eventId'),
-        dataType: 'JSON'
-    }).done(function( response ) {
-        var id = readCookie('eventId');
-        // Check for successful (blank) response
-        if (response.msg === '') {
-          deleteCookie('eventId');
-          localStorage.removeItem("activityItem");
-          window.location.replace(location.origin + '/events/' + id); 
+    type: 'GET',
+    url: '/events/details/' + eventId,
+    async: false
+  }).done(function( docs ) {
+    status = docs.status;
+    name = docs.eventName;
+  });
+
+  if(status == "Draft") {
+    var a = new Date();
+    var eventObj = {
+      status: "Published",
+      dateModified: a.toString()
+    };
+
+    $.ajax({
+          type: 'POST',
+          data: eventObj,
+          url: '/events/finishevent/' + eventId,
+          dataType: 'JSON'
+      }).done(function( response ) {
+          var id = eventId;
+          // Check for successful (blank) response
+          if (response.msg === '') {
+            deleteCookie('eventId');
+            localStorage.removeItem("activityItem");
+            window.location.replace(location.origin + '/events/' + id); 
+          }
+          else {
+
+              // If something goes wrong, alert the error message that our service returned
+              alert('Error: ' + response.msg);
+
+          }
+      });  
+  } else {
+    $.getJSON( '/events/participants/' + eventId, function( dataParticipant ) {      
+      for(var i = 0; i < dataParticipant.length; i++) {
+        var newNotification = {
+            'userId': dataParticipant[i].userId,
+            'content': 'Sự kiện <b>"' + name + '"</b> mà bạn đã tham gia đã được sửa đổi.',
+            'link': '/events/' + eventId,
+            'markedRead': 'Unread',
+            'dateCreated': new Date()
         }
-        else {
 
-            // If something goes wrong, alert the error message that our service returned
-            alert('Error: ' + response.msg);
+        console.log(newNotification);
 
+        // Use AJAX to post the object to our adduser service        
+        $.ajax({
+            type: 'POST',
+            data: newNotification,
+            url: '/notifications/addnotification',
+            dataType: 'JSON'
+        }).done(function( response ) {
+
+            // Check for successful (blank) response
+            if (response.msg !== '') {
+
+                // If something goes wrong, alert the error message that our service returned
+                showAlert('error', $LAYOUT_ERROR + response.msg);
+
+            } else {
+              var socket = io.connect('http://localhost:3000');
+              socket.emit('notification', newNotification);
+            }
+        });
+      }      
+    });    
+
+    $.getJSON( '/events/allsponsor/' + eventId, function( dataSponsor ) {      
+      for(var i = 0; i < dataSponsor.length; i++) {
+        var newNotification = {
+            'userId': dataSponsor[i].userId,
+            'content': 'Sự kiện <b>"' + name + '"</b> mà bạn tài trợ đã được sửa đổi.',
+            'link': '/events/' + eventId,
+            'markedRead': 'Unread',
+            'dateCreated': new Date()
         }
-    });
 
+        console.log(newNotification);
+
+        // Use AJAX to post the object to our adduser service        
+        $.ajax({
+            type: 'POST',
+            data: newNotification,
+            url: '/notifications/addnotification',
+            dataType: 'JSON'
+        }).done(function( response ) {
+
+            // Check for successful (blank) response
+            if (response.msg !== '') {
+
+                // If something goes wrong, alert the error message that our service returned
+                showAlert('error', $LAYOUT_ERROR + response.msg);
+
+            } else {
+              var socket = io.connect('http://localhost:3000');
+              socket.emit('notification', newNotification);
+            }
+        });
+      }      
+    });    
+
+    $.getJSON( '/events/donations/' + eventId, function( dataDonate ) {      
+      for(var i = 0; i < dataDonate.length; i++) {
+        if(dataDonate.userId != '') {
+          var newNotification = {
+              'userId': dataDonate[i].userId,
+              'content': 'Sự kiện <b>"' + name + '"</b> mà bạn đóng góp đã được sửa đổi.',
+              'link': '/events/' + eventId,
+              'markedRead': 'Unread',
+              'dateCreated': new Date()
+          }
+
+          console.log(newNotification);
+
+          // Use AJAX to post the object to our adduser service        
+          $.ajax({
+              type: 'POST',
+              data: newNotification,
+              url: '/notifications/addnotification',
+              dataType: 'JSON'
+          }).done(function( response ) {
+
+              // Check for successful (blank) response
+              if (response.msg !== '') {
+
+                  // If something goes wrong, alert the error message that our service returned
+                  showAlert('error', $LAYOUT_ERROR + response.msg);
+
+              } else {
+                var socket = io.connect('http://localhost:3000');
+                socket.emit('notification', newNotification);
+              }
+          });
+        }        
+      }      
+    });    
+
+    deleteCookie('eventId');
+    localStorage.removeItem("activityItem");
+    window.location.replace(location.origin + '/events/' + eventId); 
+
+  }
 }

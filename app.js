@@ -5,7 +5,8 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var fs = require('fs');
-var request = require('request');  
+var request = require('request');
+var port = 3000;
 
 // New Code
 var mongo = require('mongodb');
@@ -20,6 +21,28 @@ var notifications = require('./routes/notifications');
 var ratings = require('./routes/ratings');
 
 var app = express();
+
+io = require('socket.io').listen(app.listen(port));
+console.log("LISTENING: " + port);
+
+io.sockets.on('connection', function(socket){
+  io.emit('chat message', "Someone has connect");
+
+  socket.on('disconnect', function(){
+    console.log('user disconnected');
+    io.emit('chat message', "Someone has disconnect");
+  });
+
+  socket.on('chat message', function(msg){
+    console.log('message: ' + msg);
+    io.emit('chat message', msg);
+  });
+
+  socket.on('notification', function(notiObj){
+    console.log('new noti');
+    io.emit('notification', notiObj);
+  });
+});
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -76,6 +99,5 @@ app.use(function(err, req, res, next) {
     error: {}
   });
 });
-
 
 module.exports = app;

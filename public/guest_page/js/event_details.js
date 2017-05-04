@@ -314,6 +314,8 @@ function confirmDonate() {
 
 		// If meet all requirement and validation => Donate
 		if(donateFlag == true) {
+			var dbflag = true;
+			var code = "";
 			// Donate each item
 			for(var i = 0; i < $('.donateItem').length; i++) {
 				value = $('.donateItem')[i].value;
@@ -344,111 +346,119 @@ function confirmDonate() {
 							$.ajax({
 						        type: 'POST',
 						        data: donation,
-						        url: '/events/addDonation',
-						        dataType: 'JSON'
+						        url: '/events/adddonation',
+						        dataType: 'JSON',
+						        async: false
 						    }).done(function( response ) {
 
 						        // Check for successful (blank) response
 						        if(response.msg == '') {				        				        	
-
+						        	code += ' ' + response.code;
 						        } else {
+						        	dbflag = false;
 						            showAlert('danger', $LAYOUT_ERROR + response.msg);
 						        }
 						    });
 				        }
 				    });			
 				}
-			}	
+			}
+
+			if(dbflag == true) {
+				showAlert('success', $EVENTDETAILS_ALERT_DONATE_SUCCESS + code);
+			}
 
 			// Create notification for producer
 			$.getJSON( '/users/id/' + readCookie('user'), function( data ) {
-				var newNotification = {
-		            'userId': $('#txtProducerId').val(),
-		            'content': data.username + ' đã đóng góp cho sự kiện "' + $('#eventName').html() + '" của bạn.',
-		            'link': '/events/update/' + eventId,
-		            'markedRead': 'Unread',
-		            'dateCreated': new Date()
-		        }
-
-		        // Use AJAX to post the object to our adduser service        
-		        $.ajax({
-		            type: 'POST',
-		            data: newNotification,
-		            url: '/notifications/addnotification',
-		            dataType: 'JSON'
-		        }).done(function( response ) {
-
-		            // Check for successful (blank) response
-		            if (response.msg !== '') {
-
-		                // If something goes wrong, alert the error message that our service returned
-		                showAlert('error', $LAYOUT_ERROR + response.msg);
-
-		            }
-		        });
-
 		        // Bring user to pending sponsor to the event
-		        if(minimumFlag == true) {		        	
-			    	if(role == "Sponsor") {
-			    		$.getJSON( '/events/checksponsor/' + eventId + '/' + readCookie('user'), function( dataDonationEvent ) {		    		
-			    			// Check if user is in sponsor list
-			    			if(dataDonationEvent == null) {
-			    				var sponsor = {
-					    			'eventId': window.location.href.split('/')[window.location.href.split('/').length - 1].split('#')[0],
-									'userId': readCookie('user'),
-									'status': 'Pending',
-									'donation': donationString,
-									'dateCreated': new Date()
-					    		};
+		        if(minimumFlag == true && role == "Sponsor") {		        				    	
+		    		$.getJSON( '/events/checksponsor/' + eventId + '/' + readCookie('user'), function( dataDonationEvent ) {		    		
+		    			// Check if user is in sponsor list
+		    			if(dataDonationEvent == null) {
+		    				var sponsor = {
+				    			'eventId': window.location.href.split('/')[window.location.href.split('/').length - 1].split('#')[0],
+								'userId': readCookie('user'),
+								'status': 'Pending',
+								'donation': donationString,
+								'dateCreated': new Date()
+				    		};
 
-					    		console.log(sponsor);
+				    		console.log(sponsor);
 
-					    		$.ajax({
-							        type: 'POST',
-							        data: sponsor,
-							        url: '/events/addsponsor',
-							        dataType: 'JSON'
-							    }).done(function( response ) {
-							    	console.log("DONE");
-							        // Check for successful (blank) response
-							        if(response.msg != '') {
-							            alert('Error: ' + response.msg);
-							        } else {
-							        	var newNotification = {
-					                        'userId': $('#txtProducerId').val(),
-					                        'content': $('#txtDonator').val() + ' muốn làm nhà tài trợ và đóng góp cho sự kiện "' + $('#eventName').html() + '" của bạn.',
-					                        'link': '/events/update/' + eventId,
-					                        'markedRead': 'Unread',
-					                        'dateCreated': new Date()
-					                    }
+				    		$.ajax({
+						        type: 'POST',
+						        data: sponsor,
+						        url: '/events/addsponsor',
+						        dataType: 'JSON'
+						    }).done(function( response ) {
+						    	console.log("DONE");
+						        // Check for successful (blank) response
+						        if(response.msg != '') {
+						            alert('Error: ' + response.msg);
+						        } else {
+						        	var newNotification = {
+				                        'userId': $('#txtProducerId').val(),
+				                        'content': '<b>' + $('#txtDonator').val() + '</b> muốn làm nhà tài trợ và đóng góp cho sự kiện <b>"' + $('#eventName').html() + '"</b> của bạn. ' + '(' + donationString + ')',
+				                        'link': '/events/update/' + eventId,
+				                        'markedRead': 'Unread',
+				                        'dateCreated': new Date()
+				                    }
 
-					                    // Use AJAX to post the object to our adduser service        
-					                    $.ajax({
-					                        type: 'POST',
-					                        data: newNotification,
-					                        url: '/notifications/addnotification',
-					                        dataType: 'JSON'
-					                    }).done(function( response ) {
+				                    // Use AJAX to post the object to our adduser service        
+				                    $.ajax({
+				                        type: 'POST',
+				                        data: newNotification,
+				                        url: '/notifications/addnotification',
+				                        dataType: 'JSON'
+				                    }).done(function( response ) {
 
-					                        // Check for successful (blank) response
-					                        if (response.msg !== '') {
+				                        // Check for successful (blank) response
+				                        if (response.msg !== '') {
 
-					                            // If something goes wrong, alert the error message that our service returned
-					                            showAlert('danger', $LAYOUT_ERROR + response.msg);
+				                            // If something goes wrong, alert the error message that our service returned
+				                            showAlert('danger', $LAYOUT_ERROR + response.msg);
 
-					                        }
-					                    });
-							        }
-							    });
-			    			}
-			    		});    		   	
-			    	}
-		        }							        
+				                        } else {
+				                        	var socket = io.connect('http://localhost:3000');
+			            					socket.emit('notification', newNotification);
+				                        }
+				                    });
+						        }
+						    });
+		    			}
+		    		});    		   				    	
+		        } else {
+		        	var newNotification = {
+			            'userId': $('#txtProducerId').val(),
+			            'content': '<b>' + $('#txtDonator').val() + '</b> đã đóng góp cho sự kiện <b>"' + $('#eventName').html() + '"</b> của bạn. (' + donationString + ')',
+			            'link': '/events/update/' + eventId,
+			            'markedRead': 'Unread',
+			            'dateCreated': new Date()
+			        }
+
+			        // Use AJAX to post the object to our adduser service        
+			        $.ajax({
+			            type: 'POST',
+			            data: newNotification,
+			            url: '/notifications/addnotification',
+			            dataType: 'JSON'
+			        }).done(function( response ) {
+			            // Check for successful (blank) response
+			            if (response.msg !== '') {			            	
+
+			                // If something goes wrong, alert the error message that our service returned
+			                showAlert('error', $LAYOUT_ERROR + response.msg);
+
+			            } else {
+			            	var socket = io.connect('http://localhost:3000');
+			            	socket.emit('notification', newNotification);
+			            }
+			        });
+		        }						        
 			});	
 
 			// Update the table
-	        populateDonationPane(eventId);		        
-	        showAlert('success', $EVENTDETAILS_ALERT_DONATE_SUCCESS);
+	        populateDonationPane(eventId);		        	        
 	        $('#donate-form').dialog('close');
 			for(var i = 0; i < $('.donateItem').length; i++) {
 				$('.donateItem')[i].value = "";
@@ -1261,7 +1271,7 @@ function populateGallery(eventId) {
 	        	var content = "";
 	        	var content2 = "";
 	        	$.each(data, function(){
-	        		content = '<div class="item thumb" style="background-image:url(\'' + this.image + '\'); height:400px"></div>';
+	        		content = '<a href="' + this.image + '"><div class="item thumb" style="background-image:url(\'' + this.image + '\'); height:400px"></div></a>';
 	        		$('#photoCarousel').html($('#photoCarousel').html() + content);
 	        		counter++;
 	        	});
@@ -1513,6 +1523,9 @@ function join() {
 					                            // If something goes wrong, alert the error message that our service returned
 					                            showAlert('danger', $LAYOUT_ERROR + response.msg);
 
+					                        } else {
+					                        	var socket = io.connect('http://localhost:3000');
+			            						socket.emit('notification', newNotification);
 					                        }
 					                    });
 							        }
@@ -1582,6 +1595,9 @@ function unjoin(){
 	                    // If something goes wrong, alert the error message that our service returned
 	                    showAlert('danger', $LAYOUT_ERROR + response.msg);
 
+	                } else {
+	                	var socket = io.connect('http://localhost:3000');
+			            socket.emit('notification', newNotification);
 	                }
 	            });
             });            

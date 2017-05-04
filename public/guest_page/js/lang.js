@@ -215,7 +215,7 @@ if(localStorage.getItem('language') == 'vi' || localStorage.getItem('language') 
 	$EVENTDETAILS_ALERT_DUPLICATE	= "Bạn đã tham gia sự kiện khác trùng với ngày diễn ra của sự kiện này."
 	$EVENTDETAILS_ALERT_JOIN_SUCCESS = "Tham gia sự kiện thành công."
 	$EVENTDETAILS_ALERT_UNJOIN_SUCCESS = "Hủy tham gia sự kiện thành công.";
-	$EVENTDETAILS_ALERT_DONATE_SUCCESS = "Cám ơn bạn đã đóng góp, ban tổ chức sẽ xem xét và liên lạc với bạn.";
+	$EVENTDETAILS_ALERT_DONATE_SUCCESS = "Cám ơn bạn đã đóng góp, ban tổ chức sẽ xem xét và liên lạc với bạn.<br>Mã đóng góp của bạn là: ";
 	$EVENTDETAILS_ALERT_UNJOIN 		= "Bạn muốn hủy tham gia?";
 	$EVENTDETAILS_ALERT_UNDER_MINIMUM = "Bạn đang đóng góp số lượng thấp hơn mức tối thiểu để trở thành nhà tài trợ cho sự kiện này. Bạn có muốn tiếp tục đóng góp theo danh nghĩa của một người dùng bình thường?"
 
@@ -754,7 +754,7 @@ if(localStorage.getItem('language') == 'vi' || localStorage.getItem('language') 
 	$EVENTDETAILS_ALERT_DUPLICATE	= "You have participated in an event with the same date.";
 	$EVENTDETAILS_ALERT_JOIN_SUCCESS = "Successfully join event.";
 	$EVENTDETAILS_ALERT_UNJOIN_SUCCESS = "Successfully cancel participate this event.";
-	$EVENTDETAILS_ALERT_DONATE_SUCCESS = "Thank you! Your donations will be reviewed by the producer.";
+	$EVENTDETAILS_ALERT_DONATE_SUCCESS = "Thank you! Your donations will be reviewed by the producer.<br>Your donation code is: ";
 	$EVENTDETAILS_ALERT_UNJOIN 		= "Are you sre to unjoin this event?";
 	$EVENTDETAILS_ALERT_UNDER_MINIMUM = "You have donate lower than the minimum require to be a sponsor for this event. Do you want to continue donate as a normal user?";
 

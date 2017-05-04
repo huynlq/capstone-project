@@ -184,7 +184,7 @@ function populateEventProduced() {
       $.getJSON('/events/producedevents/' + id, function( data ) {
         var table = $('#eventHostedTable').DataTable({"columnDefs": [{ "width": "20px", "targets": 0 }]});    
         $.each(data, function(){
-          if(this.status == "Published") {
+          if(this.status != "Draft") {
             dateCreated = new Date(this.dateCreated);
             eventId = this._id;
             $.getJSON('/events/details/' + eventId, function( dataEvent ) {

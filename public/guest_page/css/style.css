@@ -29,6 +29,14 @@ a:hover, a:focus, a:active {
 .btn-info {
   background-color: #1f76bd;
 }
+
+#noti_placeholder
+{
+  position: fixed;
+  right: 10px;
+  bottom: 10px;
+}
+
 #alert_placeholder
 {
   position: fixed;

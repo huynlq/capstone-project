@@ -612,7 +612,7 @@ router.get('/update/:id', function(req, res, next) {
         res.render('page_404');
     collection.findOne({ '_id' : req.params.id },{},function(e,docs){
         if(docs.userId == userId) {
-            res.render('producer_page/update_event', { title: 'Charity Event | Updating ' + docs.eventName, 'docs': docs });
+            res.render('producer_page/update_event', { title: 'Event Update | ' + docs.eventName, 'docs': docs });
         } else {
             res.render('page_404');
         }
@@ -887,7 +887,7 @@ router.get('/:id', function(req, res, next) {
         res.render('page_404');
     collection.findOne({ '_id' : req.params.id },{},function(e,docs){
         if(docs) {
-            res.render('guest_page/event_details', { title: 'Charity Event | ' + docs.eventName, 'docs': docs });
+            res.render('guest_page/event_details', { title: docs.eventName, 'docs': docs });
         } else {
             res.render('page_404');
         }
@@ -1123,7 +1123,7 @@ router.post('/adddonation', function(req, res) {
     var collection = db.get('Donations');
     collection.insert(req.body, function(err, result){                
         res.send(
-            (err === null) ? { msg: ''} : { msg: err, 'message': 'An error occured. Please try again.' }
+            (err === null) ? { msg: '', code: result._id} : { msg: err, 'message': 'An error occured. Please try again.' }
         );
     });
 });

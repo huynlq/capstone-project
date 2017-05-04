@@ -12,6 +12,8 @@ $(document).ready(function() {
     writeCookie('eventId',$('#txtEventId').val(),7);
   }
 
+  $('#inputEventImage').removeAttr('required');
+
   $("#inputEventImage").change(function(e) {
 
       for (var i = 0; i < e.originalEvent.srcElement.files.length; i++) {
@@ -31,7 +33,7 @@ $(document).ready(function() {
           reader.readAsDataURL(file);
           
       }
-  });
+  });  
 
   $('input[name="eventDate"]').daterangepicker();
   $('#eventDeadline').datepicker({ maxDate: new Date($('#eventDate').val().split(" - ")[1]) });
@@ -175,6 +177,13 @@ function readURL() {
 }
 
 function validate() {
+  if($('#txtImageSrc').val() != '') {
+    $('#inputEventImage').removeAttr('required');
+  } else {
+    $('#inputEventImage').attr('required', 'required');
+    event.preventDefault();
+  }
+
   if(!validateHhMm($('#txtMeetingTime').val())) {
     event.preventDefault();
     $('#txtMeetingTime').focus();

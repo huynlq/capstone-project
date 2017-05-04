@@ -54,13 +54,13 @@ function populatePosts() {
         	var comment = 0;
         	var user = "";
 
-        	$.each(data, function(){
+        	for(var i = data.length - 1; i >= 0; i--) {
         		counter++;
 
-        		dateCreated = new Date(this.dateCreated);
+        		dateCreated = new Date(data[i].dateCreated);
 
         		$.ajax({
-		            url: '/posts/commentnumber/' + this._id,
+		            url: '/posts/commentnumber/' + data[i]._id,
 		            dataType: 'json',
 		            async: false,
 		            success: function( data ) {
@@ -69,7 +69,7 @@ function populatePosts() {
 		        });
 
 		        $.ajax({
-		            url: '/users/id/' + this.userId,
+		            url: '/users/id/' + data[i].userId,
 		            dataType: 'json',
 		            async: false,
 		            success: function( data ) {
@@ -79,12 +79,12 @@ function populatePosts() {
 
         		$('#listPosts').DataTable().row.add([
 	                counter,
-	                '<a href="/posts/' + this._id + '">' + this.postName + '</a>',
+	                '<a href="/posts/' + data[i]._id + '">' + data[i].postName + '</a>',
 	                user,
 	                comment,
 	                dateCreated.toLocaleTimeString() + ' - ' + dateCreated.toLocaleDateString()
 	            ]).draw( false );
-    		});        		
+        	}  		
     	}
     });
 }
