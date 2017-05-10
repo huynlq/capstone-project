@@ -6,6 +6,30 @@ var pdf = require('html-pdf');
 var ObjectId = require('mongodb').ObjectID;
 var async = require('async');
 var source = 'http://localhost:3000';
+var passport = require('passport');
+var FacebookStrategy = require('passport-facebook').Strategy;
+
+// serialize and deserialize
+passport.serializeUser(function(user, done) {
+  done(null, user);
+});
+passport.deserializeUser(function(obj, done) {
+  done(null, obj);
+});
+
+// config
+passport.use(new FacebookStrategy({
+    clientID: '164484687312690',
+    clientSecret: 'aefbca717665f99fba67be67134cc786',
+    callbackURL: 'http://localhost:3000/auth/facebook/callback',
+    profileFields: ['id', 'emails', 'name']
+  },
+  function(accessToken, refreshToken, profile, done) {
+    process.nextTick(function () {
+      return done(null, profile);
+    });
+  }
+));
 
 var download = function(uri, filename, callback){	
     console.log("Download");
@@ -724,9 +748,64 @@ router.get('/my', function(req, res, next) {
 	}	
 });
 
+router.get('/hey', require('connect-ensure-login').ensureLoggedIn(), function(req, res){
+    var user = req.user;
+    console.log(req);  
+    console.log(res);   
+    res.json(user);
+});
+
 /* GET promote page. */
 router.get('/promote', function(req, res, next) {
 	res.render('users/promote', { title: 'Charity Project | Promotion Request'});
+});
+
+router.get('/auth/facebook', passport.authenticate('facebook', { scope : ['email'] }), function(req, res){});
+
+router.get('/auth/facebook/callback', passport.authenticate('facebook', { failureRedirect: '/' }), function(req, res) {
+  console.log(req.user);
+
+  var userFBId = req.user.id;
+  var userFBName = req.user.displayName;
+  var userFBEmail = '';
+  if(req.user.emails.length > 0) {
+    userFBEmail = req.user.emails[0].value;
+  }  
+
+  var db = req.db;
+  var collection = db.get('Users');
+  collection.findOne({"fbId": userFBId}, function(err, doc) {  
+    if(doc == null) {
+      // If user haven't register => Register now
+      var userBody = {
+        'fbId': userFBId,
+        'username': userFBName,
+        'email': userFBEmail,
+        'role': 'User',
+        'dateCreated': new Date()
+      }
+      collection.insert(userBody, function(err, result){
+        download('http://www.infinitemd.com/wp-content/uploads/2017/02/default.jpg', 'public/images/user/' + result._id + '.jpg', function(){
+            console.log('done');
+        });
+        res.cookie('user',result._id.toString(), { maxAge: 90000000000, httpOnly: false });
+        collection.update({ '_id' : result._id }, { $set:{'image':'/images/user/' + result._id + '.jpg'} }, function(err) {
+          if (err === null) {
+            res.redirect('/my');
+          }
+        });     
+      });
+    } else {
+      // If user has register => Go to homepage
+      res.cookie('user',doc._id.toString(), { maxAge: 90000000000, httpOnly: false });
+      res.redirect('/');
+    }
+  });  
+});
+
+router.get('/logout', function(req, res){
+  req.logout();
+  res.redirect('/');
 });
 
 module.exports = router;

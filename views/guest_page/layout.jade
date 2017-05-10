@@ -8,6 +8,8 @@ html
 		script(src='/vendors/jquery-ui-1.12.1/jquery-ui.js')
 		script.
 			window.jQuery || document.write('<script src="/guest_page/js/jquery-1.11.1.min.js"><\\/script>')		
+		// Boostrap Social
+		link(rel='stylesheet', href='guest_page/css/bootstrap-social.css')			
 		// Socket.io
 		script(src='/socket.io/socket.io.js')
 		script(src='/javascripts/global.js')		
@@ -97,6 +99,10 @@ html
 						input#btnLogin.btn.btn-info.col-md-6.col-sm-6.col-xs-6(type="submit")
 						div.col-md-6.col-sm-6.col-xs-6(style="text-align:center;")
 							a#btnShowRegister.btn(onclick="showRegister()", style="cursor:pointer; background-color:none; text-decoration: underline;")
+					.row.form-group
+						a.btn.btn-block.btn-social.btn-facebook(href="http://localhost:3000/auth/facebook")
+							span.fa.fa-facebook(style="color: white")
+							span(style="color: white") Sign in with Facebook
 		// Register dialog
 		#register-form(title='Register', style="display: none; padding: 30px 50px")
 			.row(style="text-align:center; color: red")
@@ -117,6 +123,9 @@ html
 						input#btnRegister.btn.btn-info.col-md-6.col-sm-6.col-xs-6(type="submit")
 						div.col-md-6.col-sm-6.col-xs-6(style="text-align:center;")
 							a#btnShowLogin.btn(onclick="showLogin()", style="cursor:pointer; background-color:none; text-decoration: underline;")
+					.row.form-group
+						#fb-root
+						.fb-login-button(data-max-rows='1', data-size='large', data-button-type='continue_with', data-show-faces='false', data-auto-logout-link='true', data-use-continue-as='true')
 		#alert_placeholder
 		#noti_placeholder
 		footer.main-footer
@@ -149,3 +158,11 @@ html
 			.footer-bottom
 				.container.text-right
 					| Sadaka @ copyrights 2017 - by numbuh1		
+		script.
+			(function(d, s, id) {
+			var js, fjs = d.getElementsByTagName(s)[0];
+			if (d.getElementById(id)) return;
+			js = d.createElement(s); js.id = id;
+			js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.9&appId=164484687312690";
+			fjs.parentNode.insertBefore(js, fjs);
+			}(document, 'script', 'facebook-jssdk'));

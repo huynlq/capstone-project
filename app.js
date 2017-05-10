@@ -6,6 +6,8 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var fs = require('fs');
 var request = require('request');
+var passport = require('passport');
+var FacebookStrategy = require('passport-facebook').Strategy;
 var port = 3000;
 
 // New Code
@@ -22,6 +24,7 @@ var ratings = require('./routes/ratings');
 
 var app = express();
 
+// Socket.io config
 io = require('socket.io').listen(app.listen(port));
 console.log("LISTENING: " + port);
 
@@ -43,6 +46,9 @@ io.sockets.on('connection', function(socket){
     io.emit('notification', notiObj);
   });
 });
+
+app.use(passport.initialize());
+app.use(passport.session());
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
