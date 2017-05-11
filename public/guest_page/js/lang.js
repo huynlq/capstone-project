@@ -55,7 +55,10 @@ if(localStorage.getItem('language') == 'vi' || localStorage.getItem('language') 
 	$LAYOUT_TIME_DAY				= "Ngày";
 	$LAYOUT_TIME_HOUR				= "Giờ";
 	$LAYOUT_TIME_MINUTE				= "Phút";
-	$LAYOUT_TIME_SECOND				= "Giây";	
+	$LAYOUT_TIME_SECOND				= "Giây";
+
+	$LAYOUT_SHARE_SUCCESS			= "Chia sẻ bài thành công.";
+	$LAYOUT_SHARE_FAILURE			= "Chia sẻ bài không thành công.";
 
 	$LAYOUT_CONFIRM_OK				= "OK";
 	$LAYOUT_CONFIRM_CANCEL			= "Hủy";
@@ -595,6 +598,9 @@ if(localStorage.getItem('language') == 'vi' || localStorage.getItem('language') 
 	$LAYOUT_TIME_HOUR				= "Hours";
 	$LAYOUT_TIME_MINUTE				= "Minutes";
 	$LAYOUT_TIME_SECOND				= "Seconds";
+
+	$LAYOUT_SHARE_SUCCESS			= "Post published.";
+	$LAYOUT_SHARE_FAILURE			= "Post not published.";
 
 	$LAYOUT_CONFIRM_OK				= "OK";
 	$LAYOUT_CONFIRM_CANCEL			= "Cancel";

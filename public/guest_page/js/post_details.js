@@ -29,6 +29,72 @@ $(document).ready(function() {
   $('#commentPane').on('click', 'a.linkeditcomment', editComment);
   $('#commentPane').on('click', 'a.linkdeletecomment', deleteComment);  
 
+  //========================== SHARE BUTTON ==============================
+
+  window.fbAsyncInit = function() {
+      FB.init({
+      appId      : '164484687312690',
+      xfbml      : true,
+      version    : 'v2.3'
+    });
+  };
+
+  (function(d, s, id){
+    var js, fjs = d.getElementsByTagName(s)[0];
+    if (d.getElementById(id)) {return;}
+    js = d.createElement(s); js.id = id;
+    js.src = "//connect.facebook.net/en_US/sdk.js";
+    fjs.parentNode.insertBefore(js, fjs);
+  }(document, 'script', 'facebook-jssdk'));
+
+  document.getElementById('shareBtn').onclick = function() {
+    $.ajax({
+          url: '/posts/details/' + postId,
+          dataType: 'json',
+          async: false,
+          success: function( data ) {           
+        var postName = data.postName;
+        var postRealLink = window.location.href;
+
+        var postShortDescription = '';        
+        var postImage = 'http://i.imgur.com/j5S3xdw.png';
+
+        if(data.postType == "News") {
+          postShortDescription = data.postDescription;
+
+          // UNCOMMENT THIS AFTER DEPLOY ===========================
+          //postImage = data.postImage;
+        } else {
+          postShortDescription = data.postContent.replace(/<(?:.|\n)*?>/gm, '');
+        }
+
+        // UNCOMMENT THIS AFTER DEPLOY ===========================
+        // var postLink = window.location.href;
+
+        // COMMENT THIS AFTER DEPLOY =============================
+        var postLink = 'http://google.com/';
+
+        FB.ui(
+          {
+            method: 'feed',
+            link: postLink,
+            name: postName,
+            picture: postImage,
+            caption: postRealLink,
+            description: postShortDescription
+          },
+          function(response) {
+            if (response && response.post_id) {
+              showAlert('success', $LAYOUT_SHARE_SUCCESS);
+            } else {
+              showAlert('danger', $LAYOUT_SHARE_FAILURE);
+            }
+          }
+        );
+          }
+      });   
+  }
+
   
 });
 

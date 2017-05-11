@@ -42,7 +42,64 @@ $(function(){
 				populateRating(eventId);
 			}			
 		}
-	}); 	
+	}); 
+
+	//========================== SHARE BUTTON ==============================
+
+	window.fbAsyncInit = function() {
+    	FB.init({
+			appId      : '164484687312690',
+			xfbml      : true,
+			version    : 'v2.3'
+		});
+	};
+
+	(function(d, s, id){
+		var js, fjs = d.getElementsByTagName(s)[0];
+		if (d.getElementById(id)) {return;}
+		js = d.createElement(s); js.id = id;
+		js.src = "//connect.facebook.net/en_US/sdk.js";
+		fjs.parentNode.insertBefore(js, fjs);
+	}(document, 'script', 'facebook-jssdk'));
+
+	document.getElementById('shareBtn').onclick = function() {
+		$.ajax({
+	        url: '/events/details/' + eventId,
+	        dataType: 'json',
+	        async: false,
+	        success: function( data ) {	        	
+				var eventName = data.eventName;
+				var eventShortDescription = data.eventShortDescription;
+				var eventRealLink = window.location.href;
+
+				// UNCOMMENT THIS AFTER DEPLOY ===========================
+				// var eventImage = window.location.origin + data.eventImage;
+				// var eventLink = window.location.href;
+
+				// COMMENT THIS AFTER DEPLOY =============================
+				var eventImage = 'http://i.imgur.com/j5S3xdw.png';
+				var eventLink = 'http://google.com/';
+
+				FB.ui(
+					{
+						method: 'feed',
+						link: eventLink,
+						name: eventName,
+						picture: eventImage,
+						caption: eventRealLink,
+						description: eventShortDescription
+					},
+					function(response) {
+						if (response && response.post_id) {
+							showAlert('success', $LAYOUT_SHARE_SUCCESS);
+						} else {
+							showAlert('danger', $LAYOUT_SHARE_FAILURE);
+						}
+					}
+				);
+	        }
+	    });		
+	}	
 
 	//========================== OWL CAROUSEL ==============================
 
