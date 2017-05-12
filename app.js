@@ -7,6 +7,7 @@ var bodyParser = require('body-parser');
 var fs = require('fs');
 var request = require('request');
 var passport = require('passport');
+var session = require('express-session');
 var FacebookStrategy = require('passport-facebook').Strategy;
 var port = 3000;
 
@@ -49,6 +50,7 @@ io.sockets.on('connection', function(socket){
 
 app.use(passport.initialize());
 app.use(passport.session());
+app.use(session({secret:'SECRET'}));
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));

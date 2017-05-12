@@ -26,8 +26,6 @@ $(document).ready(function() {
 
       $('#table-day-' + i + ' .edit-button').click(function () {
           var data = $('#table-day-' + i).DataTable().row( $(this).parents('tr') ).data();
-          console.log("data");
-          alert( data );
       });      
   }
 

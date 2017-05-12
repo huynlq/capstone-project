@@ -260,7 +260,7 @@ function approveDonation(event) {
                
         }
         else {
-            alert('Error: ' + response.msg);
+            showAlert('danger', $LAYOUT_ERROR + response.msg);
         }
     });
 }

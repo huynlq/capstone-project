@@ -162,7 +162,7 @@ function nearby() {
 		    });		    
 	    });
 	} else {
-	    alert($EVENTLIST_GEO_NOT_SUPPORTED);
+		showAlert($LAYOUT_ERROR + $EVENTLIST_GEO_NOT_SUPPORTED);
 	}
 }
 

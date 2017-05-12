@@ -8,6 +8,8 @@ var async = require('async');
 var source = 'http://localhost:3000';
 var passport = require('passport');
 var FacebookStrategy = require('passport-facebook').Strategy;
+var TwitterStrategy = require('passport-twitter').Strategy;
+var configAuth = require('../config/auth');
 
 // serialize and deserialize
 passport.serializeUser(function(user, done) {
@@ -19,9 +21,9 @@ passport.deserializeUser(function(obj, done) {
 
 // config
 passport.use(new FacebookStrategy({
-    clientID: '164484687312690',
-    clientSecret: 'aefbca717665f99fba67be67134cc786',
-    callbackURL: 'http://localhost:3000/auth/facebook/callback',
+    clientID: configAuth.facebookAuth.clientID,
+    clientSecret: configAuth.facebookAuth.clientSecret,
+    callbackURL: configAuth.facebookAuth.callbackURL,
     profileFields: ['id', 'emails', 'name']
   },
   function(accessToken, refreshToken, profile, done) {
@@ -30,6 +32,21 @@ passport.use(new FacebookStrategy({
     });
   }
 ));
+
+passport.use(new TwitterStrategy({
+        consumerKey     : configAuth.twitterAuth.consumerKey,
+        consumerSecret  : configAuth.twitterAuth.consumerSecret,
+        callbackURL     : configAuth.twitterAuth.callbackURL,
+        profileFields: ['id', 'emails', 'name']
+    },
+    function(token, tokenSecret, profile, done) {
+
+        // make the code asynchronous
+        process.nextTick(function () {
+          return done(null, profile);
+        });
+
+    }));
 
 var download = function(uri, filename, callback){	
     console.log("Download");
@@ -760,8 +777,55 @@ router.get('/promote', function(req, res, next) {
 	res.render('users/promote', { title: 'Charity Project | Promotion Request'});
 });
 
+// =====================================
+// TWITTER ROUTES ======================
+// =====================================
+// route for twitter authentication and login
+router.get('/auth/twitter', passport.authenticate('twitter', { scope : ['email'] }), function(req, res){});
+
+// handle the callback after twitter has authenticated the user
+router.get('/auth/twitter/callback', passport.authenticate('twitter', { failureRedirect: '/' }), function(req, res) {
+  console.log(req.user);
+
+  var userTwitterId = req.user.id;
+  var userTwitterName = req.user.displayName;
+  var db = req.db;
+  var collection = db.get('Users');
+  collection.findOne({"twitterId": userTwitterId}, function(err, doc) {  
+    if(doc == null) {
+      // If user haven't register => Register now
+      var userBody = {
+        'twitterId': userTwitterId,
+        'username': userTwitterName,
+        'role': 'User',
+        'dateCreated': new Date()
+      }
+      collection.insert(userBody, function(err, result){
+        download('http://www.infinitemd.com/wp-content/uploads/2017/02/default.jpg', 'public/images/user/' + result._id + '.jpg', function(){
+            console.log('done');
+        });
+        res.cookie('user',result._id.toString(), { maxAge: 90000000000, httpOnly: false });
+        collection.update({ '_id' : result._id }, { $set:{'image':'/images/user/' + result._id + '.jpg'} }, function(err) {
+          if (err === null) {
+            res.redirect('/my');
+          }
+        });     
+      });
+    } else {
+      // If user has register => Go to homepage
+      res.cookie('user',doc._id.toString(), { maxAge: 90000000000, httpOnly: false });
+      res.redirect('/');
+    }
+  });  
+});
+
+// =====================================
+// FACEBOOK ROUTES ======================
+// =====================================
+// route for facebook authentication and login
 router.get('/auth/facebook', passport.authenticate('facebook', { scope : ['email'] }), function(req, res){});
 
+// handle the callback after facebook has authenticated the user
 router.get('/auth/facebook/callback', passport.authenticate('facebook', { failureRedirect: '/' }), function(req, res) {
   console.log(req.user);
 

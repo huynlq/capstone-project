@@ -389,7 +389,7 @@ function goNext() {
           else {
 
               // If something goes wrong, alert the error message that our service returned
-              alert('Error: ' + response.msg);
+              showAlert('danger', $LAYOUT_ERROR + response.msg);
 
           }
       });  

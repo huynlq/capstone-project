@@ -83,6 +83,7 @@ html
 			// /. main-header
 		block content
 		// Log in dialog
+		#dialog-message(title='Title')
 		#login-form(title='Log In', style="display: none; padding: 30px 50px")
 			.row(style="text-align:center; color: red")
 				p#errLoginMsg
@@ -100,9 +101,14 @@ html
 						div.col-md-6.col-sm-6.col-xs-6(style="text-align:center;")
 							a#btnShowRegister.btn(onclick="showRegister()", style="cursor:pointer; background-color:none; text-decoration: underline;")
 					.row.form-group
-						a.btn.btn-block.btn-social.btn-facebook(href="http://localhost:3000/auth/facebook")
-							span.fa.fa-facebook(style="color: white")
-							span(style="color: white") Sign in with Facebook
+						.col-xs-12
+							a.btn.btn-block.btn-social.btn-facebook(href="http://localhost:3000/auth/facebook")
+								span.fa.fa-facebook(style="color: white")
+								span(style="color: white") Sign in with Facebook
+						.col-xs-12
+							a.btn.btn-block.btn-social.btn-twitter(href="http://localhost:3000/auth/twitter")
+								span.fa.fa-twitter(style="color: white")
+								span(style="color: white") Sign in with Twitter
 		// Register dialog
 		#register-form(title='Register', style="display: none; padding: 30px 50px")
 			.row(style="text-align:center; color: red")
@@ -124,8 +130,14 @@ html
 						div.col-md-6.col-sm-6.col-xs-6(style="text-align:center;")
 							a#btnShowLogin.btn(onclick="showLogin()", style="cursor:pointer; background-color:none; text-decoration: underline;")
 					.row.form-group
-						#fb-root
-						.fb-login-button(data-max-rows='1', data-size='large', data-button-type='continue_with', data-show-faces='false', data-auto-logout-link='true', data-use-continue-as='true')
+						.col-xs-12
+							a.btn.btn-block.btn-social.btn-facebook(href="http://localhost:3000/auth/facebook")
+								span.fa.fa-facebook(style="color: white")
+								span(style="color: white") Sign in with Facebook
+						.col-xs-12
+							a.btn.btn-block.btn-social.btn-twitter(href="http://localhost:3000/auth/twitter")
+								span.fa.fa-twitter(style="color: white")
+								span(style="color: white") Sign in with Twitter
 		#alert_placeholder
 		#noti_placeholder
 		footer.main-footer

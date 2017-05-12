@@ -78,7 +78,7 @@ $(function(){
 
 				// COMMENT THIS AFTER DEPLOY =============================
 				var eventImage = 'http://i.imgur.com/j5S3xdw.png';
-				var eventLink = 'http://google.com/';
+				var eventLink = window.location.href.replace(window.location.origin,'http://127.0.0.1:3000');
 
 				FB.ui(
 					{
@@ -451,7 +451,7 @@ function confirmDonate() {
 						    	console.log("DONE");
 						        // Check for successful (blank) response
 						        if(response.msg != '') {
-						            alert('Error: ' + response.msg);
+						        	showAlert('danger', $LAYOUT_ERROR + response.msg);
 						        } else {
 						        	var newNotification = {
 				                        'userId': $('#txtProducerId').val(),
@@ -654,7 +654,7 @@ function sponsorRequest(dataDonation) {
 				    	console.log("DONE");
 				        // Check for successful (blank) response
 				        if(response.msg != '') {
-				            alert('Error: ' + response.msg);
+				            showAlert('danger', $LAYOUT_ERROR + response.msg);
 				        }
 				    });
     			}
@@ -1467,7 +1467,7 @@ function rate(id, rate) {
 		if (response.msg !== '') {
 
 			// If something goes wrong, alert the error message that our service returned
-			alert('Error: ' + response.msg);
+			showAlert('danger', $LAYOUT_ERROR + response.msg);
 
 		} else {
 

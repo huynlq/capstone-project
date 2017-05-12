@@ -191,7 +191,7 @@ function deletePost(event) {
         if (response.msg === '') {
         }
         else {
-            alert('Error: ' + response.msg);
+            showMessage('Error', response.msg);
         }
 
         // Update the table

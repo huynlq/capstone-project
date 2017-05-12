@@ -128,7 +128,7 @@ function goNext() {
   if($('#txtImageSrc').attr('src') != '' ) {
     var ext = validateImageExtension($('#txtImageSrc').attr('src'));
     if(ext == -1)
-      alert("Only accept JPG and PNG image.");
+      showAlert('danger',"Only accept JPG and PNG image.");
     else {
       var donateNo = parseInt(document.getElementById("txtNumberOfDonation").value);
       var otherDonationItem = [];

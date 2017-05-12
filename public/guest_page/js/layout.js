@@ -121,6 +121,24 @@ $(document).ready(function() {
           resizable: true,
           width: 500
     });    
+
+    var messageDialog = $( "#dialog-message" ).dialog({
+      autoOpen: false,
+      show: {
+        effect: "fade",
+        duration: 200
+      },
+      hide: {
+        effect: "fade",
+        duration: 200
+      },
+      modal: true,
+      buttons: {
+        Ok: function() {
+          $( this ).dialog( "close" );
+        }
+      }
+    });
 });
 
 // Functions =============================================================
@@ -421,4 +439,10 @@ function loadNoti() {
       $('#countNoti').html('');
     }
   });
+}
+
+function showMessage(title, msg) {
+  $('#dialog-message').dialog('option', 'title', title);
+  $('#dialog-message').html(msg);
+  $('#dialog-message').dialog( "open" );
 }
