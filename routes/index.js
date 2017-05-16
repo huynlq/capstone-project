@@ -24,7 +24,8 @@ passport.use(new FacebookStrategy({
     clientID: configAuth.facebookAuth.clientID,
     clientSecret: configAuth.facebookAuth.clientSecret,
     callbackURL: configAuth.facebookAuth.callbackURL,
-    profileFields: ['id', 'emails', 'name']
+    profileFields: ['id', 'email', 'displayName', 'gender', 'link', 'locale', 'name', 'timezone', 'updated_time', 'verified'],
+    enableProof: true
   },
   function(accessToken, refreshToken, profile, done) {
     process.nextTick(function () {
@@ -834,7 +835,11 @@ router.get('/auth/facebook/callback', passport.authenticate('facebook', { failur
   var userFBEmail = '';
   if(req.user.emails.length > 0) {
     userFBEmail = req.user.emails[0].value;
-  }  
+  }
+
+  if(req.user.displayName == null) {
+
+  }
 
   var db = req.db;
   var collection = db.get('Users');
